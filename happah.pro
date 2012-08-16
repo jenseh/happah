@@ -9,3 +9,5 @@ SOURCES += 	src/main.cpp \
 			src/render.cpp
 FORMS += 
 RESOURCES += 
+
+INCLUDEPATH += /usr/include

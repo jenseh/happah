@@ -20,7 +20,8 @@ int main(int argc,char *argv[]) {
 	render.setGeometry(0,0,600,600);
 
 
-	render.show();
+
+	window.show();
 	return app.exec();
 
 

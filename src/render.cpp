@@ -7,6 +7,7 @@
 
 #include <QtGui>
 #include <QtOpenGL>
+#include <GL/glu.h>
 #include "render.h"
 
 RenderClass::RenderClass(QWidget *parent) :
@@ -19,7 +20,7 @@ void RenderClass::initializeGL() {
 	glShadeModel (GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClearDepth(1.0f);
-	glEnable (GL_DEPTH_TEST);
+	//glEnable (GL_DEPTH_TEST);
 
 }
 
@@ -27,9 +28,11 @@ void RenderClass::resizeGL(int width, int height) {
 	glViewport(0, 0, width, height);
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 20.0f);
+	gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 1.0f, 20.0f);
+
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity();
+	gluLookAt(0.0f,0.0f,10.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f);
 }
 
 void RenderClass::paintGL() {

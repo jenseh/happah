@@ -3,9 +3,12 @@ TARGET = happah
 QT += core \
     gui \
     opengl
-    
-HEADERS += 	src/render.h
-SOURCES += 	src/main.cpp \
-			src/render.cpp
+HEADERS += src/menu.h \
+    src/render.h
+SOURCES += src/menu.cpp \
+    src/render.cpp \
+    src/main.cpp
 FORMS += 
 RESOURCES += 
+
+INCLUDEPATH += /usr/include

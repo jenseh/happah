@@ -2,6 +2,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include "render.h"
+#include "menu.h"
 
 int main(int argc,char *argv[]) {
 
@@ -10,14 +11,15 @@ int main(int argc,char *argv[]) {
 	window.resize(800,600);
 	window.setWindowTitle("Happah Geometry Module");
 
-	QPushButton create("Create Circle", &window);
+	MenuClass myMenu(&window);
+	myMenu.setGeometry(0,0,100,200);
 
 
-	create.setGeometry(600,0,200,40);
+
+
 	RenderClass render(&window);
-
-
 	render.setGeometry(0,0,600,600);
+
 
 
 

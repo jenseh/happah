@@ -1,29 +1,22 @@
+
 #include <QApplication>
-#include <QPushButton>
+#include <QtGui>
 #include <QWidget>
+#include "happah.h"
 #include "render.h"
 #include "menu.h"
 
 int main(int argc, char *argv[]) {
-	QApplication app(argc, argv);
+    QApplication app(argc, argv);
+    Happah window;
 
-	QWidget window;
-	window.resize(800, 600);
-	window.setWindowTitle("Happah Geometry Module");
+    window.resize(800,600);
+    window.setWindowTitle("QT OpenGL Project");
+    RenderClass render(&window);
+    MenuClass menu(&window);
 
-	MenuClass myMenu(&window);
-	myMenu.setGeometry(0,0,100,200);
-
-
-
-
-	RenderClass render(&window);
-	render.setGeometry(0,0,600,600);
-
-
-
-
-
-	window.show();
-	return app.exec();
+    render.setGeometry(0,0,600,600);
+    menu.setGeometry(600,0,200,600);
+    window.show();
+    return app.exec();
 }

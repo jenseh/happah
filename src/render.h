@@ -8,23 +8,28 @@
 #ifndef RENDER_H_
 #define RENDER_H_
 
-// TODO : Create a Base Render Class
-
 #include <QGLWidget>
-#include <QWidget>
 
 class RenderClass : public QGLWidget {
-Q_OBJECT
 
-// TODO: Set private functions
+Q_OBJECT
 
 public:
 	RenderClass(QWidget *parent = 0);
 
+
 protected:
 	void initializeGL();
-	void resizeGL(int width, int height);
+	void resizeGL(int width,int height);
 	void paintGL();
+
+
+private:
+	void draw();
+
+
+
+
 };
 
 #endif

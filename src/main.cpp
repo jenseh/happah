@@ -4,11 +4,11 @@
 #include "render.h"
 #include "menu.h"
 
-int main(int argc,char *argv[]) {
+int main(int argc, char *argv[]) {
+	QApplication app(argc, argv);
 
-	QApplication app(argc,argv);
 	QWidget window;
-	window.resize(800,600);
+	window.resize(800, 600);
 	window.setWindowTitle("Happah Geometry Module");
 
 	MenuClass myMenu(&window);
@@ -23,8 +23,7 @@ int main(int argc,char *argv[]) {
 
 
 
+
 	window.show();
 	return app.exec();
-
-
 }

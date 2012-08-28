@@ -13,21 +13,18 @@
 #include <QGLWidget>
 #include <QWidget>
 
-class RenderClass : public QGLWidget
-{
-	Q_OBJECT
+class RenderClass : public QGLWidget {
+Q_OBJECT
 
 // TODO: Set private functions
 
-
 public:
-	RenderClass(QWidget *parent=0);
+	RenderClass(QWidget *parent = 0);
 
 protected:
 	void initializeGL();
 	void resizeGL(int width, int height);
 	void paintGL();
-
 };
 
-#endif /* RENDER_H_ */
+#endif

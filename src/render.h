@@ -11,6 +11,8 @@
 #include <QGLWidget>
 #include <QGLBuffer>
 #include <QGLShaderProgram>
+#include <glm/glm.hpp>
+#include "sphere.h"
 class RenderClass : public QGLWidget {
 
 Q_OBJECT
@@ -23,20 +25,34 @@ protected:
 	void resizeGL(int width, int height);
 	void paintGL();
 
+	void mouseMoveEvent(QMouseEvent *event);
+	void mousePressEvent(QMouseEvent *event);
+	void mouseDoubleClickEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 private:
 	void draw();
 	void update();
-	bool initShaderProgram(const QString& vertexShaderPath, const QString& fragmentShaderPath);
-	void createSphere();
+	bool initShaderPrograms();
+	void createUnitSphere(int dtheta,int dphi);
+	void setZoom(float zoom);
 	QMatrix4x4 ModelMatrix;
 	QMatrix4x4 ViewMatrix;
 	QMatrix4x4 ProjectionMatrix;
 	QMatrix4x4 MVP;
-
-	QGLShaderProgram shader;
-	QGLBuffer vertexBuffer;
+	QVector3D eye,center,up;
 
 
+	QGLShaderProgram shader,coordShader;
+	QGLBuffer vertexBuffer,coordVBO,triangleVBO;
+	std::vector<glm::vec4> coordSystem;
+	std::vector<glm::vec4> sphereVP;
+	glm::vec4 triangleVP[3];
+	QPoint mousePos;
+
+	int pointCount;
+	Sphere * sphere;
+	// camera parameters
+	float zoomRad,theta,phi;
 };
 
 #endif

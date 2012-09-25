@@ -13,7 +13,7 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     Happah window;
-    window.resize(800,600);
+    window.resize(1024,768);
     window.setWindowTitle("Happah Project");
 
 
@@ -28,8 +28,8 @@ int main(int argc, char *argv[]) {
     RenderClass render(glFormat,&window);
     MenuClass menu(&window);
 
-    render.setGeometry(0,0,600,600);
-    menu.setGeometry(600,0,200,600);
+    render.setGeometry(0,0,1024,768);
+    menu.setGeometry(1024,0,0,0);
     window.show();
     return app.exec();
 }

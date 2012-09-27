@@ -1,11 +1,8 @@
-/*
- * sphere.cpp
- *
- *  Created on: Sep 24, 2012
- *      Author: matthias
- */
+#include <math.h>
 
 #include "sphere.h"
+
+using namespace std;
 
 Sphere::Sphere(glm::vec3 _center,float _radius) {
 	center = _center;
@@ -14,12 +11,9 @@ Sphere::Sphere(glm::vec3 _center,float _radius) {
 }
 
 Sphere::~Sphere() {
-	// TODO Auto-generated destructor stub
 }
 
 bool Sphere::hit(glm::vec3 rayPos, glm::vec3 rayDir){
-	glm::vec3 hitPoint = glm::vec3(0.0f,0.0f,0.0f);
-
 	float A,B,C;
 	A = rayDir.x*rayDir.x + rayDir.y*rayDir.y+rayDir.z*rayDir.z;
 	B = 2*(rayDir.x*rayPos.x + rayDir.y*rayPos.y+rayDir.z*rayPos.z);
@@ -40,7 +34,7 @@ bool Sphere::quad(float A,float B,float C,float *t0,float *t1){
 
 	if (discrim < 0)
 		return false;
-	float root = sqrt(discrim);
+	float root = std::sqrt(discrim);
 	if ( B< 0)
 		q = -0.5f *(B-root);
 	else

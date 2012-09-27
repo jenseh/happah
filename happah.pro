@@ -3,15 +3,15 @@ TARGET = happah
 QT += core \
     gui \
     opengl
-HEADERS += src/happah.h \
-    src/menu.h \
-    src/render.h \
+HEADERS += src/MainWindow.h \
+    src/Happah.h \
+    src/Viewport3D.h \
     src/sphere.h
-SOURCES += src/happah.cpp \
-    src/menu.cpp \
-    src/render.cpp \
+SOURCES += src/MainWindow.cpp \
+    src/Happah.cpp \
+    src/Viewport3D.cpp \
     src/main.cpp \
     src/sphere.cpp
-FORMS += src/happah.ui
+FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

@@ -1,24 +1,17 @@
-/*
- * render.cpp
- *
- *  Created on: 15.08.2012
- *      Author: msauer
- */
-
 #include <QFlags>
 #include <QtGui>
 #include <QGLBuffer>
-#include <vector>
-#include <math.h>
-#include "render.h"
+#include <cmath>
 
-RenderClass::RenderClass(const QGLFormat& format, QWidget *parent) :
+#include "Viewport3D.h"
+
+Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 		QGLWidget(format, parent), vertexBuffer(QGLBuffer::VertexBuffer), coordVBO(
 				QGLBuffer::VertexBuffer),
 				triangleVBO(QGLBuffer::VertexBuffer){
 
 	ProjectionMatrix.setToIdentity();
-	ModelMatrix.setToIdentity();
+	_modelMatrix.setToIdentity();
 	ViewMatrix.setToIdentity();
 	zoomRad = 5.0f;
 	eye.setX(0.0f);
@@ -38,7 +31,7 @@ RenderClass::RenderClass(const QGLFormat& format, QWidget *parent) :
 
 }
 
-void RenderClass::initializeGL() {
+void Viewport3D::initializeGL() {
 	int result;
 	QGLFormat glFormat = QGLWidget::format();
 	if (!glFormat.sampleBuffers())
@@ -86,14 +79,14 @@ void RenderClass::initializeGL() {
 	*/
 }
 
-void RenderClass::resizeGL(int width, int height) {
+void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	ProjectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
 
 }
 
-void RenderClass::paintGL() {
+void Viewport3D::paintGL() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	update();
 
@@ -101,7 +94,7 @@ void RenderClass::paintGL() {
 
 }
 
-bool RenderClass::initShaderPrograms() {
+bool Viewport3D::initShaderPrograms() {
 	//load and compile Vertex Shader
 	bool result = shader.addShaderFromSourceFile(QGLShader::Vertex,
 			"./src/shader/phongVert.glsl");
@@ -129,7 +122,7 @@ bool RenderClass::initShaderPrograms() {
 	return result;
 }
 
-void RenderClass::draw() {
+void Viewport3D::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -164,7 +157,7 @@ void RenderClass::draw() {
 */
 }
 
-void RenderClass::update() {
+void Viewport3D::update() {
 
 	//Update ViewMatrix
 	QMatrix4x4 tViewMatrix;
@@ -183,15 +176,15 @@ void RenderClass::update() {
 	QMatrix4x4 tModelMatrix;
 	tModelMatrix.setToIdentity();
 	tModelMatrix.scale(1.0f, 1.0f, 1.0f);
-	ModelMatrix = tModelMatrix;
+	_modelMatrix = tModelMatrix;
 
 	//Update ModelViewProjection Matrix
 
-	MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+	MVP = ProjectionMatrix * ViewMatrix * _modelMatrix;
 
 }
 
-void RenderClass::createUnitSphere(int dtheta, int dphi) {
+void Viewport3D::createUnitSphere(int dtheta, int dphi) {
 
 	const float toRad = M_PI / 180.0f;
 	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
@@ -236,7 +229,7 @@ void RenderClass::createUnitSphere(int dtheta, int dphi) {
 		qWarning() << "Could not link shader program: " << shader.log();
 
 }
-void RenderClass::mouseMoveEvent(QMouseEvent *event) {
+void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 
 	int width = this->width();
 	int height = this->height();
@@ -268,10 +261,10 @@ void RenderClass::mouseMoveEvent(QMouseEvent *event) {
 
 }
 
-void RenderClass::mousePressEvent(QMouseEvent *event) {
+void Viewport3D::mousePressEvent(QMouseEvent *event) {
 	mousePos = event->pos();
 }
-void RenderClass::wheelEvent(QWheelEvent *event) {
+void Viewport3D::wheelEvent(QWheelEvent *event) {
 	float degrees = event->delta() / 8;
 	float steps = degrees / 15;
 
@@ -281,7 +274,7 @@ void RenderClass::wheelEvent(QWheelEvent *event) {
 }
 // Picking to get Triangle Edges
 // TODO: Split that whole stuff up;
-void RenderClass::mouseDoubleClickEvent(QMouseEvent *event) {
+void Viewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
 
 	float x = (float) event->pos().x();
 	float y = (float) event->pos().y();

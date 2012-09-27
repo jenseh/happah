@@ -19,3 +19,6 @@
 *.lai
 *.la
 *.a
+
+/.settings
+*.swp

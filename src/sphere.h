@@ -1,16 +1,7 @@
-/*
- * sphere.h
- *
- *  Created on: Sep 24, 2012
- *      Author: matthias
- */
-
-#include <QWidget>
-#include <math.h>
-#include <glm/glm.hpp>
-
 #ifndef SPHERE_H_
 #define SPHERE_H_
+
+#include <glm/glm.hpp>
 
 class Sphere {
 public:
@@ -30,4 +21,4 @@ private:
 
 };
 
-#endif /* SPHERE_H_ */
+#endif

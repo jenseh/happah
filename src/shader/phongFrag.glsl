@@ -1,8 +1,8 @@
-#version 410 compatibility
+#version 330 compatibility
 
 
 in vec4 normal;
-in vec4 vertexOut;
+uniform vec4 vertexOut;
 uniform vec4 eye;
 layout(location = 0, index = 0) out vec4 fragColor;
 

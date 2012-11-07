@@ -1,19 +1,25 @@
+
 TEMPLATE = app
 TARGET = happah
+
 QT += core \
     gui \
     opengl
-HEADERS += src/GeometryObject.h \
-    src/MainWindow.h \
+HEADERS += src/MainWindow.h \
     src/Happah.h \
     src/Viewport3D.h \
     src/sphere.h
-SOURCES += src/GeometryObject.cpp \
-    src/MainWindow.cpp \
+SOURCES += src/MainWindow.cpp \
     src/Happah.cpp \
     src/Viewport3D.cpp \
     src/main.cpp \
     src/sphere.cpp
 FORMS += 
-RESOURCES += 
+RESOURCES += Resources.qrc \
+    Resources.qrc
 INCLUDEPATH += /usr/include
+OTHER_FILES += src/shader/phongFrag.glsl \
+    src/shader/phongVert.glsl \
+    src/shader/simpleFrag.glsl \
+    src/shader/simpleVert.glsl
+

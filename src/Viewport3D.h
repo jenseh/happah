@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "sphere.h"
+#include "GeometryObject.h"
 
 using namespace std;
 
@@ -21,13 +22,14 @@ private:
 	QVector3D eye, center, up;
 	QGLShaderProgram shader, coordShader;
 	QGLBuffer vertexBuffer, coordVBO, triangleVBO;
-	vector<glm::vec4> coordSystem;
-	vector<glm::vec4> sphereVP;
+	std::vector<glm::vec4> coordSystem;
+	std::vector<glm::vec4> sphereVP;
 	glm::vec4 triangleVP[3];
 	QPoint mousePos;
 	int pointCount;
 	Sphere* sphere;
 	float zoomRad, theta, phi;
+	GeometryObject* gObject;
 
 public:
 	Viewport3D(const QGLFormat& format, QWidget* parent = 0);
@@ -45,7 +47,6 @@ private:
 	void draw();
 	void update();
 	bool initShaderPrograms();
-	void createUnitSphere(int dtheta, int dphi);
 	void setZoom(float zoom);
 };
 

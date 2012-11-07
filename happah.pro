@@ -3,11 +3,13 @@ TARGET = happah
 QT += core \
     gui \
     opengl
-HEADERS += src/MainWindow.h \
+HEADERS += src/GeometryObject.h \
+    src/MainWindow.h \
     src/Happah.h \
     src/Viewport3D.h \
     src/sphere.h
-SOURCES += src/MainWindow.cpp \
+SOURCES += src/GeometryObject.cpp \
+    src/MainWindow.cpp \
     src/Happah.cpp \
     src/Viewport3D.cpp \
     src/main.cpp \

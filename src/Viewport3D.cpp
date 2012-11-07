@@ -23,7 +23,6 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 	up.setX(0.0f);
 	up.setY(1.0f);
 	up.setZ(0.0f);
-
 	pointCount = 0;
 	theta = 0;
 	phi = 0;
@@ -44,39 +43,20 @@ void Viewport3D::initializeGL() {
 	if (!initShaderPrograms())
 		return;
 
-	// Load Coordinate System
+	// Initialize your Geometry Objects here
 
-	for (float x = -2.0; x <= 2.0; x = x + 0.5f) {
-		for (float z = -2.0f; z <= 2.0f; z = z + 0.5f) {
-			coordSystem.push_back(glm::vec4(x, -1.0f, -2.0, 1.0f));
-			coordSystem.push_back(glm::vec4(x, -1.0f, 2.0, 1.0f));
-			coordSystem.push_back(glm::vec4(-2.0f, -1.0f, z, 1.0f));
-			coordSystem.push_back(glm::vec4(2.0f, -1.0f, z, 1.0f));
+	// Grid
+	gObject = new GeometryObject();
+	gObject->CreateGrid();
+	result = gObject->InitVertexBuffer(QGLBuffer::StaticDraw);
+	result = gObject->FillVertexBuffer();
 
-		}
-	}
-
-	coordVBO.create();
-	coordVBO.setUsagePattern(QGLBuffer::StaticDraw);
-	if (!coordVBO.bind()) {
-		qWarning() << "Could not bind vertex buffer";
-		return;
-	}
-	coordVBO.allocate(&(coordSystem[0]),
-			coordSystem.size() * sizeof(coordSystem[0]));
-	result = coordShader.link();
-	if (!result)
-		qWarning() << "Could not link shader program: " << coordShader.log();
+	// Sphere
+	sphere->CreateVertexData();
+	result = sphere->InitVertexBuffer(QGLBuffer::StaticDraw);
+	result = sphere->FillVertexBuffer();
 
 
-
-	// Load Sphere
-	createUnitSphere(5, 5);
-	/*
-	triangleVBO.create();
-	triangleVBO.setUsagePattern(QGLBuffer::DynamicDraw);
-	triangleVBO.allocate(triangleVP,3*sizeof(triangleVP[0]));
-	*/
 }
 
 void Viewport3D::resizeGL(int width, int height) {
@@ -126,15 +106,18 @@ void Viewport3D::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	coordVBO.bind();
+
+	gObject->BindVBuffer();
 	coordShader.bind();
 	coordShader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
 	coordShader.enableAttributeArray("vertex");
 	coordShader.setUniformValue("MVP", MVP);
 
-	glDrawArrays(GL_LINES, 0, coordSystem.size());
 
-	vertexBuffer.bind();
+	gObject->DrawArrays(GL_LINES,0);
+
+
+	sphere->BindVBuffer();
 	shader.bind();
 	shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
 	shader.enableAttributeArray("vertex");
@@ -142,19 +125,9 @@ void Viewport3D::draw() {
 	glm::vec4 eye4 = glm::vec4(eye.x(), eye.y(), eye.z(), 1.0f);
 	shader.setUniformValue("eye", eye4.x, eye4.y, eye4.z, eye4.w);
 
-	glDrawArrays(GL_QUADS, 0, sphereVP.size());
-/*
-	if(pointCount >= 2){
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	triangleVBO.bind();
-	coordShader.bind();
-	coordShader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
-	coordShader.enableAttributeArray("vertex");
 
-	glDrawArrays(GL_TRIANGLES,0,3);
-	}
-*/
+	sphere->DrawArrays(GL_QUADS,0);
+
 }
 
 void Viewport3D::update() {
@@ -184,51 +157,7 @@ void Viewport3D::update() {
 
 }
 
-void Viewport3D::createUnitSphere(int dtheta, int dphi) {
 
-	const float toRad = M_PI / 180.0f;
-	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
-		for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {
-			glm::vec4 a, b, c, d;
-			a.x = cos(theta * toRad) * cos(phi * toRad);
-			a.y = cos(theta * toRad) * sin(phi * toRad);
-			a.z = sin(theta * toRad);
-			a.w = 1.0f;
-
-			b.x = cos((theta + dtheta) * toRad) * cos(phi * toRad);
-			b.y = cos((theta + dtheta) * toRad) * sin(phi * toRad);
-			b.z = sin((theta + dtheta) * toRad);
-			b.w = 1.0f;
-
-			c.x = cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad);
-			c.y = cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad);
-			c.z = sin((theta + dtheta) * toRad);
-			c.w = 1.0f;
-
-			d.x = cos(theta * toRad) * cos((phi + dphi) * toRad);
-			d.y = cos(theta * toRad) * sin((phi + dphi) * toRad);
-			d.z = sin(theta * toRad);
-			d.w = 1.0f;
-
-			sphereVP.push_back(a);
-			sphereVP.push_back(b);
-			sphereVP.push_back(c);
-			sphereVP.push_back(d);
-
-		}
-	}
-	vertexBuffer.create();
-	vertexBuffer.setUsagePattern(QGLBuffer::StaticDraw);
-	if (!vertexBuffer.bind()) {
-		qWarning() << "Could not bind vertex buffer";
-		return;
-	}
-	vertexBuffer.allocate(&sphereVP[0], sphereVP.size() * sizeof(sphereVP[0]));
-	int result = shader.link();
-	if (!result)
-		qWarning() << "Could not link shader program: " << shader.log();
-
-}
 void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 
 	int width = this->width();

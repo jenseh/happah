@@ -2,8 +2,9 @@
 #define SPHERE_H_
 
 #include <glm/glm.hpp>
+#include "GeometryObject.h"
 
-class Sphere {
+class Sphere :public GeometryObject {
 public:
 	Sphere(glm::vec3 _center = glm::vec3(0.0f,0.0f,0.0f),float _radius = 1.0f);
 	virtual ~Sphere();
@@ -11,7 +12,7 @@ public:
 	float getRadius();
 	glm::vec3 getCenter();
 	glm::vec3 getHitpoint();
-
+	void CreateVertexData();
 private:
 	glm::vec3 center;
 	float radius;

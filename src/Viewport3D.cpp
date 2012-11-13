@@ -13,6 +13,8 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 	ProjectionMatrix.setToIdentity();
 	_modelMatrix.setToIdentity();
 	ViewMatrix.setToIdentity();
+	MV.setToIdentity();
+	MVP.setToIdentity();
 	zoomRad = 5.0f;
 	eye.setX(0.0f);
 	eye.setY(0.0f);
@@ -77,13 +79,13 @@ void Viewport3D::paintGL() {
 bool Viewport3D::initShaderPrograms() {
 	//load and compile Vertex Shader
 	bool result = shader.addShaderFromSourceFile(QGLShader::Vertex,
-			"./src/shader/phongVert.glsl");
+			"./src/shader/blinnphongVert.glsl");
 	if (!result)
 		qWarning() << shader.log();
 
 	//load and compile Fragment Shader
 	result = shader.addShaderFromSourceFile(QGLShader::Fragment,
-			"./src/shader/phongFrag.glsl");
+			"./src/shader/blinnphongFrag.glsl");
 	if (!result)
 		qWarning() << shader.log();
 
@@ -119,11 +121,14 @@ void Viewport3D::draw() {
 
 	sphere->BindVBuffer();
 	shader.bind();
-	shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
+	shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 32);
+	shader.setAttributeBuffer("normal",GL_FLOAT,32,4,32);
 	shader.enableAttributeArray("vertex");
+	shader.enableAttributeArray("normal");
 	shader.setUniformValue("MVP", MVP);
-	glm::vec4 eye4 = glm::vec4(eye.x(), eye.y(), eye.z(), 1.0f);
-	shader.setUniformValue("eye", eye4.x, eye4.y, eye4.z, eye4.w);
+	shader.setUniformValue("MV", MV);
+	shader.setUniformValue("normalMat",normalMat);
+	shader.setUniformValue("eye", eye);
 
 
 	sphere->DrawArrays(GL_QUADS,0);
@@ -154,7 +159,10 @@ void Viewport3D::update() {
 	//Update ModelViewProjection Matrix
 
 	MVP = ProjectionMatrix * ViewMatrix * _modelMatrix;
-
+	MV = _modelMatrix;
+	normalMat = _modelMatrix;
+	normalMat.inverted();
+	normalMat.transposed();
 }
 
 

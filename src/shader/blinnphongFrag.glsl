@@ -1,39 +1,45 @@
 #version 330 compatibility
 
+// TransformationsMatritzen
+uniform mat4 MVP,MV,normalMat;
 
-in vec4 normal;
-uniform vec4 vertexOut;
-uniform vec4 eye;
-layout(location = 0, index = 0) out vec4 fragColor;
+// KameraPosition
+uniform vec3 eye;
+
+
+// Output des VertexShaders
+in vec3 vNormal,vWorldPosition;
+
 
 
 
 void main( void)
 {
-	vec4 lightPosition[2];
-	vec4 ambient[2];
+	gl_FragColor = vec4(0.3f,0.1f,0.4f,1.0f);
 	
-		
-	lightPosition[0] = vec4(3.0f,5.0f,5.0f,1.0f);
-	ambient[0] = vec4(1.0f,0.0f,1.0f,1.0f);
+	// Lichtposition und Farbe sind hier FIX im Worldspace angegeben
 	
-	lightPosition[1] = vec4(-4.0f,-4.0f,-3.0f,1.0f);
-	ambient[1] = vec4(0.0f,1.0f,1.0f,1.0f);
+	vec3 lightPosition[2];
+	vec4 lightColor[2];
+	lightPosition[0] = vec3(5.0f,5.0f,5.0f);
+	lightPosition[1] = vec3(-5.0f,-5.0f,-5.0f);
+	lightColor[0] = vec4(0.4f,0.0f,0.4f,1.0f);  // Rotes Licht
+	lightColor[1] = vec4(0.0f,0.4f,0.4f,1.0f);	// Blaues Licht
 	
-	for (int i=0; i <2 ; i++){
+	// Blinn Phong Beleuchtung für jedes der Lichter
+	for(int i = 0; i < 2; i ++){
+		vec3 lightWS  = normalize(lightPosition[i] - vWorldPosition);	
+		vec3 viewWS   = normalize(eye - vWorldPosition);
+		vec3 halfwayWS = normalize(lightWS + viewWS);
+		float phong = 1.0f;
 	
-	vec4 lightWS = normalize(lightPosition[i]-vertexOut);
-	vec4 viewWS =  normalize(eye - vertexOut);
-	vec4 halfwayWS = normalize(lightWS + viewWS);
-	float phong = 10.0f;
+		float diffuse = max(0.0f, dot(lightWS,vNormal));
+		float specular = max(0.0f, pow(dot(halfwayWS,vNormal),phong));
 	
-	float diffuse = max(0.0f, dot(lightWS,normal));
-	float specular = max(0.0f, pow(dot(halfwayWS,normal),phong));
-
-	
-	gl_FragColor+= (diffuse + specular)*ambient[i];
+			
+	gl_FragColor += (specular+diffuse)*lightColor[i];	
 	
 	}
-	
+	//gl_FragColor = vec4(halfwayWS,1.0f);
 	
 }

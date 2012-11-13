@@ -1,7 +1,5 @@
-
 TEMPLATE = app
 TARGET = happah
-
 QT += core \
     gui \
     opengl
@@ -20,8 +18,7 @@ FORMS +=
 RESOURCES += Resources.qrc \
     Resources.qrc
 INCLUDEPATH += /usr/include
-OTHER_FILES += src/shader/phongFrag.glsl \
-    src/shader/phongVert.glsl \
+OTHER_FILES += src/shader/blinnphongFrag.glsl \
+    src/shader/blinnphongVert.glsl \
     src/shader/simpleFrag.glsl \
     src/shader/simpleVert.glsl
-

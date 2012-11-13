@@ -8,7 +8,7 @@ MainWindow::MainWindow() {
 	setWindowTitle("Happah");
 
 	QGLFormat glFormat;
-	glFormat.setVersion(4, 2);
+	glFormat.setVersion(3, 3);
 	glFormat.setProfile(QGLFormat::CompatibilityProfile);
 	glFormat.setSampleBuffers(true);
 	glFormat.setDoubleBuffer(true);

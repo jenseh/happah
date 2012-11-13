@@ -18,7 +18,7 @@ private:
 	QMatrix4x4 _modelMatrix;
 	QMatrix4x4 ViewMatrix;
 	QMatrix4x4 ProjectionMatrix;
-	QMatrix4x4 MVP;
+	QMatrix4x4 MVP,MV,normalMat;
 	QVector3D eye, center, up;
 	QGLShaderProgram shader, coordShader;
 	QGLBuffer vertexBuffer, coordVBO, triangleVBO;

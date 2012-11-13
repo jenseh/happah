@@ -70,31 +70,39 @@ void Sphere::CreateVertexData(){
 	const float toRad = M_PI / 180.0f;
 	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
 		for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {
-			glm::vec4 a, b, c, d;
+			glm::vec4 a, b, c, d,normA,normB,normC,normD;
 			a.x = cos(theta * toRad) * cos(phi * toRad);
 			a.y = cos(theta * toRad) * sin(phi * toRad);
 			a.z = sin(theta * toRad);
 			a.w = 1.0f;
+			normA = glm::normalize(a-glm::vec4(0.0f,0.0f,0.0f,1.0f));
 
 			b.x = cos((theta + dtheta) * toRad) * cos(phi * toRad);
 			b.y = cos((theta + dtheta) * toRad) * sin(phi * toRad);
 			b.z = sin((theta + dtheta) * toRad);
 			b.w = 1.0f;
+			normB = glm::normalize(b-glm::vec4(0.0f,0.0f,0.0f,1.0f));
 
 			c.x = cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad);
 			c.y = cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad);
 			c.z = sin((theta + dtheta) * toRad);
 			c.w = 1.0f;
+			normC = glm::normalize(c-glm::vec4(0.0f,0.0f,0.0f,1.0f));
 
 			d.x = cos(theta * toRad) * cos((phi + dphi) * toRad);
 			d.y = cos(theta * toRad) * sin((phi + dphi) * toRad);
 			d.z = sin(theta * toRad);
 			d.w = 1.0f;
+			normD = glm::normalize(d-glm::vec4(0.0f,0.0f,0.0f,1.0f));
 
 			DataPushback(a);
+			DataPushback(normA);
 			DataPushback(b);
+			DataPushback(normB);
 			DataPushback(c);
+			DataPushback(normC);
 			DataPushback(d);
+			DataPushback(normD);
 
 		}
 	}

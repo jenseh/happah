@@ -16,10 +16,14 @@ private:
     float radius;
     float length;
     int toothCount;
+    std::vector<glm::vec2> heightProfilePartition;
     std::vector<glm::vec2> heightProfile;
 
-    const static int SEGMENT_COUNT = 500;
+    const static int SEGMENT_COUNT = 100;
 
+    void createSinePartition();
+    void createApproximatedPartition();
+    void createHeightProfilePartition();
     void createHeightProfile();
 };
 

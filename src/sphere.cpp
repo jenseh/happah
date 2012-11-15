@@ -71,29 +71,29 @@ void Sphere::CreateVertexData(){
 	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
 		for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {
 			glm::vec4 a, b, c, d,normA,normB,normC,normD;
-			a.x = cos(theta * toRad) * cos(phi * toRad);
-			a.y = cos(theta * toRad) * sin(phi * toRad);
-			a.z = sin(theta * toRad);
+            a.x = center.x + cos(theta * toRad) * cos(phi * toRad);
+            a.y = center.y + cos(theta * toRad) * sin(phi * toRad);
+            a.z = center.z + sin(theta * toRad);
 			a.w = 1.0f;
-			normA = glm::normalize(a-glm::vec4(0.0f,0.0f,0.0f,1.0f));
+            normA = glm::normalize(a-glm::vec4(center, 1.0f));
 
-			b.x = cos((theta + dtheta) * toRad) * cos(phi * toRad);
-			b.y = cos((theta + dtheta) * toRad) * sin(phi * toRad);
-			b.z = sin((theta + dtheta) * toRad);
+            b.x = center.x + cos((theta + dtheta) * toRad) * cos(phi * toRad);
+            b.y = center.y + cos((theta + dtheta) * toRad) * sin(phi * toRad);
+            b.z = center.z + sin((theta + dtheta) * toRad);
 			b.w = 1.0f;
-			normB = glm::normalize(b-glm::vec4(0.0f,0.0f,0.0f,1.0f));
+            normB = glm::normalize(b-glm::vec4(center, 1.0f));
 
-			c.x = cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad);
-			c.y = cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad);
-			c.z = sin((theta + dtheta) * toRad);
+            c.x = center.x + cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad);
+            c.y = center.y + cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad);
+            c.z = center.z + sin((theta + dtheta) * toRad);
 			c.w = 1.0f;
-			normC = glm::normalize(c-glm::vec4(0.0f,0.0f,0.0f,1.0f));
+            normC = glm::normalize(c-glm::vec4(center, 1.0f));
 
-			d.x = cos(theta * toRad) * cos((phi + dphi) * toRad);
-			d.y = cos(theta * toRad) * sin((phi + dphi) * toRad);
-			d.z = sin(theta * toRad);
+            d.x = center.x + cos(theta * toRad) * cos((phi + dphi) * toRad);
+            d.y = center.y + cos(theta * toRad) * sin((phi + dphi) * toRad);
+            d.z = center.z + sin(theta * toRad);
 			d.w = 1.0f;
-			normD = glm::normalize(d-glm::vec4(0.0f,0.0f,0.0f,1.0f));
+            normD = glm::normalize(d-glm::vec4(center, 1.0f));
 
 			DataPushback(a);
 			DataPushback(normA);

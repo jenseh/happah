@@ -28,8 +28,8 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 	pointCount = 0;
 	theta = 0;
 	phi = 0;
-	sphere = new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
-    gear = new Gear(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 0.2f, 20);
+    sphere = new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
+    gear = new Gear(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, 20);
 }
 
 void Viewport3D::initializeGL() {
@@ -178,9 +178,7 @@ void Viewport3D::update() {
 
 	MVP = ProjectionMatrix * ViewMatrix * _modelMatrix;
 	MV = _modelMatrix;
-	normalMat = _modelMatrix;
-	normalMat.inverted();
-	normalMat.transposed();
+    normalMat = _modelMatrix.inverted().transposed();
 }
 
 

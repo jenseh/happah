@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "sphere.h"
+#include "Gear.h"
 #include "GeometryObject.h"
 
 using namespace std;
@@ -28,6 +29,7 @@ private:
 	QPoint mousePos;
 	int pointCount;
 	Sphere* sphere;
+    Gear* gear;
 	float zoomRad, theta, phi;
 	GeometryObject* gObject;
 

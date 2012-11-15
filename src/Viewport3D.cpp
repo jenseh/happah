@@ -29,7 +29,7 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 	theta = 0;
 	phi = 0;
 	sphere = new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
-
+    gear = new Gear(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 0.2f, 20);
 }
 
 void Viewport3D::initializeGL() {
@@ -58,7 +58,10 @@ void Viewport3D::initializeGL() {
 	result = sphere->InitVertexBuffer(QGLBuffer::StaticDraw);
 	result = sphere->FillVertexBuffer();
 
-
+    // Gear
+    gear->CreateVertexData();
+    result = gear->InitVertexBuffer(QGLBuffer::StaticDraw);
+    result = gear->FillVertexBuffer();
 }
 
 void Viewport3D::resizeGL(int width, int height) {
@@ -131,8 +134,23 @@ void Viewport3D::draw() {
 	shader.setUniformValue("eye", eye);
 
 
-	sphere->DrawArrays(GL_QUADS,0);
+    //sphere->DrawArrays(GL_QUADS,0);
 
+
+    // Draw gear
+    gear->BindVBuffer();
+    shader.bind();
+    shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 32);
+    shader.setAttributeBuffer("normal", GL_FLOAT, 32, 4, 32);
+    shader.enableAttributeArray("vertex");
+    shader.enableAttributeArray("normal");
+    shader.setUniformValue("MVP", MVP);
+    shader.setUniformValue("MV", MV);
+    shader.setUniformValue("normalMat",normalMat);
+    shader.setUniformValue("eye", eye);
+
+
+    gear->DrawArrays(GL_QUADS, 0);
 }
 
 void Viewport3D::update() {
@@ -170,7 +188,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 
 	int width = this->width();
 	int height = this->height();
-	float stepSize = 50;
+    float stepSize = 150.0f;
 
 	float dx = (float) (event->x() - mousePos.x()) / width;
 	float dy = (float) (event->y() - mousePos.y()) / height;

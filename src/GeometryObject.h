@@ -17,21 +17,34 @@
 class GeometryObject: public QObject {
 Q_OBJECT
 public:
-	GeometryObject(QWidget* parent = 0);
+    GeometryObject();
 	virtual ~GeometryObject();
-	int InitVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
-	int FillVertexBuffer();
 	void CreateGrid();
-	void DrawArrays(int mode,int stride);
 	int BindVBuffer();
 	void DataPushback(glm::vec4 data);
-	void CreateVertexData();
 
+    // For drawing
+    void init(QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix);
+    void draw(QGLShaderProgram *shader);
+    void updateView(QMatrix4x4 _viewMatrix, QVector3D eye);
+    void updateProjectionMatrix(QMatrix4x4 _projectionMatrix);
 
-private:
+    void CreateVertexData();
+    int InitVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
+    int FillVertexBuffer();
 
-	QGLBuffer 		 vertexBuffer;
+    // Transformations
+    void rotate(float angle, float x, float y, float z);
+    void translate(float x, float y, float z);
+protected:
+    QGLBuffer vertexBuffer;
 	std::vector<glm::vec4> vertexData;
+
+    // For drawing
+    QMatrix4x4 projectionMatrix, viewMatrix, MVP, MV; //redundant information to avoid repeated computation
+    QMatrix4x4 modelMatrix;
+    QMatrix3x3 normalMatrix;
+    QVector3D eye;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

@@ -9,6 +9,7 @@
 
 #include "sphere.h"
 #include "Gear.h"
+#include "Grid.h"
 #include "GeometryObject.h"
 
 using namespace std;
@@ -16,10 +17,8 @@ using namespace std;
 class Viewport3D: public QGLWidget {
 Q_OBJECT
 private:
-	QMatrix4x4 _modelMatrix;
 	QMatrix4x4 ViewMatrix;
 	QMatrix4x4 ProjectionMatrix;
-	QMatrix4x4 MVP,MV,normalMat;
 	QVector3D eye, center, up;
 	QGLShaderProgram shader, coordShader;
 	QGLBuffer vertexBuffer, coordVBO, triangleVBO;
@@ -28,10 +27,14 @@ private:
 	glm::vec4 triangleVP[3];
 	QPoint mousePos;
 	int pointCount;
-	Sphere* sphere;
-    Gear* gear;
 	float zoomRad, theta, phi;
-	GeometryObject* gObject;
+
+    // GeometryObjects
+    vector<GeometryObject> *geometryObjects;
+    Grid* grid;
+    Sphere* sphere;
+    Gear* gear1;
+    Gear* gear2;
 
 public:
 	Viewport3D(const QGLFormat& format, QWidget* parent = 0);
@@ -44,12 +47,19 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseDoubleClickEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
-	void draw();
-	void update();
+    QTimer *timer;
+    const static int WAIT_TIME = 40;
+
+    void draw();
+    void updateView();
 	bool initShaderPrograms();
 	void setZoom(float zoom);
+
+private slots:
+    void update();
 };
 
 #endif

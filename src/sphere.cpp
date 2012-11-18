@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Sphere::Sphere(glm::vec3 _center,float _radius) {
+Sphere::Sphere(glm::vec3 _center,float _radius) : GeometryObject(){
 	center = _center;
 	radius = _radius;
 
@@ -65,9 +65,9 @@ glm::vec3 Sphere::getHitpoint(){
 }
 
 void Sphere::CreateVertexData(){
-	int dtheta = 5;
-	int dphi = 5;
-	const float toRad = M_PI / 180.0f;
+    int dtheta = 1;
+    int dphi = 1;
+    const float toRad = M_PI / 180.0f;
 	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
 		for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {
 			glm::vec4 a, b, c, d,normA,normB,normC,normD;
@@ -95,14 +95,14 @@ void Sphere::CreateVertexData(){
 			d.w = 1.0f;
             normD = glm::normalize(d-glm::vec4(center, 1.0f));
 
-			DataPushback(a);
-			DataPushback(normA);
-			DataPushback(b);
-			DataPushback(normB);
-			DataPushback(c);
-			DataPushback(normC);
-			DataPushback(d);
-			DataPushback(normD);
+            DataPushback(a);
+            DataPushback(normA);
+            DataPushback(b);
+            DataPushback(normB);
+            DataPushback(c);
+            DataPushback(normC);
+            DataPushback(d);
+            DataPushback(normD);
 
 		}
 	}

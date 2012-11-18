@@ -4,11 +4,12 @@
 
 using namespace std;
 
-Gear::Gear(glm::vec3 _axisStart, float _radius, float _length, int _toothCount) {
-    axisStart = _axisStart;
+// Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
+Gear::Gear(float _radius, float _length, int _toothCount, float _heightFactor) : GeometryObject(){
     radius = _radius;
     length = _length;
     toothCount = _toothCount;
+    heightFactor = _heightFactor;
 }
 
 Gear::~Gear() {
@@ -29,7 +30,7 @@ void Gear::createSinePartition() {
 }
 
 void Gear::createApproximatedPartition() {
-    const int segmentsPerLine = SEGMENT_COUNT / 5;
+    const int segmentsPerLine = SEGMENT_COUNT / 4;
 
     float horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
     float flankX = 0.15f;
@@ -96,57 +97,83 @@ void Gear::createHeightProfile() {
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 void Gear::CreateVertexData(){
-    float dz = length;
+    float dz = length / Z_DETAIL_LEVEL;
     const float toRad = M_PI / 180.0f;
-    const float heightFactor = 0.2f;
+    float innerRadius = radius * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
 
+
+    // precompute sin and cos of angles
+    float cosSegment[heightProfile.size() + 1];
+    float sinSegment[heightProfile.size() + 1];
+    float height[heightProfile.size() + 1];
+    float cosHeight[heightProfile.size() + 1];
+    float sinHeight[heightProfile.size() + 1];
+
+    for (unsigned int segmentNum = 0; segmentNum < heightProfile.size(); segmentNum++) {
+        float phi = heightProfile[segmentNum].x * 360.0f;
+        cosSegment[segmentNum] = cos(phi * toRad);
+        sinSegment[segmentNum] = sin(phi * toRad);
+        height[segmentNum] = radius + heightProfile[segmentNum].y * heightFactor * radius;
+        cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
+        sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
+    }
+    // Insert first value again to close the mesh
+    cosSegment[heightProfile.size()] = cosSegment[0];
+    sinSegment[heightProfile.size()] = sinSegment[0];
+    height[heightProfile.size()] = height[0];
+    cosHeight[heightProfile.size()] = cosHeight[0];
+    sinHeight[heightProfile.size()] = sinHeight[0];
+
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
-    float z = 0.0f;
+    for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
+        float z = i * dz;
         for (unsigned int segmentNum = 0; segmentNum < heightProfile.size(); segmentNum++) {
-            float phi = heightProfile[segmentNum].x * 360.0f;
-            float nextPhi = heightProfile[segmentNum + 1].x * 360.0f;
 
-            float height = heightProfile[segmentNum].y * heightFactor * radius;
-            float nextHeight = heightProfile[segmentNum + 1].y * heightFactor * radius;
+            glm::vec4 a, b, c, d, normNext, norm;
 
-            glm::vec4 a, b, c, d, normA, normB, normC, normD;
-
-            a.x = axisStart.x + cos(nextPhi * toRad) * (radius + nextHeight);
-            a.y = axisStart.y + sin(nextPhi * toRad) * (radius + nextHeight);
-            a.z = axisStart.z + z;
+            a.x = cosHeight[segmentNum + 1];
+            a.y = sinHeight[segmentNum + 1];
+            a.z = z;
             a.w = 1.0f;
-            normA = glm::normalize(a-glm::vec4(axisStart, 1.0f));
 
-            b.x = axisStart.x + cos(phi * toRad) * (radius + height);
-            b.y = axisStart.y + sin(phi * toRad) * (radius + height);
-            b.z = axisStart.z + z;
+            b.x = cosHeight[segmentNum];
+            b.y = sinHeight[segmentNum];
+            b.z = z;
             b.w = 1.0f;
-            normB = glm::normalize(b-glm::vec4(axisStart, 1.0f));
 
-            c.x = axisStart.x + cos(phi * toRad) * (radius + height);
-            c.y = axisStart.y + sin(phi * toRad) * (radius + height);
-            c.z = axisStart.z + z + dz;
+            c.x = cosHeight[segmentNum];
+            c.y = sinHeight[segmentNum];
+            c.z = z + dz;
             c.w = 1.0f;
-            normC = glm::normalize(c-glm::vec4(axisStart + glm::vec3(0.0f, 0.0f, dz), 1.0f));
 
-            d.x = axisStart.x + cos(nextPhi * toRad) * (radius + nextHeight);
-            d.y = axisStart.y + sin(nextPhi * toRad) * (radius + nextHeight);
-            d.z = axisStart.z + z + dz;
+            d.x = cosHeight[segmentNum + 1];
+            d.y = sinHeight[segmentNum + 1];
+            d.z = z + dz;
             d.w = 1.0f;
-            normD = glm::normalize(d-glm::vec4(axisStart + glm::vec3(0.0f, 0.0f, dz), 1.0f));
+
+            // compute the 2 normals (each used twice
+            normNext = glm::vec4(glm::normalize(
+                                 glm::cross(glm::vec3(0.0f, 0.0f, c.z-b.z),
+                                            glm::vec3(cosHeight[segmentNum + 2] - a.x, sinHeight[segmentNum + 2] - a.y, 0.0f))
+                                            ), 1.0f);
+            norm = glm::vec4(glm::normalize(
+                                 glm::cross(glm::vec3(0.0f, 0.0f, c.z-b.z),
+                                            glm::vec3(a.x-b.x, a.y-b.y, 0.0f))
+                                            ), 1.0f);
 
             DataPushback(a);
-            DataPushback(normA);
+            DataPushback(normNext);
             DataPushback(b);
-            DataPushback(normB);
+            DataPushback(norm);
             DataPushback(c);
-            DataPushback(normC);
+            DataPushback(norm);
             DataPushback(d);
-            DataPushback(normD);
+            DataPushback(normNext);
+        }
     }
 
     // draw the front and back of the gear
@@ -154,50 +181,47 @@ void Gear::CreateVertexData(){
     // circle's center as a common point. for nicer highlights it
     // might be better to chose vertices in a more clever way.
     int i = 0;
-    for (z = 0.0f; i < 2; i++, z += dz) {
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile.size() - 1; segmentNum++) {
-            float phi = heightProfile[segmentNum].x * 360.0f;
-            float nextPhi = heightProfile[segmentNum + 1].x * 360.0f;
-            float nextNextPhi = heightProfile[segmentNum + 2].x * 360.0f;
+    for (float z = 0.0f; i < 2; i++, z += length) {
+        for (unsigned int segmentNum = 0; segmentNum < heightProfile.size(); segmentNum++) {
+            glm::vec4 a, b, c, d, norm;
 
-            float height = heightProfile[segmentNum].y * heightFactor * radius;
-            float nextHeight = heightProfile[segmentNum + 1].y * heightFactor * radius;
-            float nextNextHeight = heightProfile[segmentNum + 2].y * heightFactor * radius;
-            glm::vec4 a, b, c, d, normA, normB, normC, normD;
-
-            a.x = axisStart.x + cos(phi * toRad) * (radius + height);
-            a.y = axisStart.y + sin(phi * toRad) * (radius + height);
-            a.z = axisStart.z + z;
+            a.x = cosHeight[segmentNum];
+            a.y = sinHeight[segmentNum];
+            a.z = z;
             a.w = 1.0f;
-            normA = glm::normalize(a-glm::vec4(axisStart + glm::vec3(0.0f, 0.0f, dz),1.0f));
 
-            b.x = axisStart.x + cos(nextPhi * toRad) * (radius + nextHeight);
-            b.y = axisStart.y + sin(nextPhi * toRad) * (radius + nextHeight);
-            b.z = axisStart.z + z;
+            b.x = cosHeight[segmentNum + 1];
+            b.y = sinHeight[segmentNum + 1];
+            b.z = z;
             b.w = 1.0f;
-            normB = glm::normalize(b-glm::vec4(axisStart + glm::vec3(0.0f, 0.0f, dz),1.0f));
 
-            c.x = axisStart.x + cos(nextNextPhi * toRad) * (radius + nextNextHeight);
-            c.y = axisStart.y + sin(nextNextPhi * toRad) * (radius + nextNextHeight);
-            c.z = axisStart.z + z;
+            c.x = cosSegment[segmentNum + 1] * innerRadius;
+            c.y = sinSegment[segmentNum + 1] * innerRadius;
+            c.z = z;
             c.w = 1.0f;
-            normC = glm::normalize(c-glm::vec4(axisStart + glm::vec3(0.0f, 0.0f, dz),1.0f));
 
-            d.x = axisStart.x;
-            d.y = axisStart.y;
-            d.z = axisStart.z + z;
+            d.x = cosSegment[segmentNum] * innerRadius;
+            d.y = sinSegment[segmentNum] * innerRadius;
+            d.z = z;
             d.w = 1.0f;
-            normD = glm::normalize(d-glm::vec4(axisStart + glm::vec3(0.0f, 0.0f, dz),1.0f));
+            norm = i == 0 ? glm::vec4(0.0f, 0.0f, 1.0, 1.0) : glm::vec4(0.0f, 0.0f, -1.0, 1.0);
 
             DataPushback(a);
-            DataPushback(normA);
+            DataPushback(norm);
             DataPushback(b);
-            DataPushback(normB);
+            DataPushback(norm);
             DataPushback(c);
-            DataPushback(normC);
+            DataPushback(norm);
             DataPushback(d);
-            DataPushback(normD);
+            DataPushback(norm);
         }
     }
 }
 
+//nice formula for the sides            d.y = sin((int)((phi+45) * 4 / 360) * M_PI / 2.0f);
+
+//            cout << normA.x << ", " << normA.y << ", " << normA.z << endl;
+//            cout << normB.x << ", " << normB.y << ", " << normB.z << endl;
+//            cout << normC.x << ", " << normC.y << ", " << normC.z << endl;
+//            cout << normD.x << ", " << normD.y << ", " << normD.z << endl;
+//            cout << "-----" << endl;

@@ -2,6 +2,7 @@
 #include <QtGui>
 #include <QGLBuffer>
 #include <cmath>
+#include <iostream>
 
 #include "Viewport3D.h"
 
@@ -10,11 +11,8 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 				QGLBuffer::VertexBuffer),
 				triangleVBO(QGLBuffer::VertexBuffer){
 
-	ProjectionMatrix.setToIdentity();
-	_modelMatrix.setToIdentity();
-	ViewMatrix.setToIdentity();
-	MV.setToIdentity();
-	MVP.setToIdentity();
+    ProjectionMatrix.setToIdentity();
+    ViewMatrix.setToIdentity();
 	zoomRad = 5.0f;
 	eye.setX(0.0f);
 	eye.setY(0.0f);
@@ -27,13 +25,10 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 	up.setZ(0.0f);
 	pointCount = 0;
 	theta = 0;
-	phi = 0;
-    sphere = new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
-    gear = new Gear(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, 20);
+    phi = 0;
 }
 
 void Viewport3D::initializeGL() {
-	int result;
 	QGLFormat glFormat = QGLWidget::format();
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
@@ -45,23 +40,52 @@ void Viewport3D::initializeGL() {
 	if (!initShaderPrograms())
 		return;
 
-	// Initialize your Geometry Objects here
+    // Initialize your Geometry Objects here
 
-	// Grid
-	gObject = new GeometryObject();
-	gObject->CreateGrid();
-	result = gObject->InitVertexBuffer(QGLBuffer::StaticDraw);
-	result = gObject->FillVertexBuffer();
+    // Grid
+    grid = new Grid();
+    sphere = new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    gear1 = new Gear(1.0f, 1.0f, 20);
+    gear2 = new Gear(0.25f, 1.0f, 5, 0.6f);
 
-	// Sphere
-	sphere->CreateVertexData();
-	result = sphere->InitVertexBuffer(QGLBuffer::StaticDraw);
-	result = sphere->FillVertexBuffer();
+    grid->init(ProjectionMatrix, ViewMatrix);
+    sphere->init(ProjectionMatrix, ViewMatrix);
+    gear1->init(ProjectionMatrix, ViewMatrix);
+    gear2->init(ProjectionMatrix, ViewMatrix);
+
+    gear2->translate(1.5f, 0.0f, 0.0f);
+    gear2->rotate(45.0f, 0.0f, 0.0f, 1.0f);
+
+    // Grid
+    grid->CreateVertexData();
+    grid->InitVertexBuffer(QGLBuffer::StaticDraw);
+    grid->FillVertexBuffer();
+
+    // Sphere
+    sphere->CreateVertexData();
+    sphere->InitVertexBuffer(QGLBuffer::StaticDraw);
+    sphere->FillVertexBuffer();
 
     // Gear
-    gear->CreateVertexData();
-    result = gear->InitVertexBuffer(QGLBuffer::StaticDraw);
-    result = gear->FillVertexBuffer();
+    gear1->CreateVertexData();
+    gear1->InitVertexBuffer(QGLBuffer::StaticDraw);
+    gear1->FillVertexBuffer();
+
+    gear2->CreateVertexData();
+    gear2->InitVertexBuffer(QGLBuffer::StaticDraw);
+    gear2->FillVertexBuffer();
+
+    // TODO: Why does this not work?
+//    geometryObjects = new vector<GeometryObject>();
+//    geometryObjects->push_back((GeometryObject) *grid);
+//    geometryObjects->push_back((GeometryObject) *sphere);
+//    geometryObjects->push_back((GeometryObject) *gear1);
+//    geometryObjects->push_back((GeometryObject) *gear2);
+
+    // Setup and start a timer
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(WAIT_TIME);
 }
 
 void Viewport3D::resizeGL(int width, int height) {
@@ -69,14 +93,17 @@ void Viewport3D::resizeGL(int width, int height) {
 	float ratio = (float) width / (float) height;
 	ProjectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
 
+    grid->updateProjectionMatrix(ProjectionMatrix);
+    sphere->updateProjectionMatrix(ProjectionMatrix);
+    gear1->updateProjectionMatrix(ProjectionMatrix);
+    gear2->updateProjectionMatrix(ProjectionMatrix);
 }
 
 void Viewport3D::paintGL() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	update();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    
+    updateView();
 
-	draw();
-
+    draw();
 }
 
 bool Viewport3D::initShaderPrograms() {
@@ -110,50 +137,28 @@ bool Viewport3D::initShaderPrograms() {
 void Viewport3D::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Draw grid
+    grid->draw(&coordShader);
 
+    // Draw sphere
+    sphere->draw(&shader);
 
-	gObject->BindVBuffer();
-	coordShader.bind();
-	coordShader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
-	coordShader.enableAttributeArray("vertex");
-	coordShader.setUniformValue("MVP", MVP);
-
-
-	gObject->DrawArrays(GL_LINES,0);
-
-
-	sphere->BindVBuffer();
-	shader.bind();
-	shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 32);
-	shader.setAttributeBuffer("normal",GL_FLOAT,32,4,32);
-	shader.enableAttributeArray("vertex");
-	shader.enableAttributeArray("normal");
-	shader.setUniformValue("MVP", MVP);
-	shader.setUniformValue("MV", MV);
-	shader.setUniformValue("normalMat",normalMat);
-	shader.setUniformValue("eye", eye);
-
-
-    //sphere->DrawArrays(GL_QUADS,0);
-
-
-    // Draw gear
-    gear->BindVBuffer();
-    shader.bind();
-    shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 32);
-    shader.setAttributeBuffer("normal", GL_FLOAT, 32, 4, 32);
-    shader.enableAttributeArray("vertex");
-    shader.enableAttributeArray("normal");
-    shader.setUniformValue("MVP", MVP);
-    shader.setUniformValue("MV", MV);
-    shader.setUniformValue("normalMat",normalMat);
-    shader.setUniformValue("eye", eye);
-
-
-    gear->DrawArrays(GL_QUADS, 0);
+    // Draw gears
+    gear1->draw(&shader);
+    gear2->draw(&shader);
 }
 
+// use this method for animations (model modification + draw updates
 void Viewport3D::update() {
+    // modify the model
+    gear1->rotate(1.0f, 0.0f, 0.0f, 1.0f);
+    gear2->rotate(-4.0f, 0.0f, 0.0f, 1.0f);
+
+    // draw the scene again
+    updateGL();
+}
+
+void Viewport3D::updateView() {
 
 	//Update ViewMatrix
 	QMatrix4x4 tViewMatrix;
@@ -168,17 +173,16 @@ void Viewport3D::update() {
 	LookatMatrix.lookAt(eye, center, up);
 	ViewMatrix = LookatMatrix;
 
-	//Update ModelMatrix
-	QMatrix4x4 tModelMatrix;
-	tModelMatrix.setToIdentity();
-	tModelMatrix.scale(1.0f, 1.0f, 1.0f);
-	_modelMatrix = tModelMatrix;
+    // Update MV and MVP
+//    for (unigned int i = 0; i < geometryObjects->size(); i++)
+//    {
+//        geometryObjects[i]->updateView(ViewMatrix, eye);
+//    }
 
-	//Update ModelViewProjection Matrix
-
-	MVP = ProjectionMatrix * ViewMatrix * _modelMatrix;
-	MV = _modelMatrix;
-    normalMat = _modelMatrix.inverted().transposed();
+    gear1->updateView(ViewMatrix, eye);
+    gear2->updateView(ViewMatrix, eye);
+    sphere->updateView(ViewMatrix, eye);
+    grid->updateView(ViewMatrix, eye);
 }
 
 
@@ -191,7 +195,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 	float dx = (float) (event->x() - mousePos.x()) / width;
 	float dy = (float) (event->y() - mousePos.y()) / height;
 
-	if (event->buttons() == 2) {
+    if (event->buttons() == Qt::RightButton) {
 
 		if (theta < 360) {
 			theta = theta + (stepSize * dx);
@@ -207,6 +211,8 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 		eye.setX(zoomRad * (sin(thetaRad) * cos(phiRad))); //- sin(dx)*cos(dy)));
 		eye.setY(zoomRad * (sin(thetaRad) * sin(phiRad))); //+ sin(dx)*cos (dy)));
 		eye.setZ(zoomRad * (cos(thetaRad))); //*cos(dy)));
+
+        updateView();
 		updateGL();
 	}
 
@@ -215,8 +221,13 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void Viewport3D::mousePressEvent(QMouseEvent *event) {
-	mousePos = event->pos();
+    if (event->buttons() == Qt::LeftButton) {
+        // do something
+    } else if (event->buttons() == Qt::RightButton) {
+        mousePos = event->pos();
+    }
 }
+
 void Viewport3D::wheelEvent(QWheelEvent *event) {
 	float degrees = event->delta() / 8;
 	float steps = degrees / 15;
@@ -295,5 +306,10 @@ void Viewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
 
 		}
 	//	triangleVBO.write(0,triangleVP,3);
-	}
+    }
+}
+
+void Viewport3D::keyPressEvent(QKeyEvent *event) {
+    // TODO: Why does this not work?
+    cout << "Key: " << event->key() << endl;
 }

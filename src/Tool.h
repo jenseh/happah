@@ -6,14 +6,14 @@
 
 #include "Component.h"
 
-class Tool : public QObject {
-Q_OBJECT
+class Tool: public QObject {
+	Q_OBJECT
 
 public:
 	QPushButton* toolButton;
 	QWidget* toolSettings;
 
-signals:
+	signals:
 	void emitComponent( Component* component );
 
 public:

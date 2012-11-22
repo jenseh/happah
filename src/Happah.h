@@ -6,7 +6,7 @@
 #include "MainWindow.h"
 
 class Happah: public QApplication {
-Q_OBJECT
+	Q_OBJECT
 private:
 	MainWindow _window;
 public:

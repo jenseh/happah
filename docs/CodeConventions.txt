@@ -1,0 +1,9 @@
+The following should be a minimum convention for how to write the code in Happah. All aspects listed here are still to be discussed:
+
+Variables:
+- All non-final variables are written in camel-case.
+- All class variables should begin with an underscore (_). All method parameters should not.
+- Variable names should begin with a non-capital letter.
+
+Classes:
+- Class names should begin with a capital letter and proceed in camel-case (except for main).

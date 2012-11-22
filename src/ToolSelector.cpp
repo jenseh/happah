@@ -11,8 +11,8 @@ ToolSelector::ToolSelector(QWidget* parent) {
 	currToolID = 0;
 
 	settingsWidgetStack = new QStackedWidget;
-	settingsWidgetStack->addWidget( new QWidget );
-	
+	settingsWidgetStack->addWidget(new QWidget);
+
 	buttonGroup = new QButtonGroup(this);
 	connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toolSelected(int)));
 
@@ -27,15 +27,16 @@ ToolSelector::ToolSelector(QWidget* parent) {
 	setLayout(vBox);
 }
 
-ToolSelector::~ToolSelector() {}
-
-QWidget* ToolSelector::getSettingsWidget() {
-	 return settingsWidgetStack;
+ToolSelector::~ToolSelector() {
 }
 
-void ToolSelector::addTool( Tool* tool ) {
+QWidget* ToolSelector::getSettingsWidget() {
+	return settingsWidgetStack;
+}
 
-	toolList.append( tool );
+void ToolSelector::addTool(Tool* tool) {
+
+	toolList.append(tool);
 
 	int row = (toolCount / buttonsPerRow);
 	int col = (toolCount % buttonsPerRow);
@@ -44,25 +45,25 @@ void ToolSelector::addTool( Tool* tool ) {
 	tool->toolButton->setCheckable(true);
 //	toolButton->setParent(this);
 	buttonGroup->addButton(tool->toolButton, toolCount);
-	selectorGrid->addWidget( tool->toolButton, row, col );
+	selectorGrid->addWidget(tool->toolButton, row, col);
 
-	settingsWidgetStack->addWidget( tool->toolSettings );
+	settingsWidgetStack->addWidget(tool->toolSettings);
 
 	toolCount += 1;
 }
 
-void ToolSelector::toolSelected( int toolID ) {
-	settingsWidgetStack->setCurrentIndex( toolID + 1 );
+void ToolSelector::toolSelected(int toolID) {
+	settingsWidgetStack->setCurrentIndex(toolID + 1);
 
 	toolList[currToolID]->disconnect( SIGNAL(emitComponent( Component* )) );
-	connect( toolList[toolID], SIGNAL(emitComponent( Component* )), 
+	connect( toolList[toolID], SIGNAL(emitComponent( Component* )),
 			this, SLOT(newComponent( Component* )) );
 	currToolID = toolID;
-	
+
 //	QTextStream out(stdout);
 //	out << "Button " << toolID << endl;
 }
 
-void ToolSelector::newComponent( Component* component ) {
-	emit emitComponent( component );
+void ToolSelector::newComponent(Component* component) {
+	emit emitComponent(component);
 }

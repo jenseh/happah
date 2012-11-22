@@ -8,3 +8,10 @@ Tool::Tool() {
 Tool::~Tool() {
 }
 
+QPushButton* Tool::getToolButton() {
+    return toolButton;
+}
+
+QWidget* Tool::getToolSettings() {
+    return toolSettings;
+}

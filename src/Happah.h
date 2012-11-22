@@ -7,11 +7,14 @@
 
 class Happah: public QApplication {
 	Q_OBJECT
-private:
-	MainWindow _window;
+
 public:
 	Happah(int & argc, char ** argv);
 	virtual ~Happah();
+
+private:
+	MainWindow window_;
+
 };
 
 #endif

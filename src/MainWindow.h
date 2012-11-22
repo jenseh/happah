@@ -13,12 +13,6 @@
 class MainWindow: public QMainWindow {
 	Q_OBJECT
 
-private:
-	QMenu* viewMenu;
-	ComponentContainer* componentContainer;
-	ToolSelector* toolSelector;
-	EditorScene* scene;
-
 public:
 	static const int DEFAULT_WIDTH = 1024;
 	static const int DEFAULT_HEIGHT = 768;
@@ -33,6 +27,11 @@ private:
 	void createTools();
 	void createContainer();
 	//void createDockWindows();
+
+	QMenu* viewMenu_;
+	ComponentContainer* componentContainer_;
+	ToolSelector* toolSelector_;
+	EditorScene* scene_;
 };
 
 #endif

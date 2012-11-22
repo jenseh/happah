@@ -9,10 +9,6 @@
 
 class BSplineComponent: public Component {
 
-private:
-	QLine line;
-	QRect bRect;
-
 public:
 	BSplineComponent();
 	~BSplineComponent();
@@ -22,6 +18,9 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 			QWidget *widget);
 
+private:
+	QLine line_;
+	QRect bRect_;
 };
 
 #endif // BSPLINECOMPONENT_H

@@ -4,14 +4,14 @@
 #include "SplineTool.h"
 
 SplineTool::SplineTool() {
-	toolButton->setText("S");
+    getToolButton()->setText("S");
 
 	QVBoxLayout* vbox = new QVBoxLayout();
 
 	QLabel* label = new QLabel("Spline Settings");
 	vbox->addWidget(label);
 
-	toolSettings->setLayout(vbox);
+    getToolSettings()->setLayout(vbox);
 }
 
 SplineTool::~SplineTool() {

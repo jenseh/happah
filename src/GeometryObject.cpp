@@ -7,12 +7,12 @@
 
 #include "GeometryObject.h"
 
-GeometryObject::GeometryObject(QMatrix4x4 *_projectionMatrix,
-		QMatrix4x4 *_viewMatrix, QVector3D* _camPos) :
+GeometryObject::GeometryObject(QMatrix4x4* projectionMatrix,
+        QMatrix4x4* viewMatrix, QVector3D* cameraPosition) :
 		Component() {
-	viewMatrix = _viewMatrix;
-	projectionMatrix = _projectionMatrix;
-	camPos = _camPos;
+    viewMatrix_ = viewMatrix;
+    projectionMatrix_ = projectionMatrix;
+    cameraPosition_ = cameraPosition;
 }
 
 GeometryObject::~GeometryObject() {
@@ -23,9 +23,9 @@ GeometryObject::~GeometryObject() {
 
 int GeometryObject::initVertexBuffer(
 		enum QGLBuffer::UsagePattern usagePattern) {
-	vertexBuffer.create();
-	vertexBuffer.setUsagePattern(usagePattern);
-	if (!vertexBuffer.bind()) {
+	vertexBuffer_.create();
+	vertexBuffer_.setUsagePattern(usagePattern);
+	if (!vertexBuffer_.bind()) {
 		qWarning() << "Could not bind vertex buffer";
 		return -1;
 	}
@@ -33,35 +33,35 @@ int GeometryObject::initVertexBuffer(
 }
 
 int GeometryObject::fillVertexBuffer() {
-	if (!vertexBuffer.isCreated()) {
+	if (!vertexBuffer_.isCreated()) {
 		qWarning() << " Vertex Buffer does not exist yet";
 		return -1;
 	}
-	if (!vertexBuffer.bind()) {
+	if (!vertexBuffer_.bind()) {
 		qWarning() << "Could not bind vertex buffer";
 		return -1;
 	}
-	vertexBuffer.allocate(&(vertexData[0]),
-			vertexData.size() * sizeof(vertexData[0]));
+	vertexBuffer_.allocate(&(vertexData_[0]),
+			vertexData_.size() * sizeof(vertexData_[0]));
 	return 0;
 }
 
 void GeometryObject::init() {
-	modelMatrix.setToIdentity();
-	normalMatrix.setToIdentity();
+	modelMatrix_.setToIdentity();
+	normalMatrix_.setToIdentity();
 
 	//Update ModelViewProjection Matrix
-	MV = *viewMatrix * modelMatrix;
-	MVP = *projectionMatrix * MV;
+    MV_ = *viewMatrix_ * modelMatrix_;
+	MVP_ = *projectionMatrix_ * MV_;
 }
 
 void GeometryObject::updateProjectionMatrix() {
-	MVP = *projectionMatrix * MV;
+	MVP_ = *projectionMatrix_ * MV_;
 }
 
 void GeometryObject::updateViewMatrix() {
-	MV = *viewMatrix * modelMatrix;
-	MVP = *projectionMatrix * MV;
+	MV_ = *viewMatrix_ * modelMatrix_;
+	MVP_ = *projectionMatrix_ * MV_;
 }
 
 void GeometryObject::draw(QGLShaderProgram *shader) {
@@ -72,20 +72,20 @@ void GeometryObject::draw(QGLShaderProgram *shader) {
 			2 * 4 * sizeof(float));
 	shader->enableAttributeArray("vertex");
 	shader->enableAttributeArray("normal");
-	shader->setUniformValue("MVP", MVP);
-	shader->setUniformValue("MV", MV);
-	shader->setUniformValue("normalMat", normalMatrix);
-	shader->setUniformValue("eye", *camPos);
+	shader->setUniformValue("MVP", MVP_);
+	shader->setUniformValue("MV", MV_);
+	shader->setUniformValue("normalMat", normalMatrix_);
+    shader->setUniformValue("eye", *cameraPosition_);
 
-	vertexBuffer.bind();
+	vertexBuffer_.bind();
 	int mode = GL_QUADS;
 	int stride = 0;
-	glDrawArrays(mode, stride, vertexData.size());
+	glDrawArrays(mode, stride, vertexData_.size());
 	//   shader->release();
 }
 
 int GeometryObject::bindVBuffer() {
-	if (!vertexBuffer.bind()) {
+	if (!vertexBuffer_.bind()) {
 		qWarning() << "Could not bind vertex buffer";
 		return -1;
 	}
@@ -98,17 +98,17 @@ void GeometryObject::createVertexData() {
 }
 
 void GeometryObject::dataPushback(glm::vec4 data) {
-	vertexData.push_back(data);
+	vertexData_.push_back(data);
 }
 
 void GeometryObject::rotate(float angle, float x, float y, float z) {
-	modelMatrix.rotate(angle, x, y, z);
-	// MV = viewMatrix * modelMatrix;
-	// MVP = projectionMatrix * MV;
+	modelMatrix_.rotate(angle, x, y, z);
+    MV_ = *viewMatrix_ * modelMatrix_;
+    MVP_ = *projectionMatrix_ * MV_;
 }
 
 void GeometryObject::translate(float x, float y, float z) {
-	modelMatrix.translate(x, y, z);
-	//  MV = viewMatrix * modelMatrix;
-	//  MVP = projectionMatrix * MV;
+	modelMatrix_.translate(x, y, z);
+    MV_ = *viewMatrix_ * modelMatrix_;
+    MVP_ = *projectionMatrix_ * MV_;
 }

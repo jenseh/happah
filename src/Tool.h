@@ -10,16 +10,18 @@ class Tool: public QObject {
 	Q_OBJECT
 
 public:
-	QPushButton* toolButton;
-	QWidget* toolSettings;
+	Tool();
+	~Tool();
+
+    QPushButton* getToolButton();
+    QWidget* getToolSettings();
 
 	signals:
 	void emitComponent( Component* component );
 
-public:
-	Tool();
-	~Tool();
-
+private:
+	QPushButton* toolButton;
+	QWidget* toolSettings;
 };
 
 #endif // TOOL_H

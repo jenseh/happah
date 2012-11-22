@@ -1,12 +1,7 @@
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-
 #include "BSplineTool.h"
-#include "BSplineComponent.h"
 
 BSplineTool::BSplineTool() {
-	toolButton->setText("B");
+    getToolButton()->setText("B");
 
 	QVBoxLayout* vbox = new QVBoxLayout();
 
@@ -17,7 +12,7 @@ BSplineTool::BSplineTool() {
 	connect(genBtn, SIGNAL(clicked()), this, SLOT(generateComponent()));
 	vbox->addWidget(genBtn);
 
-	toolSettings->setLayout(vbox);
+    getToolSettings()->setLayout(vbox);
 }
 
 BSplineTool::~BSplineTool() {

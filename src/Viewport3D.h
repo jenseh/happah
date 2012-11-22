@@ -22,27 +22,6 @@ using namespace std;
 
 class Viewport3D: public QGLWidget {
 	Q_OBJECT
-private:
-	MainWindow* _mainWindow;
-
-	QMatrix4x4 ViewMatrix;
-	QMatrix4x4 ProjectionMatrix;
-	QVector3D eye, center, up;
-	QGLShaderProgram shader, coordShader;
-	QGLBuffer vertexBuffer, coordVBO, triangleVBO;
-	std::vector<glm::vec4> coordSystem;
-	std::vector<glm::vec4> sphereVP;
-	glm::vec4 triangleVP[3];
-	QPoint mousePos;
-	int pointCount;
-	float zoomRad, theta, phi;
-
-	// GeometryObjects
-	vector<GeometryObject> *geometryObjects;
-	Grid* grid;
-	Sphere* sphere;
-	Gear* gear1;
-	Gear* gear2;
 
 public:
 	Viewport3D(const QGLFormat& format, QWidget* parent = 0,
@@ -59,7 +38,28 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
-	QTimer *timer;
+    QTimer *timer_;
+    MainWindow* mainWindow_;
+
+    QMatrix4x4 viewMatrix_;
+    QMatrix4x4 projectionMatrix_;
+    QVector3D eye_, center_, up_;
+    QGLShaderProgram shader_, coordShader_;
+    QGLBuffer vertexBuffer_, coordVBO_, triangleVBO_;
+    std::vector<glm::vec4> coordSystem_; //unused
+    std::vector<glm::vec4> sphereVP_; //unused
+    glm::vec4 triangleVP_[3];
+    QPoint mousePos_;
+    int pointCount_;
+    float zoomRad_, theta_, phi_; //is zoomRad german?
+
+    // GeometryObjects
+    vector<GeometryObject>* geometryObjects_;
+    Grid* grid_;
+    Sphere* sphere_;
+    Gear* gear1_;
+    Gear* gear2_;
+
 	const static int WAIT_TIME = 40;
 
 	void draw();

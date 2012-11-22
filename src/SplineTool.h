@@ -10,7 +10,6 @@ class SplineTool: public Tool {
 public:
 	SplineTool();
 	~SplineTool();
-
 };
 
 #endif

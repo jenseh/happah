@@ -7,7 +7,7 @@ using namespace std;
 Sphere::Sphere(float _radius, QMatrix4x4 *_projectionMatrix,
 		QMatrix4x4 *_viewMatrix, QVector3D* _camPos) :
 		GeometryObject(_projectionMatrix, _viewMatrix, _camPos) {
-	radius = _radius;
+	radius_ = _radius;
 }
 
 Sphere::~Sphere() {
@@ -18,13 +18,13 @@ bool Sphere::hit(glm::vec3 rayPos, glm::vec3 rayDir) {
 	A = rayDir.x * rayDir.x + rayDir.y * rayDir.y + rayDir.z * rayDir.z;
 	B = 2 * (rayDir.x * rayPos.x + rayDir.y * rayPos.y + rayDir.z * rayPos.z);
 	C = rayPos.x * rayPos.x + rayPos.y * rayPos.y + rayPos.z * rayPos.z
-			- radius * radius;
+			- radius_ * radius_;
 
 	float t0, t1;
 	if (!quad(A, B, C, &t0, &t1))
 		return false;
 	float tmin = glm::min(t0, t1);
-	hitpoint = rayPos + tmin * rayDir;
+	hitpoint_ = rayPos + tmin * rayDir;
 
 	return true;
 }
@@ -53,11 +53,11 @@ bool Sphere::quad(float A, float B, float C, float *t0, float *t1) {
 }
 
 float Sphere::getRadius() {
-	return radius;
+	return radius_;
 }
 
 glm::vec3 Sphere::getHitpoint() {
-	return hitpoint;
+	return hitpoint_;
 }
 
 void Sphere::createVertexData() {

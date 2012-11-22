@@ -1,10 +1,10 @@
 #include <math.h>
 
-#include "sphere.h"
+#include "Sphere.h"
 
 using namespace std;
 
-Sphere::Sphere(float _radius) : GeometryObject(){
+Sphere::Sphere(float _radius,QMatrix4x4 *_projectionMatrix,QMatrix4x4 *_viewMatrix,QVector3D* _camPos) : GeometryObject(_projectionMatrix,_viewMatrix,_camPos){
 	radius = _radius;
 }
 

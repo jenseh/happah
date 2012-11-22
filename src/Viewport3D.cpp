@@ -39,15 +39,15 @@ void Viewport3D::initializeGL() {
     // Initialize your Geometry Objects here
 
     // Grid
-    grid = new Grid();
-    sphere = new Sphere(1.0f);
-    gear1 = new Gear(1.0f, 1.0f, 20); // 1 * 3.14 / 20
-    gear2 = new Gear(0.5f, 1.0f, 10, 0.6f); // 0.25
+    grid = new Grid(&ProjectionMatrix,&ViewMatrix,&eye);
+    sphere = new Sphere(1.0f,&ProjectionMatrix,&ViewMatrix,&eye);
+    gear1 = new Gear(1.0f, 1.0f, 20,0.2f,&ProjectionMatrix,&ViewMatrix,&eye); // 1 * 3.14 / 20
+    gear2 = new Gear(0.5f, 1.0f, 10, 0.6f,&ProjectionMatrix,&ViewMatrix,&eye); // 0.25
 
-    grid->init(ProjectionMatrix, ViewMatrix);
-    sphere->init(ProjectionMatrix, ViewMatrix);
-    gear1->init(ProjectionMatrix, ViewMatrix);
-    gear2->init(ProjectionMatrix, ViewMatrix);
+    grid->init(/*ProjectionMatrix, ViewMatrix*/);
+    sphere->init(/*ProjectionMatrix, ViewMatrix*/);
+    gear1->init(/*ProjectionMatrix, ViewMatrix*/);
+    gear2->init(/*ProjectionMatrix, ViewMatrix*/);
 
     gear2->translate(1.9f, 0.0f, 0.0f);
     gear2->rotate(40.0f, 0.0f, 0.0f, 1.0f);
@@ -71,7 +71,7 @@ void Viewport3D::initializeGL() {
     gear2->InitVertexBuffer(QGLBuffer::StaticDraw);
     gear2->FillVertexBuffer();
 
-    // TODO: Why does this not work?
+    // TODO: Why does this not work?Because grids , spheres and gears are not geometry objects they just inherit it
 //    geometryObjects = new vector<GeometryObject>();
 //    geometryObjects->push_back((GeometryObject) *grid);
 //    geometryObjects->push_back((GeometryObject) *sphere);
@@ -97,11 +97,12 @@ void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	ProjectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
-
+/*
     grid->updateProjectionMatrix(ProjectionMatrix);
     sphere->updateProjectionMatrix(ProjectionMatrix);
     gear1->updateProjectionMatrix(ProjectionMatrix);
     gear2->updateProjectionMatrix(ProjectionMatrix);
+*/
 }
 
 void Viewport3D::paintGL() {
@@ -175,10 +176,10 @@ void Viewport3D::updateView() {
 //        geometryObjects[i]->updateView(ViewMatrix, eye);
 //    }
 
-    gear1->updateView(ViewMatrix, eye);
-    gear2->updateView(ViewMatrix, eye);
-    sphere->updateView(ViewMatrix, eye);
-    grid->updateView(ViewMatrix, eye);
+    gear1->updateView(/*ViewMatrix, eye*/);
+    gear2->updateView(/*ViewMatrix, eye*/);
+    sphere->updateView(/*ViewMatrix, eye*/);
+    grid->updateView(/*ViewMatrix, eye*/);
 }
 
 

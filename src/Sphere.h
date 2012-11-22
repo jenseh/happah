@@ -6,7 +6,7 @@
 
 class Sphere :public GeometryObject {
 public:
-    Sphere(float _radius = 1.0f);
+    Sphere(float _radius = 1.0f,QMatrix4x4 *_projectionMatrix = 0,QMatrix4x4 *_viewMatrix = 0,QVector3D* _camPos= 0);
 	virtual ~Sphere();
 	bool hit(glm::vec3 rayPos,glm::vec3 rayDir);
     float getRadius();

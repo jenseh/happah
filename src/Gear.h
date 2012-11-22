@@ -8,7 +8,7 @@
 
 class Gear : public GeometryObject {
 public:
-    Gear(float _radius = 1.0f, float _length = 0.2f, int toothCount = 10, float heightFactor = 0.2f);
+    Gear(float _radius = 1.0f, float _length = 0.2f, int toothCount = 10, float heightFactor = 0.2f,QMatrix4x4 *_projectionMatrix = 0,QMatrix4x4 *_viewMatrix = 0,QVector3D* _camPos= 0);
     virtual ~Gear();
     float getRadius();
     glm::vec3 getCenter();

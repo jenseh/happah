@@ -19,16 +19,16 @@
 class GeometryObject : public QObject, public Component {
 Q_OBJECT
 public:
-    GeometryObject();
+    GeometryObject(QMatrix4x4 * _projectionMatrix,QMatrix4x4 *_viewMatrix,QVector3D * _camPos);
 	virtual ~GeometryObject();
 	void CreateGrid();
 	int BindVBuffer();
 	void DataPushback(glm::vec4 data);
 
     // For drawing
-    void init(QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix);
+    void init(/*QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix*/);
     void draw(QGLShaderProgram *shader);
-    void updateView(QMatrix4x4 _viewMatrix, QVector3D eye);
+    void updateView(/*QMatrix4x4 _viewMatrix, QVector3D eye*/);
     void updateProjectionMatrix(QMatrix4x4 _projectionMatrix);
 
     void CreateVertexData();
@@ -43,10 +43,10 @@ protected:
 	std::vector<glm::vec4> vertexData;
 
     // For drawing
-    QMatrix4x4 projectionMatrix, viewMatrix, MVP, MV; //redundant information to avoid repeated computation
+    QMatrix4x4 *projectionMatrix, *viewMatrix, MVP, MV; //redundant information to avoid repeated computation
     QMatrix4x4 modelMatrix;
     QMatrix3x3 normalMatrix;
-    QVector3D eye;
+    QVector3D *camPos;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

@@ -6,7 +6,7 @@
 class Grid : public GeometryObject
 {
 public:
-    Grid();
+    Grid(QMatrix4x4 *_projectionMatrix = 0,QMatrix4x4 *_viewMatrix = 0,QVector3D* _camPos= 0);
     void CreateVertexData();
     void draw(QGLShaderProgram *shader);
 };

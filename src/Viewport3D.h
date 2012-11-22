@@ -13,7 +13,7 @@
 #include <iostream>
 
 #include "MainWindow.h"
-#include "sphere.h"
+#include "Sphere.h"
 #include "Gear.h"
 #include "Grid.h"
 #include "GeometryObject.h"

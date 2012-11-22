@@ -1,6 +1,6 @@
 #include "Grid.h"
 
-Grid::Grid()
+Grid::Grid(QMatrix4x4 *_projectionMatrix,QMatrix4x4 *_viewMatrix,QVector3D* _camPos):GeometryObject(_projectionMatrix,_viewMatrix,_camPos)
 {
 }
 

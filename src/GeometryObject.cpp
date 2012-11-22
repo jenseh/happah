@@ -7,7 +7,10 @@
 
 #include "GeometryObject.h"
 
-GeometryObject::GeometryObject() : Component() {
+GeometryObject::GeometryObject(QMatrix4x4 *_projectionMatrix,QMatrix4x4 *_viewMatrix,QVector3D* _camPos) : Component() {
+	viewMatrix = _viewMatrix;
+	projectionMatrix = _projectionMatrix;
+	camPos = _camPos;
 }
 
 GeometryObject::~GeometryObject() {
@@ -40,28 +43,28 @@ int GeometryObject::FillVertexBuffer(){
 	return 0;
 }
 
-void GeometryObject::init(QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix) {
-    viewMatrix = _viewMatrix;
-    projectionMatrix = _projectionMatrix;
+void GeometryObject::init(/*QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix*/) {
+    //viewMatrix = _viewMatrix;
+    //projectionMatrix = _projectionMatrix;
 
     modelMatrix.setToIdentity();
     normalMatrix.setToIdentity();
 
     //Update ModelViewProjection Matrix
-    MV = _viewMatrix * modelMatrix;
-    MVP = _projectionMatrix * MV;
+    MV = *viewMatrix * modelMatrix;
+    MVP = *projectionMatrix * MV;
 }
-
+/*
 void GeometryObject::updateProjectionMatrix(QMatrix4x4 _projectionMatrix) {
     projectionMatrix = _projectionMatrix;
     MVP = projectionMatrix * MV;
 }
-
-void GeometryObject::updateView(QMatrix4x4 _viewMatrix, QVector3D _eye) {
-    viewMatrix = _viewMatrix;
-    eye = _eye;
-    MV = viewMatrix * modelMatrix;
-    MVP = projectionMatrix * MV;
+*/
+void GeometryObject::updateView(/*QMatrix4x4 _viewMatrix, QVector3D _eye*/) {
+   // viewMatrix = _viewMatrix;
+   // eye = _eye;
+    MV = *viewMatrix * modelMatrix;
+    MVP = *projectionMatrix * MV;
 }
 
 void GeometryObject::draw(QGLShaderProgram *shader) {
@@ -74,13 +77,13 @@ void GeometryObject::draw(QGLShaderProgram *shader) {
     shader->setUniformValue("MVP", MVP);
     shader->setUniformValue("MV", MV);
     shader->setUniformValue("normalMat", normalMatrix);
-    shader->setUniformValue("eye", eye);
+    shader->setUniformValue("eye", *camPos);
 
     vertexBuffer.bind();
     int mode = GL_QUADS;
     int stride = 0;
     glDrawArrays(mode, stride, vertexData.size());
-    shader->release();
+ //   shader->release();
 }
 
 int GeometryObject::BindVBuffer(){
@@ -93,7 +96,7 @@ int GeometryObject::BindVBuffer(){
 }
 
 void GeometryObject::CreateVertexData(){
-
+	// Dummy !! Vertex Data is Created in the inheriting classes
 }
 
 void GeometryObject::DataPushback(glm::vec4 data){
@@ -102,12 +105,12 @@ void GeometryObject::DataPushback(glm::vec4 data){
 
 void GeometryObject::rotate(float angle, float x, float y, float z) {
     modelMatrix.rotate(angle, x, y, z);
-    MV = viewMatrix * modelMatrix;
-    MVP = projectionMatrix * MV;
+   // MV = viewMatrix * modelMatrix;
+   // MVP = projectionMatrix * MV;
 }
 
 void GeometryObject::translate(float x, float y, float z) {
     modelMatrix.translate(x, y, z);
-    MV = viewMatrix * modelMatrix;
-    MVP = projectionMatrix * MV;
+  //  MV = viewMatrix * modelMatrix;
+  //  MVP = projectionMatrix * MV;
 }

@@ -14,5 +14,4 @@ SplineTool::SplineTool() {
 	toolSettings->setLayout(vbox);
 }
 
-SplineTool::~SplineTool() {
-}
+SplineTool::~SplineTool() {}

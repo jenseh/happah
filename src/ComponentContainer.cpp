@@ -1,15 +1,18 @@
+
 #include "ComponentContainer.h"
 
-ComponentContainer::ComponentContainer(QGraphicsScene* scene, QWidget* parent) :
-		QListWidget(parent), scene_(scene) {
+ComponentContainer::ComponentContainer( QGraphicsScene* scene, QWidget* parent )
+	: QListWidget( parent ) ,
+	scene( scene )
+{
 	;
 }
 
-ComponentContainer::~ComponentContainer() {
+ComponentContainer::~ComponentContainer() {}
+
+void ComponentContainer::addComponent( Component* newComponent ) {
+	this->addItem( newComponent );
+	scene->addItem( newComponent );
 }
 
-void ComponentContainer::addComponent(Component* newComponent) {
-	this->addItem(newComponent);
-	scene_->addItem(newComponent);
-}
 

@@ -7,19 +7,24 @@
 
 #include "Component.h"
 
-class BSplineComponent: public Component {
+class BSplineComponent : public Component {
+
+private:
+	QLine line;
+	QRect bRect;
+	
 public:
 	BSplineComponent();
 	~BSplineComponent();
 
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+    QRectF getBoundingRect() const;
+
+	void paint( QPainter *painter,
+			const QStyleOptionGraphicsItem *option,
 			QWidget *widget);
 
-private:
-	QLine line_;
-	QRect bRect_;
-
-	QRectF getBoundingRect() const;
 };
 
+
 #endif // BSPLINECOMPONENT_H
+

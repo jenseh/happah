@@ -4,15 +4,15 @@
 #include "ToolSelector.h"
 #include "Tool.h"
 
-class BSplineTool: public Tool {
-	Q_OBJECT
+class BSplineTool : public Tool {
+Q_OBJECT
+
+private slots:
+	void generateComponent();
 
 public:
 	BSplineTool();
 	~BSplineTool();
-
-private slots:
-	void generateComponent();
 
 };
 

@@ -21,9 +21,9 @@
 using namespace std;
 
 class Viewport3D: public QGLWidget {
-	Q_OBJECT
+Q_OBJECT
 private:
-	MainWindow* _mainWindow;
+    MainWindow* _mainWindow;
 
 	QMatrix4x4 ViewMatrix;
 	QMatrix4x4 ProjectionMatrix;
@@ -35,18 +35,17 @@ private:
 	glm::vec4 triangleVP[3];
 	QPoint mousePos;
 	int pointCount;
-	float zoomRad, theta, phi;
+    float zoomRad, theta, phi;
 
-	// GeometryObjects
-	vector<GeometryObject> *geometryObjects;
-	Grid* grid;
-	Sphere* sphere;
-	Gear* gear1;
-	Gear* gear2;
+    // GeometryObjects
+    vector<GeometryObject> *geometryObjects;
+    Grid* grid;
+    Sphere* sphere;
+    Gear* gear1;
+    Gear* gear2;
 
 public:
-	Viewport3D(const QGLFormat& format, QWidget* parent = 0,
-			MainWindow* mainWindow = 0);
+    Viewport3D(const QGLFormat& format, QWidget* parent = 0, MainWindow* mainWindow = 0);
 
 protected:
 	void initializeGL();
@@ -56,19 +55,19 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseDoubleClickEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
-	void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
-	QTimer *timer;
-	const static int WAIT_TIME = 40;
+    QTimer *timer;
+    const static int WAIT_TIME = 40;
 
-	void draw();
-	void updateView();
+    void draw();
+    void updateView();
 	bool initShaderPrograms();
 	void setZoom(float zoom);
 
 private slots:
-	void update();
+    void update();
 };
 
 #endif

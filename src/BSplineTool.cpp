@@ -8,22 +8,23 @@
 BSplineTool::BSplineTool() {
 	toolButton->setText("B");
 
-	QVBoxLayout* vBox = new QVBoxLayout();
+	QVBoxLayout* vbox = new QVBoxLayout();
 
-	QLabel* label = new QLabel("B-Spline Settings"); //TODO: move label into component
-	vBox->addWidget(label);
+    QLabel* label = new QLabel("B-Spline Settings"); //TODO: move label into component
+	vbox->addWidget(label);
 
 	QPushButton* genBtn = new QPushButton("new");
-	connect(genBtn, SIGNAL(clicked()), this, SLOT(generateComponent()));
-	vBox->addWidget(genBtn);
+	connect( genBtn, SIGNAL(clicked()), this, SLOT(generateComponent()) );
+	vbox->addWidget(genBtn);
 
-	toolSettings->setLayout(vBox);
+	toolSettings->setLayout(vbox);
 }
 
-BSplineTool::~BSplineTool() {
-}
+BSplineTool::~BSplineTool() {}
 
 void BSplineTool::generateComponent() {
+	
 	BSplineComponent* component = new BSplineComponent;
-	emit emitComponent(component);
+	emit emitComponent( component );
+
 }

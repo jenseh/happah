@@ -5,6 +5,5 @@ Tool::Tool() {
 	toolSettings = new QWidget();
 }
 
-Tool::~Tool() {
-}
+Tool::~Tool() {}
 

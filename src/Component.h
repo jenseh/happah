@@ -4,17 +4,18 @@
 #include <QListWidgetItem>
 #include <QGraphicsItem>
 
-class Component: public QListWidgetItem, public QGraphicsItem {
+class Component : public QListWidgetItem , public QGraphicsItem {
 
-public:
-	Component(const QString *name = 0);
+	public:
+    Component(const QString *name = 0);
 	~Component();
 
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+    QRectF getBoundingRect() const;
+
+	void paint( QPainter *painter,
+			const QStyleOptionGraphicsItem *option,
 			QWidget *widget);
 
-private:
-    QRectF getBoundingRect() const;
 };
 
 #endif // COMPONENT_H

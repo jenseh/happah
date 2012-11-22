@@ -3,13 +3,15 @@
 
 #include <QGraphicsScene>
 
-class EditorScene: public QGraphicsScene {
-	Q_OBJECT
+class EditorScene : public QGraphicsScene {
+Q_OBJECT
 
-public:
-	EditorScene(QObject* parent = 0);
+	public:
+	EditorScene( QObject* parent = 0 );
 	~EditorScene();
 
 };
+
+
 
 #endif // EDITORSCENE_H

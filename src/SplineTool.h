@@ -4,10 +4,10 @@
 #include "Tool.h"
 #include "ToolSelector.h"
 
-class SplineTool : public Tool {
-Q_OBJECT
+class SplineTool: public Tool {
+	Q_OBJECT
 
-	public:
+public:
 	SplineTool();
 	~SplineTool();
 

@@ -7,7 +7,7 @@
 class Component : public QListWidgetItem , public QGraphicsItem {
 
 	public:
-	Component( );
+    Component(const QString *name = 0);
 	~Component();
 
 	QRectF boundingRect() const;

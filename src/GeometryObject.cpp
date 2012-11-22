@@ -6,9 +6,8 @@
  */
 
 #include "GeometryObject.h"
-#include <iostream>
 
-GeometryObject::GeometryObject() {
+GeometryObject::GeometryObject() : Component() {
 }
 
 GeometryObject::~GeometryObject() {

@@ -1,7 +1,11 @@
 #include "Component.h"
 
-Component::Component() : QListWidgetItem() {
-	 setText("Empty item");
+Component::Component(const QString *name) : QListWidgetItem() {
+    if (name != 0) {
+        setText(*name);
+    } else {
+        setText("Empty item");
+    }
 }
 
 Component::~Component() {}

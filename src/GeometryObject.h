@@ -13,8 +13,10 @@
 #include <QGLShaderProgram>
 #include <glm/glm.hpp>
 #include <vector>
+#include <iostream>
+#include "Component.h"
 
-class GeometryObject: public QObject {
+class GeometryObject : public QObject, public Component {
 Q_OBJECT
 public:
     GeometryObject();

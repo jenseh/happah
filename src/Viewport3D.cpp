@@ -1,15 +1,11 @@
-#include <QFlags>
-#include <QtGui>
-#include <QGLBuffer>
-#include <cmath>
-#include <iostream>
-
 #include "Viewport3D.h"
 
-Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
+Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent, MainWindow* mainWindow) :
 		QGLWidget(format, parent), vertexBuffer(QGLBuffer::VertexBuffer), coordVBO(
 				QGLBuffer::VertexBuffer),
 				triangleVBO(QGLBuffer::VertexBuffer){
+
+    _mainWindow = mainWindow;
 
     ProjectionMatrix.setToIdentity();
     ViewMatrix.setToIdentity();
@@ -23,8 +19,8 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent) :
 	up.setX(0.0f);
 	up.setY(1.0f);
 	up.setZ(0.0f);
-	pointCount = 0;
-	theta = 0;
+    pointCount = 0;
+  	theta = 0;
     phi = 0;
 }
 
@@ -44,17 +40,17 @@ void Viewport3D::initializeGL() {
 
     // Grid
     grid = new Grid();
-    sphere = new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
-    gear1 = new Gear(1.0f, 1.0f, 20);
-    gear2 = new Gear(0.25f, 1.0f, 5, 0.6f);
+    sphere = new Sphere(1.0f);
+    gear1 = new Gear(1.0f, 1.0f, 20); // 1 * 3.14 / 20
+    gear2 = new Gear(0.5f, 1.0f, 10, 0.6f); // 0.25
 
     grid->init(ProjectionMatrix, ViewMatrix);
     sphere->init(ProjectionMatrix, ViewMatrix);
     gear1->init(ProjectionMatrix, ViewMatrix);
     gear2->init(ProjectionMatrix, ViewMatrix);
 
-    gear2->translate(1.5f, 0.0f, 0.0f);
-    gear2->rotate(45.0f, 0.0f, 0.0f, 1.0f);
+    gear2->translate(1.9f, 0.0f, 0.0f);
+    gear2->rotate(40.0f, 0.0f, 0.0f, 1.0f);
 
     // Grid
     grid->CreateVertexData();
@@ -81,6 +77,15 @@ void Viewport3D::initializeGL() {
 //    geometryObjects->push_back((GeometryObject) *sphere);
 //    geometryObjects->push_back((GeometryObject) *gear1);
 //    geometryObjects->push_back((GeometryObject) *gear2);
+
+    _mainWindow->getComponentContainer()->addComponent(gear1);
+    gear1->setText("Gear 1");
+    _mainWindow->getComponentContainer()->addComponent(gear2);
+    gear2->setText("Gear 2");
+    _mainWindow->getComponentContainer()->addComponent(sphere);
+    sphere->setText("Sphere");
+    _mainWindow->getComponentContainer()->addComponent(grid);
+    grid->setText("Grid");
 
     // Setup and start a timer
     timer = new QTimer(this);
@@ -152,23 +157,14 @@ void Viewport3D::draw() {
 void Viewport3D::update() {
     // modify the model
     gear1->rotate(1.0f, 0.0f, 0.0f, 1.0f);
-    gear2->rotate(-4.0f, 0.0f, 0.0f, 1.0f);
+    gear2->rotate(-2.0f, 0.0f, 0.0f, 1.0f);
 
     // draw the scene again
     updateGL();
 }
 
 void Viewport3D::updateView() {
-
-	//Update ViewMatrix
-	QMatrix4x4 tViewMatrix;
-	tViewMatrix.setToIdentity();
-	tViewMatrix.translate(0.0f, 0.0f, -5.0f);
-	tViewMatrix.rotate(0.0f, 1.0f, 0.0f, 0.0f);
-	tViewMatrix.rotate(0.0f, 0.0f, 1.0f, 0.0f);
-
-	//ViewMatrix = tViewMatrix;
-
+    //Update ViewMatrix
 	QMatrix4x4 LookatMatrix;
 	LookatMatrix.lookAt(eye, center, up);
 	ViewMatrix = LookatMatrix;
@@ -219,7 +215,6 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 	mousePos = event->pos();
 
 }
-
 void Viewport3D::mousePressEvent(QMouseEvent *event) {
     if (event->buttons() == Qt::LeftButton) {
         // do something

@@ -14,11 +14,11 @@ HEADERS += src/BSplineComponent.h \
     src/Happah.h \
     src/main.h \
     src/MainWindow.h \
-    src/sphere.h \
     src/SplineTool.h \
     src/Tool.h \
     src/ToolSelector.h \
-    src/Viewport3D.h
+    src/Viewport3D.h \
+    src/Sphere.h
 SOURCES += src/BSplineComponent.cpp \
     src/BSplineTool.cpp \
     src/Component.cpp \
@@ -30,11 +30,11 @@ SOURCES += src/BSplineComponent.cpp \
     src/Happah.cpp \
     src/main.cpp \
     src/MainWindow.cpp \
-    src/sphere.cpp \
     src/SplineTool.cpp \
     src/Tool.cpp \
     src/ToolSelector.cpp \
-    src/Viewport3D.cpp
+    src/Viewport3D.cpp \
+    src/Sphere.cpp
 FORMS += 
 RESOURCES +=
 INCLUDEPATH += /usr/include

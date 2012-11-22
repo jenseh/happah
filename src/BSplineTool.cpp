@@ -10,7 +10,7 @@ BSplineTool::BSplineTool() {
 
 	QVBoxLayout* vbox = new QVBoxLayout();
 
-	QLabel* label = new QLabel("B-Spline Settings");
+    QLabel* label = new QLabel("B-Spline Settings"); //TODO: move label into component
 	vbox->addWidget(label);
 
 	QPushButton* genBtn = new QPushButton("new");

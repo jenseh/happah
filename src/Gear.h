@@ -2,6 +2,8 @@
 #define GEAR_H
 
 #include <glm/glm.hpp>
+#include <iostream>
+#include <math.h>
 #include "GeometryObject.h"
 
 class Gear : public GeometryObject {

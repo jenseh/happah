@@ -38,7 +38,7 @@ MainWindow::MainWindow() {
 
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
-	Viewport3D* viewport3D = new Viewport3D(glFormat, viewportWidget);
+    Viewport3D* viewport3D = new Viewport3D(glFormat, viewportWidget, this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	tabs->addTab( viewportWidget ,"3D-View");
 
@@ -49,7 +49,6 @@ MainWindow::MainWindow() {
 	tabs->addTab( view2D ,"2D-View");
 
 	setCentralWidget(tabs);
-
 
 	createTools();
 	createContainer();
@@ -95,7 +94,6 @@ void MainWindow::createContainer() {
 	dock->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget( Qt::RightDockWidgetArea, dock );
 	viewMenu->addAction( dock->toggleViewAction() );
-
 }
 
 MainWindow::~MainWindow() {
@@ -105,4 +103,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 	if (event->key() == Qt::Key_Escape) {
 		qApp->quit();
 	}
+}
+
+ComponentContainer* MainWindow::getComponentContainer() {
+    return componentContainer;
 }

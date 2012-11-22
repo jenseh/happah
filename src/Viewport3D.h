@@ -6,7 +6,13 @@
 #include <QGLShaderProgram>
 #include <glm/glm.hpp>
 #include <vector>
+#include <QFlags>
+#include <QtGui>
+#include <QGLBuffer>
+#include <cmath>
+#include <iostream>
 
+#include "MainWindow.h"
 #include "sphere.h"
 #include "Gear.h"
 #include "Grid.h"
@@ -17,6 +23,8 @@ using namespace std;
 class Viewport3D: public QGLWidget {
 Q_OBJECT
 private:
+    MainWindow* _mainWindow;
+
 	QMatrix4x4 ViewMatrix;
 	QMatrix4x4 ProjectionMatrix;
 	QVector3D eye, center, up;
@@ -27,7 +35,7 @@ private:
 	glm::vec4 triangleVP[3];
 	QPoint mousePos;
 	int pointCount;
-	float zoomRad, theta, phi;
+    float zoomRad, theta, phi;
 
     // GeometryObjects
     vector<GeometryObject> *geometryObjects;
@@ -37,7 +45,7 @@ private:
     Gear* gear2;
 
 public:
-	Viewport3D(const QGLFormat& format, QWidget* parent = 0);
+    Viewport3D(const QGLFormat& format, QWidget* parent = 0, MainWindow* mainWindow = 0);
 
 protected:
 	void initializeGL();

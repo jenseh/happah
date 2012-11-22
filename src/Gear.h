@@ -12,7 +12,7 @@ public:
     virtual ~Gear();
     float getRadius();
     glm::vec3 getCenter();
-    void CreateVertexData();
+    void createVertexData();
 private:
     float radius;
     float length;

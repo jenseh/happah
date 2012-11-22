@@ -21,9 +21,9 @@ Q_OBJECT
 public:
     GeometryObject(QMatrix4x4 * _projectionMatrix,QMatrix4x4 *_viewMatrix,QVector3D * _camPos);
 	virtual ~GeometryObject();
-	void CreateGrid();
-	int BindVBuffer();
-	void DataPushback(glm::vec4 data);
+	void createGrid();
+	int bindVBuffer();
+	void dataPushback(glm::vec4 data);
 
     // For drawing
     void init(/*QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix*/);
@@ -31,9 +31,9 @@ public:
     void updateView(/*QMatrix4x4 _viewMatrix, QVector3D eye*/);
     void updateProjectionMatrix(QMatrix4x4 _projectionMatrix);
 
-    void CreateVertexData();
-    int InitVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
-    int FillVertexBuffer();
+    void createVertexData();
+    int initVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
+    int fillVertexBuffer();
 
     // Transformations
     void rotate(float angle, float x, float y, float z);

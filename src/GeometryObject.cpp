@@ -20,7 +20,7 @@ GeometryObject::~GeometryObject() {
 // Prepare Vertex and Index Buffer to be filled with Data
 
 
-int GeometryObject::InitVertexBuffer(enum QGLBuffer::UsagePattern usagePattern){
+int GeometryObject::initVertexBuffer(enum QGLBuffer::UsagePattern usagePattern){
 	vertexBuffer.create();
 	vertexBuffer.setUsagePattern(usagePattern);
 	if (!vertexBuffer.bind()) {
@@ -30,7 +30,7 @@ int GeometryObject::InitVertexBuffer(enum QGLBuffer::UsagePattern usagePattern){
 	return 0;
 }
 
-int GeometryObject::FillVertexBuffer(){
+int GeometryObject::fillVertexBuffer(){
 	if (!vertexBuffer.isCreated()){
 		qWarning() << " Vertex Buffer does not exist yet";
 		return -1;
@@ -68,7 +68,7 @@ void GeometryObject::updateView(/*QMatrix4x4 _viewMatrix, QVector3D _eye*/) {
 }
 
 void GeometryObject::draw(QGLShaderProgram *shader) {
-    BindVBuffer();
+    bindVBuffer();
     shader->bind();
     shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 2 * 4 * sizeof(float));
     shader->setAttributeBuffer("normal", GL_FLOAT, 2 * 4 * sizeof(float), 4, 2 * 4 * sizeof(float));
@@ -86,7 +86,7 @@ void GeometryObject::draw(QGLShaderProgram *shader) {
  //   shader->release();
 }
 
-int GeometryObject::BindVBuffer(){
+int GeometryObject::bindVBuffer(){
 	if (!vertexBuffer.bind()) {
 			qWarning() << "Could not bind vertex buffer";
 			return -1;
@@ -95,11 +95,11 @@ int GeometryObject::BindVBuffer(){
 
 }
 
-void GeometryObject::CreateVertexData(){
+void GeometryObject::createVertexData(){
 	// Dummy !! Vertex Data is Created in the inheriting classes
 }
 
-void GeometryObject::DataPushback(glm::vec4 data){
+void GeometryObject::dataPushback(glm::vec4 data){
 	vertexData.push_back(data);
 }
 

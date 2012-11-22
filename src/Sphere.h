@@ -11,7 +11,7 @@ public:
 	bool hit(glm::vec3 rayPos,glm::vec3 rayDir);
     float getRadius();
 	glm::vec3 getHitpoint();
-	void CreateVertexData();
+    void createVertexData();
 private:
 	float radius;
 	bool quad(float A,float B,float C, float *t0,float* t1);

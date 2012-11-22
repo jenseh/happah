@@ -94,7 +94,7 @@ void Gear::createHeightProfile() {
 
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
-void Gear::CreateVertexData(){
+void Gear::createVertexData(){
     float dz = length / Z_DETAIL_LEVEL;
     const float toRad = M_PI / 180.0f;
     float innerRadius = radius * INNER_RADIUS_FACTOR;
@@ -163,14 +163,14 @@ void Gear::CreateVertexData(){
                                             glm::vec3(a.x-b.x, a.y-b.y, 0.0f))
                                             ), 1.0f);
 
-            DataPushback(a);
-            DataPushback(normNext);
-            DataPushback(b);
-            DataPushback(norm);
-            DataPushback(c);
-            DataPushback(norm);
-            DataPushback(d);
-            DataPushback(normNext);
+            dataPushback(a);
+            dataPushback(normNext);
+            dataPushback(b);
+            dataPushback(norm);
+            dataPushback(c);
+            dataPushback(norm);
+            dataPushback(d);
+            dataPushback(normNext);
         }
     }
 
@@ -204,14 +204,14 @@ void Gear::CreateVertexData(){
             d.w = 1.0f;
             norm = i == 0 ? glm::vec4(0.0f, 0.0f, 1.0, 1.0) : glm::vec4(0.0f, 0.0f, -1.0, 1.0);
 
-            DataPushback(a);
-            DataPushback(norm);
-            DataPushback(b);
-            DataPushback(norm);
-            DataPushback(c);
-            DataPushback(norm);
-            DataPushback(d);
-            DataPushback(norm);
+            dataPushback(a);
+            dataPushback(norm);
+            dataPushback(b);
+            dataPushback(norm);
+            dataPushback(c);
+            dataPushback(norm);
+            dataPushback(d);
+            dataPushback(norm);
         }
     }
 }

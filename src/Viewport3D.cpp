@@ -53,23 +53,23 @@ void Viewport3D::initializeGL() {
     gear2->rotate(40.0f, 0.0f, 0.0f, 1.0f);
 
     // Grid
-    grid->CreateVertexData();
-    grid->InitVertexBuffer(QGLBuffer::StaticDraw);
-    grid->FillVertexBuffer();
+    grid->createVertexData();
+    grid->initVertexBuffer(QGLBuffer::StaticDraw);
+    grid->fillVertexBuffer();
 
     // Sphere
-    sphere->CreateVertexData();
-    sphere->InitVertexBuffer(QGLBuffer::StaticDraw);
-    sphere->FillVertexBuffer();
+    sphere->createVertexData();
+    sphere->initVertexBuffer(QGLBuffer::StaticDraw);
+    sphere->fillVertexBuffer();
 
     // Gear
-    gear1->CreateVertexData();
-    gear1->InitVertexBuffer(QGLBuffer::StaticDraw);
-    gear1->FillVertexBuffer();
+    gear1->createVertexData();
+    gear1->initVertexBuffer(QGLBuffer::StaticDraw);
+    gear1->fillVertexBuffer();
 
-    gear2->CreateVertexData();
-    gear2->InitVertexBuffer(QGLBuffer::StaticDraw);
-    gear2->FillVertexBuffer();
+    gear2->createVertexData();
+    gear2->initVertexBuffer(QGLBuffer::StaticDraw);
+    gear2->fillVertexBuffer();
 
     // TODO: Why does this not work?Because grids , spheres and gears are not geometry objects they just inherit it
 //    geometryObjects = new vector<GeometryObject>();

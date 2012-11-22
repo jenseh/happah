@@ -57,7 +57,7 @@ glm::vec3 Sphere::getHitpoint(){
 	return hitpoint;
 }
 
-void Sphere::CreateVertexData(){
+void Sphere::createVertexData(){
     int dtheta = 5;
     int dphi = 5;
     const float toRad = M_PI / 180.0f;
@@ -88,14 +88,14 @@ void Sphere::CreateVertexData(){
 			d.w = 1.0f;
             normD = glm::normalize(d);
 
-            DataPushback(a);
-            DataPushback(normA);
-            DataPushback(b);
-            DataPushback(normB);
-            DataPushback(c);
-            DataPushback(normC);
-            DataPushback(d);
-            DataPushback(normD);
+            dataPushback(a);
+            dataPushback(normA);
+            dataPushback(b);
+            dataPushback(normB);
+            dataPushback(c);
+            dataPushback(normC);
+            dataPushback(d);
+            dataPushback(normD);
 		}
 	}
 }

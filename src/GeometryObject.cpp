@@ -53,6 +53,9 @@ void GeometryObject::init() {
 	//Update ModelViewProjection Matrix
     MV_ = *viewMatrix_ * modelMatrix_;
 	MVP_ = *projectionMatrix_ * MV_;
+	normalMatrix_= MV_;
+	normalMatrix_=normalMatrix_.inverted();
+	normalMatrix_=normalMatrix_.transposed();
 }
 
 /*	WE Don't need that function either , as I said Matrices only need to be computed once BEFORE DRAWING. Projection and

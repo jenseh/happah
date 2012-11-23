@@ -46,8 +46,8 @@ protected:
 
 	// For drawing
 	QMatrix4x4 *projectionMatrix_, *viewMatrix_, MVP_, MV_; //redundant information to avoid repeated computation
-	QMatrix4x4 modelMatrix_;
-	QMatrix3x3 normalMatrix_;
+	QMatrix4x4 modelMatrix_,normalMatrix_;
+
     QVector3D *cameraPosition_;
 };
 

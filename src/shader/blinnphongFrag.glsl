@@ -2,7 +2,7 @@
 
 // TransformationsMatritzen
 uniform mat4 MVP,MV;
-uniform mat3 normalMat;
+
 
 // KameraPosition
 uniform vec3 eye;
@@ -33,15 +33,15 @@ void main( void)
         vec3 lightWS  = normalize(lightPosition[i] - vWorldPosition);
         vec3 viewWS   = normalize(eye - vWorldPosition);
         vec3 halfwayWS = normalize(lightWS + viewWS);
-        float phong = 20.0f;
+        float phong = 5.0f;
 
         float diffuse = max(0.0f, dot(lightWS,vNormal));
         float specular = max(0.0f, pow(dot(halfwayWS,vNormal),phong));
 
 
-        gl_FragColor += (specular+diffuse)*lightColor[i];
-
+    	 gl_FragColor += (specular+diffuse)*lightColor[i];
+		
     }
-    //gl_FragColor = vec4(halfwayWS,1.0f);
+    
 
 }

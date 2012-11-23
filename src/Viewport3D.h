@@ -1,4 +1,4 @@
-#ifndef VpIEWPORT3D_H_
+#ifndef VIEWPORT3D_H_
 #define VIEWPORT3D_H_
 
 #include <QGLWidget>
@@ -21,31 +21,11 @@
 using namespace std;
 
 class Viewport3D: public QGLWidget {
-Q_OBJECT
-private:
-    MainWindow* _mainWindow;
-
-	QMatrix4x4 ViewMatrix;
-	QMatrix4x4 ProjectionMatrix;
-	QVector3D eye, center, up;
-	QGLShaderProgram shader, coordShader;
-	QGLBuffer vertexBuffer, coordVBO, triangleVBO;
-	std::vector<glm::vec4> coordSystem;
-	std::vector<glm::vec4> sphereVP;
-	glm::vec4 triangleVP[3];
-	QPoint mousePos;
-	int pointCount;
-    float zoomRad, theta, phi;
-
-    // GeometryObjects
-    vector<GeometryObject> *geometryObjects;
-    Grid* grid;
-    Sphere* sphere;
-    Gear* gear1;
-    Gear* gear2;
+	Q_OBJECT
 
 public:
-    Viewport3D(const QGLFormat& format, QWidget* parent = 0, MainWindow* mainWindow = 0);
+	Viewport3D(const QGLFormat& format, QWidget* parent = 0,
+			MainWindow* mainWindow = 0);
 
 protected:
 	void initializeGL();
@@ -55,19 +35,40 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseDoubleClickEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
-    void keyPressEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 private:
-    QTimer *timer;
-    const static int WAIT_TIME = 40;
+    QTimer *timer_;
+    MainWindow* mainWindow_;
 
-    void draw();
-    void updateView();
+    QMatrix4x4 viewMatrix_;
+    QMatrix4x4 projectionMatrix_;
+    QVector3D eye_, center_, up_;
+    QGLShaderProgram shader_, coordShader_;
+    QGLBuffer vertexBuffer_, coordVBO_, triangleVBO_;
+    std::vector<glm::vec4> coordSystem_; //unused
+    std::vector<glm::vec4> sphereVP_; //unused
+    glm::vec4 triangleVP_[3];
+    QPoint mousePos_;
+    int pointCount_;
+    float zoomRad_, theta_, phi_; //is zoomRad german?
+
+    // GeometryObjects
+    vector<GeometryObject>* geometryObjects_;
+    Grid* grid_;
+    Sphere* sphere_;
+    Gear* gear1_;
+    Gear* gear2_;
+
+	const static int WAIT_TIME = 40;
+
+	void draw();
+	void updateView();
 	bool initShaderPrograms();
 	void setZoom(float zoom);
 
 private slots:
-    void update();
+	void update();
 };
 
 #endif

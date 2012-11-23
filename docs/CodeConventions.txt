@@ -1,0 +1,22 @@
+The following should be a minimum convention for how to write the code in Happah. All aspects listed here are still to be discussed:
+
+Variables:
+- Constant variables are written in upper-case with underscores between each word.
+- All non-constant variables are written in camel-case.
+- All class variables should begin with an underscore (_). All method parameters should not.
+- Variable names should begin with a non-capital letter.
+- No class variables should be public.
+
+Classes:
+- Class names begin with a capital letter and proceed in camel-case (except for main).
+- Class file names have the same form as their names and use the endings .h and .cpp.
+
+Methods:
+- Method names begin with non-capital letters and continue in camel-case.
+- Getters and Setters should be used whenever possible.
+
+Braces:
+- Opening braces should be placed in the same line as the method declaration (K & R style).
+
+Pointers:
+- The pointer symbol (*) should be placed after the type and not after the variable declaration.

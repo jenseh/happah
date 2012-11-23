@@ -16,37 +16,39 @@
 #include <iostream>
 #include "Component.h"
 
-class GeometryObject : public QObject, public Component {
-Q_OBJECT
+class GeometryObject: public QObject, public Component {
+	Q_OBJECT
 public:
-    GeometryObject(QMatrix4x4 * _projectionMatrix,QMatrix4x4 *_viewMatrix,QVector3D * _camPos);
+    GeometryObject(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
+            QVector3D* camPos);
 	virtual ~GeometryObject();
-	void CreateGrid();
-	int BindVBuffer();
-	void DataPushback(glm::vec4 data);
+	void createGrid();
+	int bindVBuffer();
+	void dataPushback(glm::vec4 data);
 
-    // For drawing
-    void init(/*QMatrix4x4 _projectionMatrix, QMatrix4x4 _viewMatrix*/);
-    void draw(QGLShaderProgram *shader);
-    void updateView(/*QMatrix4x4 _viewMatrix, QVector3D eye*/);
-    void updateProjectionMatrix(QMatrix4x4 _projectionMatrix);
+	// For drawing
+	void init();
+    void draw(QGLShaderProgram* shader);
+	void updateProjectionMatrix();
+	void updateViewMatrix();
 
-    void CreateVertexData();
-    int InitVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
-    int FillVertexBuffer();
+	void createVertexData();
+	int initVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
+	int fillVertexBuffer();
 
-    // Transformations
-    void rotate(float angle, float x, float y, float z);
-    void translate(float x, float y, float z);
+	// Transformations
+	void rotate(float angle, float x, float y, float z);
+	void translate(float x, float y, float z);
+
 protected:
-    QGLBuffer vertexBuffer;
-	std::vector<glm::vec4> vertexData;
+	QGLBuffer vertexBuffer_;
+	std::vector<glm::vec4> vertexData_;
 
-    // For drawing
-    QMatrix4x4 *projectionMatrix, *viewMatrix, MVP, MV; //redundant information to avoid repeated computation
-    QMatrix4x4 modelMatrix;
-    QMatrix3x3 normalMatrix;
-    QVector3D *camPos;
+	// For drawing
+	QMatrix4x4 *projectionMatrix_, *viewMatrix_, MVP_, MV_; //redundant information to avoid repeated computation
+	QMatrix4x4 modelMatrix_;
+	QMatrix3x3 normalMatrix_;
+    QVector3D *cameraPosition_;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

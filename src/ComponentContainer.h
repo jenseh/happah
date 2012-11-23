@@ -6,18 +6,18 @@
 
 #include "Component.h"
 
-class ComponentContainer : public QListWidget {
-Q_OBJECT
+class ComponentContainer: public QListWidget {
+	Q_OBJECT
 
 private:
-	QGraphicsScene* scene;
+	QGraphicsScene* scene_;
 
 public:
-	ComponentContainer( QGraphicsScene* scene, QWidget* parent = 0 );
+	ComponentContainer(QGraphicsScene* scene, QWidget* parent = 0);
 	~ComponentContainer();
 
 public slots:
-	void addComponent( Component* newComponent );
+    void addComponent(Component* component);
 
 };
 

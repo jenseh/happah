@@ -3,7 +3,7 @@
 
 Happah::Happah(int & argc, char ** argv) :
 		QApplication(argc, argv) {
-	_window.show();
+	window_.show();
 }
 
 Happah::~Happah() {

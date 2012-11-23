@@ -10,29 +10,28 @@
 #include "ComponentContainer.h"
 #include "EditorScene.h"
 
-class MainWindow : public QMainWindow {
-Q_OBJECT
-
-private:
-	QMenu* viewMenu;
-    ComponentContainer* componentContainer;
-	ToolSelector* toolSelector;
-	EditorScene* scene;
+class MainWindow: public QMainWindow {
+	Q_OBJECT
 
 public:
 	static const int DEFAULT_WIDTH = 1024;
-    static const int DEFAULT_HEIGHT = 768;
+	static const int DEFAULT_HEIGHT = 768;
 
 	MainWindow();
 	virtual ~MainWindow();
-    void keyPressEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
-    ComponentContainer* getComponentContainer();
+	ComponentContainer* getComponentContainer();
 
 private:
 	void createTools();
 	void createContainer();
 	//void createDockWindows();
+
+	QMenu* viewMenu_;
+	ComponentContainer* componentContainer_;
+	ToolSelector* toolSelector_;
+	EditorScene* scene_;
 };
 
 #endif

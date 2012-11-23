@@ -99,15 +99,18 @@ void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
-
+	/*
+	 * NOT NEEDED ...
 	grid_->updateProjectionMatrix();
 	sphere_->updateProjectionMatrix();
 	gear1_->updateProjectionMatrix();
 	gear2_->updateProjectionMatrix();
+	*/
 }
 
 void Viewport3D::paintGL() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	updateView();
 
 	draw();

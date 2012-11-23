@@ -29,7 +29,7 @@ public:
 	// For drawing
 	void init();
     void draw(QGLShaderProgram* shader);
-	void updateProjectionMatrix();
+	// void updateProjectionMatrix();  Please read the comment in GeometryObject.ccp
 	void updateViewMatrix();
 
 	void createVertexData();

@@ -55,13 +55,17 @@ void GeometryObject::init() {
 	MVP_ = *projectionMatrix_ * MV_;
 }
 
+/*	WE Don't need that function either , as I said Matrices only need to be computed once BEFORE DRAWING. Projection and
+ * and Viewing Matrix are always up to date here , as these are pointers the the global Matrices in ViewPort3D.
+ *
 void GeometryObject::updateProjectionMatrix() {
 	MVP_ = *projectionMatrix_ * MV_;
 }
-
+*/
 void GeometryObject::updateViewMatrix() {
 	MV_ = *viewMatrix_ * modelMatrix_;
 	MVP_ = *projectionMatrix_ * MV_;
+
 }
 
 void GeometryObject::draw(QGLShaderProgram *shader) {
@@ -103,12 +107,12 @@ void GeometryObject::dataPushback(glm::vec4 data) {
 
 void GeometryObject::rotate(float angle, float x, float y, float z) {
 	modelMatrix_.rotate(angle, x, y, z);
-    MV_ = *viewMatrix_ * modelMatrix_;
-    MVP_ = *projectionMatrix_ * MV_;
+   // MV_ = *viewMatrix_ * modelMatrix_;		No need to compute Matrices here , Matrices are computed ONCE before drawing the object
+   // MVP_ = *projectionMatrix_ * MV_;
 }
 
 void GeometryObject::translate(float x, float y, float z) {
 	modelMatrix_.translate(x, y, z);
-    MV_ = *viewMatrix_ * modelMatrix_;
-    MVP_ = *projectionMatrix_ * MV_;
+   // MV_ = *viewMatrix_ * modelMatrix_;	No need to compute Matrices here , Matrices are computed ONCE before drawing the object
+   // MVP_ = *projectionMatrix_ * MV_;
 }

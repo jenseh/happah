@@ -61,8 +61,8 @@ glm::vec3 Sphere::getHitpoint() {
 }
 
 void Sphere::createVertexData() {
-	int dtheta = 5;
-	int dphi = 5;
+	int dtheta = 1;
+	int dphi = 1;
 	const float toRad = M_PI / 180.0f;
 	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
 		for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {

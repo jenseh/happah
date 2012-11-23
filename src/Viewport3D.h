@@ -1,4 +1,4 @@
-#ifndef VpIEWPORT3D_H_
+#ifndef VIEWPORT3D_H_
 #define VIEWPORT3D_H_
 
 #include <QGLWidget>

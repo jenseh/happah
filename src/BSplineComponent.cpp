@@ -29,7 +29,7 @@ BSplineComponent::BSplineComponent() :
 BSplineComponent::~BSplineComponent() {
 }
 
-QRectF BSplineComponent::getBoundingRect() const {
+QRectF BSplineComponent::boundingRect() const {
 	return bRect_;
 }
 

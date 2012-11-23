@@ -4,20 +4,19 @@ using namespace std;
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 Gear::Gear(float radius, float length, int toothCount, float heightFactor,
-        QMatrix4x4* projectionMatrix, QMatrix4x4 *viewMatrix,
-        QVector3D* camPos) :
-        GeometryObject(projectionMatrix, viewMatrix, camPos) {
-    radius_ = radius;
-    length_ = length;
-    toothCount_ = toothCount;
-    heightFactor_ = heightFactor;
+		QMatrix4x4* projectionMatrix, QMatrix4x4 *viewMatrix, QVector3D* camPos) :
+		GeometryObject(projectionMatrix, viewMatrix, camPos) {
+	radius_ = radius;
+	length_ = length;
+	toothCount_ = toothCount;
+	heightFactor_ = heightFactor;
 }
 
 Gear::~Gear() {
 }
 
 float Gear::getRadius() {
-    return radius_;
+	return radius_;
 }
 
 void Gear::createSinePartition() {
@@ -25,7 +24,7 @@ void Gear::createSinePartition() {
 	for (int i = 0; i < SEGMENT_COUNT; i++) {
 		float position = (float) i / (float) SEGMENT_COUNT;
 		float height = exp2f(sinf(position * 2.0f * M_PI));
-        heightProfilePartition_.push_back(glm::vec2(position, height));
+		heightProfilePartition_.push_back(glm::vec2(position, height));
 		//cout << position << ": " << height << std::endl;
 	}
 }
@@ -40,13 +39,13 @@ void Gear::createApproximatedPartition() {
 	// horizontal teeth part
 	for (int i = 0; i < segmentsPerLine; i++) {
 		float x = (float) i / segmentsPerLine;
-        heightProfilePartition_.push_back(glm::vec2(0.0f + x * horizX, 1.0f));
+		heightProfilePartition_.push_back(glm::vec2(0.0f + x * horizX, 1.0f));
 	}
 
 	// right flank
 	for (int i = 0; i < segmentsPerLine; i++) {
 		float x = (float) i / segmentsPerLine;
-        heightProfilePartition_.push_back(
+		heightProfilePartition_.push_back(
 				glm::vec2(horizX + x * flankX, 1.0f - x * 0.8f));
 	}
 
@@ -56,14 +55,14 @@ void Gear::createApproximatedPartition() {
 		float x = (float) i / segmentsPerLine;
 		float position = horizX + flankX + x * horizX;
 		float height = 0.2f * pow(2.0f * x - 1.0f, 2.0f);
-        heightProfilePartition_.push_back(glm::vec2(position, height));
+		heightProfilePartition_.push_back(glm::vec2(position, height));
 		//cout << position << ": " << height << std::endl;
 	}
 
 	//left flank
 	for (int i = 0; i < segmentsPerLine; i++) {
 		float x = (float) i / segmentsPerLine;
-        heightProfilePartition_.push_back(
+		heightProfilePartition_.push_back(
 				glm::vec2(horizX + flankX + horizX + x * flankX,
 						0.2f + x * 0.8f));
 	}
@@ -73,7 +72,7 @@ void Gear::createApproximatedPartition() {
 // x-values must be between 0 and 1 (position)
 // y-values must be between -1 and 1 (height)
 void Gear::createHeightProfilePartition() {
-    heightProfilePartition_ = std::vector<glm::vec2>();
+	heightProfilePartition_ = std::vector<glm::vec2>();
 
 	createApproximatedPartition();
 }
@@ -83,59 +82,59 @@ void Gear::createHeightProfilePartition() {
 // y-values must be between -1 and 1 (height)
 void Gear::createHeightProfile() {
 	createHeightProfilePartition();
-    heightProfile_ = std::vector<glm::vec2>();
+	heightProfile_ = std::vector<glm::vec2>();
 
-    for (int i = 0; i < toothCount_; i++) {
-        for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
-            float position = (heightProfilePartition_[j].x + i) / toothCount_;
-            float height = heightProfilePartition_[j].y;
-            heightProfile_.push_back(glm::vec2(position, height));
+	for (int i = 0; i < toothCount_; i++) {
+		for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
+			float position = (heightProfilePartition_[j].x + i) / toothCount_;
+			float height = heightProfilePartition_[j].y;
+			heightProfile_.push_back(glm::vec2(position, height));
 			//cout << position << ": " << height << std::endl;
 		}
 	}
 	// Add the first element again to close the "circle"
 	// TODO: Rethink whether this makes sense
-    heightProfile_.push_back(heightProfile_[0]);
+	heightProfile_.push_back(heightProfile_[0]);
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 void Gear::createVertexData() {
-    float dz = length_ / Z_DETAIL_LEVEL;
+	float dz = length_ / Z_DETAIL_LEVEL;
 	const float toRad = M_PI / 180.0f;
-    float innerRadius = radius_ * INNER_RADIUS_FACTOR;
+	float innerRadius = radius_ * INNER_RADIUS_FACTOR;
 
 	// Create the height profile given the current gear settings
 	createHeightProfile();
 
 	// precompute sin and cos of angles
-    float cosSegment[heightProfile_.size() + 1];
-    float sinSegment[heightProfile_.size() + 1];
-    float height[heightProfile_.size() + 1];
-    float cosHeight[heightProfile_.size() + 1];
-    float sinHeight[heightProfile_.size() + 1];
+	float cosSegment[heightProfile_.size() + 1];
+	float sinSegment[heightProfile_.size() + 1];
+	float height[heightProfile_.size() + 1];
+	float cosHeight[heightProfile_.size() + 1];
+	float sinHeight[heightProfile_.size() + 1];
 
-    for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+	for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
 			segmentNum++) {
-        float phi = heightProfile_[segmentNum].x * 360.0f;
+		float phi = heightProfile_[segmentNum].x * 360.0f;
 		cosSegment[segmentNum] = cos(phi * toRad);
 		sinSegment[segmentNum] = sin(phi * toRad);
-        height[segmentNum] = radius_
-                + heightProfile_[segmentNum].y * heightFactor_ * radius_;
+		height[segmentNum] = radius_
+				+ heightProfile_[segmentNum].y * heightFactor_ * radius_;
 		cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
 		sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
 	}
 	// Insert first value again to close the mesh
-    cosSegment[heightProfile_.size()] = cosSegment[0];
-    sinSegment[heightProfile_.size()] = sinSegment[0];
-    height[heightProfile_.size()] = height[0];
-    cosHeight[heightProfile_.size()] = cosHeight[0];
-    sinHeight[heightProfile_.size()] = sinHeight[0];
+	cosSegment[heightProfile_.size()] = cosSegment[0];
+	sinSegment[heightProfile_.size()] = sinSegment[0];
+	height[heightProfile_.size()] = height[0];
+	cosHeight[heightProfile_.size()] = cosHeight[0];
+	sinHeight[heightProfile_.size()] = sinHeight[0];
 
 	// draw the sides (german: Mantelflaechen) of the gear
 	// this is the important part where the height profile will come into play
 	for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
 		float z = i * dz;
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+		for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
 				segmentNum++) {
 
 			glm::vec4 a, b, c, d, normNext, norm;
@@ -189,8 +188,8 @@ void Gear::createVertexData() {
 	// circle's center as a common point. for nicer highlights it
 	// might be better to chose vertices in a more clever way.
 	int i = 0;
-    for (float z = 0.0f; i < 2; i++, z += length_) {
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+	for (float z = 0.0f; i < 2; i++, z += length_) {
+		for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
 				segmentNum++) {
 			glm::vec4 a, b, c, d, norm;
 
@@ -227,6 +226,12 @@ void Gear::createVertexData() {
 			dataPushback(norm);
 		}
 	}
+}
+// Dummy Function to make things work , im not sure if we should really let our 3D stuff inherit QComponent
+
+QRectF Gear::boundingRect() const {
+
+	return QRectF(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 //nice formula for the sides            d.y = sin((int)((phi+45) * 4 / 360) * M_PI / 2.0f);

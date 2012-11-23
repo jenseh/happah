@@ -14,6 +14,7 @@ public:
 	float getRadius();
 	glm::vec3 getHitpoint();
 	void createVertexData();
+	QRectF boundingRect() const;				// DO NOT CHANGE INTO getBoundingRect as bounding Rectangle implements a virtual function of component.
 
 private:
 	float radius_;

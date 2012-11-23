@@ -9,6 +9,7 @@ public:
             QVector3D* camPos = 0);
 	void createVertexData();
 	void draw(QGLShaderProgram *shader);
+	QRectF boundingRect() const;				// DO NOT CHANGE INTO getBoundingRect as bounding Rectangle implements a virtual function of component.
 };
 
 #endif // GRID_H

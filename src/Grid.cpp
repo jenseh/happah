@@ -29,3 +29,11 @@ void Grid::createVertexData() {
 		}
 	}
 }
+
+// Dummy Function to make things work , im not sure if we should really let our 3D stuff inherit QComponent
+
+QRectF Grid::boundingRect() const
+{
+
+	return QRectF(0.0f,0.0f,0.0f,0.0f);
+}

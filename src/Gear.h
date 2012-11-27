@@ -5,7 +5,7 @@
 #include <iostream>
 #include <math.h>
 #include "GeometryObject.h"
-#include "standartprofile.h"
+#include "StandardProfile.h"
 
 class Gear: public GeometryObject {
 public:
@@ -25,6 +25,7 @@ private:
     float module_;
 	std::vector<glm::vec2> heightProfilePartition_;
 	std::vector<glm::vec2> heightProfile_;
+    StandardProfile* standardProfile;
 
 	const static int SEGMENT_COUNT = 40; //maximum: 4500
 	const static int Z_DETAIL_LEVEL = 4;

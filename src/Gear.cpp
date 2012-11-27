@@ -70,12 +70,13 @@ void Gear::createApproximatedPartition() {
 }
 
 // Create a profile of height values for one partition (german: Teilung)
-// x-values must be between 0 and 1 (position)
-// y-values must be between -1 and 1 (height)
+// x-values must be between 0 and p (partition, german: Teilung)
+// y-values must be between -p and p (height)
 void Gear::createHeightProfilePartition() {
 	heightProfilePartition_ = std::vector<glm::vec2>();
 
-    StandartProfile(module_, 30 / 180.0 * M_PI, 0, 0).getProfilePartition(heightProfilePartition_, SEGMENT_COUNT);
+    standardProfile = new StandardProfile(module_, 10 / 180.0 * M_PI, 0, 0);
+    standardProfile->getProfilePartition(heightProfilePartition_, SEGMENT_COUNT);
     //createApproximatedPartition();
 }
 

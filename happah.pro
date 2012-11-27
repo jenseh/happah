@@ -18,7 +18,9 @@ HEADERS += src/BSplineComponent.h \
     src/Tool.h \
     src/ToolSelector.h \
     src/Viewport3D.h \
-    src/Sphere.h
+    src/Sphere.h \
+    src/OpenGL.h \
+    src/StandardProfile.h
 SOURCES += src/BSplineComponent.cpp \
     src/BSplineTool.cpp \
     src/Component.cpp \
@@ -34,7 +36,9 @@ SOURCES += src/BSplineComponent.cpp \
     src/Tool.cpp \
     src/ToolSelector.cpp \
     src/Viewport3D.cpp \
-    src/Sphere.cpp
+    src/Sphere.cpp \
+    src/OpenGL.cpp \
+    src/StandardProfile.cpp
 FORMS += 
 RESOURCES +=
 INCLUDEPATH += /usr/include

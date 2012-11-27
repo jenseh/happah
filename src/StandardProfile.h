@@ -1,39 +1,39 @@
-#ifndef STANDARTPROFILE_H
-#define STANDARTPROFILE_H
+#ifndef STANDARDPROFILE_H
+#define STANDARDPROFILE_H
 
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
 #include <vector>
 
-class StandartProfile
+class StandardProfile
 {
-    // Werden übergeben
+    // Werden uebergeben
     double mModul;
     double mDegree; // Flankenwinkel
-    double rootCircleRadius;// Fußrundungsradius
+    double rootCircleRadius;// Fussrundungsradius
     double mCP; // Kopfspiel
 
     // Werden aus Modul und Winkel berechnet
     // X Start Werte
     double mFlankStart; // Anfang der Flanken
-    double mFloorCyrcleStart; // Fußrundungsanfang
+    double mFloorCyrcleStart; // Fussrundungsanfang
     double mFloorStart; // X Anfang des Bodens
     // Y Formeln der Komponenten
     // Flanken Formeln
     double mSlopeFlank; // Steigung
     double mCFlank; // Y-Achsenabschnitt
-    // Fußrundung
+    // Fussrundung
     double mFloorCyrcleMiddle[2];
 
     void normalize(double& x)const;
 
 public:
-    StandartProfile(double modul, double degree, double radius, double cp);
+    StandardProfile(double modul, double degree, double radius, double cp);
 
-    double getHeight(double x)const; // gibt höhe auf interval [0,1] zurück
+    double getHeight(double x)const; // gibt Hoehe auf interval [0,1] zurueck //TODO: fix
 
     void getProfilePartition(std::vector<glm::vec2>& partition, int numberSamples);
 };
 
-#endif // STANDARTPROFILE_H
+#endif // STANDARDPROFILE_H

@@ -74,38 +74,37 @@ void Viewport3D::initializeGL() {
 	gear2_->fillVertexBuffer();
 
 	// TODO: Why does this not work?Because grids , spheres and gears are not geometry objects they just inherit it
-//    geometryObjects_ = new vector<GeometryObject>();
-//    geometryObjects_->push_back((GeometryObject) *grid_);
-//    geometryObjects_->push_back((GeometryObject) *sphere);
-//    geometryObjects_->push_back((GeometryObject) *gear1);
-//    geometryObjects_->push_back((GeometryObject) *gear2);
+    geometryObjects_ = vector<GeometryObject*>();
+    geometryObjects_.push_back(grid_);
+    geometryObjects_.push_back(sphere_);
+    geometryObjects_.push_back(gear1_);
+    geometryObjects_.push_back(gear2_);
 
-	mainWindow_->getComponentContainer()->addComponent(gear1_);
-	gear1_->setText("Gear 1");
-	mainWindow_->getComponentContainer()->addComponent(gear2_);
-	gear2_->setText("Gear 2");
-	mainWindow_->getComponentContainer()->addComponent(sphere_);
-	sphere_->setText("Sphere");
-	mainWindow_->getComponentContainer()->addComponent(grid_);
+    for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
+        mainWindow_->getComponentContainer()->addComponent(geometryObjects_[i]);
+    }
+
+    sphere_->setText("Sphere");
 	grid_->setText("Grid");
+    gear1_->setText("Gear 1");
+    gear2_->setText("Gear 2");
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
 	connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
-	timer_->start(WAIT_TIME);
+    timer_->start(WAIT_TIME);
 }
 
 void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
-	/*
-	 * NOT NEEDED ...
-	grid_->updateProjectionMatrix();
-	sphere_->updateProjectionMatrix();
-	gear1_->updateProjectionMatrix();
-	gear2_->updateProjectionMatrix();
-	*/
+    /*
+     * NOT NEEDED ...
+    for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
+        geometryObjects_[i]->updateProjectionMatrix();
+    }*/
+
 }
 
 void Viewport3D::paintGL() {
@@ -175,15 +174,10 @@ void Viewport3D::updateView() {
 	viewMatrix_ = LookatMatrix;
 
 	// Update MV and MVP
-//    for (unigned int i = 0; i < geometryObjects_->size(); i++)
-//    {
-//        geometryObjects_[i]->updateView(viewMatrix_, eye_);
-//    }
-
-	gear1_->updateViewMatrix();
-	gear2_->updateViewMatrix();
-	sphere_->updateViewMatrix();
-	grid_->updateViewMatrix();
+    for (unsigned int i = 0; i < geometryObjects_.size(); i++)
+    {
+        geometryObjects_[i]->updateViewMatrix();
+    }
 }
 
 void Viewport3D::mouseMoveEvent(QMouseEvent *event) {

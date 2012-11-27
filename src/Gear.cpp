@@ -10,6 +10,7 @@ Gear::Gear(float radius, float length, int toothCount, float heightFactor,
 	length_ = length;
 	toothCount_ = toothCount;
 	heightFactor_ = heightFactor;
+    module_ = radius_ * 2.0f / toothCount_;
 }
 
 Gear::~Gear() {
@@ -74,7 +75,8 @@ void Gear::createApproximatedPartition() {
 void Gear::createHeightProfilePartition() {
 	heightProfilePartition_ = std::vector<glm::vec2>();
 
-	createApproximatedPartition();
+    StandartProfile(module_, 30 / 180.0 * M_PI, 0, 0).getProfilePartition(heightProfilePartition_, SEGMENT_COUNT);
+    //createApproximatedPartition();
 }
 
 // Create a profile of height values
@@ -86,8 +88,8 @@ void Gear::createHeightProfile() {
 
 	for (int i = 0; i < toothCount_; i++) {
 		for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
-			float position = (heightProfilePartition_[j].x + i) / toothCount_;
-			float height = heightProfilePartition_[j].y;
+            float position = heightProfilePartition_[j].x + i*module_ * M_PI;
+            float height = heightProfilePartition_[j].y;
 			heightProfile_.push_back(glm::vec2(position, height));
 			//cout << position << ": " << height << std::endl;
 		}
@@ -115,11 +117,10 @@ void Gear::createVertexData() {
 
 	for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
 			segmentNum++) {
-		float phi = heightProfile_[segmentNum].x * 360.0f;
+        float phi = heightProfile_[segmentNum].x / (2*M_PI * radius_) *360.0f; //in degrees
 		cosSegment[segmentNum] = cos(phi * toRad);
 		sinSegment[segmentNum] = sin(phi * toRad);
-		height[segmentNum] = radius_
-				+ heightProfile_[segmentNum].y * heightFactor_ * radius_;
+        height[segmentNum] = radius_ + heightProfile_[segmentNum].y;
 		cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
 		sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
 	}

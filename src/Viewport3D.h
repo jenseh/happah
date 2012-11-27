@@ -54,13 +54,13 @@ private:
     float zoomRad_, theta_, phi_; //is zoomRad german?
 
     // GeometryObjects
-    vector<GeometryObject>* geometryObjects_;
+    vector<GeometryObject*> geometryObjects_;
     Grid* grid_;
     Sphere* sphere_;
     Gear* gear1_;
     Gear* gear2_;
 
-	const static int WAIT_TIME = 40;
+    const static int WAIT_TIME = 40;
 
 	void draw();
 	void updateView();

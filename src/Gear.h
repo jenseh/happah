@@ -5,6 +5,7 @@
 #include <iostream>
 #include <math.h>
 #include "GeometryObject.h"
+#include "standartprofile.h"
 
 class Gear: public GeometryObject {
 public:
@@ -21,6 +22,7 @@ private:
 	float length_;
 	int toothCount_;
 	float heightFactor_;
+    float module_;
 	std::vector<glm::vec2> heightProfilePartition_;
 	std::vector<glm::vec2> heightProfile_;
 

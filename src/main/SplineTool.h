@@ -5,7 +5,7 @@
 #include "ToolSelector.h"
 
 class SplineTool: public Tool {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	SplineTool();

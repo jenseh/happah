@@ -7,17 +7,17 @@
 #include "Component.h"
 
 class Tool: public QObject {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	Tool();
 	~Tool();
 
-    QPushButton* getToolButton();
-    QWidget* getToolSettings();
+	QPushButton* getToolButton();
+	QWidget* getToolSettings();
 
-	signals:
-	void emitComponent( Component* component );
+signals:
+	void emitComponent(Component* component);
 
 private:
 	QPushButton* toolButton;

@@ -8,11 +8,11 @@
 #include "QglGeometryObject.h"
 
 QglGeometryObject::QglGeometryObject(QMatrix4x4* projectionMatrix,
-        QMatrix4x4* viewMatrix, QVector3D* cameraPosition) :
+		QMatrix4x4* viewMatrix, QVector3D* cameraPosition) :
 		Component() {
-    viewMatrix_ = viewMatrix;
-    projectionMatrix_ = projectionMatrix;
-    cameraPosition_ = cameraPosition;
+	viewMatrix_ = viewMatrix;
+	projectionMatrix_ = projectionMatrix;
+	cameraPosition_ = cameraPosition;
 }
 
 QglGeometryObject::~QglGeometryObject() {
@@ -51,20 +51,20 @@ void QglGeometryObject::init() {
 	normalMatrix_.setToIdentity();
 
 	//Update ModelViewProjection Matrix
-    MV_ = *viewMatrix_ * modelMatrix_;
+	MV_ = *viewMatrix_ * modelMatrix_;
 	MVP_ = *projectionMatrix_ * MV_;
-	normalMatrix_= MV_;
-	normalMatrix_=normalMatrix_.inverted();
-	normalMatrix_=normalMatrix_.transposed();
+	normalMatrix_ = MV_;
+	normalMatrix_ = normalMatrix_.inverted();
+	normalMatrix_ = normalMatrix_.transposed();
 }
 
 /*	WE Don't need that function either , as I said Matrices only need to be computed once BEFORE DRAWING. Projection and
  * and Viewing Matrix are always up to date here , as these are pointers the the global Matrices in ViewPort3D.
  *
-void GeometryObject::updateProjectionMatrix() {
-	MVP_ = *projectionMatrix_ * MV_;
-}
-*/
+ void GeometryObject::updateProjectionMatrix() {
+ MVP_ = *projectionMatrix_ * MV_;
+ }
+ */
 void QglGeometryObject::updateViewMatrix() {
 	MV_ = *viewMatrix_ * modelMatrix_;
 	MVP_ = *projectionMatrix_ * MV_;
@@ -82,7 +82,7 @@ void QglGeometryObject::draw(QGLShaderProgram *shader) {
 	shader->setUniformValue("MVP", MVP_);
 	shader->setUniformValue("MV", MV_);
 	shader->setUniformValue("normalMat", normalMatrix_);
-    shader->setUniformValue("eye", *cameraPosition_);
+	shader->setUniformValue("eye", *cameraPosition_);
 
 	vertexBuffer_.bind();
 	int mode = GL_QUADS;
@@ -110,12 +110,12 @@ void QglGeometryObject::dataPushback(glm::vec4 data) {
 
 void QglGeometryObject::rotate(float angle, float x, float y, float z) {
 	modelMatrix_.rotate(angle, x, y, z);
-   // MV_ = *viewMatrix_ * modelMatrix_;		No need to compute Matrices here , Matrices are computed ONCE before drawing the object
-   // MVP_ = *projectionMatrix_ * MV_;
+	// MV_ = *viewMatrix_ * modelMatrix_;		No need to compute Matrices here , Matrices are computed ONCE before drawing the object
+	// MVP_ = *projectionMatrix_ * MV_;
 }
 
 void QglGeometryObject::translate(float x, float y, float z) {
 	modelMatrix_.translate(x, y, z);
-   // MV_ = *viewMatrix_ * modelMatrix_;	No need to compute Matrices here , Matrices are computed ONCE before drawing the object
-   // MVP_ = *projectionMatrix_ * MV_;
+	// MV_ = *viewMatrix_ * modelMatrix_;	No need to compute Matrices here , Matrices are computed ONCE before drawing the object
+	// MVP_ = *projectionMatrix_ * MV_;
 }

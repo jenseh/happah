@@ -14,13 +14,13 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <iostream>
-#include "Component.h"
+#include "../../Component.h"
 
 class QglGeometryObject: public QObject, public Component {
-	Q_OBJECT
+Q_OBJECT
 public:
-    QglGeometryObject(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
-            QVector3D* camPos);
+	QglGeometryObject(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
+			QVector3D* camPos);
 	virtual ~QglGeometryObject();
 	void createGrid();
 	int bindVBuffer();
@@ -28,7 +28,7 @@ public:
 
 	// For drawing
 	void init();
-    void draw(QGLShaderProgram* shader);
+	void draw(QGLShaderProgram* shader);
 	// void updateProjectionMatrix();  Please read the comment in GeometryObject.ccp
 	void updateViewMatrix();
 
@@ -46,9 +46,9 @@ protected:
 
 	// For drawing
 	QMatrix4x4 *projectionMatrix_, *viewMatrix_, MVP_, MV_; //redundant information to avoid repeated computation
-	QMatrix4x4 modelMatrix_,normalMatrix_;
+	QMatrix4x4 modelMatrix_, normalMatrix_;
 
-    QVector3D *cameraPosition_;
+	QVector3D *cameraPosition_;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

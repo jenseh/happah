@@ -9,9 +9,9 @@ Tool::~Tool() {
 }
 
 QPushButton* Tool::getToolButton() {
-    return toolButton;
+	return toolButton;
 }
 
 QWidget* Tool::getToolSettings() {
-    return toolSettings;
+	return toolSettings;
 }

@@ -11,7 +11,7 @@
 #include "EditorScene.h"
 
 class MainWindow: public QMainWindow {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	static const int DEFAULT_WIDTH = 1024;

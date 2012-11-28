@@ -5,7 +5,7 @@
 #include <iostream>
 #include <math.h>
 #include "QglGeometryObject.h"
-#include "StandardProfile.h"
+#include "../../StandardProfile.h"
 
 class QglGear: public QglGeometryObject {
 public:
@@ -22,10 +22,10 @@ private:
 	float length_;
 	int toothCount_;
 	float heightFactor_;
-    float module_;
+	float module_;
 	std::vector<glm::vec2> heightProfilePartition_;
 	std::vector<glm::vec2> heightProfile_;
-    StandardProfile* standardProfile;
+	StandardProfile* standardProfile;
 
 	const static int SEGMENT_COUNT = 40; //maximum: 4500
 	const static int Z_DETAIL_LEVEL = 4;

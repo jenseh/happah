@@ -7,7 +7,7 @@
 #include "Component.h"
 
 class ComponentContainer: public QListWidget {
-	Q_OBJECT
+Q_OBJECT
 
 private:
 	QGraphicsScene* scene_;
@@ -17,7 +17,7 @@ public:
 	~ComponentContainer();
 
 public slots:
-    void addComponent(Component* component);
+	void addComponent(Component* component);
 
 };
 

@@ -9,7 +9,7 @@ ComponentContainer::~ComponentContainer() {
 }
 
 void ComponentContainer::addComponent(Component* component) {
-    this->addItem(component);
-    scene_->addItem(component);
+	this->addItem(component);
+	scene_->addItem(component);
 }
 

@@ -7,22 +7,23 @@
 
 //TODO: replace kopfspiel everywhere with equivalent word in English
 
-class StandardProfile
-{
-    double module_;
-    double profileAngle_; // Flankenwinkel
-    double rootCircleRadius_;// Fussrundungsradius
-    double kopfspiel_; // Kopfspiel
+class StandardProfile {
+	double module_;
+	double profileAngle_; // Flankenwinkel
+	double rootCircleRadius_; // Fussrundungsradius
+	double kopfspiel_; // Kopfspiel
 
-    void normalize(double& x)const;
-    void calcRootCircleCenter(double *center)const;
+	void normalize(double& x) const;
+	void calcRootCircleCenter(double *center) const;
 
 public:
-    StandardProfile(double module, double profileAngle, double rootCircleRadius, double kopfspiel);
+	StandardProfile(double module, double profileAngle, double rootCircleRadius,
+			double kopfspiel);
 
-    double getHeight(double x)const;
+	double getHeight(double x) const;
 
-    void getProfilePartition(std::vector<glm::vec2>& partition, int numberSamples);
+	void getProfilePartition(std::vector<glm::vec2>& partition,
+			int numberSamples);
 };
 
 #endif // STANDARDPROFILE_H

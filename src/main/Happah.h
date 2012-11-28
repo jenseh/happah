@@ -6,7 +6,7 @@
 #include "MainWindow.h"
 
 class Happah: public QApplication {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	Happah(int & argc, char ** argv);

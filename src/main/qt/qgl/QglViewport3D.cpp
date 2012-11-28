@@ -31,7 +31,7 @@ void QglViewPort3D::initializeGL() {
 
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 	glClearDepth(1.0f);
-	glEnable (GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	if (!initShaderPrograms())
 		return;
@@ -41,9 +41,9 @@ void QglViewPort3D::initializeGL() {
 	// Grid
 	grid_ = new QglGrid(&projectionMatrix_, &viewMatrix_, &eye_);
 	sphere_ = new QglSphere(1.0f, &projectionMatrix_, &viewMatrix_, &eye_);
-	gear1_ = new Gear(1.0f, 1.0f, 20, 0.2f, &projectionMatrix_, &viewMatrix_,
+	gear1_ = new QglGear(1.0f, 1.0f, 20, 0.2f, &projectionMatrix_, &viewMatrix_,
 			&eye_); // 1 * 3.14 / 20
-	gear2_ = new Gear(0.5f, 1.0f, 10, 0.6f, &projectionMatrix_, &viewMatrix_,
+	gear2_ = new QglGear(0.5f, 1.0f, 10, 0.6f, &projectionMatrix_, &viewMatrix_,
 			&eye_); // 0.25
 
 	grid_->init(/*projectionMatrix_, viewMatrix_*/);
@@ -74,36 +74,36 @@ void QglViewPort3D::initializeGL() {
 	gear2_->fillVertexBuffer();
 
 	// TODO: Why does this not work?Because grids , spheres and gears are not geometry objects they just inherit it
-    geometryObjects_ = vector<QglGeometryObject*>();
-    geometryObjects_.push_back(grid_);
-    geometryObjects_.push_back(sphere_);
-    geometryObjects_.push_back(gear1_);
-    geometryObjects_.push_back(gear2_);
+	geometryObjects_ = vector<QglGeometryObject*>();
+	geometryObjects_.push_back(grid_);
+	geometryObjects_.push_back(sphere_);
+	geometryObjects_.push_back(gear1_);
+	geometryObjects_.push_back(gear2_);
 
-    for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
-        mainWindow_->getComponentContainer()->addComponent(geometryObjects_[i]);
-    }
+	for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
+		mainWindow_->getComponentContainer()->addComponent(geometryObjects_[i]);
+	}
 
-    sphere_->setText("Sphere");
+	sphere_->setText("Sphere");
 	grid_->setText("Grid");
-    gear1_->setText("Gear 1");
-    gear2_->setText("Gear 2");
+	gear1_->setText("Gear 1");
+	gear2_->setText("Gear 2");
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
 	connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
-    timer_->start(WAIT_TIME);
+	timer_->start(WAIT_TIME);
 }
 
 void QglViewPort3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
-    /*
-     * NOT NEEDED ...
-    for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
-        geometryObjects_[i]->updateProjectionMatrix();
-    }*/
+	/*
+	 * NOT NEEDED ...
+	 for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
+	 geometryObjects_[i]->updateProjectionMatrix();
+	 }*/
 
 }
 
@@ -174,10 +174,9 @@ void QglViewPort3D::updateView() {
 	viewMatrix_ = LookatMatrix;
 
 	// Update MV and MVP
-    for (unsigned int i = 0; i < geometryObjects_.size(); i++)
-    {
-        geometryObjects_[i]->updateViewMatrix();
-    }
+	for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
+		geometryObjects_[i]->updateViewMatrix();
+	}
 }
 
 void QglViewPort3D::mouseMoveEvent(QMouseEvent *event) {

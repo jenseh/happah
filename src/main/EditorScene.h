@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 
 class EditorScene: public QGraphicsScene {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	EditorScene(QObject* parent = 0);

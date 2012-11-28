@@ -10,7 +10,7 @@
 #include "Tool.h"
 
 class BSplineTool: public Tool {
-	Q_OBJECT
+Q_OBJECT
 public:
 	BSplineTool();
 	~BSplineTool();

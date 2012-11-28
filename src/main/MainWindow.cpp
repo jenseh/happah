@@ -37,7 +37,8 @@ MainWindow::MainWindow() {
 
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
-	QglViewPort3D* viewport3D = new QglViewPort3D(glFormat, viewportWidget, this);
+	QglViewPort3D* viewport3D = new QglViewPort3D(glFormat, viewportWidget,
+			this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	tabs->addTab(viewportWidget, "3D-View");
 
@@ -52,7 +53,8 @@ MainWindow::MainWindow() {
 	createTools();
 	createContainer();
 
-connect(toolSelector_, SIGNAL(emitComponent(Component*)), componentContainer_, SLOT(addComponent(Component*)) );
+	connect(toolSelector_, SIGNAL(emitComponent(Component*)),
+			componentContainer_, SLOT(addComponent(Component*)));
 
 //createDockWindows();
 }
@@ -60,50 +62,50 @@ connect(toolSelector_, SIGNAL(emitComponent(Component*)), componentContainer_, S
 void MainWindow::createTools() {
 
 // Tool selector
-QDockWidget* dock = new QDockWidget(tr("Tools"), this);
+	QDockWidget* dock = new QDockWidget(tr("Tools"), this);
 
-toolSelector_ = new ToolSelector(dock);
+	toolSelector_ = new ToolSelector(dock);
 
-SplineTool* splineTool = new SplineTool();
-toolSelector_->addTool(splineTool);
+	SplineTool* splineTool = new SplineTool();
+	toolSelector_->addTool(splineTool);
 
-BSplineTool* bSplineTool = new BSplineTool();
-toolSelector_->addTool(bSplineTool);
+	BSplineTool* bSplineTool = new BSplineTool();
+	toolSelector_->addTool(bSplineTool);
 
-dock->setWidget(toolSelector_);
-dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-addDockWidget(Qt::LeftDockWidgetArea, dock);
-viewMenu_->addAction(dock->toggleViewAction());
+	dock->setWidget(toolSelector_);
+	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	addDockWidget(Qt::LeftDockWidgetArea, dock);
+	viewMenu_->addAction(dock->toggleViewAction());
 
 // Option docking-window to control current tool
-dock = new QDockWidget(tr("Tool Settings"), this);
-dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-addDockWidget(Qt::LeftDockWidgetArea, dock);
-viewMenu_->addAction(dock->toggleViewAction());
-dock->setWidget(toolSelector_->getSettingsWidget());
+	dock = new QDockWidget(tr("Tool Settings"), this);
+	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	addDockWidget(Qt::LeftDockWidgetArea, dock);
+	viewMenu_->addAction(dock->toggleViewAction());
+	dock->setWidget(toolSelector_->getSettingsWidget());
 
 }
 
 void MainWindow::createContainer() {
 
 // List of objects in scene
-QDockWidget* dock = new QDockWidget(tr("Objects"), this);
-componentContainer_ = new ComponentContainer(scene_, dock);
-dock->setWidget(componentContainer_);
-dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-addDockWidget(Qt::RightDockWidgetArea, dock);
-viewMenu_->addAction(dock->toggleViewAction());
+	QDockWidget* dock = new QDockWidget(tr("Objects"), this);
+	componentContainer_ = new ComponentContainer(scene_, dock);
+	dock->setWidget(componentContainer_);
+	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	addDockWidget(Qt::RightDockWidgetArea, dock);
+	viewMenu_->addAction(dock->toggleViewAction());
 }
 
 MainWindow::~MainWindow() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-if (event->key() == Qt::Key_Escape) {
-	qApp->quit();
-}
+	if (event->key() == Qt::Key_Escape) {
+		qApp->quit();
+	}
 }
 
 ComponentContainer* MainWindow::getComponentContainer() {
-return componentContainer_;
+	return componentContainer_;
 }

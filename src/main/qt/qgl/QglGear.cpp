@@ -10,7 +10,7 @@ QglGear::QglGear(float radius, float length, int toothCount, float heightFactor,
 	length_ = length;
 	toothCount_ = toothCount;
 	heightFactor_ = heightFactor;
-    module_ = radius_ * 2.0f / toothCount_;
+	module_ = radius_ * 2.0f / toothCount_;
 }
 
 QglGear::~QglGear() {
@@ -75,9 +75,10 @@ void QglGear::createApproximatedPartition() {
 void QglGear::createHeightProfilePartition() {
 	heightProfilePartition_ = std::vector<glm::vec2>();
 
-    standardProfile = new StandardProfile(module_, 10 / 180.0 * M_PI, 0, 0);
-    standardProfile->getProfilePartition(heightProfilePartition_, SEGMENT_COUNT);
-    //createApproximatedPartition();
+	standardProfile = new StandardProfile(module_, 10 / 180.0 * M_PI, 0, 0);
+	standardProfile->getProfilePartition(heightProfilePartition_,
+			SEGMENT_COUNT);
+	//createApproximatedPartition();
 }
 
 // Create a profile of height values
@@ -89,8 +90,8 @@ void QglGear::createHeightProfile() {
 
 	for (int i = 0; i < toothCount_; i++) {
 		for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
-            float position = heightProfilePartition_[j].x + i*module_ * M_PI;
-            float height = heightProfilePartition_[j].y;
+			float position = heightProfilePartition_[j].x + i * module_ * M_PI;
+			float height = heightProfilePartition_[j].y;
 			heightProfile_.push_back(glm::vec2(position, height));
 			//cout << position << ": " << height << std::endl;
 		}
@@ -118,10 +119,11 @@ void QglGear::createVertexData() {
 
 	for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
 			segmentNum++) {
-        float phi = heightProfile_[segmentNum].x / (2*M_PI * radius_) *360.0f; //in degrees
+		float phi = heightProfile_[segmentNum].x / (2 * M_PI * radius_)
+				* 360.0f; //in degrees
 		cosSegment[segmentNum] = cos(phi * toRad);
 		sinSegment[segmentNum] = sin(phi * toRad);
-        height[segmentNum] = radius_ + heightProfile_[segmentNum].y;
+		height[segmentNum] = radius_ + heightProfile_[segmentNum].y;
 		cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
 		sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
 	}

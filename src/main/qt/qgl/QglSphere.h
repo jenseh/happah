@@ -7,14 +7,14 @@
 class QglSphere: public QglGeometryObject {
 
 public:
-    QglSphere(float radius = 1.0f, QMatrix4x4* projectionMatrix = 0,
-            QMatrix4x4 *viewMatrix = 0, QVector3D* camPos = 0);
+	QglSphere(float radius = 1.0f, QMatrix4x4* projectionMatrix = 0,
+			QMatrix4x4 *viewMatrix = 0, QVector3D* camPos = 0);
 	virtual ~QglSphere();
 	bool hit(glm::vec3 rayPos, glm::vec3 rayDir);
 	float getRadius();
 	glm::vec3 getHitpoint();
 	void createVertexData();
-	QRectF boundingRect() const;				// DO NOT CHANGE INTO getBoundingRect as bounding Rectangle implements a virtual function of component.
+	QRectF boundingRect() const;// DO NOT CHANGE INTO getBoundingRect as bounding Rectangle implements a virtual function of component.
 
 private:
 	float radius_;

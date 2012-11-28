@@ -10,8 +10,8 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent,
 	projectionMatrix_.setToIdentity();
 	viewMatrix_.setToIdentity();
 	zoomRad_ = 5.0f;
-	eye_.setX(0.0f);
-	eye_.setY(0.0f);
+    eye_.setX(0.5f);
+    eye_.setY(1.0f);
 	eye_.setZ(zoomRad_);
 	center_.setX(0.0f);
 	center_.setY(0.0f);

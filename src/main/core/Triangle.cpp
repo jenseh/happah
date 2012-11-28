@@ -1,18 +1,18 @@
 /*
- * GeomtryObject.cpp
+ * Triangle.cpp
  *
  *  Created on: Nov 28, 2012
  *      Author: matthias
  */
 
-#include "GeometryObject.h"
+#include "Triangle.h"
 
-GeometryObject::GeometryObject() {
+Triangle::Triangle() {
 	// TODO Auto-generated constructor stub
 
 }
 
-GeometryObject::~GeometryObject() {
+Triangle::~Triangle() {
 	// TODO Auto-generated destructor stub
 }
 

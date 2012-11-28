@@ -8,10 +8,10 @@
 #ifndef GEOMTRYOBJECT_H_
 #define GEOMTRYOBJECT_H_
 
-class GeomtryObject {
+class GeometryObject {
 public:
-	GeomtryObject();
-	virtual ~GeomtryObject();
+	GeometryObject();
+	virtual ~GeometryObject();
 };
 
 #endif /* GEOMTRYOBJECT_H_ */

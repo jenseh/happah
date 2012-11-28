@@ -1,18 +1,18 @@
 /*
- * GeomtryObject.cpp
+ * Sphere.cpp
  *
  *  Created on: Nov 28, 2012
  *      Author: matthias
  */
 
-#include "GeometryObject.h"
+#include "Sphere.h"
 
-GeometryObject::GeometryObject() {
+Sphere::Sphere() {
 	// TODO Auto-generated constructor stub
 
 }
 
-GeometryObject::~GeometryObject() {
+Sphere::~Sphere() {
 	// TODO Auto-generated destructor stub
 }
 

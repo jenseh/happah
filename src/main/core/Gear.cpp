@@ -1,18 +1,18 @@
 /*
- * GeomtryObject.cpp
+ * Gear.cpp
  *
  *  Created on: Nov 28, 2012
  *      Author: matthias
  */
 
-#include "GeometryObject.h"
+#include "Gear.h"
 
-GeometryObject::GeometryObject() {
+Gear::Gear() {
 	// TODO Auto-generated constructor stub
 
 }
 
-GeometryObject::~GeometryObject() {
+Gear::~Gear() {
 	// TODO Auto-generated destructor stub
 }
 

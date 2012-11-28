@@ -5,13 +5,20 @@
  *      Author: matthias
  */
 
-#ifndef GEOMTRYOBJECT_H_
-#define GEOMTRYOBJECT_H_
+#ifndef GEOMETRYOBJECT_H_
+#define GEOMETRYOBJECT_H_
+
+#include <glm/glm.hpp>
+
+using glm::vec4;
+using glm::vec3;
 
 class GeometryObject {
 public:
-	GeometryObject();
+	GeometryObject(vec4 position);
 	virtual ~GeometryObject();
+private:
+	vec4 position_;
 };
 
-#endif /* GEOMTRYOBJECT_H_ */
+#endif /* GEOMETRYOBJECT_H_ */

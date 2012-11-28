@@ -10,10 +10,15 @@
 
 #include "GeometryObject.h"
 
+using glm::vec4;
+
 class Sphere: public GeometryObject {
 public:
-	Sphere();
+	Sphere(vec4 center=vec4(0.0f,0.0f,0.0f,0.0f),float radius=1.0f);
 	virtual ~Sphere();
+private:
+	vec4 center_;
+	float radius_;
 };
 
 #endif /* SPHERE_H_ */

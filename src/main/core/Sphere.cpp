@@ -7,9 +7,10 @@
 
 #include "Sphere.h"
 
-Sphere::Sphere() {
+Sphere::Sphere(vec4 center,float radius) : GeometryObject(center){
 	// TODO Auto-generated constructor stub
-
+	center_=center;
+	radius_=radius;
 }
 
 Sphere::~Sphere() {

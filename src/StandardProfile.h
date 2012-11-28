@@ -2,36 +2,25 @@
 #define STANDARDPROFILE_H
 
 #include <glm/glm.hpp>
-#include <iostream>
 #include <math.h>
 #include <vector>
 
+//TODO: replace kopfspiel everywhere with equivalent word in English
+
 class StandardProfile
 {
-    // Werden uebergeben
-    double mModul;
-    double mDegree; // Flankenwinkel
-    double rootCircleRadius;// Fussrundungsradius
-    double mCP; // Kopfspiel
-
-    // Werden aus Modul und Winkel berechnet
-    // X Start Werte
-    double mFlankStart; // Anfang der Flanken
-    double mFloorCyrcleStart; // Fussrundungsanfang
-    double mFloorStart; // X Anfang des Bodens
-    // Y Formeln der Komponenten
-    // Flanken Formeln
-    double mSlopeFlank; // Steigung
-    double mCFlank; // Y-Achsenabschnitt
-    // Fussrundung
-    double mFloorCyrcleMiddle[2];
+    double module_;
+    double profileAngle_; // Flankenwinkel
+    double rootCircleRadius_;// Fussrundungsradius
+    double kopfspiel_; // Kopfspiel
 
     void normalize(double& x)const;
+    void calcRootCircleCenter(double *center)const;
 
 public:
-    StandardProfile(double modul, double degree, double radius, double cp);
+    StandardProfile(double module, double profileAngle, double rootCircleRadius, double kopfspiel);
 
-    double getHeight(double x)const; // gibt Hoehe auf interval [0,1] zurueck //TODO: fix
+    double getHeight(double x)const;
 
     void getProfilePartition(std::vector<glm::vec2>& partition, int numberSamples);
 };

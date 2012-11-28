@@ -12,7 +12,6 @@ HEADERS += src/BSplineComponent.h \
     src/GeometryObject.h \
     src/Grid.h \
     src/Happah.h \
-    src/main.h \
     src/MainWindow.h \
     src/SplineTool.h \
     src/Tool.h \

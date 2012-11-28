@@ -1,4 +1,4 @@
-#include "opengl.h"
+#include "OpenGL.h"
 
 OpenGL::OpenGL() {
 }

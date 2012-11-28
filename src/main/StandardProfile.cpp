@@ -25,6 +25,7 @@ void StandardProfile::normalize(double& x)const{
     if( x > 0.5 ){
         x = 1.0 - x;
     }
+    x *= ( module_ * M_PI );
 }
 
 void StandardProfile::calcRootCircleCenter(double *center)const {

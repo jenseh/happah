@@ -5,10 +5,10 @@
 
 class Grid: public GeometryObject {
 public:
-    Grid(QMatrix4x4* projectionMatrix = 0, QMatrix4x4 *viewMatrix = 0,
-            QVector3D* camPos = 0);
+    Grid();
 	void createVertexData();
-	void draw(QGLShaderProgram *shader);
+    void draw(QGLShaderProgram *shader, QMatrix4x4* projectionMatrix,
+              QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	QRectF boundingRect() const;				// DO NOT CHANGE INTO getBoundingRect as bounding Rectangle implements a virtual function of component.
 };
 

@@ -39,20 +39,19 @@ void Viewport3D::initializeGL() {
 	// Initialize your Geometry Objects here
 
 	// Grid
-	grid_ = new Grid(&projectionMatrix_, &viewMatrix_, &eye_);
-	sphere_ = new Sphere(1.0f, &projectionMatrix_, &viewMatrix_, &eye_);
-	gear1_ = new Gear(1.0f, 1.0f, 20, 0.2f, &projectionMatrix_, &viewMatrix_,
-			&eye_); // 1 * 3.14 / 20
-	gear2_ = new Gear(0.5f, 1.0f, 10, 0.6f, &projectionMatrix_, &viewMatrix_,
-			&eye_); // 0.25
+    grid_ = new Grid();
+    sphere_ = new Sphere(1.0f);
+    gear1_ = new Gear(1.0f, 1.0f, 20, 0.2f);
+    gear2_ = new Gear(0.5f, 1.0f, 10, 0.6f);
 
-	grid_->init(/*projectionMatrix_, viewMatrix_*/);
-	sphere_->init(/*projectionMatrix_, viewMatrix_*/);
-	gear1_->init(/*projectionMatrix_, viewMatrix_*/);
-	gear2_->init(/*projectionMatrix_, viewMatrix_*/);
+    grid_->init();
+    sphere_->init();
+    gear1_->init();
+    gear2_->init();
 
+    gear2_->rotate(40.0f, 0.0f, 0.0f, 1.0f);
 	gear2_->translate(1.9f, 0.0f, 0.0f);
-	gear2_->rotate(40.0f, 0.0f, 0.0f, 1.0f);
+
 
 	// Grid
 	grid_->createVertexData();
@@ -89,30 +88,37 @@ void Viewport3D::initializeGL() {
     gear1_->setText("Gear 1");
     gear2_->setText("Gear 2");
 
-	// Setup and start a timer
+    // Setup and start a timer for the simulation
 	timer_ = new QTimer(this);
-	connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
-    timer_->start(WAIT_TIME);
+    connect(timer_, SIGNAL(timeout()), this, SLOT(act()));
+    timer_->start(ACT_WAIT_TIME);
+
+    // Setup and start a timer for the drawing
+    connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
+    timer_->start(DRAW_WAIT_TIME);
 }
 
 void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
-	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
-    /*
-     * NOT NEEDED ...
-    for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
-        geometryObjects_[i]->updateProjectionMatrix();
-    }*/
-
+    projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
 }
 
 void Viewport3D::paintGL() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	updateView();
+    // Recompute view matrix
+    updateView();
 
-	draw();
+    // Draw grid
+    grid_->draw(&coordShader_, &projectionMatrix_, &viewMatrix_, &eye_);
+
+    // Draw sphere
+    sphere_->draw(&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
+
+    // Draw gears
+    gear1_->draw(&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
+    gear2_->draw(&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
 }
 
 bool Viewport3D::initShaderPrograms() {
@@ -143,41 +149,18 @@ bool Viewport3D::initShaderPrograms() {
 	return result;
 }
 
-void Viewport3D::draw() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Draw grid
-	grid_->draw(&coordShader_);
-
-	// Draw sphere
-	sphere_->draw(&shader_);
-
-	// Draw gears
-	gear1_->draw(&shader_);
-	gear2_->draw(&shader_);
-}
-
 // use this method for animations (model modification + draw updates
-void Viewport3D::update() {
+void Viewport3D::act() {
 	// modify the model
 	gear1_->rotate(1.0f, 0.0f, 0.0f, 1.0f);
-	gear2_->rotate(-2.0f, 0.0f, 0.0f, 1.0f);
-
-	// draw the scene again
-	updateGL();
+    gear2_->rotate(-2.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void Viewport3D::updateView() {
 	//Update ViewMatrix
 	QMatrix4x4 LookatMatrix;
 	LookatMatrix.lookAt(eye_, center_, up_);
-	viewMatrix_ = LookatMatrix;
-
-	// Update MV and MVP
-    for (unsigned int i = 0; i < geometryObjects_.size(); i++)
-    {
-        geometryObjects_[i]->updateViewMatrix();
-    }
+    viewMatrix_ = LookatMatrix;
 }
 
 void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
@@ -206,7 +189,6 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 		eye_.setY(zoomRad_ * (sin(thetaRad) * sin(phiRad))); //+ sin(dx)*cos (dy)));
 		eye_.setZ(zoomRad_ * (cos(thetaRad))); //*cos(dy)));
 
-		updateView();
 		updateGL();
 	}
 

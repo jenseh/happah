@@ -60,15 +60,15 @@ private:
     Gear* gear1_;
     Gear* gear2_;
 
-    const static int WAIT_TIME = 40;
+    const static int DRAW_WAIT_TIME = 40;
+    const static int ACT_WAIT_TIME = 40;
 
-	void draw();
 	void updateView();
 	bool initShaderPrograms();
 	void setZoom(float zoom);
 
 private slots:
-	void update();
+    void act();
 };
 
 #endif

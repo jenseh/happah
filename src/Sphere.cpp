@@ -4,9 +4,8 @@
 
 using namespace std;
 
-Sphere::Sphere(float _radius, QMatrix4x4 *_projectionMatrix,
-		QMatrix4x4 *_viewMatrix, QVector3D* _camPos) :
-		GeometryObject(_projectionMatrix, _viewMatrix, _camPos) {
+Sphere::Sphere(float _radius) :
+        GeometryObject() {
 	radius_ = _radius;
 }
 
@@ -61,8 +60,8 @@ glm::vec3 Sphere::getHitpoint() {
 }
 
 void Sphere::createVertexData() {
-	int dtheta = 1;
-	int dphi = 1;
+    int dtheta = 10;
+    int dphi = 10;
 	const float toRad = M_PI / 180.0f;
 	for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
 		for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {

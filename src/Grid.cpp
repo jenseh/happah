@@ -1,16 +1,20 @@
 #include "Grid.h"
 
-Grid::Grid(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
-        QVector3D* cameraPosition) :
-        GeometryObject(projectionMatrix, viewMatrix, cameraPosition) {
+Grid::Grid() :
+        GeometryObject() {
 }
 
-void Grid::draw(QGLShaderProgram *shader) {
+void Grid::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
+                QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+    //Update ModelViewProjection Matrix
+    QMatrix4x4 MV = *viewMatrix * modelMatrix_;
+    QMatrix4x4 MVP = *projectionMatrix * MV;
+
 	bindVBuffer();
 	shader->bind();
 	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
 	shader->enableAttributeArray("vertex");
-    shader->setUniformValue("MVP", MVP_);
+    shader->setUniformValue("MVP", MVP);
 
 	int mode = GL_LINES;
 	int stride = 0;

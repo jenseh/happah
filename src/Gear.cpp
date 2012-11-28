@@ -3,9 +3,8 @@
 using namespace std;
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Gear::Gear(float radius, float length, int toothCount, float heightFactor,
-		QMatrix4x4* projectionMatrix, QMatrix4x4 *viewMatrix, QVector3D* camPos) :
-		GeometryObject(projectionMatrix, viewMatrix, camPos) {
+Gear::Gear(float radius, float length, int toothCount, float heightFactor) :
+        GeometryObject() {
 	radius_ = radius;
 	length_ = length;
 	toothCount_ = toothCount;

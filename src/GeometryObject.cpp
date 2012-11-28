@@ -7,12 +7,8 @@
 
 #include "GeometryObject.h"
 
-GeometryObject::GeometryObject(QMatrix4x4* projectionMatrix,
-        QMatrix4x4* viewMatrix, QVector3D* cameraPosition) :
-		Component() {
-    viewMatrix_ = viewMatrix;
-    projectionMatrix_ = projectionMatrix;
-    cameraPosition_ = cameraPosition;
+GeometryObject::GeometryObject() :
+        Component() {
 }
 
 GeometryObject::~GeometryObject() {
@@ -47,31 +43,19 @@ int GeometryObject::fillVertexBuffer() {
 }
 
 void GeometryObject::init() {
-	modelMatrix_.setToIdentity();
-	normalMatrix_.setToIdentity();
-
-	//Update ModelViewProjection Matrix
-    MV_ = *viewMatrix_ * modelMatrix_;
-	MVP_ = *projectionMatrix_ * MV_;
-	normalMatrix_= MV_;
-	normalMatrix_=normalMatrix_.inverted();
-	normalMatrix_=normalMatrix_.transposed();
+    modelMatrix_.setToIdentity();
 }
 
-/*	WE Don't need that function either , as I said Matrices only need to be computed once BEFORE DRAWING. Projection and
- * and Viewing Matrix are always up to date here , as these are pointers the the global Matrices in ViewPort3D.
- *
-void GeometryObject::updateProjectionMatrix() {
-	MVP_ = *projectionMatrix_ * MV_;
-}
-*/
-void GeometryObject::updateViewMatrix() {
-	MV_ = *viewMatrix_ * modelMatrix_;
-	MVP_ = *projectionMatrix_ * MV_;
+void GeometryObject::draw(QGLShaderProgram *shader, QMatrix4x4* projectionMatrix,
+                          QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+    //Update ModelViewProjection Matrix
+    QMatrix4x4 MV = *viewMatrix * modelMatrix_;
+    QMatrix4x4 MVP = *projectionMatrix * MV;
 
-}
+    //Update Normal Matrix, put these updates somewhere else
+    //Note that this is actually a 3x3 matrix, but it cannot be cast automatically and so the last components are 0
+    QMatrix4x4 normalMatrix = MV.inverted().transposed();
 
-void GeometryObject::draw(QGLShaderProgram *shader) {
 	bindVBuffer();
 	shader->bind();
 	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 2 * 4 * sizeof(float));
@@ -79,10 +63,10 @@ void GeometryObject::draw(QGLShaderProgram *shader) {
 			2 * 4 * sizeof(float));
 	shader->enableAttributeArray("vertex");
 	shader->enableAttributeArray("normal");
-	shader->setUniformValue("MVP", MVP_);
-	shader->setUniformValue("MV", MV_);
-	shader->setUniformValue("normalMat", normalMatrix_);
-    shader->setUniformValue("eye", *cameraPosition_);
+    shader->setUniformValue("MVP", MVP);
+    shader->setUniformValue("MV", MV);
+    shader->setUniformValue("normalMat", normalMatrix);
+    shader->setUniformValue("eye", *cameraPosition);
 
 	vertexBuffer_.bind();
 	int mode = GL_QUADS;
@@ -110,12 +94,8 @@ void GeometryObject::dataPushback(glm::vec4 data) {
 
 void GeometryObject::rotate(float angle, float x, float y, float z) {
 	modelMatrix_.rotate(angle, x, y, z);
-   // MV_ = *viewMatrix_ * modelMatrix_;		No need to compute Matrices here , Matrices are computed ONCE before drawing the object
-   // MVP_ = *projectionMatrix_ * MV_;
 }
 
 void GeometryObject::translate(float x, float y, float z) {
-	modelMatrix_.translate(x, y, z);
-   // MV_ = *viewMatrix_ * modelMatrix_;	No need to compute Matrices here , Matrices are computed ONCE before drawing the object
-   // MVP_ = *projectionMatrix_ * MV_;
+    modelMatrix_.translate(x, y, z);
 }

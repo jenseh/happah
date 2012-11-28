@@ -19,8 +19,7 @@
 class GeometryObject: public QObject, public Component {
 	Q_OBJECT
 public:
-    GeometryObject(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
-            QVector3D* camPos);
+    GeometryObject();
 	virtual ~GeometryObject();
 	void createGrid();
 	int bindVBuffer();
@@ -28,9 +27,7 @@ public:
 
 	// For drawing
 	void init();
-    void draw(QGLShaderProgram* shader);
-	// void updateProjectionMatrix();  Please read the comment in GeometryObject.ccp
-	void updateViewMatrix();
+    void draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 
 	void createVertexData();
 	int initVertexBuffer(enum QGLBuffer::UsagePattern usagePattern);
@@ -44,11 +41,8 @@ protected:
 	QGLBuffer vertexBuffer_;
 	std::vector<glm::vec4> vertexData_;
 
-	// For drawing
-	QMatrix4x4 *projectionMatrix_, *viewMatrix_, MVP_, MV_; //redundant information to avoid repeated computation
-	QMatrix4x4 modelMatrix_,normalMatrix_;
-
-    QVector3D *cameraPosition_;
+    // For drawing
+    QMatrix4x4 modelMatrix_;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

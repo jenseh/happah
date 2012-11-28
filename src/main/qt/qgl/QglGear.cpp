@@ -3,9 +3,9 @@
 using namespace std;
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Gear::Gear(float radius, float length, int toothCount, float heightFactor,
+QglGear::QglGear(float radius, float length, int toothCount, float heightFactor,
 		QMatrix4x4* projectionMatrix, QMatrix4x4 *viewMatrix, QVector3D* camPos) :
-		GeometryObject(projectionMatrix, viewMatrix, camPos) {
+		QglGeometryObject(projectionMatrix, viewMatrix, camPos) {
 	radius_ = radius;
 	length_ = length;
 	toothCount_ = toothCount;
@@ -13,14 +13,14 @@ Gear::Gear(float radius, float length, int toothCount, float heightFactor,
     module_ = radius_ * 2.0f / toothCount_;
 }
 
-Gear::~Gear() {
+QglGear::~QglGear() {
 }
 
-float Gear::getRadius() {
+float QglGear::getRadius() {
 	return radius_;
 }
 
-void Gear::createSinePartition() {
+void QglGear::createSinePartition() {
 	// Use this to draw a sinus surface
 	for (int i = 0; i < SEGMENT_COUNT; i++) {
 		float position = (float) i / (float) SEGMENT_COUNT;
@@ -30,7 +30,7 @@ void Gear::createSinePartition() {
 	}
 }
 
-void Gear::createApproximatedPartition() {
+void QglGear::createApproximatedPartition() {
 	const int segmentsPerLine = SEGMENT_COUNT / 4;
 
 	float horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
@@ -72,7 +72,7 @@ void Gear::createApproximatedPartition() {
 // Create a profile of height values for one partition (german: Teilung)
 // x-values must be between 0 and p (partition, german: Teilung)
 // y-values must be between -p and p (height)
-void Gear::createHeightProfilePartition() {
+void QglGear::createHeightProfilePartition() {
 	heightProfilePartition_ = std::vector<glm::vec2>();
 
     standardProfile = new StandardProfile(module_, 10 / 180.0 * M_PI, 0, 0);
@@ -83,7 +83,7 @@ void Gear::createHeightProfilePartition() {
 // Create a profile of height values
 // x-values must be between 0 and 1 (position)
 // y-values must be between -1 and 1 (height)
-void Gear::createHeightProfile() {
+void QglGear::createHeightProfile() {
 	createHeightProfilePartition();
 	heightProfile_ = std::vector<glm::vec2>();
 
@@ -101,7 +101,7 @@ void Gear::createHeightProfile() {
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
-void Gear::createVertexData() {
+void QglGear::createVertexData() {
 	float dz = length_ / Z_DETAIL_LEVEL;
 	const float toRad = M_PI / 180.0f;
 	float innerRadius = radius_ * INNER_RADIUS_FACTOR;
@@ -231,7 +231,7 @@ void Gear::createVertexData() {
 }
 // Dummy Function to make things work , im not sure if we should really let our 3D stuff inherit QComponent
 
-QRectF Gear::boundingRect() const {
+QRectF QglGear::boundingRect() const {
 
 	return QRectF(0.0f, 0.0f, 0.0f, 0.0f);
 }

@@ -1,11 +1,11 @@
-#include "QglGrid.h"
+#include "Grid.h"
 
-Grid::Grid(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
+QglGrid::QglGrid(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
         QVector3D* cameraPosition) :
-        GeometryObject(projectionMatrix, viewMatrix, cameraPosition) {
+        QglGeometryObject(projectionMatrix, viewMatrix, cameraPosition) {
 }
 
-void Grid::draw(QGLShaderProgram *shader) {
+void QglGrid::draw(QGLShaderProgram *shader) {
 	bindVBuffer();
 	shader->bind();
 	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 0);
@@ -19,7 +19,7 @@ void Grid::draw(QGLShaderProgram *shader) {
 	shader->release();
 }
 
-void Grid::createVertexData() {
+void QglGrid::createVertexData() {
 	for (float x = -2.0; x <= 2.0; x = x + 0.5f) {
 		for (float z = -2.0f; z <= 2.0f; z = z + 0.5f) {
             vertexData_.push_back(glm::vec4(x, -1.0f, -2.0, 1.0f));
@@ -32,7 +32,7 @@ void Grid::createVertexData() {
 
 // Dummy Function to make things work , im not sure if we should really let our 3D stuff inherit QComponent
 
-QRectF Grid::boundingRect() const
+QRectF QglGrid::boundingRect() const
 {
 
 	return QRectF(0.0f,0.0f,0.0f,0.0f);

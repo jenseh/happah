@@ -16,12 +16,12 @@
 #include <iostream>
 #include "Component.h"
 
-class GeometryObject: public QObject, public Component {
+class QglGeometryObject: public QObject, public Component {
 	Q_OBJECT
 public:
-    GeometryObject(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
+    QglGeometryObject(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
             QVector3D* camPos);
-	virtual ~GeometryObject();
+	virtual ~QglGeometryObject();
 	void createGrid();
 	int bindVBuffer();
 	void dataPushback(glm::vec4 data);

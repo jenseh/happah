@@ -4,16 +4,16 @@
 
 using namespace std;
 
-Sphere::Sphere(float _radius, QMatrix4x4 *_projectionMatrix,
+QglSphere::QglSphere(float _radius, QMatrix4x4 *_projectionMatrix,
 		QMatrix4x4 *_viewMatrix, QVector3D* _camPos) :
-		GeometryObject(_projectionMatrix, _viewMatrix, _camPos) {
+		QglGeometryObject(_projectionMatrix, _viewMatrix, _camPos) {
 	radius_ = _radius;
 }
 
-Sphere::~Sphere() {
+QglSphere::~QglSphere() {
 }
 
-bool Sphere::hit(glm::vec3 rayPos, glm::vec3 rayDir) {
+bool QglSphere::hit(glm::vec3 rayPos, glm::vec3 rayDir) {
 	float A, B, C;
 	A = rayDir.x * rayDir.x + rayDir.y * rayDir.y + rayDir.z * rayDir.z;
 	B = 2 * (rayDir.x * rayPos.x + rayDir.y * rayPos.y + rayDir.z * rayPos.z);
@@ -29,7 +29,7 @@ bool Sphere::hit(glm::vec3 rayPos, glm::vec3 rayDir) {
 	return true;
 }
 
-bool Sphere::quad(float A, float B, float C, float *t0, float *t1) {
+bool QglSphere::quad(float A, float B, float C, float *t0, float *t1) {
 	float q;
 	float discrim = B * B - 4.0f * A * C;
 
@@ -52,15 +52,15 @@ bool Sphere::quad(float A, float B, float C, float *t0, float *t1) {
 
 }
 
-float Sphere::getRadius() {
+float QglSphere::getRadius() {
 	return radius_;
 }
 
-glm::vec3 Sphere::getHitpoint() {
+glm::vec3 QglSphere::getHitpoint() {
 	return hitpoint_;
 }
 
-void Sphere::createVertexData() {
+void QglSphere::createVertexData() {
 	int dtheta = 1;
 	int dphi = 1;
 	const float toRad = M_PI / 180.0f;
@@ -104,7 +104,7 @@ void Sphere::createVertexData() {
 }
 // Dummy Function to make things work , im not sure if we should really let our 3D stuff inherit QComponent
 
-QRectF Sphere::boundingRect() const {
+QRectF QglSphere::boundingRect() const {
 
 	return QRectF(0.0f, 0.0f, 0.0f, 0.0f);
 }

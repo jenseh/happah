@@ -20,11 +20,11 @@
 
 using namespace std;
 
-class Viewport3D: public QGLWidget {
+class QglViewPort3D: public QGLWidget {
 	Q_OBJECT
 
 public:
-	Viewport3D(const QGLFormat& format, QWidget* parent = 0,
+	QglViewPort3D(const QGLFormat& format, QWidget* parent = 0,
 			MainWindow* mainWindow = 0);
 
 protected:
@@ -54,9 +54,9 @@ private:
     float zoomRad_, theta_, phi_; //is zoomRad german?
 
     // GeometryObjects
-    vector<GeometryObject*> geometryObjects_;
-    Grid* grid_;
-    Sphere* sphere_;
+    vector<QglGeometryObject*> geometryObjects_;
+    QglGrid* grid_;
+    QglSphere* sphere_;
     Gear* gear1_;
     Gear* gear2_;
 

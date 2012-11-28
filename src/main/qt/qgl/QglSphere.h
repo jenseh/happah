@@ -4,12 +4,12 @@
 #include <glm/glm.hpp>
 #include "QglGeometryObject.h"
 
-class Sphere: public GeometryObject {
+class QglSphere: public QglGeometryObject {
 
 public:
-    Sphere(float radius = 1.0f, QMatrix4x4* projectionMatrix = 0,
+    QglSphere(float radius = 1.0f, QMatrix4x4* projectionMatrix = 0,
             QMatrix4x4 *viewMatrix = 0, QVector3D* camPos = 0);
-	virtual ~Sphere();
+	virtual ~QglSphere();
 	bool hit(glm::vec3 rayPos, glm::vec3 rayDir);
 	float getRadius();
 	glm::vec3 getHitpoint();

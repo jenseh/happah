@@ -7,7 +7,7 @@
 
 #include "QglGeometryObject.h"
 
-GeometryObject::GeometryObject(QMatrix4x4* projectionMatrix,
+QglGeometryObject::QglGeometryObject(QMatrix4x4* projectionMatrix,
         QMatrix4x4* viewMatrix, QVector3D* cameraPosition) :
 		Component() {
     viewMatrix_ = viewMatrix;
@@ -15,13 +15,13 @@ GeometryObject::GeometryObject(QMatrix4x4* projectionMatrix,
     cameraPosition_ = cameraPosition;
 }
 
-GeometryObject::~GeometryObject() {
+QglGeometryObject::~QglGeometryObject() {
 	// TODO Auto-generated destructor stub
 }
 
 // Prepare Vertex and Index Buffer to be filled with Data
 
-int GeometryObject::initVertexBuffer(
+int QglGeometryObject::initVertexBuffer(
 		enum QGLBuffer::UsagePattern usagePattern) {
 	vertexBuffer_.create();
 	vertexBuffer_.setUsagePattern(usagePattern);
@@ -32,7 +32,7 @@ int GeometryObject::initVertexBuffer(
 	return 0;
 }
 
-int GeometryObject::fillVertexBuffer() {
+int QglGeometryObject::fillVertexBuffer() {
 	if (!vertexBuffer_.isCreated()) {
 		qWarning() << " Vertex Buffer does not exist yet";
 		return -1;
@@ -46,7 +46,7 @@ int GeometryObject::fillVertexBuffer() {
 	return 0;
 }
 
-void GeometryObject::init() {
+void QglGeometryObject::init() {
 	modelMatrix_.setToIdentity();
 	normalMatrix_.setToIdentity();
 
@@ -65,13 +65,13 @@ void GeometryObject::updateProjectionMatrix() {
 	MVP_ = *projectionMatrix_ * MV_;
 }
 */
-void GeometryObject::updateViewMatrix() {
+void QglGeometryObject::updateViewMatrix() {
 	MV_ = *viewMatrix_ * modelMatrix_;
 	MVP_ = *projectionMatrix_ * MV_;
 
 }
 
-void GeometryObject::draw(QGLShaderProgram *shader) {
+void QglGeometryObject::draw(QGLShaderProgram *shader) {
 	bindVBuffer();
 	shader->bind();
 	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 2 * 4 * sizeof(float));
@@ -91,7 +91,7 @@ void GeometryObject::draw(QGLShaderProgram *shader) {
 	//   shader->release();
 }
 
-int GeometryObject::bindVBuffer() {
+int QglGeometryObject::bindVBuffer() {
 	if (!vertexBuffer_.bind()) {
 		qWarning() << "Could not bind vertex buffer";
 		return -1;
@@ -100,21 +100,21 @@ int GeometryObject::bindVBuffer() {
 
 }
 
-void GeometryObject::createVertexData() {
+void QglGeometryObject::createVertexData() {
 	// Dummy !! Vertex Data is Created in the inheriting classes
 }
 
-void GeometryObject::dataPushback(glm::vec4 data) {
+void QglGeometryObject::dataPushback(glm::vec4 data) {
 	vertexData_.push_back(data);
 }
 
-void GeometryObject::rotate(float angle, float x, float y, float z) {
+void QglGeometryObject::rotate(float angle, float x, float y, float z) {
 	modelMatrix_.rotate(angle, x, y, z);
    // MV_ = *viewMatrix_ * modelMatrix_;		No need to compute Matrices here , Matrices are computed ONCE before drawing the object
    // MVP_ = *projectionMatrix_ * MV_;
 }
 
-void GeometryObject::translate(float x, float y, float z) {
+void QglGeometryObject::translate(float x, float y, float z) {
 	modelMatrix_.translate(x, y, z);
    // MV_ = *viewMatrix_ * modelMatrix_;	No need to compute Matrices here , Matrices are computed ONCE before drawing the object
    // MVP_ = *projectionMatrix_ * MV_;

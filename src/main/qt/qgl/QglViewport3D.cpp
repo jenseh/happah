@@ -1,6 +1,6 @@
 #include "QglViewport3D.h"
 
-Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent,
+QglViewPort3D::QglViewPort3D(const QGLFormat& format, QWidget *parent,
 		MainWindow* mainWindow) :
 		QGLWidget(format, parent), vertexBuffer_(QGLBuffer::VertexBuffer), coordVBO_(
 				QGLBuffer::VertexBuffer), triangleVBO_(QGLBuffer::VertexBuffer) {
@@ -24,7 +24,7 @@ Viewport3D::Viewport3D(const QGLFormat& format, QWidget *parent,
 	phi_ = 0;
 }
 
-void Viewport3D::initializeGL() {
+void QglViewPort3D::initializeGL() {
 	QGLFormat glFormat = QGLWidget::format();
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
@@ -39,8 +39,8 @@ void Viewport3D::initializeGL() {
 	// Initialize your Geometry Objects here
 
 	// Grid
-	grid_ = new Grid(&projectionMatrix_, &viewMatrix_, &eye_);
-	sphere_ = new Sphere(1.0f, &projectionMatrix_, &viewMatrix_, &eye_);
+	grid_ = new QglGrid(&projectionMatrix_, &viewMatrix_, &eye_);
+	sphere_ = new QglSphere(1.0f, &projectionMatrix_, &viewMatrix_, &eye_);
 	gear1_ = new Gear(1.0f, 1.0f, 20, 0.2f, &projectionMatrix_, &viewMatrix_,
 			&eye_); // 1 * 3.14 / 20
 	gear2_ = new Gear(0.5f, 1.0f, 10, 0.6f, &projectionMatrix_, &viewMatrix_,
@@ -74,7 +74,7 @@ void Viewport3D::initializeGL() {
 	gear2_->fillVertexBuffer();
 
 	// TODO: Why does this not work?Because grids , spheres and gears are not geometry objects they just inherit it
-    geometryObjects_ = vector<GeometryObject*>();
+    geometryObjects_ = vector<QglGeometryObject*>();
     geometryObjects_.push_back(grid_);
     geometryObjects_.push_back(sphere_);
     geometryObjects_.push_back(gear1_);
@@ -95,7 +95,7 @@ void Viewport3D::initializeGL() {
     timer_->start(WAIT_TIME);
 }
 
-void Viewport3D::resizeGL(int width, int height) {
+void QglViewPort3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
@@ -107,7 +107,7 @@ void Viewport3D::resizeGL(int width, int height) {
 
 }
 
-void Viewport3D::paintGL() {
+void QglViewPort3D::paintGL() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	updateView();
@@ -115,7 +115,7 @@ void Viewport3D::paintGL() {
 	draw();
 }
 
-bool Viewport3D::initShaderPrograms() {
+bool QglViewPort3D::initShaderPrograms() {
 	//load and compile Vertex Shader
 	bool result = shader_.addShaderFromSourceFile(QGLShader::Vertex,
 			"./src/shader/blinnphongVert.glsl");
@@ -143,7 +143,7 @@ bool Viewport3D::initShaderPrograms() {
 	return result;
 }
 
-void Viewport3D::draw() {
+void QglViewPort3D::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw grid
@@ -158,7 +158,7 @@ void Viewport3D::draw() {
 }
 
 // use this method for animations (model modification + draw updates
-void Viewport3D::update() {
+void QglViewPort3D::update() {
 	// modify the model
 	gear1_->rotate(1.0f, 0.0f, 0.0f, 1.0f);
 	gear2_->rotate(-2.0f, 0.0f, 0.0f, 1.0f);
@@ -167,7 +167,7 @@ void Viewport3D::update() {
 	updateGL();
 }
 
-void Viewport3D::updateView() {
+void QglViewPort3D::updateView() {
 	//Update ViewMatrix
 	QMatrix4x4 LookatMatrix;
 	LookatMatrix.lookAt(eye_, center_, up_);
@@ -180,7 +180,7 @@ void Viewport3D::updateView() {
     }
 }
 
-void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
+void QglViewPort3D::mouseMoveEvent(QMouseEvent *event) {
 
 	int width = this->width();
 	int height = this->height();
@@ -213,7 +213,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 	mousePos_ = event->pos();
 
 }
-void Viewport3D::mousePressEvent(QMouseEvent *event) {
+void QglViewPort3D::mousePressEvent(QMouseEvent *event) {
 	if (event->buttons() == Qt::LeftButton) {
 		// do something
 	} else if (event->buttons() == Qt::RightButton) {
@@ -221,7 +221,7 @@ void Viewport3D::mousePressEvent(QMouseEvent *event) {
 	}
 }
 
-void Viewport3D::wheelEvent(QWheelEvent *event) {
+void QglViewPort3D::wheelEvent(QWheelEvent *event) {
 	float degrees = event->delta() / 8;
 	float steps = degrees / 15;
 
@@ -231,7 +231,7 @@ void Viewport3D::wheelEvent(QWheelEvent *event) {
 }
 // Picking to get Triangle Edges
 // TODO: Split that whole stuff up;
-void Viewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
+void QglViewPort3D::mouseDoubleClickEvent(QMouseEvent *event) {
 
 	float x = (float) event->pos().x();
 	float y = (float) event->pos().y();
@@ -299,7 +299,7 @@ void Viewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
 	}
 }
 
-void Viewport3D::keyPressEvent(QKeyEvent *event) {
+void QglViewPort3D::keyPressEvent(QKeyEvent *event) {
 	// TODO: Why does this not work?
 	cout << "Key: " << event->key() << endl;
 }

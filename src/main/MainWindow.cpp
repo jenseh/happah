@@ -37,7 +37,7 @@ MainWindow::MainWindow() {
 
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
-	Viewport3D* viewport3D = new Viewport3D(glFormat, viewportWidget, this);
+	QglViewPort3D* viewport3D = new QglViewPort3D(glFormat, viewportWidget, this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	tabs->addTab(viewportWidget, "3D-View");
 

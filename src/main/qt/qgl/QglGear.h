@@ -7,12 +7,12 @@
 #include "QglGeometryObject.h"
 #include "StandardProfile.h"
 
-class Gear: public GeometryObject {
+class QglGear: public QglGeometryObject {
 public:
-	Gear(float radius = 1.0f, float length = 0.2f, int toothCount = 10,
+	QglGear(float radius = 1.0f, float length = 0.2f, int toothCount = 10,
 			float heightFactor = 0.2f, QMatrix4x4* projectionMatrix = 0,
 			QMatrix4x4* viewMatrix = 0, QVector3D* camPos = 0);
-	virtual ~Gear();
+	virtual ~QglGear();
 	float getRadius();
 	glm::vec3 getCenter();
 	void createVertexData();

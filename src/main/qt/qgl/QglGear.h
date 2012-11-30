@@ -10,6 +10,7 @@
 class QglGear: public QglGeometryObject {
 public:
     QglGear(float radius = 1.0f, float length = 0.2f, int toothCount = 10);
+
 	virtual ~QglGear();
 	float getRadius();
 	glm::vec3 getCenter();

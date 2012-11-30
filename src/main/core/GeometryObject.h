@@ -15,7 +15,7 @@ using glm::vec3;
 
 class GeometryObject {
 public:
-	GeometryObject(vec4 position);
+	GeometryObject();
 	virtual ~GeometryObject();
 private:
 	vec4 position_;

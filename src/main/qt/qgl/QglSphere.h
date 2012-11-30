@@ -8,6 +8,7 @@ class QglSphere: public QglGeometryObject {
 
 public:
     QglSphere(float radius = 1.0f);
+
 	virtual ~QglSphere();
 	bool hit(glm::vec3 rayPos, glm::vec3 rayDir);
 	float getRadius();

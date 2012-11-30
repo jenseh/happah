@@ -7,7 +7,7 @@
 
 #include "GeometryObject.h"
 
-GeometryObject::GeometryObject(vec4 position) {
+GeometryObject::GeometryObject() {
 	// TODO Auto-generated constructor stub
 
 }

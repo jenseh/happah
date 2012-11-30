@@ -53,8 +53,8 @@ void GeometryObject::draw(QGLShaderProgram *shader, QMatrix4x4* projectionMatrix
     QMatrix4x4 MVP = *projectionMatrix * MV;
 
     //Update Normal Matrix, put these updates somewhere else
-    //Note that this now is and has to be a 3x3 matrix
-    QMatrix3x3 normalMatrix = MV.normalMatrix();
+    //Note that this is actually a 3x3 matrix, but it cannot be cast automatically and so the last components are 0
+    QMatrix4x4 normalMatrix = MV.inverted().transposed();
 
 	bindVBuffer();
 	shader->bind();

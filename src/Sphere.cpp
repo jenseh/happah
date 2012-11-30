@@ -91,13 +91,13 @@ void Sphere::createVertexData() {
 			normD = glm::normalize(d);
 
 			dataPushback(a);
-            dataPushback(normA);
+			dataPushback(normA);
 			dataPushback(b);
-            dataPushback(normB);
+			dataPushback(normB);
 			dataPushback(c);
-            dataPushback(normC);
+			dataPushback(normC);
 			dataPushback(d);
-            dataPushback(normD);
+			dataPushback(normD);
 		}
 	}
 }

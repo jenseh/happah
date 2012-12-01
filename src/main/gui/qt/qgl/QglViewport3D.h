@@ -12,7 +12,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "../../MainWindow.h"
+#include "../../../MainWindow.h"
 #include "QglSphere.h"
 #include "QglGear.h"
 #include "QglGrid.h"

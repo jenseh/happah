@@ -72,20 +72,20 @@ void QglViewPort3D::initializeGL() {
 	gear2_->fillVertexBuffer();
 
 	// TODO: Why does this not work?Because grids , spheres and gears are not geometry objects they just inherit it
-	geometryObjects_ = vector<QglGeometryObject*>();
-	geometryObjects_.push_back(grid_);
-	geometryObjects_.push_back(sphere_);
-	geometryObjects_.push_back(gear1_);
-	geometryObjects_.push_back(gear2_);
+//	geometryObjects_ = vector<QglGeometryObject*>();
+//	geometryObjects_.push_back(grid_);
+//	geometryObjects_.push_back(sphere_);
+//	geometryObjects_.push_back(gear1_);
+//	geometryObjects_.push_back(gear2_);
 
-	for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
-		mainWindow_->getComponentContainer()->addComponent(geometryObjects_[i]);
-	}
+//	for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
+//		mainWindow_->getComponentContainer()->addComponent(geometryObjects_[i]);
+//	}
 
-	sphere_->setText("Sphere");
-	grid_->setText("Grid");
-	gear1_->setText("Gear 1");
-	gear2_->setText("Gear 2");
+//	sphere_->setText("Sphere");
+//	grid_->setText("Grid");
+//	gear1_->setText("Gear 1");
+//	gear2_->setText("Gear 2");
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
@@ -139,7 +139,7 @@ void QglViewPort3D::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw grid
-    grid_->draw(&coordShader_, &projectionMatrix_, &viewMatrix_, &eye_);
+    grid_->draw(&coordShader_, &projectionMatrix_, &viewMatrix_);
 
 	// Draw sphere
     sphere_->draw(&shader_, &projectionMatrix_, &viewMatrix_, &eye_);

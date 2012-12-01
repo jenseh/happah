@@ -7,8 +7,7 @@
 
 #include "QglGeometryObject.h"
 
-QglGeometryObject::QglGeometryObject() :
-        Component() {
+QglGeometryObject::QglGeometryObject() : GeometryObject() {
 }
 
 QglGeometryObject::~QglGeometryObject() {
@@ -16,6 +15,14 @@ QglGeometryObject::~QglGeometryObject() {
 }
 
 // Prepare Vertex and Index Buffer to be filled with Data
+
+int QglGeometryObject::bindVBuffer() {
+    if (!vertexBuffer_.bind()) {
+        qWarning() << "Could not bind vertex buffer";
+        return -1;
+    }
+    return 0;
+}
 
 int QglGeometryObject::initVertexBuffer(
 		enum QGLBuffer::UsagePattern usagePattern) {
@@ -42,9 +49,7 @@ int QglGeometryObject::fillVertexBuffer() {
 	return 0;
 }
 
-void QglGeometryObject::init() {
-	modelMatrix_.setToIdentity();
-}
+
 
 
 void QglGeometryObject::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
@@ -70,29 +75,4 @@ void QglGeometryObject::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMat
 	int stride = 0;
 	glDrawArrays(mode, stride, vertexData_.size());
 	//   shader->release();
-}
-
-int QglGeometryObject::bindVBuffer() {
-	if (!vertexBuffer_.bind()) {
-		qWarning() << "Could not bind vertex buffer";
-		return -1;
-	}
-	return 0;
-
-}
-
-void QglGeometryObject::createVertexData() {
-	// Dummy !! Vertex Data is Created in the inheriting classes
-}
-
-void QglGeometryObject::dataPushback(glm::vec4 data) {
-	vertexData_.push_back(data);
-}
-
-void QglGeometryObject::rotate(float angle, float x, float y, float z) {
-	modelMatrix_.rotate(angle, x, y, z);
-}
-
-void QglGeometryObject::translate(float x, float y, float z) {
-	modelMatrix_.translate(x, y, z);
 }

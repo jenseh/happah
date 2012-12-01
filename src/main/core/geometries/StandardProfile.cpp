@@ -1,5 +1,4 @@
 #include "StandardProfile.h"
-#include <iostream>
 
 StandardProfile::StandardProfile(double module, double profileAngle,
 		double rootCircleRadius, double kopfspiel) :

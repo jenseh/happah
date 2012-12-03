@@ -9,7 +9,7 @@
 #include "MainWindow.h"
 #include "SplineTool.h"
 #include "BSplineTool.h"
-#include "gui/qt/qgl/QglViewport3D.h"
+#include "gui/qt/gl/GlViewport3D.h"
 #include "Component.h"
 
 MainWindow::MainWindow() {
@@ -35,9 +35,12 @@ MainWindow::MainWindow() {
 
 	QTabWidget *tabs = new QTabWidget(this);
 
+    // Setting up logic
+    sceneManager = new SceneManager();
+
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
-	QglViewPort3D* viewport3D = new QglViewPort3D(glFormat, viewportWidget,
+    GlViewport3D* viewport3D = new GlViewport3D(sceneManager, glFormat, viewportWidget,
 			this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	tabs->addTab(viewportWidget, "3D-View");

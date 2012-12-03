@@ -1,5 +1,5 @@
-#ifndef VIEWPORT3D_H_
-#define VIEWPORT3D_H_
+#ifndef GLVIEWPORT3D_H_
+#define GLVIEWPORT3D_H_
 
 #include <QGLWidget>
 #include <QGLBuffer>
@@ -13,19 +13,16 @@
 #include <iostream>
 
 #include "../../../MainWindow.h"
-#include "QglSphere.h"
-#include "QglGear.h"
-#include "QglGrid.h"
-#include "QglGeometryObject.h"
+#include "../../../core/SceneManager.h"
+#include "GlQuadliteralMesh.h"
 
 using namespace std;
 
-class QglViewPort3D: public QGLWidget {
-Q_OBJECT
+class GlViewport3D: public QGLWidget {
 
 public:
-	QglViewPort3D(const QGLFormat& format, QWidget* parent = 0,
-			MainWindow* mainWindow = 0);
+    GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget* parent = 0,
+            MainWindow* mainWindow = 0);
 
 protected:
 	void initializeGL();
@@ -40,6 +37,7 @@ protected:
 private:
 	QTimer *timer_;
 	MainWindow* mainWindow_;
+    SceneManager* sceneManager_;
 
 	QMatrix4x4 viewMatrix_;
 	QMatrix4x4 projectionMatrix_;
@@ -54,11 +52,7 @@ private:
 	float zoomRad_, theta_, phi_; //is zoomRad german?
 
 	// GeometryObjects
-	vector<QglGeometryObject*> geometryObjects_;
-	QglGrid* grid_;
-	QglSphere* sphere_;
-	QglGear* gear1_;
-	QglGear* gear2_;
+    vector<GlQuadliteralMesh*> glQuadliteralMeshs_;
 
 	const static int WAIT_TIME = 40;
 
@@ -66,9 +60,6 @@ private:
 	void updateView();
 	bool initShaderPrograms();
 	void setZoom(float zoom);
-
-private slots:
-	void update();
 };
 
 #endif

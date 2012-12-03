@@ -1,17 +1,11 @@
-#include "QglSphere.h"
+#include "GlQuadliteralMesh.h"
 
-QglSphere::QglSphere(float radius) : Sphere(radius){
+GlQuadliteralMesh::GlQuadliteralMesh(QuadliteralMesh* quadliteralMesh) : QuadliteralMesh(quadliteralMesh->getVertexData()) {
 
 }
 
-QglSphere::~QglSphere() {
-    // TODO Auto-generated destructor stub
-}
-
-
-//The following part is only here due to problems with multiple inheritance
 // Prepare Vertex and Index Buffer to be filled with Data
-void QglSphere::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
+void GlQuadliteralMesh::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
                              QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
     QMatrix4x4 MV = *viewMatrix * modelMatrix_;
     QMatrix4x4 MVP = *projectionMatrix * MV;
@@ -33,10 +27,9 @@ void QglSphere::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
     int mode = GL_QUADS;
     int stride = 0;
     glDrawArrays(mode, stride, vertexData_.size());
-    //   shader->release();
 }
 
-int QglSphere::bindVBuffer() {
+int GlQuadliteralMesh::bindVBuffer() {
     if (!vertexBuffer_.bind()) {
         qWarning() << "Could not bind vertex buffer";
         return -1;
@@ -44,7 +37,7 @@ int QglSphere::bindVBuffer() {
     return 0;
 }
 
-int QglSphere::initVertexBuffer(
+int GlQuadliteralMesh::initVertexBuffer(
         enum QGLBuffer::UsagePattern usagePattern) {
     vertexBuffer_.create();
     vertexBuffer_.setUsagePattern(usagePattern);
@@ -55,7 +48,7 @@ int QglSphere::initVertexBuffer(
     return 0;
 }
 
-int QglSphere::fillVertexBuffer() {
+int GlQuadliteralMesh::fillVertexBuffer() {
     if (!vertexBuffer_.isCreated()) {
         qWarning() << " Vertex Buffer does not exist yet";
         return -1;

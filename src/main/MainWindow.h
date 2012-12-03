@@ -9,6 +9,7 @@
 #include "ToolSelector.h"
 #include "ComponentContainer.h"
 #include "EditorScene.h"
+#include "core/SceneManager.h"
 
 class MainWindow: public QMainWindow {
 Q_OBJECT
@@ -32,6 +33,7 @@ private:
 	ComponentContainer* componentContainer_;
 	ToolSelector* toolSelector_;
 	EditorScene* scene_;
+    SceneManager* sceneManager;
 };
 
 #endif

@@ -1,16 +1,16 @@
-#ifndef QGLSPHERE_H_
-#define QGLSPHERE_H_
+#ifndef GLQUADLITERALMESH_H
+#define GLQUADLITERALMESH_H
 
-#include <glm/glm.hpp>
-#include <QGLBuffer>
 #include <QGLShaderProgram>
-#include "../../../core/geometries/Sphere.h"
+#include <QMatrix4x4>
+#include <QVector3D>
+#include <QGLBuffer>
 
-class QglSphere: public Sphere {
+#include "../../../core/models/QuadliteralMesh.h"
 
+class GlQuadliteralMesh : public QuadliteralMesh {
 public:
-    QglSphere(float radius = 1.0f);
-    ~QglSphere();
+    GlQuadliteralMesh(QuadliteralMesh* quadliteralMesh);
 
     void draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
               QVector3D* cameraPosition);
@@ -22,4 +22,4 @@ protected:
     QGLBuffer vertexBuffer_;
 };
 
-#endif
+#endif // GLQUADLITERALMESH_H_

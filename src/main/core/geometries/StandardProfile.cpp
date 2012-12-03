@@ -1,20 +1,21 @@
 #include "StandardProfile.h"
 
-StandardProfile::StandardProfile(double module, double profileAngle,
-		double rootCircleRadius, double kopfspiel) :
-		module_(module), profileAngle_(profileAngle), rootCircleRadius_(
-				rootCircleRadius), kopfspiel_(kopfspiel) {
+StandardProfile::StandardProfile(double module, double pressureAngle, // pressureAngle = Profilwinkel
+		double filletRadius,                                          // filletRadius = Fußrundungsradius
+		double bottomClearance) :                                     // bottomClearance = Kopfspiel
+		module_(module), pressureAngle_(pressureAngle), filletRadius_(
+				filletRadius), bottomClearance_(bottomClearance) {
 	// Angle has to be smaller than approximately 38.146 degrees or 0.785 rad
-	if (tan(profileAngle_) > M_PI / 4)
-		std::cerr << "ERROR: Your angle is too big with " << profileAngle_
+	if (tan(pressureAngle_) > M_PI / 4)
+		std::cerr << "ERROR: Your angle is too big with " << pressureAngle_
 				<< std::endl;
-	if (rootCircleRadius_ > kopfspiel_ / (1 - sin(profileAngle_))
-			|| rootCircleRadius_
-					> (sin(profileAngle_) / (1 - sin(profileAngle_)))
-							* (((M_PI - 4 * tan(profileAngle_)) / 4
-									* tan(profileAngle_)) * module_ - kopfspiel_))
-		std::cerr << "ERROR: Your rootCircleRadius is too big with "
-				<< rootCircleRadius_ << std::endl;
+	if (filletRadius_ > bottomClearance_ / (1 - sin(pressureAngle_))
+			|| filletRadius_
+					> (sin(pressureAngle_) / (1 - sin(pressureAngle_)))
+							* (((M_PI - 4 * tan(pressureAngle_)) / 4
+									* tan(pressureAngle_)) * module_ - bottomClearance_))
+		std::cerr << "ERROR: Your filletRadius is too big with "
+				<< filletRadius_ << std::endl;
 }
 
 void StandardProfile::normalize(double& x) const {
@@ -31,11 +32,11 @@ void StandardProfile::normalize(double& x) const {
 }
 
 void StandardProfile::calcRootCircleCenter(double *center) const {
-	double t = (kopfspiel_ + rootCircleRadius_ * (1 + sin(profileAngle_)))
-			/ cos(profileAngle_);
-	center[0] = module_ * M_PI + cos(profileAngle_) * rootCircleRadius_
-			+ t * sin(profileAngle_);
-	center[1] = sin(profileAngle_) * rootCircleRadius_ - t * cos(profileAngle_);
+	double t = (bottomClearance_ + filletRadius_ * (1 + sin(pressureAngle_)))
+			/ cos(pressureAngle_);
+	center[0] = module_ * M_PI + cos(pressureAngle_) * filletRadius_
+			+ t * sin(pressureAngle_);
+	center[1] = sin(pressureAngle_) * filletRadius_ - t * cos(pressureAngle_);
 }
 
 /**
@@ -54,7 +55,7 @@ double StandardProfile::getHeight(double x) const {
 	 * x_1, ..., x_5 are used for the different regions of a pitch:
 	 * 
 	 * 0   <= x < x_1  --> right half of top land
-	 * x_1 <= x < x_2  --> flank without kopfspiel
+	 * x_1 <= x < x_2  --> flank without bottomClearance
 	 * x_2 <= x < x_3  --> rest of flank until root circle is starting
 	 * x_3 <= x < x_4  --> region of root circle
 	 * x_4 <= x < x_5  --> left bottom land (until center of bottom land)
@@ -63,12 +64,12 @@ double StandardProfile::getHeight(double x) const {
 
 	//calculate x-function for half of one pitch
 
-	double x_1 = (module_ * M_PI) / 4 - tan(profileAngle_) * module_;
-	double x_2 = (module_ * M_PI) / 4 + tan(profileAngle_) * module_;
+	double x_1 = (module_ * M_PI) / 4 - tan(pressureAngle_) * module_;
+	double x_2 = (module_ * M_PI) / 4 + tan(pressureAngle_) * module_;
 	double x_3 = x_2
-			+ (kopfspiel_ + rootCircleRadius_ * (sin(profileAngle_) - 1))
-					* tan(profileAngle_);
-	double x_4 = x_3 + rootCircleRadius_ * cos(profileAngle_);
+			+ (bottomClearance_ + filletRadius_ * (sin(pressureAngle_) - 1))
+					* tan(pressureAngle_);
+	double x_4 = x_3 + filletRadius_ * cos(pressureAngle_);
 	double x_5 = (module_ * M_PI) / 2;
 
 	double center[2];
@@ -78,14 +79,14 @@ double StandardProfile::getHeight(double x) const {
 		return module_;
 	else if (x < x_3)
 		return (x - (module_ * M_PI) / 4)
-				* (-cos(profileAngle_) / sin(profileAngle_));
+				* (-cos(pressureAngle_) / sin(pressureAngle_));
 	else if (x < x_4)
 		return (center[1]
 				- sqrt(
-						rootCircleRadius_ * rootCircleRadius_
+						filletRadius_ * filletRadius_
 								- (x - center[0]) * (x - center[0])));
 	else
-		return -module_ - kopfspiel_;
+		return -module_ - bottomClearance_;
 }
 
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition,

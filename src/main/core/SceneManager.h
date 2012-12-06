@@ -7,6 +7,7 @@
 #include "geometries/Grid.h"
 #include "geometries/Sphere.h"
 #include "geometries/Gear.h"
+#include "geometries/BasicRack.h"
 
 // Qt includes are only for the timer
 #include <QGLShaderProgram>
@@ -31,6 +32,7 @@ private:
    QuadliteralMesh* gear2_;
    QuadliteralMesh* sphere_;
    QuadliteralMesh* grid_;
+   QuadliteralMesh* rack1_;
 
 private slots:
    void update();

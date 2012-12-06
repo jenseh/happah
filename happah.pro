@@ -22,7 +22,8 @@ HEADERS += src/main/BSplineComponent.h \
     src/main/core/models/Model.h \
     src/main/gui/qt/gl/GlViewport3D.h \
     src/main/gui/qt/gl/GlQuadliteralMesh.h \
-    src/main/core/models/QuadliteralMesh.h
+    src/main/core/models/QuadliteralMesh.h \
+    src/main/core/geometries/BasicRack.h
 SOURCES += src/main/main.cpp \
     src/main/BSplineComponent.cpp \
     src/main/BSplineTool.cpp \
@@ -43,8 +44,11 @@ SOURCES += src/main/main.cpp \
     src/main/core/models/Model.cpp \
     src/main/core/models/QuadliteralMesh.cpp \
     src/main/gui/qt/gl/GlViewport3D.cpp \
-    src/main/gui/qt/gl/GlQuadliteralMesh.cpp
+    src/main/gui/qt/gl/GlQuadliteralMesh.cpp \
+    src/main/core/geometries/BasicRack.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include
+
+
 

@@ -1,12 +1,12 @@
 /*
- * Gear.h
+ * SpurGear.h
  *
  *  Created on: Nov 28, 2012
  *      Author: matthias
  */
 
-#ifndef GEAR_H_
-#define GEAR_H_
+#ifndef SPURGEAR_H_
+#define SPURGEAR_H_
 
 #include <glm/glm.hpp>
 #include <iostream>
@@ -17,11 +17,11 @@
 using namespace std;
 
 
-class Gear: public GeometryObject {
+class SpurGear: public GeometryObject {
 public:
-    Gear(float radius = 1.0f, float length = 0.2f, int toothCount = 10);
+    SpurGear(float radius = 1.0f, float length = 0.2f, int toothCount = 10);
 
-    virtual ~Gear();
+    virtual ~SpurGear();
     float getRadius();
     glm::vec3 getCenter();
     void createVertexData();

@@ -6,7 +6,7 @@
 #include "geometries/GeometryObject.h"
 #include "geometries/Grid.h"
 #include "geometries/Sphere.h"
-#include "geometries/Gear.h"
+#include "geometries/SpurGear.h"
 #include "geometries/BasicRack.h"
 
 // Qt includes are only for the timer

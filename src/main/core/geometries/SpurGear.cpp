@@ -1,14 +1,14 @@
 /*
- * Gear.cpp
+ * SpurGear.cpp
  *
  *  Created on: Nov 28, 2012
  *      Author: matthias
  */
 
-#include "Gear.h"
+#include "SpurGear.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Gear::Gear(float radius, float length, int toothCount) :
+SpurGear::SpurGear(float radius, float length, int toothCount) :
         GeometryObject() {
     radius_ = radius;
     length_ = length;
@@ -16,14 +16,14 @@ Gear::Gear(float radius, float length, int toothCount) :
     module_ = radius_ * 2.0f / toothCount_;
 }
 
-Gear::~Gear() {
+SpurGear::~SpurGear() {
 }
 
-float Gear::getRadius() {
+float SpurGear::getRadius() {
     return radius_;
 }
 
-void Gear::createSinePartition() {
+void SpurGear::createSinePartition() {
     // Use this to draw a sinus surface
     for (int i = 0; i < SEGMENT_COUNT; i++) {
         float position = (float) i / (float) SEGMENT_COUNT;
@@ -33,7 +33,7 @@ void Gear::createSinePartition() {
     }
 }
 
-void Gear::createApproximatedPartition() {
+void SpurGear::createApproximatedPartition() {
     const int segmentsPerLine = SEGMENT_COUNT / 4;
 
     float horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
@@ -75,7 +75,7 @@ void Gear::createApproximatedPartition() {
 // Create a profile of height values for one partition (german: Teilung)
 // x-values must be between 0 and p (partition, german: Teilung)
 // y-values must be between -p and p (height)
-void Gear::createHeightProfilePartition() {
+void SpurGear::createHeightProfilePartition() {
     heightProfilePartition_ = std::vector<glm::vec2>();
 
     standardProfile = new StandardProfile(module_, 10 / 180.0 * M_PI, 0, 0);
@@ -87,7 +87,7 @@ void Gear::createHeightProfilePartition() {
 // Create a profile of height values
 // x-values must be between 0 and 1 (position)
 // y-values must be between -1 and 1 (height)
-void Gear::createHeightProfile() {
+void SpurGear::createHeightProfile() {
     createHeightProfilePartition();
     heightProfile_ = std::vector<glm::vec2>();
 
@@ -105,7 +105,7 @@ void Gear::createHeightProfile() {
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
-void Gear::createVertexData() {
+void SpurGear::createVertexData() {
     float dz = length_ / Z_DETAIL_LEVEL;
     const float toRad = M_PI / 180.0f;
     float innerRadius = radius_ * INNER_RADIUS_FACTOR;

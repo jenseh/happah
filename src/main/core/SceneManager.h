@@ -2,7 +2,7 @@
 #define SCENEMANAGER_H
 
 #include <vector>
-#include "models/Model.h"
+#include "models/Drawable.h"
 #include "geometries/GeometryObject.h"
 #include "geometries/Grid.h"
 #include "geometries/Sphere.h"
@@ -19,20 +19,20 @@ public:
     SceneManager();
     ~SceneManager();
 
-    vector<QuadliteralMesh*> getQuadliteralMeshs();
+    vector<QuadMesh*> getQuadMeshs();
 
 private:
-   vector<QuadliteralMesh*> quadliteralMeshs_;
+   vector<QuadMesh*> quadMeshs_;
 
     QTimer *timer_;
     const static int WAIT_TIME = 40;
 
    //Just for the beginning to have some objects
-   QuadliteralMesh* gear1_;
-   QuadliteralMesh* gear2_;
-   QuadliteralMesh* sphere_;
-   QuadliteralMesh* grid_;
-   QuadliteralMesh* rack1_;
+   QuadMesh* gear1_;
+   QuadMesh* gear2_;
+   QuadMesh* sphere_;
+   QuadMesh* grid_;
+   QuadMesh* rack1_;
 
 private slots:
    void update();

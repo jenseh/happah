@@ -14,7 +14,7 @@
 
 #include "../../../MainWindow.h"
 #include "../../../core/SceneManager.h"
-#include "GlQuadliteralMesh.h"
+#include "GlQuadMesh.h"
 
 using namespace std;
 
@@ -52,7 +52,7 @@ private:
 	float zoomRad_, theta_, phi_; //is zoomRad german?
 
 	// GeometryObjects
-    vector<GlQuadliteralMesh*> glQuadliteralMeshs_;
+    vector<GlQuadMesh*> glQuadMeshs_;
 
 	const static int WAIT_TIME = 40;
 

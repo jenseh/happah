@@ -1,15 +1,26 @@
-#include "GlQuadliteralMesh.h"
+#include "GlQuadMesh.h"
+#include <iostream>
 
-GlQuadliteralMesh::GlQuadliteralMesh(QuadliteralMesh* quadliteralMesh) : QuadliteralMesh(quadliteralMesh->getVertexData()) {
-
+GlQuadMesh::GlQuadMesh(QuadMesh* quadMesh) : QuadMesh(quadMesh->getVertexData()) {
+    //TODO: create an object from the quadmesh
+    setName(quadMesh->getName());
 }
 
 // Prepare Vertex and Index Buffer to be filled with Data
-void GlQuadliteralMesh::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
+void GlQuadMesh::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix,
                              QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
     QMatrix4x4 MV = *viewMatrix * modelMatrix_;
     QMatrix4x4 MVP = *projectionMatrix * MV;
     QMatrix3x3 normalMatrix = MV.normalMatrix();
+
+//    const qreal* data = modelMatrix_.constData();
+//    for (int x = 0; x < 4; x++) {
+//        for (int y = 0; y < 4; y++) {
+//            std::cout << data[x * 4 + y] << ", ";
+//        }
+//        std::cout << endl;
+//    }
+//    std::cout << "-----------------------------------" << endl;
 
     bindVBuffer();
     shader->bind();
@@ -29,7 +40,7 @@ void GlQuadliteralMesh::draw(QGLShaderProgram* shader, QMatrix4x4* projectionMat
     glDrawArrays(mode, stride, vertexData_.size());
 }
 
-int GlQuadliteralMesh::bindVBuffer() {
+int GlQuadMesh::bindVBuffer() {
     if (!vertexBuffer_.bind()) {
         qWarning() << "Could not bind vertex buffer";
         return -1;
@@ -37,7 +48,7 @@ int GlQuadliteralMesh::bindVBuffer() {
     return 0;
 }
 
-int GlQuadliteralMesh::initVertexBuffer(
+int GlQuadMesh::initVertexBuffer(
         enum QGLBuffer::UsagePattern usagePattern) {
     vertexBuffer_.create();
     vertexBuffer_.setUsagePattern(usagePattern);
@@ -48,7 +59,7 @@ int GlQuadliteralMesh::initVertexBuffer(
     return 0;
 }
 
-int GlQuadliteralMesh::fillVertexBuffer() {
+int GlQuadMesh::fillVertexBuffer() {
     if (!vertexBuffer_.isCreated()) {
         qWarning() << " Vertex Buffer does not exist yet";
         return -1;

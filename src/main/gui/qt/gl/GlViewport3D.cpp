@@ -37,29 +37,28 @@ void GlViewport3D::initializeGL() {
 	if (!initShaderPrograms())
 		return;
 
-    vector<QuadliteralMesh*> quadMeshs = sceneManager_->getQuadliteralMeshs();
+    vector<QuadMesh*> quadMeshs = sceneManager_->getQuadMeshs();
     // Use this loop to get all
-    for(vector<QuadliteralMesh*>::iterator iter = quadMeshs.begin(); iter != quadMeshs.end(); ++iter )
+    for(vector<QuadMesh*>::iterator iter = quadMeshs.begin(); iter != quadMeshs.end(); ++iter )
     {
-        glQuadliteralMeshs_.push_back(new GlQuadliteralMesh(*iter));
+        glQuadMeshs_.push_back(new GlQuadMesh(*iter));
     }
 
-    for (unsigned int i = 0; i < glQuadliteralMeshs_.size(); i++) {
-        GlQuadliteralMesh* quadMesh = glQuadliteralMeshs_[i];
+    for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
+        GlQuadMesh* quadMesh = glQuadMeshs_[i];
         quadMesh->initVertexBuffer(QGLBuffer::StaticDraw);
         quadMesh->fillVertexBuffer();
     }
 
 
     // Add each Model's label to the mainWindow (right panel)
-//    for (unsigned int i = 0; i < geometryObjects_.size(); i++) {
-//        mainWindow_->getComponentContainer()->addComponent(geometryObjects_[i]);
-//    }
+    for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
+        mainWindow_->getComponentContainer()->addComponent(glQuadMeshs_[i]->getName());
 
-//	sphere_->setText("Sphere");
-//	grid_->setText("Grid");
-//	gear1_->setText("Gear 1");
-//	gear2_->setText("Gear 2");
+        std::cout << glQuadMeshs_[i]->getName() << std::endl;
+    }
+
+
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
@@ -114,13 +113,11 @@ void GlViewport3D::draw() {
 
     // Draw visual objects
     //Problem: forces all elements to use the same shader
-    for (unsigned int i = 0; i < glQuadliteralMeshs_.size(); i++) {
-        GlQuadliteralMesh* quadMesh = glQuadliteralMeshs_[i];
+    for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
+        GlQuadMesh* quadMesh = glQuadMeshs_[i];
         quadMesh->draw(&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
     }
 }
-
-// use this method for animations (model modification + draw updates
 
 
 void GlViewport3D::updateView() {

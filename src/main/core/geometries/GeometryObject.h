@@ -11,9 +11,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <iostream>
+#include <string>
 #include <QMatrix4x4>
-
-#include "../models/QuadliteralMesh.h"
 
 class GeometryObject{
 
@@ -21,12 +20,20 @@ public:
     GeometryObject();
     virtual ~GeometryObject();
 
-    void createVertexData();
-    QuadliteralMesh* toQuadrilateralMesh();
+
+    // Transformations
+    void rotate(float angle, float x, float y, float z);
+    void translate(float x, float y, float z);
+    void scale(float x, float y, float z);
+
+    std::string getName();
+    void setName(std::string name);
 
 protected:
-    std::vector<glm::vec4> vertexData_;
-    void dataPushback(glm::vec4 data);
+    QMatrix4x4 modelMatrix_;
+
+private:
+    std::string name_;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

@@ -4,14 +4,14 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "GeometryObject.h"
+#include "NonDrawable.h"
 #include "BasicRack.h"
 #include "StandardProfile.h"
 
 using namespace std;
 
 
-class BasicRack: public GeometryObject {
+class BasicRack: public NonDrawable {
 public:
     BasicRack(float lenght = 2.0f, float depth = 0.6f, float height = 0.7f, int toothCount = 5);
 

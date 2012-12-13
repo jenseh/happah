@@ -19,11 +19,12 @@ HEADERS += src/main/BSplineComponent.h \
     src/main/ToolSelector.h \
     src/main/core/geometries/Grid.h \
     src/main/core/SceneManager.h \
-    src/main/core/models/Model.h \
     src/main/gui/qt/gl/GlViewport3D.h \
-    src/main/gui/qt/gl/GlQuadliteralMesh.h \
-    src/main/core/models/QuadliteralMesh.h \
-    src/main/core/geometries/BasicRack.h
+    src/main/core/models/QuadMesh.h \
+    src/main/core/geometries/BasicRack.h \
+    src/main/core/models/Drawable.h \
+    src/main/core/geometries/NonDrawable.h \
+    src/main/gui/qt/gl/GlQuadMesh.h
 SOURCES += src/main/main.cpp \
     src/main/BSplineComponent.cpp \
     src/main/BSplineTool.cpp \
@@ -41,11 +42,12 @@ SOURCES += src/main/main.cpp \
     src/main/ToolSelector.cpp \
     src/main/core/geometries/Grid.cpp \
     src/main/core/SceneManager.cpp \
-    src/main/core/models/Model.cpp \
-    src/main/core/models/QuadliteralMesh.cpp \
+    src/main/core/models/QuadMesh.cpp \
     src/main/gui/qt/gl/GlViewport3D.cpp \
-    src/main/gui/qt/gl/GlQuadliteralMesh.cpp \
-    src/main/core/geometries/BasicRack.cpp
+    src/main/core/geometries/BasicRack.cpp \
+    src/main/core/models/Drawable.cpp \
+    src/main/core/geometries/NonDrawable.cpp \
+    src/main/gui/qt/gl/GlQuadMesh.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

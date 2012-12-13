@@ -11,13 +11,13 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "GeometryObject.h"
+#include "NonDrawable.h"
 #include "StandardProfile.h"
 
 using namespace std;
 
 
-class Gear: public GeometryObject {
+class Gear: public NonDrawable {
 public:
     Gear(float radius = 1.0f, float length = 0.2f, int toothCount = 10);
 

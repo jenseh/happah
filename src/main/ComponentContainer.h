@@ -3,6 +3,7 @@
 
 #include <QListWidget>
 #include <QGraphicsScene>
+#include <string>
 
 #include "Component.h"
 
@@ -18,6 +19,7 @@ public:
 
 public slots:
 	void addComponent(Component* component);
+    void addComponent(std::string component);
 
 };
 

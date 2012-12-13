@@ -1,9 +1,9 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "GeometryObject.h"
+#include "NonDrawable.h"
 
-class Grid : public GeometryObject
+class Grid : public NonDrawable
 {
 public:
     Grid();

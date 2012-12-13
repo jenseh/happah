@@ -1,8 +1,7 @@
 #include "BasicRack.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-BasicRack::BasicRack(float length, float depth, float height, int toothCount) :
-        GeometryObject() {
+BasicRack::BasicRack(float length, float depth, float height, int toothCount) {
     length_ = length;
     depth_ = depth;
     height_ = height;

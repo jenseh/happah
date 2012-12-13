@@ -8,8 +8,7 @@
 #include "Gear.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Gear::Gear(float radius, float length, int toothCount) :
-        GeometryObject() {
+Gear::Gear(float radius, float length, int toothCount) {
     radius_ = radius;
     length_ = length;
     toothCount_ = toothCount;

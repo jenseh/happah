@@ -7,8 +7,7 @@
 
 #include "Sphere.h"
 
-Sphere::Sphere(float radius) :
-        GeometryObject() {
+Sphere::Sphere(float radius) {
     radius_ = radius;
 }
 

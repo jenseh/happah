@@ -1,16 +1,16 @@
-#ifndef GLQUADLITERALMESH_H
-#define GLQUADLITERALMESH_H
+#ifndef GLQUADMESH_H
+#define GLQUADMESH_H
 
 #include <QGLShaderProgram>
 #include <QMatrix4x4>
 #include <QVector3D>
 #include <QGLBuffer>
 
-#include "../../../core/models/QuadliteralMesh.h"
+#include "../../../core/models/QuadMesh.h"
 
-class GlQuadliteralMesh : public QuadliteralMesh {
+class GlQuadMesh : public QuadMesh {
 public:
-    GlQuadliteralMesh(QuadliteralMesh* quadliteralMesh);
+    GlQuadMesh(QuadMesh* quadMesh);
 
     void draw(QGLShaderProgram* shader, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
               QVector3D* cameraPosition);
@@ -22,4 +22,4 @@ protected:
     QGLBuffer vertexBuffer_;
 };
 
-#endif // GLQUADLITERALMESH_H_
+#endif // GLQUADMESH_H_

@@ -10,11 +10,11 @@
 
 #include <math.h>
 #include <glm/glm.hpp>
-#include "GeometryObject.h"
+#include "NonDrawable.h"
 
 using namespace std;
 
-class Sphere: public GeometryObject {
+class Sphere: public NonDrawable {
 
 public:
     Sphere(float radius = 1.0f);

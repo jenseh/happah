@@ -16,6 +16,5 @@ void ComponentContainer::addComponent(Component* component) {
 void ComponentContainer::addComponent(std::string label) {
     const QString labelAsQString = QString::fromStdString(label);
     this->addItem(labelAsQString);
-    std::cout << label << std::endl;
 }
 

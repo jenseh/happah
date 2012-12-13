@@ -8,7 +8,7 @@ HEADERS += src/main/BSplineComponent.h \
     src/main/Component.h \
     src/main/ComponentContainer.h \
     src/main/core/geometries/GeometryObject.h \
-    src/main/core/geometries/Gear.h \
+    src/main/core/geometries/SpurGear.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/EditorScene.h \
@@ -31,7 +31,7 @@ SOURCES += src/main/main.cpp \
     src/main/Component.cpp \
     src/main/ComponentContainer.cpp \
     src/main/core/geometries/GeometryObject.cpp \
-    src/main/core/geometries/Gear.cpp \
+    src/main/core/geometries/SpurGear.cpp \
     src/main/core/geometries/Sphere.cpp \
     src/main/core/geometries/StandardProfile.cpp \
     src/main/EditorScene.cpp \

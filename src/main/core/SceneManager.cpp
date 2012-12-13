@@ -4,8 +4,8 @@ SceneManager::SceneManager() {
     // Load a few sample geometries
     Grid* grid = new Grid();
     Sphere* sphere = new Sphere(1.0f);
-    Gear* gear1 = new Gear(1.0f, 1.0f, 20);
-    Gear* gear2 = new Gear(0.5f, 1.0f, 10);
+    SpurGear* gear1 = new SpurGear(1.0f, 1.0f, 20);
+    SpurGear* gear2 = new SpurGear(0.5f, 1.0f, 10);
     BasicRack* rack1 = new BasicRack(2.0f,  0.6f, 0.4f, 5);
 
     grid->setName("Grid");

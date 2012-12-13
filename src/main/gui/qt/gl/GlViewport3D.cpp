@@ -54,8 +54,6 @@ void GlViewport3D::initializeGL() {
     // Add each Model's label to the mainWindow (right panel)
     for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
         mainWindow_->getComponentContainer()->addComponent(glQuadMeshs_[i]->getName());
-
-        std::cout << glQuadMeshs_[i]->getName() << std::endl;
     }
 
 

@@ -9,7 +9,7 @@ public:
     Grid();
     ~Grid();
 
-    void createVertexData();
+    virtual void createVertexData();
 };
 
 #endif // GRID_H

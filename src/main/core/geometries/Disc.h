@@ -11,13 +11,13 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "GeometryObject.h"
+#include "NonDrawable.h"
 #include "StandardProfile.h"
 
 using namespace std;
 
 
-class Disc: public GeometryObject {
+class Disc: public NonDrawable {
 public:
     Disc(float radius = 1.0f);
 

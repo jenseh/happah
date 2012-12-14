@@ -1,8 +1,5 @@
 #include "NonDrawable.h"
 
-NonDrawable::NonDrawable()
-{
-}
 
 void NonDrawable::dataPushback(glm::vec4 data) {
     vertexData_.push_back(data);

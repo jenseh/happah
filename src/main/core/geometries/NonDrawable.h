@@ -6,15 +6,12 @@
 
 class NonDrawable : public GeometryObject
 {
+protected:
+	std::vector<glm::vec4> vertexData_;
 public:
-    NonDrawable();
-
-
-    void createVertexData();
+	virtual void createVertexData() = 0;
     void dataPushback(glm::vec4 data);
     QuadMesh* toQuadMesh();
-
-    std::vector<glm::vec4> vertexData_;
 };
 
 #endif // NONDRAWABLE_H

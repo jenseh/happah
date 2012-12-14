@@ -11,7 +11,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "GeometryObject.h"
 #include "StandardProfile.h"
 #include "NonDrawable.h"
 

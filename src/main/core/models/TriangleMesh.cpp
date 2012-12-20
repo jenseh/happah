@@ -16,5 +16,4 @@ std::vector<glm::vec4> TriangleMesh::getVertexData()
 }
 
 void TriangleMesh::draw(DrawManager* drawManager) {
-
 }

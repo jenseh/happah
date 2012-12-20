@@ -16,7 +16,6 @@ public:
     std::vector<glm::vec4> getVertexData();
     void draw(DrawManager* drawManager);
 
-
 protected:
     std::vector<glm::vec4> vertexData_;
 };

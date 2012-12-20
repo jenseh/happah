@@ -61,7 +61,7 @@ glm::vec3 Sphere::getHitpoint() {
     return hitpoint_;
 }
 
-void Sphere::createVertexData() {
+QuadMesh* Sphere::toQuadMesh() {
     int dtheta = 1;
     int dphi = 1;
     const float toRad = M_PI / 180.0f;
@@ -92,14 +92,20 @@ void Sphere::createVertexData() {
             d.w = 1.0f;
             normD = glm::normalize(d);
 
-            dataPushback(a);
-            dataPushback(normA);
-            dataPushback(b);
-            dataPushback(normB);
-            dataPushback(c);
-            dataPushback(normC);
-            dataPushback(d);
-            dataPushback(normD);
+            vertexData_.push_back(a);
+            vertexData_.push_back(normA);
+            vertexData_.push_back(b);
+            vertexData_.push_back(normB);
+            vertexData_.push_back(c);
+            vertexData_.push_back(normC);
+            vertexData_.push_back(d);
+            vertexData_.push_back(normD);
         }
     }
+    return new QuadMesh(vertexData_);
+}
+
+TriangleMesh* Sphere::toTriangleMesh() {
+  //TODO: Implement this function
+  return 0;
 }

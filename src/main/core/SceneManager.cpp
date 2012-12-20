@@ -15,13 +15,6 @@ SceneManager::SceneManager() {
     rack1->setName("Rack 1");
 
 
-    // Load their internal representation
-    grid->createVertexData();
-    sphere->createVertexData();
-    gear1->createVertexData();
-    gear2->createVertexData();
-    rack1->createVertexData();
-
     // Convert them to quad meshs
     grid_ = grid->toQuadMesh();
     sphere_ = sphere->toQuadMesh();
@@ -38,11 +31,12 @@ SceneManager::SceneManager() {
 
 
     // Add all quad meshs to a common vector
-    quadMeshs_.push_back(grid_);
-    //quadMeshs_.push_back(sphere_);
-    quadMeshs_.push_back(gear1_);
-    //quadMeshs_.push_back(gear2_);
-    quadMeshs_.push_back(rack1_);
+    drawables_ = new vector<Drawable*>();
+    drawables_->push_back(grid_);
+    drawables_->push_back(sphere_);
+    drawables_->push_back(gear1_);
+    //drawables_->push_back(gear2_);
+    drawables_->push_back(rack1_);
 
     //TODO: Setup and start a timer
 //    timer_ = new QTimer();
@@ -61,6 +55,6 @@ void SceneManager::update() {
     gear2_->rotate(-2.0f, 0.0f, 0.0f, 1.0f);
 }
 
-vector<QuadMesh*> SceneManager::getQuadMeshs() {
-    return quadMeshs_;
+vector<Drawable*>* SceneManager::getDrawables() {
+    return drawables_;
 }

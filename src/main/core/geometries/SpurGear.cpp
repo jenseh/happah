@@ -15,8 +15,8 @@ SpurGear::SpurGear(float radius, float length, int toothCount) {
     module_ = radius_ * 2.0f / toothCount_;
 }
 
-SpurGear::~SpurGear() {
-}
+//SpurGear::~SpurGear() {
+//}
 
 float SpurGear::getRadius() {
     return radius_;
@@ -104,7 +104,7 @@ void SpurGear::createHeightProfile() {
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
-void SpurGear::createVertexData() {
+QuadMesh* SpurGear::toQuadMesh() {
     float dz = length_ / Z_DETAIL_LEVEL;
     const float toRad = M_PI / 180.0f;
     float innerRadius = radius_ * INNER_RADIUS_FACTOR;
@@ -178,14 +178,14 @@ void SpurGear::createVertexData() {
                                     glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
                     1.0f);
 
-            dataPushback(a);
-            dataPushback(normNext);
-            dataPushback(b);
-            dataPushback(norm);
-            dataPushback(c);
-            dataPushback(norm);
-            dataPushback(d);
-            dataPushback(normNext);
+            vertexData_.push_back(a);
+            vertexData_.push_back(normNext);
+            vertexData_.push_back(b);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(d);
+            vertexData_.push_back(normNext);
         }
     }
 
@@ -222,16 +222,22 @@ void SpurGear::createVertexData() {
                     glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
                     glm::vec4(0.0f, 0.0f, -1.0, 1.0);
 
-            dataPushback(a);
-            dataPushback(norm);
-            dataPushback(b);
-            dataPushback(norm);
-            dataPushback(c);
-            dataPushback(norm);
-            dataPushback(d);
-            dataPushback(norm);
+            vertexData_.push_back(a);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(b);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(d);
+            vertexData_.push_back(norm);
         }
     }
+    return new QuadMesh(vertexData_);
+}
+
+TriangleMesh* SpurGear::toTriangleMesh() {
+  //TODO: Implement this function
+  return 0;
 }
 
 //nice formula for the sides            d.y = sin((int)((phi+45) * 4 / 360) * M_PI / 2.0f);

@@ -11,6 +11,7 @@
 #include <math.h>
 #include <glm/glm.hpp>
 #include "NonDrawable.h"
+#include "../models/QuadMesh.h"
 
 using namespace std;
 
@@ -18,16 +19,18 @@ class Sphere: public NonDrawable {
 
 public:
     Sphere(float radius = 1.0f);
+    ~Sphere();
 
-    virtual ~Sphere();
     bool hit(glm::vec3 rayPos, glm::vec3 rayDir);
     float getRadius();
     glm::vec3 getHitpoint();
-    void createVertexData();
+    QuadMesh* toQuadMesh();
+    TriangleMesh* toTriangleMesh();
 
 private:
     float radius_;
     glm::vec3 hitpoint_;
+    std::vector<glm::vec4> vertexData_;
 
     bool quad(float A, float B, float C, float *t0, float* t1);
 };

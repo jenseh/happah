@@ -11,10 +11,6 @@ GeometryObject::GeometryObject() {
     modelMatrix_.setToIdentity();
 }
 
-GeometryObject::~GeometryObject() {
-    // TODO Auto-generated destructor stub
-}
-
 void GeometryObject::rotate(float angle, float x, float y, float z) {
     modelMatrix_.rotate(angle, x, y, z);
 }

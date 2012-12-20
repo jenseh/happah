@@ -54,7 +54,7 @@ void BasicRack::createHeightProfile() {
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
-void BasicRack::createVertexData() {
+QuadMesh* BasicRack::toQuadMesh() {
     float dz = depth_ / Z_DETAIL_LEVEL;
 
     // Create the height profile given the current gear settings
@@ -94,18 +94,23 @@ void BasicRack::createVertexData() {
                                     glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
                     1.0f);
 
-            dataPushback(a);
-            //dataPushback(normNext);
-            dataPushback(norm);
-            dataPushback(b);
-            dataPushback(norm);
-            dataPushback(c);
-            dataPushback(norm);
-            dataPushback(d);
-            //dataPushback(normNext);
-            dataPushback(norm);
+            vertexData_.push_back(a);
+            //vertexData_.push_back(normNext);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(b);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(d);
+            //vertexData_.push_back(normNext);
+            vertexData_.push_back(norm);
         }
     }
 
+    return new QuadMesh(vertexData_);
+}
 
+TriangleMesh* BasicRack::toTriangleMesh() {
+  //TODO: Implement this function
+  return 0;
 }

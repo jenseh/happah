@@ -6,7 +6,7 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, 
 				QGLBuffer::VertexBuffer), triangleVBO_(QGLBuffer::VertexBuffer) {
 
 	mainWindow_ = mainWindow;
-    sceneManager_ = sceneManager;
+	sceneManager_ = sceneManager;
 
 	projectionMatrix_.setToIdentity();
 	viewMatrix_.setToIdentity();
@@ -36,24 +36,22 @@ void GlViewport3D::initializeGL() {
 
 	if (!initShaderPrograms())
 		return;
+    //Create DrawManager
+      drawManager_ = new DrawManager();
 
-    vector<QuadMesh*> quadMeshs = sceneManager_->getQuadMeshs();
-    // Use this loop to get all
-    for(vector<QuadMesh*>::iterator iter = quadMeshs.begin(); iter != quadMeshs.end(); ++iter )
-    {
-        glQuadMeshs_.push_back(new GlQuadMesh(*iter));
+    vector<Drawable*>* drawables = sceneManager_->getDrawables();
+    // Initialize all drawables
+    for (unsigned int i = 0; i < drawables->size(); i++) {
+        Drawable* drawable = drawables->at(i);
+//        TODO:
+//        quadMesh->initVertexBuffer(QGLBuffer::StaticDraw);
+//        quadMesh->fillVertexBuffer();
     }
 
-    for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
-        GlQuadMesh* quadMesh = glQuadMeshs_[i];
-        quadMesh->initVertexBuffer(QGLBuffer::StaticDraw);
-        quadMesh->fillVertexBuffer();
-    }
 
-
-    // Add each Model's label to the mainWindow (right panel)
-    for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
-        mainWindow_->getComponentContainer()->addComponent(glQuadMeshs_[i]->getName());
+    // Add each Drawable's label to the mainWindow (right panel)
+    for (unsigned int i = 0; i < drawables->size(); i++) {
+        mainWindow_->getComponentContainer()->addComponent(drawables->at(i)->getName());
     }
 
 
@@ -111,9 +109,11 @@ void GlViewport3D::draw() {
 
     // Draw visual objects
     //Problem: forces all elements to use the same shader
-    for (unsigned int i = 0; i < glQuadMeshs_.size(); i++) {
-        GlQuadMesh* quadMesh = glQuadMeshs_[i];
-        quadMesh->draw(&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
+    vector<Drawable*>* drawables = sceneManager_->getDrawables();
+    // Initialize all drawables
+    for (unsigned int i = 0; i < drawables->size(); i++) {
+        Drawable* drawable = drawables->at(i);
+//        drawable->draw(drawManager_);//&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
     }
 }
 

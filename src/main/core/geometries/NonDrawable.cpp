@@ -1,15 +1,17 @@
 #include "NonDrawable.h"
 
+//QuadMesh* NonDrawable::toQuadMesh() {
+//    QuadMesh* mesh = new QuadMesh(vertexData_);
+//    if (getName() != "") {
+//        mesh->setName(getName() + " - Instance 1");
+//    }
+//    return mesh;
+//}
 
-void NonDrawable::dataPushback(glm::vec4 data) {
-    vertexData_.push_back(data);
-}
-
-
-QuadMesh* NonDrawable::toQuadMesh() {
-    QuadMesh* mesh = new QuadMesh(vertexData_);
-    if (getName() != "") {
-        mesh->setName(getName() + " - Instance 1");
-    }
-    return mesh;
-}
+//TriangleMesh* NonDrawable::toTriangleMesh() {
+//    TriangleMesh* mesh = new TriangleMesh(vertexData_);
+//    if (getName() != "") {
+//        mesh->setName(getName() + " - Instance 1");
+//    }
+//    return mesh;
+//}

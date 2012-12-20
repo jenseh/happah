@@ -3,15 +3,14 @@
 
 #include "GeometryObject.h"
 #include "../models/QuadMesh.h"
+#include "../models/TriangleMesh.h"
 
 class NonDrawable : public GeometryObject
 {
-protected:
-	std::vector<glm::vec4> vertexData_;
 public:
-	virtual void createVertexData() = 0;
-    void dataPushback(glm::vec4 data);
-    QuadMesh* toQuadMesh();
+//    virtual ~NonDrawable() = 0;
+//    virtual QuadMesh* toQuadMesh();
+//    virtual TriangleMesh* toTriangleMesh();
 };
 
 #endif // NONDRAWABLE_H

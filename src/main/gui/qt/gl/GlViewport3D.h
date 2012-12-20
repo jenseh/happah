@@ -15,6 +15,7 @@
 #include "../../../MainWindow.h"
 #include "../../../core/SceneManager.h"
 #include "GlQuadMesh.h"
+#include "GlTriangleMesh.h"
 
 using namespace std;
 
@@ -37,7 +38,8 @@ protected:
 private:
 	QTimer *timer_;
 	MainWindow* mainWindow_;
-    SceneManager* sceneManager_;
+	SceneManager* sceneManager_;
+	DrawManager* drawManager_;
 
 	QMatrix4x4 viewMatrix_;
 	QMatrix4x4 projectionMatrix_;
@@ -50,9 +52,6 @@ private:
 	QPoint mousePos_;
 	int pointCount_;
 	float zoomRad_, theta_, phi_; //is zoomRad german?
-
-	// GeometryObjects
-    vector<GlQuadMesh*> glQuadMeshs_;
 
 	const static int WAIT_TIME = 40;
 

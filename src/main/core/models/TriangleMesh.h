@@ -1,5 +1,5 @@
-#ifndef QUADMESH_H
-#define QUADMESH_H
+#ifndef TRIANGLEMESH_H
+#define TRIANGLEMESH_H
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -7,17 +7,18 @@
 #include "Drawable.h"
 #include "../DrawManager.h"
 
-class QuadMesh : public Drawable {
-
+class TriangleMesh : public Drawable
+{
 public:
-    QuadMesh(std::vector<glm::vec4> vertexData);
-    ~QuadMesh();
+    TriangleMesh(std::vector<glm::vec4> vertexData);
+    ~TriangleMesh();
 
     std::vector<glm::vec4> getVertexData();
     void draw(DrawManager* drawManager);
+
 
 protected:
     std::vector<glm::vec4> vertexData_;
 };
 
-#endif // QUADMESH_H
+#endif // TRIANGLEMESH_H

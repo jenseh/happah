@@ -24,7 +24,8 @@ HEADERS += src/main/BSplineComponent.h \
     src/main/core/geometries/BasicRack.h \
     src/main/core/models/Drawable.h \
     src/main/core/geometries/NonDrawable.h \
-    src/main/gui/qt/gl/GlQuadMesh.h
+    src/main/core/models/TriangleMesh.h \
+    src/main/core/DrawManager.h
 SOURCES += src/main/main.cpp \
     src/main/BSplineComponent.cpp \
     src/main/BSplineTool.cpp \
@@ -47,7 +48,8 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/BasicRack.cpp \
     src/main/core/models/Drawable.cpp \
     src/main/core/geometries/NonDrawable.cpp \
-    src/main/gui/qt/gl/GlQuadMesh.cpp
+    src/main/core/models/TriangleMesh.cpp \
+    src/main/core/DrawManager.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

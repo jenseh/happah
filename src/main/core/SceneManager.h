@@ -19,20 +19,20 @@ public:
     SceneManager();
     ~SceneManager();
 
-    vector<QuadMesh*> getQuadMeshs();
+    vector<Drawable*>* getDrawables();
 
 private:
-   vector<QuadMesh*> quadMeshs_;
+   vector<Drawable*>* drawables_;
 
     QTimer *timer_;
     const static int WAIT_TIME = 40;
 
    //Just for the beginning to have some objects
-   QuadMesh* gear1_;
-   QuadMesh* gear2_;
-   QuadMesh* sphere_;
-   QuadMesh* grid_;
-   QuadMesh* rack1_;
+   Drawable* gear1_;
+   Drawable* gear2_;
+   Drawable* sphere_;
+   Drawable* grid_;
+   Drawable* rack1_;
 
 private slots:
    void update();

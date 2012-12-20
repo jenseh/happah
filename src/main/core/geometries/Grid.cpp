@@ -7,7 +7,7 @@ Grid::~Grid() {
 }
 
 
-void Grid::createVertexData() {
+QuadMesh* Grid::toQuadMesh() {
     for (float x = -2.0; x <= 2.0; x = x + 0.5f) {
         for (float z = -2.0f; z <= 2.0f; z = z + 0.5f) {
             glm::vec4 normal = glm::vec4(0.0, 1.0, 0.0, 0.0);
@@ -21,4 +21,10 @@ void Grid::createVertexData() {
             vertexData_.push_back(normal);
         }
     }
+    return new QuadMesh(vertexData_);
+}
+
+TriangleMesh* Grid::toTriangleMesh() {
+  //TODO: Implement this function
+  return 0;
 }

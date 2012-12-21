@@ -6,7 +6,7 @@
 
 class Drawable : public GeometryObject{
 public:
-//    virtual ~Drawable();
+    virtual ~Drawable();
 };
 
 #endif // DRAWABLE_H

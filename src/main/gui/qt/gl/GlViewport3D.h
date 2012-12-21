@@ -14,7 +14,6 @@
 
 #include "../../../MainWindow.h"
 #include "../../../core/SceneManager.h"
-#include "GlQuadMesh.h"
 
 using namespace std;
 

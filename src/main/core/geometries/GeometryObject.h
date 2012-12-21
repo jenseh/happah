@@ -18,7 +18,7 @@ class GeometryObject{
 
 public:
     GeometryObject();
-//    virtual ~GeometryObject();
+    virtual ~GeometryObject();
 
 
     // Transformations

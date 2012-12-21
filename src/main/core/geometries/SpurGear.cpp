@@ -15,8 +15,7 @@ SpurGear::SpurGear(float radius, float length, int toothCount) {
     module_ = radius_ * 2.0f / toothCount_;
 }
 
-//SpurGear::~SpurGear() {
-//}
+SpurGear::~SpurGear() {}
 
 float SpurGear::getRadius() {
     return radius_;

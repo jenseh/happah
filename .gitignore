@@ -23,3 +23,9 @@
 /.settings
 *.swp
 /happah.pro.user
+
+#Qt mocs
+moc_*
+
+#Gedit temp files
+*~

@@ -21,7 +21,7 @@ class Disc: public NonDrawable {
 public:
     Disc(float radius = 1.0f);
 
-    virtual ~Disc();
+    ~Disc();
     float getRadius();
     glm::vec3 getCenter();
     void createVertexData();

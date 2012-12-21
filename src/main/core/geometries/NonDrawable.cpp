@@ -1,5 +1,7 @@
 #include "NonDrawable.h"
 
+NonDrawable::~NonDrawable() {}
+
 //QuadMesh* NonDrawable::toQuadMesh() {
 //    QuadMesh* mesh = new QuadMesh(vertexData_);
 //    if (getName() != "") {

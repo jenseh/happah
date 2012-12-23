@@ -34,6 +34,10 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
+	void updateView();
+	bool initShaderPrograms();
+	void setZoom(float zoom);
+
 	QTimer *timer_;
 	MainWindow* mainWindow_;
 	SceneManager* sceneManager_;
@@ -42,21 +46,13 @@ private:
 	QMatrix4x4 viewMatrix_;
 	QMatrix4x4 projectionMatrix_;
 	QVector3D eye_, center_, up_;
-	QGLShaderProgram shader_, coordShader_;
 	QGLBuffer vertexBuffer_, coordVBO_, triangleVBO_;
-	std::vector<glm::vec4> coordSystem_; //unused
-	std::vector<glm::vec4> sphereVP_; //unused
 	glm::vec4 triangleVP_[3];
 	QPoint mousePos_;
 	int pointCount_;
 	float zoomRad_, theta_, phi_; //is zoomRad german?
 
 	const static int WAIT_TIME = 40;
-
-	void draw();
-	void updateView();
-	bool initShaderPrograms();
-	void setZoom(float zoom);
 };
 
 #endif

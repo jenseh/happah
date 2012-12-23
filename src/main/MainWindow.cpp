@@ -35,12 +35,12 @@ MainWindow::MainWindow() {
 
 	QTabWidget *tabs = new QTabWidget(this);
 
-    // Setting up logic
-    sceneManager = new SceneManager();
+        // Setting up logic
+        sceneManager = new SceneManager();
 
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
-    GlViewport3D* viewport3D = new GlViewport3D(sceneManager, glFormat, viewportWidget,
+	GlViewport3D* viewport3D = new GlViewport3D(sceneManager, glFormat, viewportWidget,
 			this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	tabs->addTab(viewportWidget, "3D-View");

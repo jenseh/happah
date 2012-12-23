@@ -13,8 +13,7 @@ public:
     TriangleMesh(std::vector<glm::vec4> vertexData);
     ~TriangleMesh();
 
-    std::vector<glm::vec4> getVertexData();
-    void draw(DrawManager* drawManager);
+    std::vector<glm::vec4>* getVertexData();
 
 protected:
     std::vector<glm::vec4> vertexData_;

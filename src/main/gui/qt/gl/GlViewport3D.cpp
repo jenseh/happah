@@ -1,7 +1,7 @@
 #include "GlViewport3D.h"
 
-GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget *parent,
-        MainWindow* mainWindow) :
+GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
+		QWidget *parent, MainWindow* mainWindow) :
 		QGLWidget(format, parent), vertexBuffer_(QGLBuffer::VertexBuffer), coordVBO_(
 				QGLBuffer::VertexBuffer), triangleVBO_(QGLBuffer::VertexBuffer) {
 
@@ -30,93 +30,49 @@ void GlViewport3D::initializeGL() {
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
 
-	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
+	//Create DrawManager
+	drawManager_ = new DrawManager();
 
-	if (!initShaderPrograms())
-		return;
-    //Create DrawManager
-      drawManager_ = new DrawManager();
+	// Initialize shaders
+//	if (!drawManager_->initShaderPrograms()) {
+//		return;
+//	}
 
-    vector<Drawable*>* drawables = sceneManager_->getDrawables();
-    // Initialize all drawables
-    for (unsigned int i = 0; i < drawables->size(); i++) {
-        Drawable* drawable = drawables->at(i);
-//        TODO:
-//        quadMesh->initVertexBuffer(QGLBuffer::StaticDraw);
-//        quadMesh->fillVertexBuffer();
-    }
+	vector<Drawable*>* drawables = sceneManager_->getDrawables();
+	// Initialize all drawables
+	for (unsigned int i = 0; i < drawables->size(); i++) {
+		Drawable* drawable = drawables->at(i);
+		drawManager_->addDrawable(drawable);
+	}
 
+	// Finalize vertex buffer
+//	if (!drawManager_->finalizeBuffer()) {
+//	    return;
+//	}
 
-    // Add each Drawable's label to the mainWindow (right panel)
-    for (unsigned int i = 0; i < drawables->size(); i++) {
-        mainWindow_->getComponentContainer()->addComponent(drawables->at(i)->getName());
-    }
-
-
+	// Add each Drawable's label to the mainWindow (right panel)
+	for (unsigned int i = 0; i < drawables->size(); i++) {
+		mainWindow_->getComponentContainer()->addComponent(
+				drawables->at(i)->getName());
+	}
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
-    connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
+	connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
 	timer_->start(WAIT_TIME);
 }
 
 void GlViewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
-    projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
+	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
 }
 
 void GlViewport3D::paintGL() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	updateView();
 
-	draw();
+//	drawManager_->draw(&projectionMatrix_, &viewMatrix_, &eye_);
 }
-
-bool GlViewport3D::initShaderPrograms() {
-	//load and compile Vertex Shader
-	bool result = shader_.addShaderFromSourceFile(QGLShader::Vertex,
-			"./src/shader/blinnphongVert.glsl");
-	if (!result)
-		qWarning() << shader_.log();
-
-	//load and compile Fragment Shader
-	result = shader_.addShaderFromSourceFile(QGLShader::Fragment,
-			"./src/shader/blinnphongFrag.glsl");
-	if (!result)
-		qWarning() << shader_.log();
-
-	//coord Shader
-	result = coordShader_.addShaderFromSourceFile(QGLShader::Vertex,
-			"./src/shader/simpleVert.glsl");
-	if (!result)
-		qWarning() << coordShader_.log();
-
-	//coord Shader
-	result = coordShader_.addShaderFromSourceFile(QGLShader::Fragment,
-			"./src/shader/simpleFrag.glsl");
-	if (!result)
-		qWarning() << coordShader_.log();
-
-	return result;
-}
-
-void GlViewport3D::draw() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Draw visual objects
-    //Problem: forces all elements to use the same shader
-    vector<Drawable*>* drawables = sceneManager_->getDrawables();
-    // Initialize all drawables
-    for (unsigned int i = 0; i < drawables->size(); i++) {
-        Drawable* drawable = drawables->at(i);
-//        drawable->draw(drawManager_);//&shader_, &projectionMatrix_, &viewMatrix_, &eye_);
-    }
-}
-
 
 void GlViewport3D::updateView() {
 	//Update ViewMatrix

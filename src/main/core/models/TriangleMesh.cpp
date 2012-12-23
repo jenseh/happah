@@ -10,10 +10,7 @@ TriangleMesh::~TriangleMesh()
 
 }
 
-std::vector<glm::vec4> TriangleMesh::getVertexData()
+std::vector<glm::vec4>* TriangleMesh::getVertexData()
 {
-    return vertexData_;
-}
-
-void TriangleMesh::draw(DrawManager* drawManager) {
+    return &vertexData_;
 }

@@ -27,13 +27,15 @@ public:
     void scale(float x, float y, float z);
 
     std::string getName();
+    int getObjectId();
     void setName(std::string name);
+    QMatrix4x4* getModelMatrix();
 
 protected:
     QMatrix4x4 modelMatrix_;
-
-private:
     std::string name_;
+    int objectId_;
+    static int objectIdCounter_;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

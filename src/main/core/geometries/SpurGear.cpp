@@ -231,7 +231,9 @@ QuadMesh* SpurGear::toQuadMesh() {
             vertexData_.push_back(norm);
         }
     }
-    return new QuadMesh(vertexData_);
+    QuadMesh* result = new QuadMesh(vertexData_);
+    result->setName(name_ + " - Instance 1");
+    return result;
 }
 
 TriangleMesh* SpurGear::toTriangleMesh() {

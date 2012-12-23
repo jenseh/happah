@@ -6,8 +6,10 @@
  */
 
 #include "GeometryObject.h"
+int GeometryObject::objectIdCounter_ = 0;
 
 GeometryObject::GeometryObject() {
+    objectId_ = GeometryObject::objectIdCounter_++;
     modelMatrix_.setToIdentity();
 }
 
@@ -29,6 +31,14 @@ std::string GeometryObject::getName() {
     return name_;
 }
 
+int GeometryObject::getObjectId() {
+  return objectId_;
+}
+
 void GeometryObject::setName(std::string name) {
     name_ = name;
+}
+
+QMatrix4x4* GeometryObject::getModelMatrix() {
+    return &modelMatrix_;
 }

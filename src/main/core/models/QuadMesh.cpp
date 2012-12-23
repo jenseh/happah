@@ -10,12 +10,7 @@ QuadMesh::~QuadMesh()
 
 }
 
-std::vector<glm::vec4> QuadMesh::getVertexData()
+std::vector<glm::vec4>* QuadMesh::getVertexData()
 {
-    return vertexData_;
-}
-
-
-void QuadMesh::draw(DrawManager* drawManager) {
-
+    return &vertexData_;
 }

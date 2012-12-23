@@ -34,9 +34,9 @@ void GlViewport3D::initializeGL() {
 	drawManager_ = new DrawManager();
 
 	// Initialize shaders
-//	if (!drawManager_->initShaderPrograms()) {
-//		return;
-//	}
+	if (!drawManager_->initShaderPrograms()) {
+		return;
+	}
 
 	vector<Drawable*>* drawables = sceneManager_->getDrawables();
 	// Initialize all drawables
@@ -46,9 +46,9 @@ void GlViewport3D::initializeGL() {
 	}
 
 	// Finalize vertex buffer
-//	if (!drawManager_->finalizeBuffer()) {
-//	    return;
-//	}
+	if (!drawManager_->finalizeBuffer()) {
+	    return;
+	}
 
 	// Add each Drawable's label to the mainWindow (right panel)
 	for (unsigned int i = 0; i < drawables->size(); i++) {

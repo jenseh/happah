@@ -10,7 +10,8 @@ class DrawManager {
 public:
 	DrawManager();
 
-	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
+	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
+			QVector3D* cameraPosition);
 	void addDrawable(Drawable* drawable);
 	bool initShaderPrograms();
 	int finalizeBuffer();

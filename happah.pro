@@ -26,7 +26,17 @@ HEADERS += src/main/BSplineComponent.h \
     src/main/core/geometries/NonDrawable.h \
     src/main/core/models/TriangleMesh.h \
     src/main/core/DrawManager.h \
-    src/main/core/DrawManagerItem.h
+    src/main/core/DrawManagerItem.h \
+    src/main/core/kdtree/TriangleKDTreeNode.h \
+    src/main/core/kdtree/TriangleKDTree.h \
+    src/main/core/kdtree/TriangleBox.h \
+    src/main/core/geometries/Triangle.h \
+    src/main/core/geometries/Ray.h \
+    src/main/core/models/Triangle.h \
+    src/main/core/kdtree/IntersectInfo.h \
+    src/main/core/simulations/DiscGearGrind.h \
+    src/main/core/geometries/Disc.h \
+    src/main/core/kdtree/Box.h
 SOURCES += src/main/main.cpp \
     src/main/BSplineComponent.cpp \
     src/main/BSplineTool.cpp \
@@ -51,7 +61,11 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/NonDrawable.cpp \
     src/main/core/models/TriangleMesh.cpp \
     src/main/core/DrawManager.cpp \
-    src/main/core/DrawManagerItem.cpp
+    src/main/core/DrawManagerItem.cpp \
+    src/main/core/simulations/DiscGearGrind.cpp \
+    src/main/core/geometries/Disc.cpp \
+    src/main/core/kdtree/TriangleKDTree.cpp \
+    src/main/core/kdtree/Box.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

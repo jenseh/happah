@@ -3,17 +3,24 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-
+#include "../geometries/Triangle.h"
 #include "Drawable.h"
 #include "../DrawManager.h"
+#include "../geometries/Ray.h"
+
 
 class TriangleMesh : public Drawable
 {
 public:
+    std::vector<Triangle> triangles_;
+
     TriangleMesh(std::vector<glm::vec4> vertexData);
     ~TriangleMesh();
 
     std::vector<glm::vec4>* getVertexData();
+    std::vector<Ray*> toRayCloud();
+
+    void fillTriangles();
 
 protected:
     std::vector<glm::vec4> vertexData_;

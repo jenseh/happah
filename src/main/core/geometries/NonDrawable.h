@@ -9,8 +9,8 @@ class NonDrawable : public GeometryObject
 {
 public:
     virtual ~NonDrawable();
-    virtual QuadMesh* toQuadMesh() = 0;
-    virtual TriangleMesh* toTriangleMesh() = 0;
+    virtual QuadMesh* toQuadMesh();
+    virtual TriangleMesh* toTriangleMesh();
 };
 
 #endif // NONDRAWABLE_H

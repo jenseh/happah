@@ -38,8 +38,8 @@ private:
     StandardProfile* standardProfile;
     std::vector<glm::vec4> vertexData_;
 
-    const static int SEGMENT_COUNT = 40; //maximum: 4500
-    const static int Z_DETAIL_LEVEL = 4;
+    const static int SEGMENT_COUNT = 5; //maximum: 4500
+    const static int Z_DETAIL_LEVEL = 1;
     const static float INNER_RADIUS_FACTOR = 0.5f;
 
     void createSinePartition();

@@ -14,6 +14,9 @@ std::vector<glm::vec4>* TriangleMesh::getVertexData()
 {
     return &vertexData_;
 }
+int TriangleMesh::getTupleSize() {
+  return 3;
+}
 
 void TriangleMesh::fillTriangles(){
     triangles_.resize(vertexData_.size() / 6);

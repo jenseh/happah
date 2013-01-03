@@ -236,15 +236,149 @@ QuadMesh* SpurGear::toQuadMesh() {
     return result;
 }
 
+// This creates the triangle mesh representation of a gear. The gear axis is the model's z-axis.
 TriangleMesh* SpurGear::toTriangleMesh() {
-  //TODO: Implement this function
-  return 0;
+    float dz = length_ / Z_DETAIL_LEVEL;
+    const float toRad = M_PI / 180.0f;
+    float innerRadius = radius_ * INNER_RADIUS_FACTOR;
+
+    // Create the height profile given the current gear settings
+    createHeightProfile();
+
+    // precompute sin and cos of angles
+    float cosSegment[heightProfile_.size() + 1];
+    float sinSegment[heightProfile_.size() + 1];
+    float height[heightProfile_.size() + 1];
+    float cosHeight[heightProfile_.size() + 1];
+    float sinHeight[heightProfile_.size() + 1];
+
+    for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+            segmentNum++) {
+        float phi = heightProfile_[segmentNum].x / (2 * M_PI * radius_)
+                * 360.0f; //in degrees
+        cosSegment[segmentNum] = cos(phi * toRad);
+        sinSegment[segmentNum] = sin(phi * toRad);
+        height[segmentNum] = radius_ + heightProfile_[segmentNum].y;
+        cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
+        sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
+    }
+    // Insert first value again to close the mesh
+    cosSegment[heightProfile_.size()] = cosSegment[0];
+    sinSegment[heightProfile_.size()] = sinSegment[0];
+    height[heightProfile_.size()] = height[0];
+    cosHeight[heightProfile_.size()] = cosHeight[0];
+    sinHeight[heightProfile_.size()] = sinHeight[0];
+
+    // draw the sides (german: Mantelflaechen) of the gear
+    // this is the important part where the height profile will come into play
+    for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
+        float z = i * dz;
+        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+                segmentNum++) {
+
+            glm::vec4 a, b, c, d, normNext, norm;
+
+            a.x = cosHeight[segmentNum + 1];
+            a.y = sinHeight[segmentNum + 1];
+            a.z = z;
+            a.w = 1.0f;
+
+            b.x = cosHeight[segmentNum];
+            b.y = sinHeight[segmentNum];
+            b.z = z;
+            b.w = 1.0f;
+
+            c.x = cosHeight[segmentNum];
+            c.y = sinHeight[segmentNum];
+            c.z = z + dz;
+            c.w = 1.0f;
+
+            d.x = cosHeight[segmentNum + 1];
+            d.y = sinHeight[segmentNum + 1];
+            d.z = z + dz;
+            d.w = 1.0f;
+
+            // compute the 2 normals (each used twice)
+            normNext = glm::vec4(
+                    glm::normalize(
+                            glm::cross(glm::vec3(0.0f, 0.0f, dz),
+                                    glm::vec3(cosHeight[segmentNum + 2] - cosHeight[segmentNum + 1],
+                                              sinHeight[segmentNum + 2] - sinHeight[segmentNum + 1],
+                                              0.0f))),
+                    1.0f);
+            norm = glm::vec4(
+                    glm::normalize(
+                            glm::cross(glm::vec3(0.0f, 0.0f, dz),
+                                    glm::vec3(cosHeight[segmentNum + 1] - cosHeight[segmentNum],
+                                              sinHeight[segmentNum + 1] - sinHeight[segmentNum],
+                                              0.0f))),
+                    1.0f);
+
+            vertexData_.push_back(a);
+            vertexData_.push_back(normNext);
+            vertexData_.push_back(b);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+
+            vertexData_.push_back(a);
+            vertexData_.push_back(normNext);
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(d);
+            vertexData_.push_back(normNext);
+        }
+    }
+
+    // draw the front and back of the gear
+    // this part is very straightforward. now alle quads have the
+    // circle's center as a common point. for nicer highlights it
+    // might be better to chose vertices in a more clever way.
+    int i = 0;
+    for (float z = 0.0f; i < 2; i++, z += length_) {
+        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+                segmentNum++) {
+            glm::vec4 a, b, c, d, norm;
+
+            a.x = cosHeight[segmentNum];
+            a.y = sinHeight[segmentNum];
+            a.z = z;
+            a.w = 1.0f;
+
+            b.x = cosHeight[segmentNum + 1];
+            b.y = sinHeight[segmentNum + 1];
+            b.z = z;
+            b.w = 1.0f;
+
+            c.x = cosSegment[segmentNum + 1] * innerRadius;
+            c.y = sinSegment[segmentNum + 1] * innerRadius;
+            c.z = z;
+            c.w = 1.0f;
+
+            d.x = cosSegment[segmentNum] * innerRadius;
+            d.y = sinSegment[segmentNum] * innerRadius;
+            d.z = z;
+            d.w = 1.0f;
+            norm = i == 0 ?
+                    glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
+                    glm::vec4(0.0f, 0.0f, -1.0, 1.0);
+
+            vertexData_.push_back(a);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(b);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+
+            vertexData_.push_back(c);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(d);
+            vertexData_.push_back(norm);
+            vertexData_.push_back(a);
+            vertexData_.push_back(norm);
+        }
+    }
+    TriangleMesh* result = new TriangleMesh(vertexData_);
+    result->setName(name_ + " - Instance 1");
+    return result;
 }
-
-//nice formula for the sides            d.y = sin((int)((phi+45) * 4 / 360) * M_PI / 2.0f);
-
-//            cout << normA.x << ", " << normA.y << ", " << normA.z << endl;
-//            cout << normB.x << ", " << normB.y << ", " << normB.z << endl;
-//            cout << normC.x << ", " << normC.y << ", " << normC.z << endl;
-//            cout << normD.x << ", " << normD.y << ", " << normD.z << endl;
-//            cout << "-----" << endl;

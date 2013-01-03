@@ -8,6 +8,7 @@ public:
     virtual ~Drawable();
 
     virtual std::vector<glm::vec4>* getVertexData();
+    virtual int getTupleSize();
 };
 
 #endif // DRAWABLE_H

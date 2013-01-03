@@ -35,13 +35,14 @@ void main( void)
         vec3 halfwayWS = normalize(lightWS + viewWS);
         float phong = 5.0f;
 
-        float diffuse = max(0.0f, dot(lightWS,vNormal));
-        float specular = max(0.0f, pow(dot(halfwayWS,vNormal),phong));
+        float diffuse = max(0.0f, dot(lightWS, vNormal));
+        float specular = max(0.0f, pow(dot(halfwayWS, vNormal),phong));
 
 
     	 gl_FragColor += (specular+diffuse)*lightColor[i];
 		
     }
+//    gl_FragColor = vec4(normalize(vNormal), 1.0f);
     
 
 }

@@ -14,3 +14,7 @@ std::vector<glm::vec4>* QuadMesh::getVertexData()
 {
     return &vertexData_;
 }
+
+int QuadMesh::getTupleSize() {
+  return 4;
+}

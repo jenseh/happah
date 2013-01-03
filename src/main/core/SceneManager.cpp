@@ -32,11 +32,11 @@ SceneManager::SceneManager() {
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
-    drawables_->push_back(grid_);
-    drawables_->push_back(sphere_);
+//    drawables_->push_back(grid_);
+//    drawables_->push_back(sphere_);
     drawables_->push_back(gear1_);
-    drawables_->push_back(gear2_);
-    drawables_->push_back(rack1_);
+//    drawables_->push_back(gear2_);
+//    drawables_->push_back(rack1_);
 
     //TODO: Setup and start a timer
 //    timer_ = new QTimer();

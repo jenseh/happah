@@ -12,9 +12,19 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	QMatrix4x4 MVP = *projectionMatrix * MV;
 	QMatrix3x3 normalMatrix = MV.normalMatrix();
 
+//	qreal* data = normalMatrix.data();
+//	for (int x=0; x<4; x++) {
+//	    for (int y=0; y<4; y++) {
+//		std::cout << data[x*4+y] << " ";
+//	      }
+//	     std::cout << std::endl;
+//	  }
+//	std::cout << "----------" << std::endl;
+	int tupleSize = drawable_->getTupleSize();
+
 	shader->bind();
-	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 2 * 4 * sizeof(float));
-	shader->setAttributeBuffer("normal", GL_FLOAT, 2 * 4 * sizeof(float), 4,
+	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, tupleSize, 2 * 4 * sizeof(float));
+	shader->setAttributeBuffer("normal", GL_FLOAT, 4 * sizeof(float), tupleSize,
 			2 * 4 * sizeof(float));
 	shader->enableAttributeArray("vertex");
 	shader->enableAttributeArray("normal");
@@ -23,8 +33,8 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	shader->setUniformValue("normalMat", normalMatrix);
 	shader->setUniformValue("eye", *cameraPosition);
 
-	buffer->bind();
-	int mode = GL_QUADS;
+//	buffer->bind(); // Not required if only one buffer is used
+	int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;
 	int stride = 0;
 	glDrawArrays(mode, stride, drawable_->getVertexData()->size());
 }

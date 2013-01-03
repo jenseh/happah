@@ -14,6 +14,7 @@ public:
     ~QuadMesh();
 
     std::vector<glm::vec4>* getVertexData();
+    int getTupleSize();
 
 protected:
     std::vector<glm::vec4> vertexData_;

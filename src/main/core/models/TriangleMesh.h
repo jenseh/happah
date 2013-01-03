@@ -18,6 +18,7 @@ public:
     ~TriangleMesh();
 
     std::vector<glm::vec4>* getVertexData();
+    int getTupleSize();
     std::vector<Ray*> toRayCloud();
 
     void fillTriangles();

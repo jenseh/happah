@@ -35,7 +35,7 @@ SceneManager::SceneManager() {
     drawables_->push_back(grid_);
     drawables_->push_back(sphere_);
     drawables_->push_back(gear1_);
-    //drawables_->push_back(gear2_);
+    drawables_->push_back(gear2_);
     drawables_->push_back(rack1_);
 
     //TODO: Setup and start a timer

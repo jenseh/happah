@@ -14,13 +14,14 @@ public:
 			QVector3D* cameraPosition);
 	void addDrawable(Drawable* drawable);
 	bool initShaderPrograms();
-	int finalizeBuffer();
+	int createBuffer();
 
 private:
 	QGLBuffer* vertexBuffer_;
 	std::map<int, DrawManagerItem*> itemMap_;
 	QGLShaderProgram* shader_;
 	QGLShaderProgram* coordShader_;
+	int curBufferOffset;
 };
 
 #endif // DRAWMANAGER_H

@@ -13,6 +13,7 @@ public:
 			QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
 			QVector3D* cameraPosition);
 	Drawable* getDrawable();
+	int getOffset();
 private:
 	Drawable* drawable_;
 	int offset_;

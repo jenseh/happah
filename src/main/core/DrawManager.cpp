@@ -6,6 +6,7 @@ DrawManager::DrawManager() {
 	glEnable (GL_DEPTH_TEST);
 
 	vertexBuffer_ = new QGLBuffer();
+	curBufferOffset = 0;
 }
 
 bool DrawManager::initShaderPrograms() {
@@ -15,32 +16,43 @@ bool DrawManager::initShaderPrograms() {
 	//load and compile Vertex Shader
 	bool result = shader_->addShaderFromSourceFile(QGLShader::Vertex,
 			"./src/shader/blinnphongVert.glsl");
-	if (!result)
+	if (!result) {
 		qWarning() << shader_->log();
+		return result;
+	}
 
 	//load and compile Fragment Shader
 	result = shader_->addShaderFromSourceFile(QGLShader::Fragment,
 			"./src/shader/blinnphongFrag.glsl");
-	if (!result)
+	if (!result) {
 		qWarning() << shader_->log();
+		return result;
+	}
 
 	//coord Shader
 	result = coordShader_->addShaderFromSourceFile(QGLShader::Vertex,
 			"./src/shader/simpleVert.glsl");
-	if (!result)
+	if (!result) {
 		qWarning() << coordShader_->log();
+		return result;
+	}
 
 	//coord Shader
 	result = coordShader_->addShaderFromSourceFile(QGLShader::Fragment,
 			"./src/shader/simpleFrag.glsl");
-	if (!result)
+	if (!result) {
 		qWarning() << coordShader_->log();
+		return result;
+	}
 
 	return result;
 }
 
-int DrawManager::finalizeBuffer() {
-	vertexBuffer_->create();
+int DrawManager::createBuffer() {
+	if (!vertexBuffer_->create()) {
+		qWarning() << " Vertex Buffer could not be created!";
+		return -1;
+	}
 	vertexBuffer_->setUsagePattern(QGLBuffer::StaticDraw);
 
 	if (!vertexBuffer_->isCreated()) {
@@ -52,20 +64,39 @@ int DrawManager::finalizeBuffer() {
 		return -1;
 	}
 
-	//TODO: How can we preallocate something we dont know the size of?
-//	if (itemMap_.size() > 0) {
-//	  std::vector<glm::vec4>* vertexData = itemMap_[0]->getDrawable()->getVertexData();
-//	  vertexBuffer_->allocate(vertexData, vertexData->size() * sizeof(vertexData->at(0)));
-//	}
+	if (itemMap_.size() > 0) {
+		// Allocate the buffer size that is required for all drawables in itemMap
+		vertexBuffer_->allocate(curBufferOffset);
+
+		std::map<int, DrawManagerItem*>::const_iterator itr;
+
+		// Write each drawables data to its offset
+		for (itr = itemMap_.begin(); itr != itemMap_.end(); ++itr) {
+			std::vector < glm::vec4 > *vertexData = itr->second->getDrawable()->getVertexData();
+			int vertexByteSize = vertexData->size() * sizeof(vertexData->at(0));
+			int offset = itr->second->getOffset();
+			//TODO: Fix segmentation fault when calling write
+			//std::cout << offset << "/" << curBufferOffset << std::endl;
+//			vertexBuffer_->write(offset, vertexData, vertexByteSize);
+		}
+	}
 
 	return 0;
 }
 
+// Note: as of now this method can only be called before createBuffer!
 void DrawManager::addDrawable(Drawable* drawable) {
-	int offset = 0; //TODO: place drawable in buffer and store the offset
-	std::cout << drawable->getName() << ", " << drawable->getObjectId() << std::endl;
-	DrawManagerItem* item = new DrawManagerItem(drawable, offset);
+	// Place drawable in buffer and store the offset
+	int offset = curBufferOffset;
+	std::vector < glm::vec4 > *vertexData = drawable->getVertexData();
+	int vertexByteSize = vertexData->size() * sizeof(vertexData->at(0));
+	curBufferOffset += vertexByteSize;
 
+	// Create an entry in the hashmap for the new drawable item
+	std::cout << "error" << drawable->getName() << ","
+			<< drawable->getObjectId() << ","
+			<< drawable->getVertexData()->size() << ":" << offset << std::endl;
+	DrawManagerItem* item = new DrawManagerItem(drawable, offset);
 	itemMap_[drawable->getObjectId()] = item;
 }
 

@@ -46,7 +46,7 @@ void GlViewport3D::initializeGL() {
 	}
 
 	// Finalize vertex buffer
-	if (!drawManager_->finalizeBuffer()) {
+	if (!drawManager_->createBuffer()) {
 	    return;
 	}
 

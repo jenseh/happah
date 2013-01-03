@@ -30,7 +30,10 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	glDrawArrays(mode, stride, drawable_->getVertexData()->size());
 }
 
-
 Drawable* DrawManagerItem::getDrawable() {
 	return drawable_;
+}
+
+int DrawManagerItem::getOffset() {
+	return offset_;
 }

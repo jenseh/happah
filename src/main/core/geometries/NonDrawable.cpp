@@ -2,6 +2,8 @@
 
 NonDrawable::~NonDrawable() {}
 
+//TODO: Create abstract functions toQuadMesh() and toTriangleMesh()
+
 //QuadMesh* NonDrawable::toQuadMesh() {
 //    QuadMesh* mesh = new QuadMesh(vertexData_);
 //    if (getName() != "") {

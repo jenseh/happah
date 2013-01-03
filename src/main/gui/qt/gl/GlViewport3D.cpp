@@ -131,7 +131,6 @@ void GlViewport3D::wheelEvent(QWheelEvent *event) {
 
 }
 // Picking to get Triangle Edges
-// TODO: Split that whole stuff up;
 
 //TODO: Adapt to new achitecture
 void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {

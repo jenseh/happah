@@ -94,12 +94,8 @@ void SpurGear::createHeightProfile() {
             float position = heightProfilePartition_[j].x + i * module_ * M_PI;
             float height = heightProfilePartition_[j].y;
             heightProfile_.push_back(glm::vec2(position, height));
-            //cout << position << ": " << height << std::endl;
         }
     }
-    // Add the first element again to close the "circle"
-    // TODO: Rethink whether this makes sense
-    heightProfile_.push_back(heightProfile_[0]);
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
@@ -110,36 +106,31 @@ QuadMesh* SpurGear::toQuadMesh() {
 
     // Create the height profile given the current gear settings
     createHeightProfile();
+    unsigned int profSize = heightProfile_.size();
 
     // precompute sin and cos of angles
-    float cosSegment[heightProfile_.size() + 1];
-    float sinSegment[heightProfile_.size() + 1];
-    float height[heightProfile_.size() + 1];
-    float cosHeight[heightProfile_.size() + 1];
-    float sinHeight[heightProfile_.size() + 1];
+    float cosSegment[profSize + 2];
+    float sinSegment[profSize + 2];
+    float height[profSize + 2];
+    float cosHeight[profSize + 2];
+    float sinHeight[profSize + 2];
 
-    for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+    for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        float phi = heightProfile_[segmentNum].x / (2 * M_PI * radius_)
+        float phi = heightProfile_[segmentNum % profSize].x / (2 * M_PI * radius_)
                 * 360.0f; //in degrees
         cosSegment[segmentNum] = cos(phi * toRad);
         sinSegment[segmentNum] = sin(phi * toRad);
-        height[segmentNum] = radius_ + heightProfile_[segmentNum].y;
+        height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
         cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
         sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
     }
-    // Insert first value again to close the mesh
-    cosSegment[heightProfile_.size()] = cosSegment[0];
-    sinSegment[heightProfile_.size()] = sinSegment[0];
-    height[heightProfile_.size()] = height[0];
-    cosHeight[heightProfile_.size()] = cosHeight[0];
-    sinHeight[heightProfile_.size()] = sinHeight[0];
 
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
     for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
         float z = i * dz;
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+        for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
 
             glm::vec4 a, b, c, d, normNext, norm;
@@ -194,7 +185,7 @@ QuadMesh* SpurGear::toQuadMesh() {
     // might be better to chose vertices in a more clever way.
     int i = 0;
     for (float z = 0.0f; i < 2; i++, z += length_) {
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+        for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
             glm::vec4 a, b, c, d, norm;
 
@@ -239,42 +230,34 @@ QuadMesh* SpurGear::toQuadMesh() {
 // This creates the triangle mesh representation of a gear. The gear axis is the model's z-axis.
 TriangleMesh* SpurGear::toTriangleMesh() {
     float dz = length_ / Z_DETAIL_LEVEL;
-    const float toRad = M_PI / 180.0f;
     float innerRadius = radius_ * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
+    unsigned int profSize = heightProfile_.size();
 
     // precompute sin and cos of angles
-    float cosSegment[heightProfile_.size() + 1];
-    float sinSegment[heightProfile_.size() + 1];
-    float height[heightProfile_.size() + 1];
-    float cosHeight[heightProfile_.size() + 1];
-    float sinHeight[heightProfile_.size() + 1];
+    float cosSegment[profSize + 2];
+    float sinSegment[profSize + 2];
+    float height[profSize + 2];
+    float cosHeight[profSize + 2];
+    float sinHeight[profSize + 2];
 
-    for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+    for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        float phi = heightProfile_[segmentNum].x / (2 * M_PI * radius_)
-                * 360.0f; //in degrees
-        cosSegment[segmentNum] = cos(phi * toRad);
-        sinSegment[segmentNum] = sin(phi * toRad);
-        height[segmentNum] = radius_ + heightProfile_[segmentNum].y;
+        float phi = heightProfile_[segmentNum % profSize].x; //in radians
+        cosSegment[segmentNum] = cos(phi);
+        sinSegment[segmentNum] = sin(phi);
+        height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
         cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
         sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
     }
-    // Insert first value again to close the mesh
-    cosSegment[heightProfile_.size()] = cosSegment[0];
-    sinSegment[heightProfile_.size()] = sinSegment[0];
-    height[heightProfile_.size()] = height[0];
-    cosHeight[heightProfile_.size()] = cosHeight[0];
-    sinHeight[heightProfile_.size()] = sinHeight[0];
 
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
     for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
         float z = i * dz;
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
-                segmentNum++) {
+        for (unsigned int segmentNum = 0; segmentNum < profSize; segmentNum++) {
 
             glm::vec4 a, b, c, d, normNext, norm;
 
@@ -331,12 +314,9 @@ TriangleMesh* SpurGear::toTriangleMesh() {
     }
 
     // draw the front and back of the gear
-    // this part is very straightforward. now alle quads have the
-    // circle's center as a common point. for nicer highlights it
-    // might be better to chose vertices in a more clever way.
     int i = 0;
     for (float z = 0.0f; i < 2; i++, z += length_) {
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size();
+        for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
             glm::vec4 a, b, c, d, norm;
 
@@ -360,8 +340,8 @@ TriangleMesh* SpurGear::toTriangleMesh() {
             d.z = z;
             d.w = 1.0f;
             norm = i == 0 ?
-                    glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
-                    glm::vec4(0.0f, 0.0f, -1.0, 1.0);
+                    glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) :
+                    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
             vertexData_.push_back(a);
             vertexData_.push_back(norm);

@@ -18,21 +18,21 @@ SceneManager::SceneManager() {
     // Convert them to quad meshs
     grid_ = grid->toQuadMesh();
     sphere_ = sphere->toQuadMesh();
-    gear1_ = gear1->toQuadMesh();
+    gear1_ = gear1->toTriangleMesh();
     gear2_ = gear2->toQuadMesh();
     rack1_ = rack1->toQuadMesh();
 
 
 
     // Do some rotation and translation
-    gear2_->translate(1.9f, 0.0f, 0.0f);
+    gear2_->translate(500.0f, 0.0f, 0.0f);
     gear2_->rotate(40.0f, 0.0f, 0.0f, 1.0f);
 
 
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
-//    drawables_->push_back(grid_);
+    drawables_->push_back(grid_);
 //    drawables_->push_back(sphere_);
     drawables_->push_back(gear1_);
 //    drawables_->push_back(gear2_);

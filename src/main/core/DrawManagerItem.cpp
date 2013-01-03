@@ -12,7 +12,7 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	QMatrix4x4 MVP = *projectionMatrix * MV;
 	QMatrix3x3 normalMatrix = MV.normalMatrix();
 
-//	qreal* data = normalMatrix.data();
+//	qreal* data = drawable_->getModelMatrix()->data();
 //	for (int x=0; x<4; x++) {
 //	    for (int y=0; y<4; y++) {
 //		std::cout << data[x*4+y] << " ";
@@ -32,6 +32,18 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	shader->setUniformValue("MV", MV);
 	shader->setUniformValue("normalMat", normalMatrix);
 	shader->setUniformValue("eye", *cameraPosition);
+
+	QVector4D ambientColor = QVector4D(0.053f, 0.020f, 0.112f, 1.0f);
+	shader->setUniformValue("ambientColor", ambientColor);
+
+	QVector4D diffuseColor = QVector4D(0.75f, 0.75f, 0.75f, 1.0f);
+	shader->setUniformValue("diffuseColor", diffuseColor);
+
+	QVector4D specularColor = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
+	shader->setUniformValue("specularColor", specularColor);
+
+	float shininess = 20.0f;
+	shader->setUniformValue("shininess", shininess);
 
 //	buffer->bind(); // Not required if only one buffer is used
 	int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;

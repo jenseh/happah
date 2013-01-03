@@ -71,7 +71,7 @@ void GlViewport3D::resizeGL(int width, int height) {
 void GlViewport3D::paintGL() {
 	updateView();
 
-//	drawManager_->draw(&projectionMatrix_, &viewMatrix_, &eye_);
+	drawManager_->draw(&projectionMatrix_, &viewMatrix_, &eye_);
 }
 
 void GlViewport3D::updateView() {

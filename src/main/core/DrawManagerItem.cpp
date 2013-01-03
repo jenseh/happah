@@ -12,7 +12,6 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	QMatrix4x4 MVP = *projectionMatrix * MV;
 	QMatrix3x3 normalMatrix = MV.normalMatrix();
 
-//    bindVBuffer();
 	shader->bind();
 	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, 4, 2 * 4 * sizeof(float));
 	shader->setAttributeBuffer("normal", GL_FLOAT, 2 * 4 * sizeof(float), 4,

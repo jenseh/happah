@@ -68,16 +68,14 @@ int DrawManager::createBuffer() {
 		// Allocate the buffer size that is required for all drawables in itemMap
 		vertexBuffer_->allocate(curBufferOffset);
 
-		std::map<int, DrawManagerItem*>::const_iterator itr;
-
-		// Write each drawables data to its offset
-		for (itr = itemMap_.begin(); itr != itemMap_.end(); ++itr) {
-			std::vector < glm::vec4 > *vertexData = itr->second->getDrawable()->getVertexData();
+		std::map<int, DrawManagerItem*>::const_iterator iter;
+		// Write each drawables data to its offsetted position
+		for (iter = itemMap_.begin(); iter != itemMap_.end(); ++iter) {
+			std::vector < glm::vec4 > *vertexData = iter->second->getDrawable()->getVertexData();
 			int vertexByteSize = vertexData->size() * sizeof(vertexData->at(0));
-			int offset = itr->second->getOffset();
-			//TODO: Fix segmentation fault when calling write
-			//std::cout << offset << "/" << curBufferOffset << std::endl;
-//			vertexBuffer_->write(offset, vertexData, vertexByteSize);
+			int offset = iter->second->getOffset();
+
+			vertexBuffer_->write(offset, &(vertexData->at(0)), vertexByteSize);
 		}
 	}
 
@@ -92,10 +90,7 @@ void DrawManager::addDrawable(Drawable* drawable) {
 	int vertexByteSize = vertexData->size() * sizeof(vertexData->at(0));
 	curBufferOffset += vertexByteSize;
 
-	// Create an entry in the hashmap for the new drawable item
-	std::cout << "error" << drawable->getName() << ","
-			<< drawable->getObjectId() << ","
-			<< drawable->getVertexData()->size() << ":" << offset << std::endl;
+	// Create an entry in the map for the new drawable item
 	DrawManagerItem* item = new DrawManagerItem(drawable, offset);
 	itemMap_[drawable->getObjectId()] = item;
 }

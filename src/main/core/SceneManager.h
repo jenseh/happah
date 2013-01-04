@@ -8,6 +8,7 @@
 #include "geometries/Sphere.h"
 #include "geometries/SpurGear.h"
 #include "geometries/BasicRack.h"
+#include "geometries/Disc.h"
 
 // Qt includes are only for the timer
 #include <QGLShaderProgram>
@@ -33,6 +34,7 @@ private:
    Drawable* sphere_;
    Drawable* grid_;
    Drawable* rack1_;
+   Drawable* disc1_;
 
 private slots:
    void update();

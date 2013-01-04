@@ -24,7 +24,7 @@ public:
     ~Disc();
     float getRadius();
     glm::vec3 getCenter();
-    void createVertexData();
+    QuadMesh* toQuadMesh();
 private:
     float radius_;// Radius der Scheibe ( y-achse und z-achse )
     float length_;// Länge/Breite der Scheibe ( x-achse )
@@ -36,6 +36,7 @@ private:
     const static int SEGMENT_COUNT = 50; //maximum: 4500
     const static int Z_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
 
+    void createVertexData();
     void createHeightProfile();
 };
 #endif // DISC_H

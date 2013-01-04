@@ -80,11 +80,20 @@ void Disc::createVertexData() {
             d.z = cosAlpha2 * heightProfile_[segmentNum+1].y;
             d.w = 1.0f;
 
-            norm = glm::vec4(
+            /*norm = glm::vec4(
                     glm::normalize(
                             glm::cross(glm::vec3(0.0f, 0.0f, c.z - b.z),
                                     glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
-                    1.0f);
+                    1.0f);*/
+            glm::vec3 tempNorm = glm::cross( (glm::vec3)(a - b), (glm::vec3)(c - b));
+            norm.x = tempNorm.x;
+            norm.y = tempNorm.y;
+            norm.z = tempNorm.z;
+            norm.w = 1.0f;
+            norm = glm::normalize(norm);
+
+
+
 
             vertexData_.push_back(a);
             //dataPushback(normNext);
@@ -98,6 +107,12 @@ void Disc::createVertexData() {
             vertexData_.push_back(norm);
         }
     }
+}
 
+QuadMesh* Disc::toQuadMesh(){
+    createVertexData();
+    QuadMesh* result = new QuadMesh(vertexData_);
+    result->setName(name_ + " - Instance 1");
+    return result;
 }
 

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "Drawable.h"
+#include "TriangleMesh.h"
 #include "../../gui/gl/DrawManager.h"
 
 class QuadMesh : public Drawable {
@@ -15,6 +16,8 @@ public:
 
     std::vector<glm::vec4>* getVertexData();
     int getTupleSize();
+
+    TriangleMesh* toTriangleMesh();
 
 protected:
     std::vector<glm::vec4> vertexData_;

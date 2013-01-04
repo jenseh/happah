@@ -9,6 +9,7 @@ SceneManager::SceneManager() {
     BasicRack* rack1 = new BasicRack(2.0f,  0.6f, 0.4f, 5);
     Disc* disc1 = new Disc();
 
+
     grid->setName("Grid");
     sphere->setName("Sphere");
     gear1->setName("Gear 1");
@@ -27,9 +28,8 @@ SceneManager::SceneManager() {
 
 
     // Do some rotation and translation
-    gear2_->translate(0.0f, 1.0f, 0.0f);
-//    gear2_->rotate(40.0f, 0.0f, 0.0f, 1.0f);
-    grid_->translate(1.0f, 0.0f, 0.0f);
+    gear2_->translate(500.0f, 0.0f, 0.0f);
+    gear2_->rotate(40.0f, 0.0f, 0.0f, 1.0f);
 
 
 
@@ -38,10 +38,9 @@ SceneManager::SceneManager() {
     drawables_->push_back(grid_);
 //    drawables_->push_back(sphere_);
 //    drawables_->push_back(gear1_);
-    drawables_->push_back(gear2_);
-//    drawables_->push_back(rack1_);
-//    drawables_->push_back(rack1_);
-//    drawables_->push_back(disc1_);
+//    drawables_->push_back(gear2_);
+    drawables_->push_back(rack1_);
+    drawables_->push_back(disc1_);
 
     //TODO: Setup and start a timer
 //    timer_ = new QTimer();

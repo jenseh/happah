@@ -1,5 +1,5 @@
 #include "Happah.h"
-#include "MainWindow.h"
+#include "gui/qt/MainWindow.h"
 
 Happah::Happah(int & argc, char ** argv) :
 		QApplication(argc, argv) {

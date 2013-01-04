@@ -3,7 +3,7 @@
 
 #include <QGLBuffer>
 #include <QGLShaderProgram>
-#include "models/Drawable.h"
+#include "../../core/models/Drawable.h"
 #include "DrawManagerItem.h"
 
 class DrawManager {

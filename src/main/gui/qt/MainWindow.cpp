@@ -9,7 +9,7 @@
 #include "MainWindow.h"
 #include "SplineTool.h"
 #include "BSplineTool.h"
-#include "gui/qt/gl/GlViewport3D.h"
+#include "../gl/GlViewport3D.h"
 #include "Component.h"
 
 MainWindow::MainWindow() {

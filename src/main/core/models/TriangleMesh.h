@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include "../geometries/Triangle.h"
 #include "Drawable.h"
-#include "../DrawManager.h"
+#include "../../gui/gl/DrawManager.h"
 #include "../geometries/Ray.h"
 
 

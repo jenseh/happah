@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "Drawable.h"
-#include "../DrawManager.h"
+#include "../../gui/gl/DrawManager.h"
 
 class QuadMesh : public Drawable {
 

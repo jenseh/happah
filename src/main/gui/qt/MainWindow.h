@@ -9,7 +9,7 @@
 #include "ToolSelector.h"
 #include "ComponentContainer.h"
 #include "EditorScene.h"
-#include "core/SceneManager.h"
+#include "../../core/SceneManager.h"
 
 class MainWindow: public QMainWindow {
 Q_OBJECT

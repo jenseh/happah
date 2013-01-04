@@ -12,8 +12,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "../../../MainWindow.h"
-#include "../../../core/SceneManager.h"
+#include "../qt/MainWindow.h"
+#include "../../core/SceneManager.h"
 
 using namespace std;
 

@@ -26,7 +26,6 @@ SceneManager::SceneManager() {
     disc1_ = disc1->toQuadMesh();
 
 
-
     // Do some rotation and translation
     gear2_->translate(0.0f, 1.0f, 0.0f);
 //    gear2_->rotate(40.0f, 0.0f, 0.0f, 1.0f);
@@ -38,10 +37,11 @@ SceneManager::SceneManager() {
     drawables_ = new vector<Drawable*>();
     drawables_->push_back(grid_);
 //    drawables_->push_back(sphere_);
-    drawables_->push_back(gear1_);
-//    drawables_->push_back(gear2_);
+//    drawables_->push_back(gear1_);
+    drawables_->push_back(gear2_);
 //    drawables_->push_back(rack1_);
-    drawables_->push_back(disc1_);
+//    drawables_->push_back(rack1_);
+//    drawables_->push_back(disc1_);
 
     //TODO: Setup and start a timer
 //    timer_ = new QTimer();

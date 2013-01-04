@@ -17,14 +17,18 @@ SceneManager::SceneManager() {
     rack1->setName("Rack 1");
     disc1->setName("Disc 1");
 
+    //Simulation
+    //DiscGearGrind myGrind(disc1, gear1);
+    //myGrind.CalculateGrindingDepth();
+
 
     // Convert them to quad meshs
     grid_ = grid->toQuadMesh();
     sphere_ = sphere->toQuadMesh();
-    gear1_ = gear1->toTriangleMesh();
+    gear1_ = gear1->toQuadMesh()->toTriangleMesh();
     gear2_ = gear2->toQuadMesh();
     rack1_ = rack1->toQuadMesh();
-    disc1_ = disc1->toQuadMesh();
+    disc1_ = disc1->toQuadMesh()->toTriangleMesh();
 
 
     // Do some rotation and translation
@@ -37,10 +41,11 @@ SceneManager::SceneManager() {
     drawables_ = new vector<Drawable*>();
     drawables_->push_back(grid_);
 //    drawables_->push_back(sphere_);
-//    drawables_->push_back(gear1_);
+    drawables_->push_back(gear1_);
 //    drawables_->push_back(gear2_);
-    drawables_->push_back(rack1_);
+    //drawables_->push_back(rack1_);
     drawables_->push_back(disc1_);
+
 
     //TODO: Setup and start a timer
 //    timer_ = new QTimer();

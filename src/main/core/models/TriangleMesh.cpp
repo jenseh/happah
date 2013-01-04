@@ -34,24 +34,24 @@ void TriangleMesh::fillTriangles(){
 }
 
 
-std::vector<Ray*> TriangleMesh::toRayCloud(){
+RayCloud* TriangleMesh::toRayCloud(){
     fillTriangles();
-    std::vector<Ray*> result(triangles_.size() * 3);
+    std::vector<Ray*> rayVector(triangles_.size() * 3);
     for( size_t i = 0; i < triangles_.size(); i++){
-        result[i*3] = new Ray;
-        result[i*3]->direction = triangles_[i].normals[0];
-        result[i*3]->origin = triangles_[i].vertices[0];
-        result[i*3]->inverse_direction = -result[i*3]->direction;
+        rayVector[i*3] = new Ray;
+        rayVector[i*3]->direction = triangles_[i].normals[0];
+        rayVector[i*3]->origin = triangles_[i].vertices[0];
+        rayVector[i*3]->inverse_direction = -rayVector[i*3]->direction;
 
-        result[i*3+1] = new Ray;
-        result[i*3+1]->direction = triangles_[i].normals[1];
-        result[i*3+1]->origin = triangles_[i].vertices[1];
-        result[i*3+1]->inverse_direction = -result[i*3+1]->direction;
+        rayVector[i*3+1] = new Ray;
+        rayVector[i*3+1]->direction = triangles_[i].normals[1];
+        rayVector[i*3+1]->origin = triangles_[i].vertices[1];
+        rayVector[i*3+1]->inverse_direction = -rayVector[i*3+1]->direction;
 
-        result[i*3+2] = new Ray;
-        result[i*3+2]->direction = triangles_[i].normals[2];
-        result[i*3+2]->origin = triangles_[i].vertices[2];
-        result[i*3+2]->inverse_direction = -result[i*3+2]->direction;
+        rayVector[i*3+2] = new Ray;
+        rayVector[i*3+2]->direction = triangles_[i].normals[2];
+        rayVector[i*3+2]->origin = triangles_[i].vertices[2];
+        rayVector[i*3+2]->inverse_direction = -rayVector[i*3+2]->direction;
     }
-    return result;
+    return new RayCloud(rayVector);
 }

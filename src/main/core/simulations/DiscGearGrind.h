@@ -13,7 +13,7 @@ class DiscGearGrind
 public:
     DiscGearGrind(Disc* disc, SpurGear* gear);
 
-    void CalculateGrindingDepth();
+    void calculateGrindingDepth();
 };
 
 #endif // DISCGEARGRIND_H

@@ -105,7 +105,6 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
 	// Draw each visual object
 	std::map<int, DrawManagerItem*>::iterator iter;
 	for (iter = itemMap_.begin(); iter != itemMap_.end(); iter++) {
-	    iter->second->getDrawable()->rotate(1, 0, 0, 1);
 
 		// Load matrices and draw object
 		iter->second->draw(vertexBuffer_, shader_, projectionMatrix, viewMatrix,

@@ -5,8 +5,8 @@
 #pragma once
 
 #include "../kdtree/TriangleBox.h"
-#include "../geometries/Triangle.h"
-#include "../geometries/Ray.h"
+#include "../primitives/Triangle.h"
+#include "../primitives/Ray.h"
 #include <glm/glm.hpp>
 #include <iostream>
 

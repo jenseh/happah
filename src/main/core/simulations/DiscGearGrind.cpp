@@ -9,9 +9,10 @@ DiscGearGrind::DiscGearGrind(Disc* disc, SpurGear* gear):
 }
 
 
-void DiscGearGrind::CalculateGrindingDepth(){
+void DiscGearGrind::calculateGrindingDepth(){
     TriangleMesh* discMesh = m_disc->toQuadMesh()->toTriangleMesh();
-    vector<Ray*> gearMesh = m_gear->toQuadMesh()->toTriangleMesh()->toRayCloud();
+    RayCloud* rayCloud = m_gear->toQuadMesh()->toTriangleMesh()->toRayCloud(); //TODO: this is terribly inefficient
+    std::vector<Ray*> gearMesh = *(rayCloud->getRays());
     TriangleKDTree kdTree;
     kdTree.build(*discMesh);
     vector<double> distances(gearMesh.size());

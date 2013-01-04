@@ -30,12 +30,17 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/kdtree/TriangleKDTreeNode.h \
     src/main/core/kdtree/TriangleKDTree.h \
     src/main/core/kdtree/TriangleBox.h \
-    src/main/core/geometries/Triangle.h \
-    src/main/core/geometries/Ray.h \
+    src/main/core/primitives/Triangle.h \
+    src/main/core/primitives/Ray.h \
     src/main/core/kdtree/IntersectInfo.h \
     src/main/core/simulations/DiscGearGrind.h \
     src/main/core/geometries/Disc.h \
-    src/main/core/kdtree/Box.h
+    src/main/core/kdtree/Box.h \
+    src/main/core/simulations/WormGearGrind.h \
+    src/main/core/models/RayCloud.h \
+    src/main/core/models/CircleCloud.h \
+    src/main/core/simulations/Simulation.h \
+    src/main/core/primitives/Circle.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -64,7 +69,11 @@ SOURCES += src/main/main.cpp \
     src/main/core/kdtree/TriangleKDTree.cpp \
     src/main/core/simulations/DiscGearGrind.cpp \
     src/main/core/geometries/Disc.cpp \
-    src/main/core/kdtree/Box.cpp
+    src/main/core/kdtree/Box.cpp \
+    src/main/core/simulations/WormGearGrind.cpp \
+    src/main/core/models/RayCloud.cpp \
+    src/main/core/models/CircleCloud.cpp \
+    src/main/core/simulations/Simulation.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

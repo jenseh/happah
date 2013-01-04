@@ -5,7 +5,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "../geometries/Triangle.h"
+#include "../primitives/Triangle.h"
 
 struct IntersectInfo
 {

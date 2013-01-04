@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "../geometries/Ray.h"
-#include "../geometries/Triangle.h"
+#include "../primitives/Ray.h"
+#include "../primitives/Triangle.h"
 #include "Box.h"
 
 

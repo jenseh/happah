@@ -3,10 +3,11 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-#include "../geometries/Triangle.h"
+#include "../primitives/Triangle.h"
 #include "Drawable.h"
 #include "../../gui/gl/DrawManager.h"
-#include "../geometries/Ray.h"
+#include "../primitives/Ray.h"
+#include "RayCloud.h"
 
 
 class TriangleMesh : public Drawable
@@ -19,7 +20,7 @@ public:
 
     std::vector<glm::vec4>* getVertexData();
     int getTupleSize();
-    std::vector<Ray*> toRayCloud();
+    RayCloud* toRayCloud();
 
     void fillTriangles();
 

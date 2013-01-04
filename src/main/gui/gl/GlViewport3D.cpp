@@ -54,6 +54,7 @@ void GlViewport3D::initializeGL() {
 	for (unsigned int i = 0; i < drawables->size(); i++) {
 		mainWindow_->getComponentContainer()->addComponent(
 				drawables->at(i)->getName());
+		std::cout << drawables->at(i)->getName() << std::endl;
 	}
 
 	// Setup and start a timer

@@ -50,18 +50,21 @@ bool DrawManager::initShaderPrograms() {
 
 int DrawManager::createBuffer() {
 	if (!vertexBuffer_->create()) {
-		qWarning() << " Vertex Buffer could not be created!";
-		return -1;
+		std::cerr <<  "Error: Vertex Buffer could not be created!" << std::endl;
+		qWarning() << "Error: Vertex Buffer could not be created!";
+		return 0;
 	}
 	vertexBuffer_->setUsagePattern(QGLBuffer::StaticDraw);
 
 	if (!vertexBuffer_->isCreated()) {
-		qWarning() << " Vertex Buffer does not exist yet";
-		return -1;
+		std::cerr <<  "Error: Vertex Buffer does not exist yet!" << std::endl;
+		qWarning() << "Error: Vertex Buffer does not exist yet!";
+		return 0;
 	}
 	if (!vertexBuffer_->bind()) {
-		qWarning() << "Could not bind vertex buffer";
-		return -1;
+		std::cerr <<  "Error: Could not bind vertex buffer!" << std::endl;
+		qWarning() << "Error: Could not bind vertex buffer!";
+		return 0;
 	}
 
 	if (itemMap_.size() > 0) {
@@ -79,7 +82,7 @@ int DrawManager::createBuffer() {
 		}
 	}
 
-	return 0;
+	return 1;
 }
 
 // Note: as of now this method can only be called before createBuffer!

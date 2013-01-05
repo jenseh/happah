@@ -34,6 +34,7 @@ private:
 	ToolSelector* toolSelector_;
 	EditorScene* scene_;
     SceneManager* sceneManager;
+    QTabWidget *m_tabs;
 };
 
 #endif

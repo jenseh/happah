@@ -11,8 +11,8 @@ struct IntersectInfo
 {
 	IntersectInfo (void)
 	{
-		time = HUGE_VAL;
-        hit_point = glm::vec3(0,0,0);
+	  time = HUGE_VAL;
+	  hit_point = glm::vec3(0,0,0);
 	}
 
     glm::vec3	 hit_point;     // Point on the triangle intersected by the ray.

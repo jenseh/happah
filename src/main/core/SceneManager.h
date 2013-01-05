@@ -9,6 +9,7 @@
 #include "geometries/SpurGear.h"
 #include "geometries/BasicRack.h"
 #include "geometries/Disc.h"
+#include "simulations/WormGearGrind.h"
 
 // Qt includes are only for the timer
 #include <QGLShaderProgram>

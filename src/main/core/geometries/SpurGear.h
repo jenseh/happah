@@ -14,6 +14,7 @@
 #include "StandardProfile.h"
 #include "NonDrawable.h"
 #include "../models/QuadMesh.h"
+#include "../models/CircleCloud.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ public:
     glm::vec3 getCenter();
     QuadMesh* toQuadMesh();
     TriangleMesh* toTriangleMesh();
+    CircleCloud* toCircleCloud();
 private:
     float radius_;
     float length_;
@@ -36,7 +38,6 @@ private:
     std::vector<glm::vec2> heightProfilePartition_;
     std::vector<glm::vec2> heightProfile_;
     StandardProfile* standardProfile;
-    std::vector<glm::vec4> vertexData_;
 
     const static int SEGMENT_COUNT = 40; //maximum: 4500
     const static int Z_DETAIL_LEVEL = 5;

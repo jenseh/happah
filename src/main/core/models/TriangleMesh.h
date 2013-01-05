@@ -13,19 +13,21 @@
 class TriangleMesh : public Drawable
 {
 public:
-    std::vector<Triangle> triangles_;
 
     TriangleMesh(std::vector<glm::vec4> vertexData);
     ~TriangleMesh();
 
     std::vector<glm::vec4>* getVertexData();
     int getTupleSize();
+    std::vector<Triangle*>* getTriangles();
+
     RayCloud* toRayCloud();
 
     void fillTriangles();
 
 protected:
     std::vector<glm::vec4> vertexData_;
+    std::vector<Triangle*> triangles_;
 };
 
 #endif // TRIANGLEMESH_H

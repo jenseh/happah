@@ -7,13 +7,17 @@
 
 class DiscGearGrind
 {
+public:
+    DiscGearGrind(Disc* disc, SpurGear* gear);
+    ~DiscGearGrind();
+
+    void runSimulation();
+    void calculateGrindingDepth();
+
+private:
     Disc* m_disc;
     SpurGear* m_gear;
 
-public:
-    DiscGearGrind(Disc* disc, SpurGear* gear);
-
-    void calculateGrindingDepth();
 };
 
 #endif // DISCGEARGRIND_H

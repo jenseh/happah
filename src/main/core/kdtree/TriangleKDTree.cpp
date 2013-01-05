@@ -21,19 +21,19 @@ void TriangleKDTree::build (TriangleMesh &mesh)
 
     mesh.fillTriangles();
 
-    for (size_t i = 0; i < mesh.triangles_.size (); ++i)
+    for (size_t i = 0; i < mesh.getTriangles()->size(); ++i)
     {
         for (int j = 0; j < 3; ++j)// Loop over triangle vertices
         {
             for (int k = 0; k < 3; ++k)// Loop over vertex indices.
             {
-                max[k] = std::max (max[k], mesh.triangles_[i].vertices[j][k]);
-                min[k] = std::min (min[k], mesh.triangles_[i].vertices[j][k]);
+                max[k] = std::max (max[k], mesh.getTriangles()->at(i)->vertices[j][k]);
+                min[k] = std::min (min[k], mesh.getTriangles()->at(i)->vertices[j][k]);
             }
         }
 
         //piece->triangles[i].initializeIntersection ();
-        m_root->triangles.push_back(&mesh.triangles_[i]);
+        m_root->triangles.push_back(mesh.getTriangles()->at(i));
     }
 
     m_root->box = Box (min, max);

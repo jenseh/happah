@@ -6,7 +6,7 @@ class Simulation
 public:
   virtual ~Simulation();
 
-  virtual void calculateGrindingDepth();
+  virtual void runSimulation();
 };
 
 #endif // SIMULATION_H

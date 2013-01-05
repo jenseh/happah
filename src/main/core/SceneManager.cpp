@@ -46,6 +46,16 @@ SceneManager::SceneManager() {
 //    drawables_->push_back(rack1_);
 //    drawables_->push_back(disc1_);
 
+    // Run a simulation here, since keyEvents don't work yet..
+    WormGearGrind* sim = new WormGearGrind(gear1, gear2);
+    sim->runSimulation();
+
+    // Test cases
+//    Circle circle = Circle(glm::vec3(0, 0.0f, 0), glm::vec3(0, 1, 0), 1);
+//    Triangle triangle = Triangle(glm::vec3(0, 1, 0), glm::vec3(0, 0, -1), glm::vec3(0, 0, 0));
+//    bool result = circle.checkTriangleIntersection(&triangle);
+//    std::cout << result << std::endl;
+
     //TODO: Setup and start a timer
 //    timer_ = new QTimer();
 //    connect(timer_, SIGNAL(timeout()), this, SLOT(update()));

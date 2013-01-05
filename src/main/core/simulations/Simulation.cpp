@@ -4,4 +4,4 @@ Simulation::~Simulation(){}
 
 
 
-void Simulation::calculateGrindingDepth(){}
+void Simulation::runSimulation(){}

@@ -108,6 +108,9 @@ QuadMesh* SpurGear::toQuadMesh() {
     createHeightProfile();
     unsigned int profSize = heightProfile_.size();
 
+    // Create vector for the result
+    std::vector<glm::vec4> vertexData;
+
     // precompute sin and cos of angles
     float cosSegment[profSize + 2];
     float sinSegment[profSize + 2];
@@ -117,10 +120,9 @@ QuadMesh* SpurGear::toQuadMesh() {
 
     for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        float phi = heightProfile_[segmentNum % profSize].x / (2 * M_PI * radius_)
-                * 360.0f; //in degrees
-        cosSegment[segmentNum] = cos(phi * toRad);
-        sinSegment[segmentNum] = sin(phi * toRad);
+        float phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
+        cosSegment[segmentNum] = cos(phi);
+        sinSegment[segmentNum] = sin(phi);
         height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
         cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
         sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
@@ -168,14 +170,14 @@ QuadMesh* SpurGear::toQuadMesh() {
                                     glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
                     1.0f);
 
-            vertexData_.push_back(a);
-            vertexData_.push_back(normNext);
-            vertexData_.push_back(b);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(d);
-            vertexData_.push_back(normNext);
+            vertexData.push_back(a);
+            vertexData.push_back(normNext);
+            vertexData.push_back(b);
+            vertexData.push_back(norm);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
+            vertexData.push_back(d);
+            vertexData.push_back(normNext);
         }
     }
 
@@ -212,17 +214,17 @@ QuadMesh* SpurGear::toQuadMesh() {
                     glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
                     glm::vec4(0.0f, 0.0f, -1.0, 1.0);
 
-            vertexData_.push_back(a);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(b);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(d);
-            vertexData_.push_back(norm);
+            vertexData.push_back(a);
+            vertexData.push_back(norm);
+            vertexData.push_back(b);
+            vertexData.push_back(norm);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
+            vertexData.push_back(d);
+            vertexData.push_back(norm);
         }
     }
-    QuadMesh* result = new QuadMesh(vertexData_);
+    QuadMesh* result = new QuadMesh(vertexData);
     result->setName(name_ + " - Instance 1");
     return result;
 }
@@ -236,6 +238,9 @@ TriangleMesh* SpurGear::toTriangleMesh() {
     createHeightProfile();
     unsigned int profSize = heightProfile_.size();
 
+    // Create vector for the result
+    std::vector<glm::vec4> vertexData;
+
     // precompute sin and cos of angles
     float cosSegment[profSize + 2];
     float sinSegment[profSize + 2];
@@ -245,7 +250,7 @@ TriangleMesh* SpurGear::toTriangleMesh() {
 
     for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        float phi = heightProfile_[segmentNum % profSize].x; //in radians
+        float phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
         cosSegment[segmentNum] = cos(phi);
         sinSegment[segmentNum] = sin(phi);
         height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
@@ -297,19 +302,19 @@ TriangleMesh* SpurGear::toTriangleMesh() {
                                               0.0f))),
                     1.0f);
 
-            vertexData_.push_back(a);
-            vertexData_.push_back(normNext);
-            vertexData_.push_back(b);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
+            vertexData.push_back(a);
+            vertexData.push_back(normNext);
+            vertexData.push_back(b);
+            vertexData.push_back(norm);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
 
-            vertexData_.push_back(a);
-            vertexData_.push_back(normNext);
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(d);
-            vertexData_.push_back(normNext);
+            vertexData.push_back(a);
+            vertexData.push_back(normNext);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
+            vertexData.push_back(d);
+            vertexData.push_back(normNext);
         }
     }
 
@@ -343,22 +348,54 @@ TriangleMesh* SpurGear::toTriangleMesh() {
                     glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) :
                     glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
-            vertexData_.push_back(a);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(b);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
+            vertexData.push_back(a);
+            vertexData.push_back(norm);
+            vertexData.push_back(b);
+            vertexData.push_back(norm);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
 
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(d);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(a);
-            vertexData_.push_back(norm);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
+            vertexData.push_back(d);
+            vertexData.push_back(norm);
+            vertexData.push_back(a);
+            vertexData.push_back(norm);
         }
     }
-    TriangleMesh* result = new TriangleMesh(vertexData_);
+    TriangleMesh* result = new TriangleMesh(vertexData);
     result->setName(name_ + " - Instance 1");
     return result;
+}
+
+// This method converts a SpurGear to a Circle cloud representation.
+// Note that this is not more than a set of circles centered around
+// the gear center with various radii ranging from the minimum radius
+// to the maximum radius.
+CircleCloud* SpurGear::toCircleCloud() {
+  // Determine accuracy level of the simulation
+  float epsilon = 0.000001f;
+
+    // Determine radius constraints
+  float minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
+  float maxRadius = radius_ + epsilon;
+
+  // Determine resolution (important for following simulations)
+  int resolutionXY = 2000;
+  int resolutionZ = 1;
+
+  std::vector<Circle*> circles(resolutionXY * resolutionZ);
+
+  float diffRadius = maxRadius - minRadius;
+  float diffRadiusStep = diffRadius / resolutionXY;
+
+  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
+    float z = stepZ / resolutionZ * length_;
+    for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
+        float radius = minRadius + diffRadiusStep * stepXY;
+        glm::vec3 center = glm::vec3(0.0f, 0.0f, z);
+        circles[stepZ * resolutionZ + stepXY] = new Circle(center, glm::vec3(0.0f, 0.0f, 1.0f), radius);
+    }
+  }
+  return new CircleCloud(circles);
 }

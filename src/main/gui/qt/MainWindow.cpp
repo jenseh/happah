@@ -33,7 +33,7 @@ MainWindow::MainWindow() {
 	glFormat.setDoubleBuffer(true);
 	glFormat.setDepth(true);
 
-	QTabWidget *tabs = new QTabWidget(this);
+    m_tabs = new QTabWidget(this);
 
         // Setting up logic
         sceneManager = new SceneManager();
@@ -43,21 +43,21 @@ MainWindow::MainWindow() {
 	GlViewport3D* viewport3D = new GlViewport3D(sceneManager, glFormat, viewportWidget,
 			this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	tabs->addTab(viewportWidget, "3D-View");
+    m_tabs->addTab(viewportWidget, "3D-View");
 
 	// Setting up 2D Editor
 	scene_ = new EditorScene(this);
 	scene_->setSceneRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	QGraphicsView* view2D = new QGraphicsView(scene_);
-	tabs->addTab(view2D, "2D-View");
+    m_tabs->addTab(view2D, "2D-View");
 
-	setCentralWidget(tabs);
-
+    setCentralWidget(m_tabs);
 	createTools();
 	createContainer();
 
 	connect(toolSelector_, SIGNAL(emitComponent(Component*)),
 			componentContainer_, SLOT(addComponent(Component*)));
+
 
 //createDockWindows();
 }
@@ -106,7 +106,9 @@ MainWindow::~MainWindow() {
 void MainWindow::keyPressEvent(QKeyEvent *event) {
 	if (event->key() == Qt::Key_Escape) {
 		qApp->quit();
-	}
+    }
+    QApplication::sendEvent(m_tabs->currentWidget(), event);
+    QMainWindow::keyPressEvent(event);
 }
 
 ComponentContainer* MainWindow::getComponentContainer() {

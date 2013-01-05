@@ -5,6 +5,9 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 		QGLWidget(format, parent), vertexBuffer_(QGLBuffer::VertexBuffer), coordVBO_(
 				QGLBuffer::VertexBuffer), triangleVBO_(QGLBuffer::VertexBuffer) {
 
+
+    setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
+
 	mainWindow_ = mainWindow;
 	sceneManager_ = sceneManager;
 
@@ -203,6 +206,5 @@ void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
 }
 
 void GlViewport3D::keyPressEvent(QKeyEvent *event) {
-	// TODO: Why does this not work?
 	cout << "Key: " << event->key() << endl;
 }

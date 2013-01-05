@@ -20,7 +20,7 @@ int TriangleMesh::getTupleSize() {
 
 void TriangleMesh::fillTriangles(){
     triangles_.resize(vertexData_.size() / 6);
-    for( size_t i = 0; i < vertexData_.size() / 6; ){
+    for( size_t i = 0; i < vertexData_.size() / 6; i++){
         triangles_[i].vertices[0] = glm::vec3(vertexData_[i*6][0], vertexData_[i*6][1], vertexData_[i*6][2]);
         triangles_[i].normals[0] = glm::vec3(vertexData_[i*6+1][0], vertexData_[i*6+1][1], vertexData_[i*6+1][2]);
 

@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <QMatrix4x4>
+#include "../primitives/Color.h"
 
 class GeometryObject{
 

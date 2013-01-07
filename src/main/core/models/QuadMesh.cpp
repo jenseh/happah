@@ -15,6 +15,7 @@ std::vector<glm::vec4>* QuadMesh::getVertexData()
     return &vertexData_;
 }
 
+
 int QuadMesh::getTupleSize() {
   return 4;
 }
@@ -49,3 +50,4 @@ TriangleMesh* QuadMesh::toTriangleMesh(){
     TriangleMesh* result = new TriangleMesh(triVertexData);
     return result;
 }
+

@@ -10,6 +10,7 @@
 #include "geometries/BasicRack.h"
 #include "geometries/Disc.h"
 #include "simulations/WormGearGrind.h"
+#include "simulations/DiscGearGrind.h"
 
 // Qt includes are only for the timer
 #include <QGLShaderProgram>

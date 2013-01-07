@@ -12,7 +12,7 @@ DiscGearGrind::~DiscGearGrind() {
 
 }
 
-void DiscGearGrind::calculateGrindingDepth(){
+vector<Color> DiscGearGrind::calculateGrindingDepth(){
     TriangleMesh* discMesh = m_disc->toQuadMesh()->toTriangleMesh();
     RayCloud* rayCloud = m_gear->toQuadMesh()->toTriangleMesh()->toRayCloud(); //TODO: this is terribly inefficient
     std::vector<Ray*> gearMesh = *(rayCloud->getRays());
@@ -31,7 +31,16 @@ void DiscGearGrind::calculateGrindingDepth(){
             distances[i] = glm::distance(gearMesh[i]->origin , info.hit_point);
         }
     }
-    return;
+    vector<Color> colorArray;
+    colorArray.resize(distances.size());
+    for( size_t i = 0; i < distances.size(); i++){
+        colorArray[i].red = 0;
+        colorArray[i].green = 0;
+        colorArray[i].blue = 0;
+        colorArray[i].alpha = 255;
+
+    }
+    return colorArray;
 }
 
 void DiscGearGrind::runSimulation() {

@@ -38,11 +38,20 @@ SceneManager::SceneManager() {
 //    grid_->rotate(-45.0f, 1.0f, 1.0f, 1.0f);
 //    gear2_->rotate(45.0f, 0.0f, 0.0f, 1.0f);
 
-
+    DiscGearGrind myGrind(disc1, gear1);
+    vector<Color> colors = myGrind.calculateGrindingDepth();
+    std::cout<<colors.size()<<endl;
+    for(size_t i = 0; i < colors.size(); i++){
+        colors[i].red = 0;
+        colors[i].blue = 0;
+        colors[i].green = 1.0;
+        colors[i].alpha = 1.0;
+      }
+    gear1_->setColorData(colors);
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
-    drawables_->push_back(grid_);
+    //drawables_->push_back(grid_);
 //    drawables_->push_back(sphere_);
     drawables_->push_back(gear1_);
 //    drawables_->push_back(gear2_);

@@ -14,7 +14,7 @@ void WormGearGrind::calculateGrindingDepth(){
 
    std::vector<Circle*>& circles = worm.getCircles();
    gear.fillTriangles();
-   std::vector<Triangle*>& triangles = gear.getTriangles();
+   std::vector<Triangle*>& triangles = *(gear.getTriangles());
 
    size_t resolutionXY = worm.getResolutionXY();
    size_t resolutionZ = worm.getResolutionZ();

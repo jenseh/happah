@@ -23,7 +23,7 @@ TriangleMesh* QuadMesh::toTriangleMesh(){
     std::vector<glm::vec4> triVertexData;
     triVertexData.resize(vertexData_.size() / 4 * 6);
     for( size_t i = 0; i < vertexData_.size() / 8; i++){
-        // Trianle 1
+        // Triangle 1
         // A
         triVertexData[i*12] =vertexData_[i*8];
         triVertexData[i*12+1] =vertexData_[i*8+1];

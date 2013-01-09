@@ -9,6 +9,14 @@ public:
 
     virtual std::vector<glm::vec4>* getVertexData();
     virtual int getTupleSize();
+
+    void setColorData(std::vector<Color>& colorData);
+    std::vector<Color>* getColorData();
+
+private:
+    std::vector<Color> colorData_;
+
+
 };
 
 #endif // DRAWABLE_H

@@ -32,6 +32,7 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/kdtree/TriangleBox.h \
     src/main/core/primitives/Triangle.h \
     src/main/core/primitives/Ray.h \
+    src/main/core/primitives/Color.h \
     src/main/core/kdtree/IntersectInfo.h \
     src/main/core/simulations/DiscGearGrind.h \
     src/main/core/geometries/Disc.h \
@@ -40,7 +41,8 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/models/RayCloud.h \
     src/main/core/models/CircleCloud.h \
     src/main/core/simulations/Simulation.h \
-    src/main/core/primitives/Circle.h
+    src/main/core/primitives/Circle.h \
+    src/main/core/primitives/Color.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \

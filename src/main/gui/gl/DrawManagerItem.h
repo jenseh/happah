@@ -17,6 +17,7 @@ public:
 private:
 	Drawable* drawable_;
 	int offset_;
+	QGLBuffer colorBuffer_;
 };
 
 #endif // DRAWMANAGERITEM_H

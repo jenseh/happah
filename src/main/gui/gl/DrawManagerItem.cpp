@@ -3,6 +3,28 @@
 DrawManagerItem::DrawManagerItem(Drawable* drawable, int offset) {
 	drawable_ = drawable;
 	offset_ = offset;
+	size_t size = drawable->getColorData()->size();
+	if( size != 0){
+	  if (!colorBuffer_.create()) {
+		  std::cerr <<  "Error: Vertex Buffer could not be created!" << std::endl;
+		  qWarning() << "Error: Vertex Buffer could not be created!";
+		  return;
+	  }
+	  colorBuffer_.setUsagePattern(QGLBuffer::StaticDraw);
+
+          if (!colorBuffer_.isCreated()) {
+                  std::cerr <<  "Error: Vertex Buffer does not exist yet!" << std::endl;
+                  qWarning() << "Error: Vertex Buffer does not exist yet!";
+                  return;
+          }
+          if (!colorBuffer_.bind()) {
+                  std::cerr <<  "Error: Could not bind vertex buffer!" << std::endl;
+                  qWarning() << "Error: Could not bind vertex buffer!";
+                  return;
+          }
+          colorBuffer_.allocate(size*sizeof(Color));
+          colorBuffer_.write(0, &drawable->getColorData()[0], size * sizeof(Color));
+        }
 }
 
 void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
@@ -26,8 +48,14 @@ void DrawManagerItem::draw(QGLBuffer* buffer, QGLShaderProgram* shader,
 	shader->setAttributeBuffer("vertex", GL_FLOAT, 0, tupleSize, 2 * 4 * sizeof(float));
 	shader->setAttributeBuffer("normal", GL_FLOAT, 4 * sizeof(float), tupleSize,
 			2 * 4 * sizeof(float));
+
 	shader->enableAttributeArray("vertex");
 	shader->enableAttributeArray("normal");
+
+
+	shader->setAttributeBuffer("color", GL_FLOAT, 0, 4, sizeof(Color));
+	shader->enableAttributeArray("color");
+
 	shader->setUniformValue("MVP", MVP);
 	shader->setUniformValue("MV", MV);
 	shader->setUniformValue("normalMat", normalMatrix);

@@ -4,6 +4,7 @@
 #include "../geometries/Disc.h"
 #include "../geometries/SpurGear.h"
 #include "../kdtree/TriangleKDTree.h"
+#include "../primitives/Color.h"
 
 class DiscGearGrind
 {
@@ -12,7 +13,7 @@ public:
     ~DiscGearGrind();
 
     void runSimulation();
-    void calculateGrindingDepth();
+    vector<Color> calculateGrindingDepth();
 
 private:
     Disc* m_disc;

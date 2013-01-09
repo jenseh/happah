@@ -14,7 +14,7 @@ uniform float shininess;
 
 // Output des VertexShaders
 in vec3 vNormal, vWorldPosition;
-
+in vec4 vColor;
 
 
 
@@ -29,6 +29,7 @@ void main( void)
     lightColor[0] = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     lightColor[1] = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
+    /*
     // Ambient background lighting
     gl_FragColor = ambientColor;
 
@@ -46,6 +47,6 @@ void main( void)
 		
     }
 //    gl_FragColor = vec4(normalize(vNormal), 1.0f);
-    
-
+    */
+      gl_FragColor = vColor;
 }

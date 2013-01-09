@@ -31,6 +31,7 @@ public:
     int getObjectId();
     void setName(std::string name);
     QMatrix4x4* getModelMatrix();
+    void setModelMatrix(QMatrix4x4& modelMatrix);
 
 protected:
     QMatrix4x4 modelMatrix_;

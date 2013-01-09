@@ -17,8 +17,8 @@ std::vector<glm::vec4>* TriangleMesh::getVertexData()
 int TriangleMesh::getTupleSize() {
   return 3;
 }
-std::vector<Triangle*>& TriangleMesh::getTriangles() {
-  return triangles_;
+std::vector<Triangle*>* TriangleMesh::getTriangles() {
+  return &triangles_;
 }
 
 void TriangleMesh::fillTriangles(){

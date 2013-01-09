@@ -14,9 +14,12 @@ std::vector<glm::vec4>* TriangleMesh::getVertexData()
 {
     return &vertexData_;
 }
+
+
 int TriangleMesh::getTupleSize() {
   return 3;
 }
+
 std::vector<Triangle*>* TriangleMesh::getTriangles() {
   return &triangles_;
 }
@@ -67,3 +70,4 @@ RayCloud* TriangleMesh::toRayCloud(){
     }
     return new RayCloud(rayVector);
 }
+

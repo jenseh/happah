@@ -8,6 +8,7 @@
 #include "../../gui/gl/DrawManager.h"
 #include "../primitives/Ray.h"
 #include "RayCloud.h"
+#include "../primitives/Color.h"
 
 
 class TriangleMesh : public Drawable

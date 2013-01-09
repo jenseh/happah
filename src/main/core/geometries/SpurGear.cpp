@@ -100,13 +100,12 @@ void SpurGear::createHeightProfile() {
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 QuadMesh* SpurGear::toQuadMesh() {
-    float dz = length_ / Z_DETAIL_LEVEL;
-    const float toRad = M_PI / 180.0f;
-    float innerRadius = radius_ * INNER_RADIUS_FACTOR;
+    const float dz = length_ / Z_DETAIL_LEVEL;
+    const float innerRadius = radius_ * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
-    unsigned int profSize = heightProfile_.size();
+    const unsigned int profSize = heightProfile_.size();
 
     // Create vector for the result
     std::vector<glm::vec4> vertexData;
@@ -225,6 +224,7 @@ QuadMesh* SpurGear::toQuadMesh() {
         }
     }
     QuadMesh* result = new QuadMesh(vertexData);
+    result->setModelMatrix(modelMatrix_);
     result->setName(name_ + " - Instance 1");
     return result;
 }
@@ -364,6 +364,7 @@ TriangleMesh* SpurGear::toTriangleMesh() {
         }
     }
     TriangleMesh* result = new TriangleMesh(vertexData);
+    result->setModelMatrix(modelMatrix_);
     result->setName(name_ + " - Instance 1");
     return result;
 }
@@ -374,20 +375,20 @@ TriangleMesh* SpurGear::toTriangleMesh() {
 // to the maximum radius.
 CircleCloud* SpurGear::toCircleCloud() {
   // Determine accuracy level of the simulation
-  float epsilon = 0.000001f;
+  const float epsilon = 0.000001f;
 
     // Determine radius constraints
-  float minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
-  float maxRadius = radius_ + epsilon;
+  const float minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
+  const float maxRadius = radius_ + epsilon;
 
   // Determine resolution (important for following simulations)
-  int resolutionXY = 2000;
-  int resolutionZ = 1;
+  const int resolutionXY = 1000;
+  const int resolutionZ = 1000;
 
   std::vector<Circle*> circles(resolutionXY * resolutionZ);
 
-  float diffRadius = maxRadius - minRadius;
-  float diffRadiusStep = diffRadius / resolutionXY;
+  const float diffRadius = maxRadius - minRadius;
+  const float diffRadiusStep = diffRadius / resolutionXY;
 
   for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
     float z = stepZ / resolutionZ * length_;
@@ -397,5 +398,5 @@ CircleCloud* SpurGear::toCircleCloud() {
         circles[stepZ * resolutionZ + stepXY] = new Circle(center, glm::vec3(0.0f, 0.0f, 1.0f), radius);
     }
   }
-  return new CircleCloud(circles);
+  return new CircleCloud(circles, resolutionXY, resolutionZ);
 }

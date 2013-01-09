@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <QMatrix4x4>
+#include "../primitives/Color.h"
 
 class GeometryObject{
 
@@ -24,14 +25,12 @@ public:
     // Transformations
     void rotate(float angle, float x, float y, float z);
     void translate(float x, float y, float z);
-    // This function may never be used since the model internally is already in world coordinates
-//    void scale(float x, float y, float z);
+    void scale(float x, float y, float z);
 
     std::string getName();
     int getObjectId();
     void setName(std::string name);
     QMatrix4x4* getModelMatrix();
-    void setModelMatrix(QMatrix4x4& modelMatrix);
 
 protected:
     QMatrix4x4 modelMatrix_;

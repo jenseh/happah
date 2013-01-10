@@ -2,6 +2,8 @@
 #define WORMGEARGRIND_H
 
 #include "../geometries/SpurGear.h"
+#include "../primitives/Circle.h"
+#include "../primitives/Triangle.h"
 
 class WormGearGrind
 {
@@ -15,6 +17,10 @@ public:
 private:
   glm::vec3 inline transformVector(glm::vec3& vector, QMatrix4x4& transformation);
   glm::vec3 inline transformPoint(glm::vec3& point, QMatrix4x4& transformation);
+  bool inline checkIntersection(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::vector<Triangle*>& triangles);
+  void inline computeIntersectingTriangles(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::vector<Triangle*>& triangles, std::list<Triangle*>& hits);
+  bool inline reduceIntersectingTriangles(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::list<Triangle*>& hits);
+  bool inline reduceNonIntersectingTriangles(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::list<Triangle*>& hits);
 
 public:
   Triangle transformTriangle(Triangle& triangle);

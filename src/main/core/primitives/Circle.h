@@ -44,7 +44,7 @@ struct Circle {
 			 // std::cout << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 			return false;
 		}
-		// std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
+//		 std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
 		// std::cout << "m_normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 
 		//1: Check collinearity of normal vectors
@@ -54,6 +54,7 @@ struct Circle {
 		if (collinear) {
 			//2: Check whether planes are identical or parallel
 			bool identical = floatEquals(glm::dot(m_center - triangle.vertices[2], t_normal), 0.0f);
+			// std::cout << "Info: Identical: " << identical << std::endl;
 
 			//2a: If planes are parallel, return false
 			if (!identical) {
@@ -77,7 +78,10 @@ struct Circle {
 				float distC02 = glm::distance(m_center, closestPoint02);
 
 				// Check whether any distance is shorter than the radius
-				if (floatLess(distC01, m_radius) || floatLess(distC12, m_radius) || floatLess(distC02, m_radius)) {
+				bool triangleInside = floatLess(distC01, m_radius) || floatLess(distC12, m_radius) || floatLess(distC02, m_radius);
+				// std::cout << "Info: triangleInside: " << triangleInside << std::endl;
+
+				if (triangleInside) {
 					// ..then the triangle is "inside" the circle
 				    // std::cout << distC01 << ", " << distC12 << ", " << distC02 << ", " << m_radius << std::endl;
 				    // std::cout << "Exiting due to: Collinear | Triangle inside circle!" << std::endl;

@@ -19,9 +19,9 @@ SceneManager::SceneManager() {
     disc1->setName("Disc 1");
 
     // Transform the original geometry for the simulation
-    gear1->translate(-1.5f, 0.0f, 0.0f);
+//    gear1->translate(-1.5f, 0.0f, 0.0f);
 //    gear1->rotate(-90.0f, 0.0f, 1.0f, 0.0f);
-    gear2->translate(0.0f, 0.0f, 0.5f);
+//    gear2->translate(0.0f, 0.0f, 0.5f);
 
     // Convert them to quad meshs
     grid_ = grid->toQuadMesh();
@@ -38,16 +38,16 @@ SceneManager::SceneManager() {
 //    grid_->rotate(-45.0f, 1.0f, 1.0f, 1.0f);
 //    gear2_->rotate(45.0f, 0.0f, 0.0f, 1.0f);
 
-    DiscGearGrind myGrind(disc1, gear1);
-    vector<Color> colors = myGrind.calculateGrindingDepth();
-    std::cout<<colors.size()<<endl;
-    for(size_t i = 0; i < colors.size(); i++){
-        colors[i].red = 0;
-        colors[i].blue = 0;
-        colors[i].green = 1.0;
-        colors[i].alpha = 1.0;
-      }
-    gear1_->setColorData(colors);
+//    DiscGearGrind myGrind(disc1, gear1);
+//    vector<Color> colors = myGrind.calculateGrindingDepth();
+//    std::cout<<colors.size()<<endl;
+//    for(size_t i = 0; i < colors.size(); i++){
+//        colors[i].red = 0;
+//        colors[i].blue = 0;
+//        colors[i].green = 1.0;
+//        colors[i].alpha = 1.0;
+//      }
+//    gear1_->setColorData(colors);
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
@@ -63,30 +63,56 @@ SceneManager::SceneManager() {
 //    sim->runSimulation();
 
     // Test cases
-//    Circle circle = Circle(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.5f);
-//    Triangle triangle = Triangle(glm::vec3(0.0f, 2.0f, 0.0f),
-//                                 glm::vec3(-1.0f, 1.0f, 0.0f),
-//                                 glm::vec3(1.0f, 1.0f, 0.0f));
+    int maxCount = 0;
+    Triangle triangle = Triangle(glm::vec3(0.0f, 1.0f, 0.0f),
+                                 glm::vec3(-1.0f, 0.0f, 0.0f),
+                                 glm::vec3(1.0f, 0.0f, 0.0f));
+    {
+      std::cout << "Running ZCircle benchmark:" << std::endl;
+      ZCircle circle = ZCircle(0.5f);
+      Triangle transformedTriangle = WormGearGrind(*gear1, *gear2).transformTriangle(triangle);
+//      std::cout << "Transformation-A: " << triangle.vertices[0].x << ", " << triangle.vertices[0].y << ", " << triangle.vertices[0].z << " to " << transformedTriangle.vertices[0].x << ", " << transformedTriangle.vertices[0].y << ", " << transformedTriangle.vertices[0].z << std::endl;
 
-//    Circle transformedCircle = WormGearGrind(*gear1, *gear2).transformCircle(circle);
-//    std::cout << "Transformation-Center: " << circle.m_center.x << ", " << circle.m_center.y << ", " << circle.m_center.z << " to " << transformedCircle.m_center.x << ", " << transformedCircle.m_center.y << ", " << transformedCircle.m_center.z << std::endl;
-//    std::cout << "Transformation-Normal: " << circle.m_normal.x << ", " << circle.m_normal.y << ", " << circle.m_normal.z << " to " << transformedCircle.m_normal.x << ", " << transformedCircle.m_normal.y << ", " << transformedCircle.m_normal.z << std::endl;
+      clock_t start, end;
+      start = clock();
+      bool result;
+      for (int count = 0; count < maxCount; count++) {
+        result = circle.checkTriangleIntersection(transformedTriangle);
+      }
+      end = clock();
+      double totalTime = (double)(end-start)/CLOCKS_PER_SEC;
+      std::cout << "Result: " << result << std::endl;
+      std::cout << "Time: " << totalTime/maxCount << ", total: " << totalTime << " seconds." << std::endl;
+    }
 
-//    clock_t start, end;
-//    int maxCount = 1;
-//    start = clock();
-//    for (int count = 0; count < maxCount; count++) {
-//      bool result = transformedCircle.checkTriangleIntersection(triangle);
-//      std::cout << "Result: " << result << std::endl;
-//    }
-//    end = clock();
-//    double totalTime = (double)(end-start)/CLOCKS_PER_SEC;
-//    cout << "Time: " << totalTime/maxCount << ", total: " << totalTime << " seconds." << "\n\n";
 
-    //TODO: Setup and start a timer
-//    timer_ = new QTimer();
-//    connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
-//    timer_->start(WAIT_TIME);
+
+
+    {
+      std::cout << "Running Circle benchmark:" << std::endl;
+      Circle circle = Circle(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.5f);
+      Triangle transformedTriangle = WormGearGrind(*gear1, *gear2).transformTriangle(triangle);
+//      std::cout << "Transformation-A: " << triangle.vertices[0].x << ", " << triangle.vertices[0].y << ", " << triangle.vertices[0].z << " to " << transformedTriangle.vertices[0].x << ", " << transformedTriangle.vertices[0].y << ", " << transformedTriangle.vertices[0].z << std::endl;
+
+      clock_t start, end;
+      start = clock();
+      bool result;
+      for (int count = 0; count < maxCount; count++) {
+        result = circle.checkTriangleIntersection(transformedTriangle);
+      }
+      end = clock();
+      double totalTime = (double)(end-start)/CLOCKS_PER_SEC;
+      std::cout << "Result: " << result << std::endl;
+      std::cout << "Time: " << totalTime/maxCount << ", total: " << totalTime << " seconds." << std::endl;
+    }
+
+
+
+//    glm::vec2 point = glm::vec2(2.0f, 2.0f);
+//    glm::vec2 direction = glm::vec2(1.0f, 1.0f);
+//    glm::vec2 closestPoint = ZCircle(0.5f).closestPointToCenterOnLine(point, direction);
+
+//    std::cout << closestPoint.x << ", " << closestPoint.y << std::endl;
 }
 
 SceneManager::~SceneManager() {

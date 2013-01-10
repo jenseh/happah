@@ -42,7 +42,8 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/models/CircleCloud.h \
     src/main/core/simulations/Simulation.h \
     src/main/core/primitives/Circle.h \
-    src/main/core/primitives/Color.h
+    src/main/core/primitives/Color.h \
+    src/main/core/primitives/ZCircle.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \

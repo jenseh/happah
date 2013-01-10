@@ -15,8 +15,9 @@ public:
 private:
   glm::vec3 inline transformVector(glm::vec3& vector, QMatrix4x4& transformation);
   glm::vec3 inline transformPoint(glm::vec3& point, QMatrix4x4& transformation);
-  Triangle transformTriangle(Triangle& triangle);
+
 public:
+  Triangle transformTriangle(Triangle& triangle);
   Circle transformCircle(Circle& circle);
 
 private:

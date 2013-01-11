@@ -43,7 +43,8 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/simulations/Simulation.h \
     src/main/core/primitives/Circle.h \
     src/main/core/primitives/Color.h \
-    src/main/core/primitives/ZCircle.h
+    src/main/core/models/ZCircleCloud.h \
+    src/main/core/simulations/Kinematic.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -76,7 +77,9 @@ SOURCES += src/main/main.cpp \
     src/main/core/simulations/WormGearGrind.cpp \
     src/main/core/models/RayCloud.cpp \
     src/main/core/models/CircleCloud.cpp \
-    src/main/core/simulations/Simulation.cpp
+    src/main/core/simulations/Simulation.cpp \
+    src/main/core/models/ZCircleCloud.cpp \
+    src/main/core/simulations/Kinematic.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

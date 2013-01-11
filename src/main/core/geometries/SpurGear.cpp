@@ -400,3 +400,37 @@ CircleCloud* SpurGear::toCircleCloud() {
   }
   return new CircleCloud(circles, resolutionXY, resolutionZ);
 }
+
+
+ZCircleCloud* SpurGear::toZCircleCloud() {
+  // Determine accuracy level of the simulation
+  const float epsilon = 0.000001f;
+
+    // Determine radius constraints
+  const float minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
+  const float maxRadius = radius_ + epsilon;
+
+  // Determine resolution (important for following simulations)
+  const int resolutionXY = 1000;
+  const int resolutionZ = 1000;
+
+  const float diffRadius = maxRadius - minRadius;
+  const float diffRadiusStep = diffRadius / resolutionXY;
+
+  std::vector<float>* radii = new std::vector<float>(resolutionXY);
+  std::vector<float>* posZ = new std::vector<float>(resolutionZ);
+
+  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
+      float posZvalue = stepZ * length_ / resolutionZ;
+      (*posZ)[stepZ] = posZvalue;
+  }
+
+  for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
+      float radius = minRadius + diffRadiusStep * stepXY;
+      (*radii)[stepXY] = radius;
+  }
+
+  ZCircleCloud* result = new ZCircleCloud(radii, posZ, resolutionXY, resolutionZ);
+  result->setModelMatrix(modelMatrix_);
+  return result;
+}

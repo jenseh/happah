@@ -15,6 +15,7 @@
 #include "NonDrawable.h"
 #include "../models/QuadMesh.h"
 #include "../models/CircleCloud.h"
+#include "../models/ZCircleCloud.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
     QuadMesh* toQuadMesh();
     TriangleMesh* toTriangleMesh();
     CircleCloud* toCircleCloud();
+    ZCircleCloud* toZCircleCloud();
 private:
     float radius_;
     float length_;
@@ -40,7 +42,7 @@ private:
     StandardProfile* standardProfile;
 
     const static int SEGMENT_COUNT = 40; //maximum: 4500
-    const static int Z_DETAIL_LEVEL = 5;
+    const static int Z_DETAIL_LEVEL = 40;
     const static float INNER_RADIUS_FACTOR = 0.5f;
 
     void createSinePartition();

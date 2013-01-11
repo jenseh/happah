@@ -6,25 +6,27 @@
 #include <vector>
 #include <iostream>
 
+#include "../../HappahTypes.h"
+
 class StandardProfile {
 public:
-	StandardProfile(double module, double pressureAngle, // pressureAngle = Profilwinkel
-            double filletRadius,                         // filletRadius = Fußrundungsradius
-			double bottomClearance);                     // bottomClearance = Kopfspiel
+	StandardProfile(hpreal module, hpreal pressureAngle, // pressureAngle = Profilwinkel
+            hpreal filletRadius,                         // filletRadius = Fußrundungsradius
+			hpreal bottomClearance);                     // bottomClearance = Kopfspiel
 
-	double getHeight(double x) const;
+	hpreal getHeight(hpreal x) const;
 
 	void getProfilePartition(std::vector<glm::vec2>& partition,
 			int numberSamples);
 
 private:
-    double module_;
-    double pressureAngle_; // Flankenwinkel
-    double filletRadius_; // Fussrundungsradius
-    double bottomClearance_; // Kopfspiel
+    hpreal module_;
+    hpreal pressureAngle_; // Flankenwinkel
+    hpreal filletRadius_; // Fussrundungsradius
+    hpreal bottomClearance_; // Kopfspiel
 
-    void normalize(double& x) const;
-    void calcRootCircleCenter(double *center) const;
+    void normalize(hpreal& x) const;
+    void calcRootCircleCenter(hpreal *center) const;
 
 };
 

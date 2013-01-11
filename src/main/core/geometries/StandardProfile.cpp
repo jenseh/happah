@@ -1,8 +1,8 @@
 #include "StandardProfile.h"
 
-StandardProfile::StandardProfile(double module, double pressureAngle, // pressureAngle = Profilwinkel
-		double filletRadius,                                          // filletRadius = Fußrundungsradius
-		double bottomClearance) :                                     // bottomClearance = Kopfspiel
+StandardProfile::StandardProfile(hpreal module, hpreal pressureAngle, // pressureAngle = Profilwinkel
+		hpreal filletRadius,                                          // filletRadius = Fußrundungsradius
+		hpreal bottomClearance) :                                     // bottomClearance = Kopfspiel
 		module_(module), pressureAngle_(pressureAngle), filletRadius_(
 				filletRadius), bottomClearance_(bottomClearance) {
 	// Angle has to be smaller than approximately 38.146 degrees or 0.785 rad
@@ -18,7 +18,7 @@ StandardProfile::StandardProfile(double module, double pressureAngle, // pressur
 				<< filletRadius_ << std::endl;
 }
 
-void StandardProfile::normalize(double& x) const {
+void StandardProfile::normalize(hpreal& x) const {
 	x /= (module_ * M_PI);
 	// Modulo
 	while (x - 1.0 > 0) {
@@ -31,8 +31,8 @@ void StandardProfile::normalize(double& x) const {
 	x *= (module_ * M_PI);
 }
 
-void StandardProfile::calcRootCircleCenter(double *center) const {
-	double t = (bottomClearance_ + filletRadius_ * (1 + sin(pressureAngle_)))
+void StandardProfile::calcRootCircleCenter(hpreal *center) const {
+	hpreal t = (bottomClearance_ + filletRadius_ * (1 + sin(pressureAngle_)))
 			/ cos(pressureAngle_);
 	center[0] = module_ * M_PI + cos(pressureAngle_) * filletRadius_
 			+ t * sin(pressureAngle_);
@@ -41,13 +41,13 @@ void StandardProfile::calcRootCircleCenter(double *center) const {
 
 /**
  * Calculates the profiel for one gear pitch.
- * double x has to be bigger than or equal 0.
+ * hpreal x has to be bigger than or equal 0.
  * When x = 0 the height at the center of a tooth
  * of the gear is calculated.
  * When x = pitch / 2 the height at the center of
  * the gap between two teeth is calculated.
  */
-double StandardProfile::getHeight(double x) const {
+hpreal StandardProfile::getHeight(hpreal x) const {
 	/* Values are only calculated of one half of a pitch.
 	 * Therefore x is converted to values in [0, m * pi / 2], with
 	 * m = module. The second half of the pitch is mirrored and
@@ -64,15 +64,15 @@ double StandardProfile::getHeight(double x) const {
 
 	//calculate x-function for half of one pitch
 
-	double x_1 = (module_ * M_PI) / 4 - tan(pressureAngle_) * module_;
-	double x_2 = (module_ * M_PI) / 4 + tan(pressureAngle_) * module_;
-	double x_3 = x_2
+	hpreal x_1 = (module_ * M_PI) / 4 - tan(pressureAngle_) * module_;
+	hpreal x_2 = (module_ * M_PI) / 4 + tan(pressureAngle_) * module_;
+	hpreal x_3 = x_2
 			+ (bottomClearance_ + filletRadius_ * (sin(pressureAngle_) - 1))
 					* tan(pressureAngle_);
-	double x_4 = x_3 + filletRadius_ * cos(pressureAngle_);
-	double x_5 = (module_ * M_PI) / 2;
+	hpreal x_4 = x_3 + filletRadius_ * cos(pressureAngle_);
+	hpreal x_5 = (module_ * M_PI) / 2;
 
-	double center[2];
+	hpreal center[2];
 	calcRootCircleCenter(center);
 
 	if (x < x_1)
@@ -92,8 +92,8 @@ double StandardProfile::getHeight(double x) const {
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition,
 		int numberSamples) {
 	for (int i = 0; i < numberSamples; i++) {
-		double x = ((double) i / (double) numberSamples) * module_ * M_PI;
-		double y = getHeight(x);
+		hpreal x = ((hpreal) i / (hpreal) numberSamples) * module_ * M_PI;
+		hpreal y = getHeight(x);
 		partition.push_back(glm::vec2(x, y));
 	}
 

@@ -13,6 +13,7 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/gui/qt/EditorScene.h \
     src/main/Happah.h \
+    src/main/HappahTypes.h \
     src/main/gui/qt/MainWindow.h \
     src/main/gui/qt/SplineTool.h \
     src/main/gui/qt/Tool.h \
@@ -84,5 +85,11 @@ FORMS +=
 RESOURCES += 
 INCLUDEPATH += /usr/include
 
+release: DESTDIR = build/release
+debug:   DESTDIR = build/debug
 
+OBJECTS_DIR = $$DESTDIR/.obj
+MOC_DIR = $$DESTDIR/.moc
+RCC_DIR = $$DESTDIR/.rrc
+UI_DIR = $$DESTDIR/.ui
 

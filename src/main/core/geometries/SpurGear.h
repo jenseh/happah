@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
+#include "../../HappahTypes.h"
 #include "StandardProfile.h"
 #include "NonDrawable.h"
 #include "../models/QuadMesh.h"
@@ -22,21 +23,21 @@ using namespace std;
 
 class SpurGear : public NonDrawable {
 public:
-    SpurGear(float radius = 1.0f, float length = 0.2f, int toothCount = 10);
+    SpurGear(hpreal radius = 1.0f, hpreal length = 0.2f, int toothCount = 10);
     ~SpurGear();
 
-    float getRadius();
+    hpreal getRadius();
     glm::vec3 getCenter();
     QuadMesh* toQuadMesh();
     TriangleMesh* toTriangleMesh();
     CircleCloud* toCircleCloud();
     ZCircleCloud* toZCircleCloud();
 private:
-    float radius_;
-    float length_;
+    hpreal radius_;
+    hpreal length_;
     int toothCount_;
-    float heightFactor_;
-    float module_;
+    hpreal heightFactor_;
+    hpreal module_;
     std::vector<glm::vec2> heightProfilePartition_;
     std::vector<glm::vec2> heightProfile_;
     StandardProfile* standardProfile;

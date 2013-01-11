@@ -8,7 +8,7 @@
 #include "SpurGear.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-SpurGear::SpurGear(float radius, float length, int toothCount) {
+SpurGear::SpurGear(hpreal radius, hpreal length, int toothCount) {
     radius_ = radius;
     length_ = length;
     toothCount_ = toothCount;
@@ -17,15 +17,15 @@ SpurGear::SpurGear(float radius, float length, int toothCount) {
 
 SpurGear::~SpurGear() {}
 
-float SpurGear::getRadius() {
+hpreal SpurGear::getRadius() {
     return radius_;
 }
 
 void SpurGear::createSinePartition() {
     // Use this to draw a sinus surface
     for (int i = 0; i < SEGMENT_COUNT; i++) {
-        float position = (float) i / (float) SEGMENT_COUNT;
-        float height = exp2f(sinf(position * 2.0f * M_PI));
+        hpreal position = (hpreal) i / (hpreal) SEGMENT_COUNT;
+        hpreal height = exp2f(sinf(position * 2.0f * M_PI));
         heightProfilePartition_.push_back(glm::vec2(position, height));
         //cout << position << ": " << height << std::endl;
     }
@@ -34,19 +34,19 @@ void SpurGear::createSinePartition() {
 void SpurGear::createApproximatedPartition() {
     const int segmentsPerLine = SEGMENT_COUNT / 4;
 
-    float horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
-    float flankX = 0.15f;
+    hpreal horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
+    hpreal flankX = 0.15f;
 
     // Use this to draw a gear with straight flanks and a quadratic bottom
     // horizontal teeth part
     for (int i = 0; i < segmentsPerLine; i++) {
-        float x = (float) i / segmentsPerLine;
+        hpreal x = (hpreal) i / segmentsPerLine;
         heightProfilePartition_.push_back(glm::vec2(0.0f + x * horizX, 1.0f));
     }
 
     // right flank
     for (int i = 0; i < segmentsPerLine; i++) {
-        float x = (float) i / segmentsPerLine;
+        hpreal x = (hpreal) i / segmentsPerLine;
         heightProfilePartition_.push_back(
                 glm::vec2(horizX + x * flankX, 1.0f - x * 0.8f));
     }
@@ -54,16 +54,16 @@ void SpurGear::createApproximatedPartition() {
     // lower teeth part
     // fit a quadratic function for the bottom part of a teeth hole
     for (int i = 0; i < segmentsPerLine; i++) {
-        float x = (float) i / segmentsPerLine;
-        float position = horizX + flankX + x * horizX;
-        float height = 0.2f * pow(2.0f * x - 1.0f, 2.0f);
+        hpreal x = (hpreal) i / segmentsPerLine;
+        hpreal position = horizX + flankX + x * horizX;
+        hpreal height = 0.2f * pow(2.0f * x - 1.0f, 2.0f);
         heightProfilePartition_.push_back(glm::vec2(position, height));
         //cout << position << ": " << height << std::endl;
     }
 
     //left flank
     for (int i = 0; i < segmentsPerLine; i++) {
-        float x = (float) i / segmentsPerLine;
+        hpreal x = (hpreal) i / segmentsPerLine;
         heightProfilePartition_.push_back(
                 glm::vec2(horizX + flankX + horizX + x * flankX,
                         0.2f + x * 0.8f));
@@ -91,8 +91,8 @@ void SpurGear::createHeightProfile() {
 
     for (int i = 0; i < toothCount_; i++) {
         for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
-            float position = heightProfilePartition_[j].x + i * module_ * M_PI;
-            float height = heightProfilePartition_[j].y;
+            hpreal position = heightProfilePartition_[j].x + i * module_ * M_PI;
+            hpreal height = heightProfilePartition_[j].y;
             heightProfile_.push_back(glm::vec2(position, height));
         }
     }
@@ -100,8 +100,8 @@ void SpurGear::createHeightProfile() {
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 QuadMesh* SpurGear::toQuadMesh() {
-    const float dz = length_ / Z_DETAIL_LEVEL;
-    const float innerRadius = radius_ * INNER_RADIUS_FACTOR;
+    const hpreal dz = length_ / Z_DETAIL_LEVEL;
+    const hpreal innerRadius = radius_ * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
@@ -111,15 +111,15 @@ QuadMesh* SpurGear::toQuadMesh() {
     std::vector<glm::vec4> vertexData;
 
     // precompute sin and cos of angles
-    float cosSegment[profSize + 2];
-    float sinSegment[profSize + 2];
-    float height[profSize + 2];
-    float cosHeight[profSize + 2];
-    float sinHeight[profSize + 2];
+    hpreal cosSegment[profSize + 2];
+    hpreal sinSegment[profSize + 2];
+    hpreal height[profSize + 2];
+    hpreal cosHeight[profSize + 2];
+    hpreal sinHeight[profSize + 2];
 
     for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        float phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
+        hpreal phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
         cosSegment[segmentNum] = cos(phi);
         sinSegment[segmentNum] = sin(phi);
         height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
@@ -130,7 +130,7 @@ QuadMesh* SpurGear::toQuadMesh() {
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
     for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
-        float z = i * dz;
+        hpreal z = i * dz;
         for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
 
@@ -185,7 +185,7 @@ QuadMesh* SpurGear::toQuadMesh() {
     // circle's center as a common point. for nicer highlights it
     // might be better to chose vertices in a more clever way.
     int i = 0;
-    for (float z = 0.0f; i < 2; i++, z += length_) {
+    for (hpreal z = 0.0f; i < 2; i++, z += length_) {
         for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
             glm::vec4 a, b, c, d, norm;
@@ -231,8 +231,8 @@ QuadMesh* SpurGear::toQuadMesh() {
 
 // This creates the triangle mesh representation of a gear. The gear axis is the model's z-axis.
 TriangleMesh* SpurGear::toTriangleMesh() {
-    float dz = length_ / Z_DETAIL_LEVEL;
-    float innerRadius = radius_ * INNER_RADIUS_FACTOR;
+    hpreal dz = length_ / Z_DETAIL_LEVEL;
+    hpreal innerRadius = radius_ * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
@@ -242,15 +242,15 @@ TriangleMesh* SpurGear::toTriangleMesh() {
     std::vector<glm::vec4> vertexData;
 
     // precompute sin and cos of angles
-    float cosSegment[profSize + 2];
-    float sinSegment[profSize + 2];
-    float height[profSize + 2];
-    float cosHeight[profSize + 2];
-    float sinHeight[profSize + 2];
+    hpreal cosSegment[profSize + 2];
+    hpreal sinSegment[profSize + 2];
+    hpreal height[profSize + 2];
+    hpreal cosHeight[profSize + 2];
+    hpreal sinHeight[profSize + 2];
 
     for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        float phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
+        hpreal phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
         cosSegment[segmentNum] = cos(phi);
         sinSegment[segmentNum] = sin(phi);
         height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
@@ -261,7 +261,7 @@ TriangleMesh* SpurGear::toTriangleMesh() {
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
     for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
-        float z = i * dz;
+        hpreal z = i * dz;
         for (unsigned int segmentNum = 0; segmentNum < profSize; segmentNum++) {
 
             glm::vec4 a, b, c, d, normNext, norm;
@@ -320,7 +320,7 @@ TriangleMesh* SpurGear::toTriangleMesh() {
 
     // draw the front and back of the gear
     int i = 0;
-    for (float z = 0.0f; i < 2; i++, z += length_) {
+    for (hpreal z = 0.0f; i < 2; i++, z += length_) {
         for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
             glm::vec4 a, b, c, d, norm;
@@ -375,11 +375,11 @@ TriangleMesh* SpurGear::toTriangleMesh() {
 // to the maximum radius.
 CircleCloud* SpurGear::toCircleCloud() {
   // Determine accuracy level of the simulation
-  const float epsilon = 0.000001f;
+  const hpreal epsilon = 0.000001f;
 
     // Determine radius constraints
-  const float minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
-  const float maxRadius = radius_ + epsilon;
+  const hpreal minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
+  const hpreal maxRadius = radius_ + epsilon;
 
   // Determine resolution (important for following simulations)
   const int resolutionXY = 1000;
@@ -387,13 +387,13 @@ CircleCloud* SpurGear::toCircleCloud() {
 
   std::vector<Circle*> circles(resolutionXY * resolutionZ);
 
-  const float diffRadius = maxRadius - minRadius;
-  const float diffRadiusStep = diffRadius / resolutionXY;
+  const hpreal diffRadius = maxRadius - minRadius;
+  const hpreal diffRadiusStep = diffRadius / resolutionXY;
 
   for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-    float z = stepZ / resolutionZ * length_;
+    hpreal z = stepZ / resolutionZ * length_;
     for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
-        float radius = minRadius + diffRadiusStep * stepXY;
+        hpreal radius = minRadius + diffRadiusStep * stepXY;
         glm::vec3 center = glm::vec3(0.0f, 0.0f, z);
         circles[stepZ * resolutionZ + stepXY] = new Circle(center, glm::vec3(0.0f, 0.0f, 1.0f), radius);
     }

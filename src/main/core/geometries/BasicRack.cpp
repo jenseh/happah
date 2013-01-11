@@ -1,13 +1,13 @@
 #include "BasicRack.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-BasicRack::BasicRack(float length, float depth, float height, int toothCount) {
+BasicRack::BasicRack(hpreal length, hpreal depth, hpreal height, int toothCount) {
     length_ = length;
     depth_ = depth;
     height_ = height;
     toothCount_ = toothCount;
     // Modul = Teilung / PI
-    module_ = (length / (float)toothCount) / M_PI;
+    module_ = (length / (hpreal)toothCount) / M_PI;
 }
 
 BasicRack::~BasicRack() {
@@ -34,8 +34,8 @@ void BasicRack::createHeightProfile() {
 
     for (int i = 0; i < toothCount_; i++) {
         for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
-            float position = heightProfilePartition_[j].x + i * module_ * M_PI;
-            float height = heightProfilePartition_[j].y;
+            hpreal position = heightProfilePartition_[j].x + i * module_ * M_PI;
+            hpreal height = heightProfilePartition_[j].y;
             heightProfile_.push_back(glm::vec2(position, height));
             //cout << position << ": " << height << std::endl;
         }
@@ -55,12 +55,12 @@ void BasicRack::createHeightProfile() {
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 QuadMesh* BasicRack::toQuadMesh() {
-    float dz = depth_ / Z_DETAIL_LEVEL;
+    hpreal dz = depth_ / Z_DETAIL_LEVEL;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
     for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
-        float z = i * dz;
+        hpreal z = i * dz;
         glm::vec4 a, b, c, d, norm;
         a.z = z;
         a.w = 1.0f;

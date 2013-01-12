@@ -35,8 +35,7 @@ int depthFromKPos(int kPos) {
 // - No progress from depth d to d+1
 
 // Shortcuts: T for triangle and K for tree
-template<class T>
-ImplicitKDTree<T>::ImplicitKDTree(std::vector<T*>& triangles) : m_triangles(triangles)
+ImplicitKDTree::ImplicitKDTree(std::vector<Triangle*>& triangles) : m_triangles(triangles)
 {
   // Construct the KDTree
   std::cout << "Constructing KDTree" << std::endl;
@@ -60,7 +59,7 @@ ImplicitKDTree<T>::ImplicitKDTree(std::vector<T*>& triangles) : m_triangles(tria
 
       if (size > maxTrianglesPerBox) {
         // Sort triangles (point A) along an axis
-        std::sort(m_triangles.begin() + minTPos, m_triangles.begin() + maxTPos, TriangleSorter<T>(axis));
+        std::sort(m_triangles.begin() + minTPos, m_triangles.begin() + maxTPos, TriangleSorter<Triangle>(axis));
 
         // Determine where separating axis should be
         int middleTPos = (minTPos + maxTPos) / 2;
@@ -103,7 +102,7 @@ ImplicitKDTree<T>::ImplicitKDTree(std::vector<T*>& triangles) : m_triangles(tria
   // Compute bounding box for whole tree
   float minX = INFINITY, minY = INFINITY, minZ = INFINITY, maxX = -INFINITY, maxY = -INFINITY, maxZ = -INFINITY;
 
-  for (typename std::vector<T*>::iterator t = m_triangles.begin(); t != m_triangles.end(); t++) {
+  for (typename std::vector<Triangle*>::iterator t = m_triangles.begin(); t != m_triangles.end(); t++) {
       int x = (*t)->vertices[0].x;
       int y = (*t)->vertices[0].y;
       int z = (*t)->vertices[0].z;
@@ -132,14 +131,12 @@ ImplicitKDTree<T>::ImplicitKDTree(std::vector<T*>& triangles) : m_triangles(tria
 //  std::cout << "BSphere: " << center.x << ", " << center.y << ", " << center.z << ": " << radius << std::endl;
 }
 
-template<class T>
-bool ImplicitKDTree<T>::intersect(Circle& circle, std::list<T*>& hits) {
+bool ImplicitKDTree::intersect(Circle& circle, std::list<Triangle*>& hits) {
   BBox circleBox = circle.computeBoundingBox();
   return intersectRec(circle, hits, circleBox, 0, 0);
 }
 
-template<class T>
-bool ImplicitKDTree<T>::intersectRec(Circle& circle, std::list<T*>& hits, BBox& curBox, int depth, unsigned int kPos) {
+bool ImplicitKDTree::intersectRec(Circle& circle, std::list<Triangle*>& hits, BBox& curBox, int depth, unsigned int kPos) {
   if (curBox.intersects(m_bBox)) {
       TreeNode node = m_tree[kPos];
       TreeNode* prevNode;
@@ -168,11 +165,11 @@ bool ImplicitKDTree<T>::intersectRec(Circle& circle, std::list<T*>& hits, BBox& 
           return (intersectA || intersectB);
       } else {
           // Leaf node
-          typename std::vector<T*>::iterator pos = m_triangles.begin() + prevNode->treeIndex;
-          typename std::vector<T*>::iterator end = m_triangles.begin() + node.treeIndex;
+          typename std::vector<Triangle*>::iterator pos = m_triangles.begin() + prevNode->treeIndex;
+          typename std::vector<Triangle*>::iterator end = m_triangles.begin() + node.treeIndex;
           bool hit = false;
           for (; pos != end; pos++) {
-              T triangle = **pos;
+              Triangle triangle = **pos;
               if (circle.intersect(triangle)) {
                   hits.push_back(*pos);
                   hit = true;

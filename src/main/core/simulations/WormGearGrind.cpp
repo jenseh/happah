@@ -14,7 +14,7 @@ void WormGearGrind::calculateGrindingDepth(){
    m_gear->translate(0.5f, 0.0f, 0.0f); //TODO:remove
    m_gear->fillTriangles();
    std::vector<Triangle*>& triangles = *(m_gear->getTriangles());
-   ImplicitKDTree<Triangle> tree = ImplicitKDTree<Triangle>(triangles);
+   ImplicitKDTree tree = ImplicitKDTree(triangles);
    size_t resolutionXY = m_worm->getResolutionXY();
    size_t resolutionZ = m_worm->getResolutionZ();
 
@@ -101,7 +101,7 @@ void WormGearGrind::calculateGrindingDepth(){
 //    }
 //  return false;
 //}
-void inline WormGearGrind::computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree<Triangle>& tree, std::list<Triangle*>& hits) {
+void inline WormGearGrind::computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<Triangle*>& hits) {
   Circle circle = m_worm->computeCircle(z, xy);
   Circle transformedCircle = transformCircle(circle);
   //      if ((**it).vertices[2].x * (**it).vertices[2].x + (**it).vertices[2].y * (**it).vertices[2].y <= 0.25f) {

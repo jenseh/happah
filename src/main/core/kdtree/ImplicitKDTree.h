@@ -21,20 +21,19 @@ struct TreeNode {
   }
 };
 
-template <class T>
 class ImplicitKDTree
 {
 public:
-  ImplicitKDTree(std::vector<T*>& triangles);
+  ImplicitKDTree(std::vector<Triangle*>& triangles);
 
-  bool intersect(Circle& circle, std::list<T*>& hits);
+  bool intersect(Circle& circle, std::list<Triangle*>& hits);
 
 private:
-  bool intersectRec(Circle& circle, std::list<T*>& hits, BBox& circleBox, int depth, unsigned int kPos);
+  bool intersectRec(Circle& circle, std::list<Triangle*>& hits, BBox& circleBox, int depth, unsigned int kPos);
 
   BBox* m_bBox;
   BSphere* m_bSphere;
-  std::vector<T*>& m_triangles;
+  std::vector<Triangle*>& m_triangles;
   std::vector<TreeNode> m_tree; //TODO: Define a pessimistic start size, maybe log2(size/maxTriangles)
 };
 

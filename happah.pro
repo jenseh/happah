@@ -45,7 +45,10 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/primitives/Circle.h \
     src/main/core/primitives/Color.h \
     src/main/core/models/ZCircleCloud.h \
-    src/main/core/simulations/Kinematic.h
+    src/main/core/simulations/Kinematic.h \
+    src/main/core/kdtree/ImplicitKDTree.h \
+    src/main/core/kdtree/BBox.h \
+    src/main/core/kdtree/BSphere.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -80,16 +83,10 @@ SOURCES += src/main/main.cpp \
     src/main/core/models/CircleCloud.cpp \
     src/main/core/simulations/Simulation.cpp \
     src/main/core/models/ZCircleCloud.cpp \
-    src/main/core/simulations/Kinematic.cpp
+    src/main/core/simulations/Kinematic.cpp \
+    src/main/core/kdtree/ImplicitKDTree.cpp \
+    src/main/core/kdtree/BBox.cpp \
+    src/main/core/kdtree/BSphere.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include
-
-release: DESTDIR = build/release
-debug:   DESTDIR = build/debug
-
-OBJECTS_DIR = $$DESTDIR/.obj
-MOC_DIR = $$DESTDIR/.moc
-RCC_DIR = $$DESTDIR/.rrc
-UI_DIR = $$DESTDIR/.ui
-

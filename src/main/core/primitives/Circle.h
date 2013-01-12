@@ -2,7 +2,10 @@
 
 #include <iostream>
 #include <glm/glm.hpp>
+
 #include "Triangle.h"
+#include "../kdtree/BBox.h"
+#include "../kdtree/BSphere.h"
 
 struct Circle {
 	glm::vec3 m_center;
@@ -30,12 +33,11 @@ struct Circle {
 	//                - No: -> Return false
 	//            - No: -> Return false
 	//        - No: -> Return false
-	bool checkTriangleIntersection(Triangle& triangle) {
+	bool intersect(Triangle& triangle) {
 		glm::vec3& t_v0 = triangle.vertices[0];
 		glm::vec3& t_v1 = triangle.vertices[1];
 		glm::vec3& t_v2 = triangle.vertices[2];
-		glm::vec3 t_normal = glm::cross(t_v1 - t_v0,
-				t_v2 - t_v0);
+		glm::vec3 t_normal = glm::cross(t_v1 - t_v0, t_v2 - t_v0);
 
 //                // std::cout << "radius: " << m_radius << std::endl;
 //                // std::cout << "circle: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
@@ -387,5 +389,19 @@ struct Circle {
 		} else {
 			return false;
 		}
+	}
+
+
+	// Required for kd-Tree
+	BSphere computeBoundingSphere() {
+	  return BSphere(m_center, m_radius);
+	}
+	// Note that the conversion here regards the circle as a sphere.
+	// Further optimization might be possible for circles.
+	BBox computeBoundingBox() {
+	  glm::vec3 radiusV = glm::vec3(m_radius, m_radius, m_radius);
+	  glm::vec3 min = m_center - radiusV;
+	  glm::vec3 max = m_center + radiusV;
+	  return BBox(min, max);
 	}
 };

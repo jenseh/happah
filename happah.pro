@@ -26,7 +26,6 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/geometries/NonDrawable.h \
     src/main/core/models/TriangleMesh.h \
     src/main/gui/gl/DrawManager.h \
-    src/main/gui/gl/DrawManagerItem.h \
     src/main/core/kdtree/TriangleKDTreeNode.h \
     src/main/core/kdtree/TriangleKDTree.h \
     src/main/core/kdtree/TriangleBox.h \
@@ -68,7 +67,6 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/NonDrawable.cpp \
     src/main/core/models/TriangleMesh.cpp \
     src/main/gui/gl/DrawManager.cpp \
-    src/main/gui/gl/DrawManagerItem.cpp \
     src/main/core/kdtree/TriangleKDTree.cpp \
     src/main/core/simulations/DiscGearGrind.cpp \
     src/main/core/geometries/Disc.cpp \
@@ -80,6 +78,7 @@ SOURCES += src/main/main.cpp \
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include
+QMAKE_CXXFLAGS += -DGL_GLEXT_PROTOTYPES
 
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug

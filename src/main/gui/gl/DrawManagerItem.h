@@ -9,15 +9,14 @@ class DrawManagerItem {
 public:
 	DrawManagerItem(Drawable* drawable, int offset);
 
-	void draw(QGLBuffer* buffer, QGLShaderProgram* shader,
+    void draw(QGLBuffer* vertexBuffer, QGLBuffer* colorBuffer, QGLShaderProgram* shader,
 			QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
 			QVector3D* cameraPosition);
 	Drawable* getDrawable();
 	int getOffset();
 private:
 	Drawable* drawable_;
-	int offset_;
-	QGLBuffer colorBuffer_;
+    int offset_;
 };
 
 #endif // DRAWMANAGERITEM_H

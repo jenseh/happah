@@ -6,7 +6,10 @@ DrawManager::DrawManager() {
 	glEnable (GL_DEPTH_TEST);
 
 	vertexBuffer_ = new QGLBuffer();
-	curBufferOffset = 0;
+    colorBuffer_ = new QGLBuffer();
+    curVertexBufferOffset = 0;
+    curColorBufferOffset = 0;
+
 }
 
 bool DrawManager::initShaderPrograms() {
@@ -48,7 +51,7 @@ bool DrawManager::initShaderPrograms() {
 	return result;
 }
 
-int DrawManager::createBuffer() {
+int DrawManager::createVertexBuffer() {
 	if (!vertexBuffer_->create()) {
 		std::cerr <<  "Error: Vertex Buffer could not be created!" << std::endl;
 		qWarning() << "Error: Vertex Buffer could not be created!";
@@ -69,7 +72,7 @@ int DrawManager::createBuffer() {
 
 	if (itemMap_.size() > 0) {
 		// Allocate the buffer size that is required for all drawables in itemMap
-		vertexBuffer_->allocate(curBufferOffset);
+        vertexBuffer_->allocate(curVertexBufferOffset);
 
 		std::map<int, DrawManagerItem*>::const_iterator iter;
 		// Write each drawables data to its offsetted position
@@ -81,22 +84,64 @@ int DrawManager::createBuffer() {
 			vertexBuffer_->write(offset, &(vertexData->at(0)), vertexByteSize);
 		}
 	}
-
 	return 1;
+}
+
+int DrawManager::createColorBuffer() {
+    if (!colorBuffer_->create()) {
+        std::cerr <<  "Error: Color Buffer could not be created!" << std::endl;
+        qWarning() << "Error: Color Buffer could not be created!";
+        return 0;
+    }
+    colorBuffer_->setUsagePattern(QGLBuffer::StaticDraw);
+
+    if (!colorBuffer_->isCreated()) {
+        std::cerr <<  "Error: Color Buffer does not exist yet!" << std::endl;
+        qWarning() << "Error: Color Buffer does not exist yet!";
+        return 0;
+    }
+    if (!colorBuffer_->bind()) {
+        std::cerr <<  "Error: Could not bind Color buffer!" << std::endl;
+        qWarning() << "Error: Could not bind Color buffer!";
+        return 0;
+    }
+    if (itemMap_.size() > 0) {
+        // Allocate the buffer size that is required for all drawables in itemMap
+        colorBuffer_->allocate(curColorBufferOffset);
+
+        std::map<int, DrawManagerItem*>::const_iterator iter;
+        // Write each drawables data to its offsetted position
+        for (iter = itemMap_.begin(); iter != itemMap_.end(); ++iter) {
+            std::vector < Color > *colorData = iter->second->getDrawable()->getColorData();
+            if( colorData->size() != 0){ // If object has color
+                int colorByteSize = colorData->size() * sizeof(Color);
+                int offset = iter->second->getOffset();
+
+                colorBuffer_->write(offset, &(colorData->at(0)), colorByteSize);
+            }
+        }
+    }
+    return 1;
 }
 
 // Note: as of now this method can only be called before createBuffer!
 void DrawManager::addDrawable(Drawable* drawable) {
 	// Place drawable in buffer and store the offset
-	int offset = curBufferOffset;
+    int vertexOffset = curVertexBufferOffset;
 	std::vector < glm::vec4 > *vertexData = drawable->getVertexData();
 	int vertexByteSize = vertexData->size() * sizeof(vertexData->at(0));
-	curBufferOffset += vertexByteSize;
+    curVertexBufferOffset += vertexByteSize;
+
+    int colorOffset = curColorBufferOffset;
+    std::vector < Color>* colorData = drawable->getColorData();
+    int colorByteSize = colorData->size() * sizeof(Color);
+    curColorBufferOffset += colorByteSize;
 
 	// Create an entry in the map for the new drawable item
-	DrawManagerItem* item = new DrawManagerItem(drawable, offset);
+    DrawManagerItem* item = new DrawManagerItem(drawable, vertexOffset + colorOffset);
 	itemMap_[drawable->getObjectId()] = item;
 }
+
 
 void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
 		QVector3D* cameraPosition) {
@@ -107,7 +152,7 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
 	for (iter = itemMap_.begin(); iter != itemMap_.end(); iter++) {
 
 		// Load matrices and draw object
-		iter->second->draw(vertexBuffer_, shader_, projectionMatrix, viewMatrix,
+        iter->second->draw(vertexBuffer_, colorBuffer_, shader_, projectionMatrix, viewMatrix,
 				cameraPosition);
 	}
 }

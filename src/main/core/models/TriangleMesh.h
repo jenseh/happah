@@ -3,12 +3,13 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+
 #include "../primitives/Triangle.h"
 #include "Drawable.h"
 #include "../../gui/gl/DrawManager.h"
 #include "../primitives/Ray.h"
-#include "RayCloud.h"
 #include "../primitives/Color.h"
+#include "RayCloud.h"
 
 
 class TriangleMesh : public Drawable

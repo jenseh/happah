@@ -19,16 +19,16 @@ using namespace std;
 
 class Disc: public NonDrawable {
 public:
-    Disc(float radius = 1.0f);
+    Disc(hpreal radius = 1.0f);
 
     ~Disc();
-    float getRadius();
+    hpreal getRadius();
     glm::vec3 getCenter();
     QuadMesh* toQuadMesh();
 private:
-    float radius_;// Radius der Scheibe ( y-achse und z-achse )
-    float length_;// Länge/Breite der Scheibe ( x-achse )
-    float module_; // Modul des höhenprofils
+    hpreal radius_;// Radius der Scheibe ( y-achse und z-achse )
+    hpreal length_;// Länge/Breite der Scheibe ( x-achse )
+    hpreal module_; // Modul des höhenprofils
     std::vector<glm::vec2> heightProfile_;
     StandardProfile* standardProfile;
     std::vector<glm::vec4> vertexData_;

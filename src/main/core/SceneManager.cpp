@@ -19,7 +19,7 @@ SceneManager::SceneManager() {
     disc1->setName("Disc 1");
 
     // Transform the original geometry for the simulation
-//    gear1->translate(-1.5f, 0.0f, 0.0f);
+//    gear1->translate(-0.1f, 0.0f, 0.0f);
 //    gear1->rotate(-90.0f, 0.0f, 1.0f, 0.0f);
 //    gear2->translate(0.0f, 0.0f, 0.5f);
 
@@ -29,7 +29,7 @@ SceneManager::SceneManager() {
     gear1_ = gear1->toTriangleMesh();
 //    gear2_ = gear2->toQuadMesh();
     rack1_ = rack1->toQuadMesh();
-    disc1_ = disc1->toQuadMesh();
+    disc1_ = disc1->toQuadMesh()->toTriangleMesh();
 
     // Transform the meshs for display
 //    grid_->rotate(-45.0f, 0.0f, 0.0f, 1.0f);
@@ -38,16 +38,16 @@ SceneManager::SceneManager() {
 //    grid_->rotate(-45.0f, 1.0f, 1.0f, 1.0f);
 //    gear2_->rotate(45.0f, 0.0f, 0.0f, 1.0f);
 
-//    DiscGearGrind myGrind(disc1, gear1);
-//    vector<Color> colors = myGrind.calculateGrindingDepth();
+    DiscGearGrind myGrind(disc1, gear1);
+    vector<Color> colors = myGrind.calculateGrindingDepth();
 //    std::cout<<colors.size()<<endl;
-//    for(size_t i = 0; i < colors.size(); i++){
-//        colors[i].red = 0;
-//        colors[i].blue = 0;
-//        colors[i].green = 1.0;
-//        colors[i].alpha = 1.0;
-//      }
-//    gear1_->setColorData(colors);
+    /*for(size_t i = 0; i < colors.size(); i++){
+        colors[i].red = 0;
+        colors[i].blue = 0;
+        colors[i].green = 1.0;
+        colors[i].alpha = 1.0;
+    }*/
+    gear1_->setColorData(colors);
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
@@ -55,64 +55,36 @@ SceneManager::SceneManager() {
 //    drawables_->push_back(sphere_);
     drawables_->push_back(gear1_);
 //    drawables_->push_back(gear2_);
-//    drawables_->push_back(rack1_);
-//    drawables_->push_back(disc1_);
+    //drawables_->push_back(rack1_);
+    drawables_->push_back(disc1_);
 
     // Run a simulation here for testing purposes
 //    WormGearGrind* sim = new WormGearGrind(*gear1, *gear2);
 //    sim->runSimulation();
 
     // Test cases
-//    int maxCount = 0;
-//    Triangle triangle = Triangle(glm::vec3(0.0f, 1.0f, 0.0f),
-//                                 glm::vec3(-1.0f, 0.0f, 0.0f),
-//                                 glm::vec3(1.0f, 0.0f, 0.0f));
-//    {
-//      std::cout << "Running ZCircle benchmark:" << std::endl;
-//      ZCircle circle = ZCircle(0.5f);
-//      Triangle transformedTriangle = WormGearGrind(*gear1, *gear2).transformTriangle(triangle);
-////      std::cout << "Transformation-A: " << triangle.vertices[0].x << ", " << triangle.vertices[0].y << ", " << triangle.vertices[0].z << " to " << transformedTriangle.vertices[0].x << ", " << transformedTriangle.vertices[0].y << ", " << transformedTriangle.vertices[0].z << std::endl;
-
-//      clock_t start, end;
-//      start = clock();
-//      bool result;
-//      for (int count = 0; count < maxCount; count++) {
-//        result = circle.checkTriangleIntersection(transformedTriangle);
-//      }
-//      end = clock();
-//      double totalTime = (double)(end-start)/CLOCKS_PER_SEC;
-//      std::cout << "Result: " << result << std::endl;
-//      std::cout << "Time: " << totalTime/maxCount << ", total: " << totalTime << " seconds." << std::endl;
-//    }
-
-
-
+//    int maxCount = 1;
+//    Triangle triangle = Triangle(glm::vec3(-0.154736f, -0.886598f, 0.05f),
+//                                 glm::vec3(-0.161695f,  -0.885356f, 0.075f),
+//                                 glm::vec3(-0.154736f, -0.886598f, 0.075f));
 
 //    {
 //      std::cout << "Running Circle benchmark:" << std::endl;
-//      Circle circle = Circle(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.5f);
-//      Triangle transformedTriangle = WormGearGrind(*gear1, *gear2).transformTriangle(triangle);
+//      Circle circle = Circle(glm::vec3(-5.0f, 0.0f, 0.05f), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
+////      Triangle transformedTriangle = WormGearGrind(*gear1, *gear2).transformTriangle(triangle);
 ////      std::cout << "Transformation-A: " << triangle.vertices[0].x << ", " << triangle.vertices[0].y << ", " << triangle.vertices[0].z << " to " << transformedTriangle.vertices[0].x << ", " << transformedTriangle.vertices[0].y << ", " << transformedTriangle.vertices[0].z << std::endl;
 
 //      clock_t start, end;
 //      start = clock();
 //      bool result;
 //      for (int count = 0; count < maxCount; count++) {
-//        result = circle.checkTriangleIntersection(transformedTriangle);
+//        result = circle.checkTriangleIntersection(triangle);
 //      }
 //      end = clock();
 //      double totalTime = (double)(end-start)/CLOCKS_PER_SEC;
 //      std::cout << "Result: " << result << std::endl;
 //      std::cout << "Time: " << totalTime/maxCount << ", total: " << totalTime << " seconds." << std::endl;
 //    }
-
-
-
-//    glm::vec2 point = glm::vec2(2.0f, 2.0f);
-//    glm::vec2 direction = glm::vec2(1.0f, 1.0f);
-//    glm::vec2 closestPoint = ZCircle(0.5f).closestPointToCenterOnLine(point, direction);
-
-//    std::cout << closestPoint.x << ", " << closestPoint.y << std::endl;
 }
 
 SceneManager::~SceneManager() {

@@ -12,7 +12,6 @@
 #include "simulations/WormGearGrind.h"
 #include "simulations/DiscGearGrind.h"
 #include "primitives/Circle.h"
-#include "primitives/ZCircle.h"
 
 // Qt includes are only for the timer
 #include <QGLShaderProgram>

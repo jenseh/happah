@@ -2,7 +2,10 @@
 
 #include <iostream>
 #include <glm/glm.hpp>
+
 #include "Triangle.h"
+#include "../kdtree/BBox.h"
+#include "../kdtree/BSphere.h"
 
 struct Circle {
 	glm::vec3 m_center;
@@ -30,9 +33,19 @@ struct Circle {
 	//                - No: -> Return false
 	//            - No: -> Return false
 	//        - No: -> Return false
-	bool checkTriangleIntersection(Triangle& triangle) {
-		glm::vec3 t_normal = glm::cross(triangle.vertices[1] - triangle.vertices[0],
-				triangle.vertices[2] - triangle.vertices[0]);
+	bool intersect(Triangle& triangle) {
+		glm::vec3& t_v0 = triangle.vertices[0];
+		glm::vec3& t_v1 = triangle.vertices[1];
+		glm::vec3& t_v2 = triangle.vertices[2];
+		glm::vec3 t_normal = glm::cross(t_v1 - t_v0, t_v2 - t_v0);
+
+//                // std::cout << "radius: " << m_radius << std::endl;
+//                // std::cout << "circle: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+
+//                // std::cout << "triangleA: " << t_v0.x << ", " << t_v0.y << ", " << t_v0.z << std::endl;
+//                // std::cout << "triangleB: " << t_v1.x << ", " << t_v1.y << ", " << t_v1.z << std::endl;
+//                // std::cout << "triangleC: " << t_v2.x << ", " << t_v2.y << ", " << t_v2.z << std::endl;
+
 
 		// Start with a plane-plane intersection
 
@@ -44,7 +57,7 @@ struct Circle {
 			 // std::cout << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 			return false;
 		}
-//		 std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
+//		 // std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
 		// std::cout << "m_normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 
 		//1: Check collinearity of normal vectors
@@ -53,24 +66,24 @@ struct Circle {
 
 		if (collinear) {
 			//2: Check whether planes are identical or parallel
-			bool identical = floatEquals(glm::dot(m_center - triangle.vertices[2], t_normal), 0.0f);
+			bool identical = floatEquals(glm::dot(m_center - t_v2, t_normal), 0.0f);
 			// std::cout << "Info: Identical: " << identical << std::endl;
 
 			//2a: If planes are parallel, return false
 			if (!identical) {
-				// std::cout << "Exiting due to: Collinear | Planes are parallel!" << std::endl;
+				// std::cout << "Error: Collinear | Planes are parallel!" << std::endl;
 				return false;
 			}
 
 			//2b: If planes are identical, compute planar intersection of triangle and circle
 			else {
 				// Compute the closest points on triangle sides to the circle center
-				glm::vec3 closestPoint01 = glm::closestPointOnLine(m_center, triangle.vertices[0],
-						triangle.vertices[1]);
-				glm::vec3 closestPoint12 = glm::closestPointOnLine(m_center, triangle.vertices[1],
-						triangle.vertices[2]);
-				glm::vec3 closestPoint02 = glm::closestPointOnLine(m_center, triangle.vertices[0],
-						triangle.vertices[2]);
+				glm::vec3 closestPoint01 = glm::closestPointOnLine(m_center, t_v0,
+						t_v1);
+				glm::vec3 closestPoint12 = glm::closestPointOnLine(m_center, t_v1,
+						t_v2);
+				glm::vec3 closestPoint02 = glm::closestPointOnLine(m_center, t_v0,
+						t_v2);
 
 				// Compute the respective distances
 				float distC01 = glm::distance(m_center, closestPoint01);
@@ -84,15 +97,15 @@ struct Circle {
 				if (triangleInside) {
 					// ..then the triangle is "inside" the circle
 				    // std::cout << distC01 << ", " << distC12 << ", " << distC02 << ", " << m_radius << std::endl;
-				    // std::cout << "Exiting due to: Collinear | Triangle inside circle!" << std::endl;
+				    // std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
-						// std::cout << "Exiting due to: Collinear | Circle inside triangle!" << std::endl;
+						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						return true;
 					} else {
-						// std::cout << "Exiting due to: Collinear | Circle not inside triangle!" << std::endl;
+						// std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
 						return false;
 					}
 				}
@@ -101,7 +114,7 @@ struct Circle {
 			//2: Planes must collide in a common line
 			glm::vec3 linePoint;
 			glm::vec3 lineDirection;
-			intersectPlanes(t_normal, triangle.vertices[0], m_normal, m_center, linePoint, lineDirection);
+			intersectPlanes(t_normal, t_v0, m_normal, m_center, linePoint, lineDirection);
 
 			// Check whether this line hits our sphere
 			// Check whether distance is shorter than the radius
@@ -124,16 +137,16 @@ struct Circle {
 				    float distanceTB = computeDistanceOnLine(triangleIntersectionB, linePoint, lineDirection);
 
 				    if (overlapSegments(distanceCA, distanceCB, distanceTA, distanceTB)) {
-					// std::cout << "Exiting due to: Not Collinear | Overlapping!" << std::endl;
+					// std::cout << "Success: Overlapping!" << std::endl;
 					return true;
 				    }
 				    else {
-					// std::cout << "Exiting due to: Not Collinear | No overlap!" << std::endl;
+					// std::cout << "Error: No overlap!" << std::endl;
 					return false;
 				    }
 				} else {
-					// std::cout << "Exiting due to: Not Collinear | No intersection with triangle!" << std::endl;
-					return true;
+					// std::cout << "Error: No intersection with triangle!" << std::endl;
+					return false;
 				}
 
 			} else {
@@ -141,12 +154,12 @@ struct Circle {
 				// std::cout << "linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
 				// std::cout << "lineDirection: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
 
-				// std::cout << "Not Collinear | Exiting due to: Line doesn't hit circle!" << m_radius << std::endl;
+				// std::cout << "Error: Not Collinear | Exiting due to: Line doesn't hit circle!" << m_radius << std::endl;
 				return false;
 			}
 		}
 
-		 // std::cout << "Exiting due to: Nothing happened!" << std::endl;
+		 // std::cout << "Error: Nothing happened!" << std::endl;
 		return false;
 	}
 
@@ -209,6 +222,7 @@ struct Circle {
 
 	// This method checks whether a (planar) line hits a triangle.
 	// If so, the intersection points are stored in the parameters.
+	// Note that the planes are not necessarily axis aligned.
 	bool inline intersectPlanarLineTriangle(glm::vec3& linePoint, glm::vec3& lineDirection, Triangle& triangle,
 			glm::vec3& intersectionA, glm::vec3& intersectionB) {
 		glm::vec3 a = linePoint;
@@ -375,5 +389,19 @@ struct Circle {
 		} else {
 			return false;
 		}
+	}
+
+
+	// Required for kd-Tree
+	BSphere computeBoundingSphere() {
+	  return BSphere(m_center, m_radius);
+	}
+	// Note that the conversion here regards the circle as a sphere.
+	// Further optimization might be possible for circles.
+	BBox computeBoundingBox() {
+	  glm::vec3 radiusV = glm::vec3(m_radius, m_radius, m_radius);
+	  glm::vec3 min = m_center - radiusV;
+	  glm::vec3 max = m_center + radiusV;
+	  return BBox(min, max);
 	}
 };

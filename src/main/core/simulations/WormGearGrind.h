@@ -4,6 +4,8 @@
 #include "../geometries/SpurGear.h"
 #include "../primitives/Circle.h"
 #include "../primitives/Triangle.h"
+#include "../kdtree/ImplicitKDTree.h"
+
 
 class WormGearGrind
 {
@@ -17,18 +19,20 @@ public:
 private:
   glm::vec3 inline transformVector(glm::vec3& vector, QMatrix4x4& transformation);
   glm::vec3 inline transformPoint(glm::vec3& point, QMatrix4x4& transformation);
-  bool inline checkIntersection(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::vector<Triangle*>& triangles);
-  void inline computeIntersectingTriangles(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::vector<Triangle*>& triangles, std::list<Triangle*>& hits);
-  bool inline reduceIntersectingTriangles(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::list<Triangle*>& hits);
-  bool inline reduceNonIntersectingTriangles(int& xy, size_t& resolutionXY, size_t& z, std::vector<Circle*>& circles, std::list<Triangle*>& hits);
+  bool inline checkIntersection(int& xy, size_t& z, std::vector<Triangle*>& triangles);
+  void inline computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<Triangle*>& hits);
+  bool inline reduceIntersectingTriangles(int& xy, size_t& z, std::list<Triangle*>& hits);
+  bool inline reduceSubdivideTriangles(int& xy, size_t& z, std::list<Triangle*>& hits);
+
+  Triangle translateTriangle(Triangle& triangle, glm::vec3& vector);
 
 public:
   Triangle transformTriangle(Triangle& triangle);
   Circle transformCircle(Circle& circle);
 
 private:
-  SpurGear& m_worm;
-  SpurGear& m_gear;
+  ZCircleCloud* m_worm;
+  TriangleMesh* m_gear;
 
   const static float MAX_DIST = 1.0f;
 };

@@ -9,7 +9,7 @@
 
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Disc::Disc(float radius) {
+Disc::Disc(hpreal radius) {
     radius_ = radius; // doppelt so groß wie ein zahn
     module_ = radius_/2.0;
     length_ = module_ * M_PI;
@@ -20,7 +20,7 @@ Disc::~Disc() {
     delete standardProfile;
 }
 
-float Disc::getRadius() {
+hpreal Disc::getRadius() {
     return radius_;
 }
 
@@ -28,8 +28,8 @@ float Disc::getRadius() {
 void Disc::createHeightProfile() {
     heightProfile_ = std::vector<glm::vec2>();
     heightProfile_.resize(SEGMENT_COUNT);
-    double x = length_/2.0;
-    double deltaX = length_/(double)SEGMENT_COUNT;
+    hpreal x = length_/2.0;
+    hpreal deltaX = length_/(double)SEGMENT_COUNT;
     for( int i = 0; i < SEGMENT_COUNT; i++){
         heightProfile_[i].x = x;
         heightProfile_[i].y = standardProfile->getHeight(x) + module_;
@@ -49,12 +49,12 @@ void Disc::createVertexData() {
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
     for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
-        double alpha1 = i * dalpha;
-        double sinAlpha1 = sin(alpha1);
-        double cosAlpha1 = cos(alpha1);
-        double alpha2 = alpha1 + dalpha;
-        double sinAlpha2 = sin(alpha2);
-        double cosAlpha2 = cos(alpha2);
+        hpreal alpha1 = i * dalpha;
+        hpreal sinAlpha1 = sin(alpha1);
+        hpreal cosAlpha1 = cos(alpha1);
+        hpreal alpha2 = alpha1 + dalpha;
+        hpreal sinAlpha2 = sin(alpha2);
+        hpreal cosAlpha2 = cos(alpha2);
         for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size()-1;
                 segmentNum++) {
 

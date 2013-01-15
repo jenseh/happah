@@ -24,6 +24,9 @@
 /.settings
 *.swp
 /happah.pro.user
+*.user
+*.Debug
+*.Release
 
 #Qt mocs
 moc_*

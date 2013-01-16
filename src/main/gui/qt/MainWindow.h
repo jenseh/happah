@@ -7,8 +7,9 @@
 #include <QListWidget>
 
 #include "ToolSelector.h"
-#include "ComponentContainer.h"
+#include "ComponentList.h"
 #include "EditorScene.h"
+#include "EditorSceneManager.h"
 #include "../../core/SceneManager.h"
 
 class MainWindow: public QMainWindow {
@@ -22,7 +23,7 @@ public:
 	virtual ~MainWindow();
 	void keyPressEvent(QKeyEvent *event);
 
-	ComponentContainer* getComponentContainer();
+	ComponentList* getComponentList();
 
 private:
 	void createTools();
@@ -30,9 +31,10 @@ private:
 	//void createDockWindows();
 
 	QMenu* viewMenu_;
-	ComponentContainer* componentContainer_;
+	ComponentList* m_componentList;
 	ToolSelector* toolSelector_;
 	EditorScene* scene_;
+	EditorSceneManager* m_editorSceneManager;
     SceneManager* sceneManager;
     QTabWidget *m_tabs;
 };

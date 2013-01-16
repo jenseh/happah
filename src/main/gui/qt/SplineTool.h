@@ -2,7 +2,7 @@
 #define SPLINETOOL_H
 
 #include "Tool.h"
-#include "ToolSelector.h"
+//#include "ToolSelector.h"
 
 class SplineTool: public Tool {
 Q_OBJECT

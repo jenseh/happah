@@ -10,7 +10,6 @@
 #include "SplineTool.h"
 #include "BSplineTool.h"
 #include "../gl/GlViewport3D.h"
-#include "Component.h"
 
 MainWindow::MainWindow() {
 	resize(DEFAULT_WIDTH + 470, DEFAULT_HEIGHT + 70);
@@ -55,8 +54,19 @@ MainWindow::MainWindow() {
 	createTools();
 	createContainer();
 
-	connect(toolSelector_, SIGNAL(emitComponent(Component*)),
-			componentContainer_, SLOT(addComponent(Component*)));
+	m_editorSceneManager = new EditorSceneManager( scene_, m_componentList );
+
+	connect( scene_, SIGNAL(rightClickedAt( QPointF )),
+	        toolSelector_, SLOT(rightClickAt( QPointF )) );
+	connect( scene_, SIGNAL(leftClickedAt( QPointF )),
+	        toolSelector_, SLOT(leftClickAt( QPointF )) );
+	connect(toolSelector_, SIGNAL(emitDrawable( Drawable2D* )),
+	        m_editorSceneManager, SLOT(addDrawable( Drawable2D* )) );
+	connect(toolSelector_, SIGNAL(changed()), scene_, SLOT(update()));
+	connect(m_componentList, SIGNAL(deleteCurrent()),
+	        m_editorSceneManager, SLOT(deleteCurrentDrawable()) );
+	connect(m_componentList, SIGNAL(deleteCurrent()),
+	        toolSelector_, SLOT(finalise()) );
 
 
 //createDockWindows();
@@ -93,8 +103,19 @@ void MainWindow::createContainer() {
 
 // List of objects in scene
 	QDockWidget* dock = new QDockWidget(tr("Objects"), this);
-	componentContainer_ = new ComponentContainer(scene_, dock);
-	dock->setWidget(componentContainer_);
+	QWidget* baseWidget = new QWidget( dock );
+	dock->setWidget(baseWidget);
+	
+	QVBoxLayout* vbox = new QVBoxLayout( );
+	baseWidget->setLayout(vbox);
+
+	m_componentList = new ComponentList( );
+	vbox->addWidget(m_componentList);
+	
+	QPushButton* btn = new QPushButton( "Delete" );
+	connect( btn, SIGNAL(clicked()), m_componentList, SLOT(deleteButtonPressed()) );
+	vbox->addWidget(btn);
+
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	addDockWidget(Qt::RightDockWidgetArea, dock);
 	viewMenu_->addAction(dock->toggleViewAction());
@@ -111,6 +132,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     QMainWindow::keyPressEvent(event);
 }
 
-ComponentContainer* MainWindow::getComponentContainer() {
-	return componentContainer_;
+ComponentList* MainWindow::getComponentList() {
+	return m_componentList;
 }

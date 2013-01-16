@@ -15,3 +15,12 @@ QPushButton* Tool::getToolButton() {
 QWidget* Tool::getToolSettings() {
 	return toolSettings;
 }
+
+void Tool::finalise() {
+}
+
+void Tool::leftClickAt( QPointF point ) {
+}
+
+void Tool::rightClickAt( QPointF point ) {
+}

@@ -55,15 +55,43 @@ void ToolSelector::addTool(Tool* tool) {
 void ToolSelector::toolSelected(int toolID) {
 	settingsWidgetStack_->setCurrentIndex(toolID + 1);
 
-	toolList_[currToolID_]->disconnect(SIGNAL(emitComponent(Component*)));
-	connect(toolList_[toolID], SIGNAL(emitComponent(Component*)), this,
-			SLOT(newComponent(Component*)));
+	toolList_[currToolID_]->finalise();
+	toolList_[currToolID_]->disconnect(SIGNAL(emitComponent(Drawable2D*)));
+	toolList_[currToolID_]->disconnect( SIGNAL(changed()) );
 	currToolID_ = toolID;
+	connect(toolList_[toolID], SIGNAL(emitComponent(Drawable2D*)), this,
+			SLOT(newComponent(Drawable2D*)));
+	connect(toolList_[toolID], SIGNAL(changed()), this, SLOT(update()) );
+//	toolList_[currToolID_]->disconnect(SIGNAL(emitComponent(Component*)));
+//	connect(toolList_[toolID], SIGNAL(emitComponent(Component*)), this,
+//			SLOT(newComponent(Component*)));
 
 //	QTextStream out(stdout);
 //	out << "Button " << toolID << endl;
 }
 
-void ToolSelector::newComponent(Component* component) {
-	emit emitComponent(component);
+//void ToolSelector::newComponent(Component* component) {
+//	std::string name = component->text().toStdString();
+//	emit emitDrawable( drawable );
+//}
+
+void ToolSelector::newComponent(Drawable2D* drawable) {
+	emit emitDrawable( drawable );
+}
+
+void ToolSelector::update() {
+	emit changed();
+}
+
+void ToolSelector::finalise() {
+	toolList_[currToolID_]->finalise();
+}
+
+
+void ToolSelector::leftClickAt( QPointF point ) {
+	toolList_[currToolID_]->leftClickAt( point );
+}
+
+void ToolSelector::rightClickAt( QPointF point ) {
+	toolList_[currToolID_]->rightClickAt( point );
 }

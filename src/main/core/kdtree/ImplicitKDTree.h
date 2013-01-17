@@ -26,10 +26,10 @@ class ImplicitKDTree
 public:
   ImplicitKDTree(std::vector<Triangle*>& triangles);
 
-  bool intersect(Circle& circle, std::list<Triangle*>& hits);
+  template <typename Intersector> bool intersectAll(Intersector& intersector, std::list<CircleHitResult>& hitResults);
 
 private:
-  bool intersectRec(Circle& circle, std::list<Triangle*>& hits, BBox& circleBox, int depth, unsigned int kPos);
+  template <typename Intersector> bool intersectAllRec(Intersector& intersector, std::list<CircleHitResult>& hitResults, BBox& circleBox, int depth, unsigned int kPos);
 
   BBox* m_bBox;
   BSphere* m_bSphere;

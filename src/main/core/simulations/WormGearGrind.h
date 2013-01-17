@@ -19,10 +19,9 @@ public:
 private:
   glm::vec3 inline transformVector(glm::vec3& vector, QMatrix4x4& transformation);
   glm::vec3 inline transformPoint(glm::vec3& point, QMatrix4x4& transformation);
-  bool inline checkIntersection(int& xy, size_t& z, std::vector<Triangle*>& triangles);
-  void inline computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<Triangle*>& hits);
-  bool inline reduceIntersectingTriangles(int& xy, size_t& z, std::list<Triangle*>& hits);
-  bool inline reduceSubdivideTriangles(int& xy, size_t& z, std::list<Triangle*>& hits);
+  void inline computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<CircleHitResult>& hitResults);
+  bool inline reduceIntersectingTriangles(int& xy, size_t& z, std::list<CircleHitResult>& hitResults);
+  bool inline reduceSubdivideTriangles(int& xy, size_t& z, std::list<CircleHitResult>& hitResults);
 
   Triangle translateTriangle(Triangle& triangle, glm::vec3& vector);
 

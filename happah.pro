@@ -48,7 +48,9 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/simulations/Kinematic.h \
     src/main/core/kdtree/ImplicitKDTree.h \
     src/main/core/kdtree/BBox.h \
-    src/main/core/kdtree/BSphere.h
+    src/main/core/kdtree/BSphere.h \
+    src/main/test/CircleTriangleIntersectionBenchmark.h \
+    src/main/test/WormGearGrindTest.cpp
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -86,7 +88,9 @@ SOURCES += src/main/main.cpp \
     src/main/core/simulations/Kinematic.cpp \
     src/main/core/kdtree/ImplicitKDTree.cpp \
     src/main/core/kdtree/BBox.cpp \
-    src/main/core/kdtree/BSphere.cpp
+    src/main/core/kdtree/BSphere.cpp \
+    src/main/test/CircleTriangleIntersectionBenchmark.cpp \
+    src/main/test/WormGearGrindTest.cpp
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include

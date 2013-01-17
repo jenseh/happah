@@ -23,7 +23,7 @@ using namespace std;
 
 class SpurGear : public NonDrawable {
 public:
-    SpurGear(hpreal radius = 1.0f, hpreal length = 0.2f, int toothCount = 10);
+    SpurGear(hpreal radius = 1.0f, hpreal length = 0.2f, int toothCount = 10, int segmentCount = 40, int zDetailLevel = 40);
     ~SpurGear();
 
     hpreal getRadius();
@@ -32,18 +32,19 @@ public:
     TriangleMesh* toTriangleMesh();
     CircleCloud* toCircleCloud();
     ZCircleCloud* toZCircleCloud();
+//    ZCircleCloud* toZCircleCloudNEW();
 private:
-    hpreal radius_;
-    hpreal length_;
-    int toothCount_;
-    hpreal heightFactor_;
-    hpreal module_;
-    std::vector<glm::vec2> heightProfilePartition_;
-    std::vector<glm::vec2> heightProfile_;
-    StandardProfile* standardProfile;
+    hpreal m_radius;
+    hpreal m_length;
+    int m_toothCount;
+    int m_segmentCount;
+    int m_zDetailLevel;
+    hpreal m_heightFactor;
+    hpreal m_module;
+    std::vector<glm::vec2> m_heightProfilePartition;
+    std::vector<glm::vec2> m_heightProfile;
+    StandardProfile* m_standardProfile;
 
-    const static int SEGMENT_COUNT = 40; //maximum: 4500
-    const static int Z_DETAIL_LEVEL = 40;
     const static float INNER_RADIUS_FACTOR = 0.5f;
 
     void createSinePartition();

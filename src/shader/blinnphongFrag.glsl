@@ -48,5 +48,5 @@ void main( void)
     }
 //    gl_FragColor = vec4(normalize(vNormal), 1.0f);
     */
-      gl_FragColor = vColor;
+      gl_FragColor = gl_Color;
 }

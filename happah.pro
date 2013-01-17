@@ -3,15 +3,20 @@ TARGET = happah
 QT += core \
     gui \
     opengl
-HEADERS += src/main/gui/qt/BSplineComponent.h \
+HEADERS += \
     src/main/gui/qt/BSplineTool.h \
-    src/main/gui/qt/Component.h \
-    src/main/gui/qt/ComponentContainer.h \
+	src/main/gui/qt/ComponentList.h \
+    src/main/gui/qt/EditorScene.h \
+	src/main/gui/qt/EditorSceneItem.h \
+	src/main/gui/qt/EditorSceneManager.h \
+	src/main/gui/qt/Painter2DQt.h \
+	src/main/core/Painter2D.h \
+	src/main/core/Drawable2D.h \
+	src/main/core/geometries/BSplineCurve.h \
     src/main/core/geometries/GeometryObject.h \
     src/main/core/geometries/SpurGear.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
-    src/main/gui/qt/EditorScene.h \
     src/main/Happah.h \
     src/main/HappahTypes.h \
     src/main/gui/qt/MainWindow.h \
@@ -27,7 +32,6 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/core/geometries/NonDrawable.h \
     src/main/core/models/TriangleMesh.h \
     src/main/gui/gl/DrawManager.h \
-    src/main/gui/gl/DrawManagerItem.h \
     src/main/core/kdtree/TriangleKDTreeNode.h \
     src/main/core/kdtree/TriangleKDTree.h \
     src/main/core/kdtree/TriangleBox.h \
@@ -52,15 +56,19 @@ HEADERS += src/main/gui/qt/BSplineComponent.h \
     src/main/test/CircleTriangleIntersectionBenchmark.h \
     src/main/test/WormGearGrindTest.cpp
 SOURCES += src/main/main.cpp \
-    src/main/gui/qt/BSplineComponent.cpp \
     src/main/gui/qt/BSplineTool.cpp \
-    src/main/gui/qt/Component.cpp \
-    src/main/gui/qt/ComponentContainer.cpp \
+	src/main/gui/qt/ComponentList.cpp \
+    src/main/gui/qt/EditorScene.cpp \
+	src/main/gui/qt/EditorSceneItem.cpp \
+	src/main/gui/qt/EditorSceneManager.cpp \
+	src/main/gui/qt/Painter2DQt.cpp \
+	src/main/core/Painter2D.cpp \
+	src/main/core/Drawable2D.cpp \
+	src/main/core/geometries/BSplineCurve.cpp \
     src/main/core/geometries/GeometryObject.cpp \
     src/main/core/geometries/SpurGear.cpp \
     src/main/core/geometries/Sphere.cpp \
     src/main/core/geometries/StandardProfile.cpp \
-    src/main/gui/qt/EditorScene.cpp \
     src/main/Happah.cpp \
     src/main/gui/qt/MainWindow.cpp \
     src/main/gui/qt/SplineTool.cpp \
@@ -75,7 +83,6 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/NonDrawable.cpp \
     src/main/core/models/TriangleMesh.cpp \
     src/main/gui/gl/DrawManager.cpp \
-    src/main/gui/gl/DrawManagerItem.cpp \
     src/main/core/kdtree/TriangleKDTree.cpp \
     src/main/core/simulations/DiscGearGrind.cpp \
     src/main/core/geometries/Disc.cpp \
@@ -94,6 +101,7 @@ SOURCES += src/main/main.cpp \
 FORMS += 
 RESOURCES += 
 INCLUDEPATH += /usr/include
+QMAKE_CXXFLAGS += -DGL_GLEXT_PROTOTYPES
 
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug

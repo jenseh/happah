@@ -13,6 +13,7 @@ DiscGearGrind::~DiscGearGrind() {
 }
 
 vector<Color> DiscGearGrind::calculateGrindingDepth(){
+
     TriangleMesh* discMesh = m_disc->toQuadMesh()->toTriangleMesh();
     RayCloud* rayCloud = m_gear->toQuadMesh()->toTriangleMesh()->toRayCloud(); //TODO: this is terribly inefficient
     std::vector<Ray*> gearMesh = *(rayCloud->getRays());

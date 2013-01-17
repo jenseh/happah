@@ -46,16 +46,15 @@ void GlViewport3D::initializeGL() {
 	for (unsigned int i = 0; i < drawables->size(); i++) {
 		Drawable* drawable = drawables->at(i);
 		drawManager_->addDrawable(drawable);
-	}
-
+    }
 	// Finalize vertex buffer
-	if (!drawManager_->createBuffer()) {
+    if (!drawManager_->createBuffer()) {
 	    return;
 	}
 
 	// Add each Drawable's label to the mainWindow (right panel)
 	for (unsigned int i = 0; i < drawables->size(); i++) {
-		mainWindow_->getComponentContainer()->addComponent(
+		mainWindow_->getComponentList()->addComponent(
 				drawables->at(i)->getName());
 		std::cout << drawables->at(i)->getName() << std::endl;
 	}

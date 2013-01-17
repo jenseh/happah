@@ -30,7 +30,7 @@ SceneManager::SceneManager() {
     gear1_ = gear1->toTriangleMesh();
 //    gear2_ = gear2->toQuadMesh();
     rack1_ = rack1->toQuadMesh();
-    disc1_ = disc1->toQuadMesh();
+    disc1_ = disc1->toQuadMesh()->toTriangleMesh();
 
     // Transform the meshs for display
 //    grid_->rotate(-45.0f, 0.0f, 0.0f, 1.0f);
@@ -39,16 +39,16 @@ SceneManager::SceneManager() {
 //    grid_->rotate(-45.0f, 1.0f, 1.0f, 1.0f);
 //    gear2_->rotate(45.0f, 0.0f, 0.0f, 1.0f);
 
-//    DiscGearGrind myGrind(disc1, gear1);
-//    vector<Color> colors = myGrind.calculateGrindingDepth();
+    DiscGearGrind myGrind(disc1, gear1);
+    vector<Color> colors = myGrind.calculateGrindingDepth();
 //    std::cout<<colors.size()<<endl;
-//    for(size_t i = 0; i < colors.size(); i++){
-//        colors[i].red = 0;
-//        colors[i].blue = 0;
-//        colors[i].green = 1.0;
-//        colors[i].alpha = 1.0;
-//      }
-//    gear1_->setColorData(colors);
+    /*for(size_t i = 0; i < colors.size(); i++){
+        colors[i].red = 0;
+        colors[i].blue = 0;
+        colors[i].green = 1.0;
+        colors[i].alpha = 1.0;
+    }*/
+    gear1_->setColorData(colors);
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
@@ -56,8 +56,8 @@ SceneManager::SceneManager() {
 //    drawables_->push_back(sphere_);
     drawables_->push_back(gear1_);
 //    drawables_->push_back(gear2_);
-//    drawables_->push_back(rack1_);
-//    drawables_->push_back(disc1_);
+    //drawables_->push_back(rack1_);
+    drawables_->push_back(disc1_);
 
     new WormGearGrindTest(gear1, gear2);
 }

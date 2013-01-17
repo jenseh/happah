@@ -30,7 +30,6 @@ glm::vec3& ZCircleCloud::getReferenceDir() {
 }
 
 Circle ZCircleCloud::computeCircle(int posZIdx, int radiusIdx) {
-  std::cout << "Radii: " << m_radii->size() << "PosZ: " << m_radii->size() << std::endl;
   return Circle(glm::vec3(0.0f, 0.0f,
                           m_posZ->at(posZIdx)),
                 glm::vec3(0.0f, 0.0f, 1.0f),

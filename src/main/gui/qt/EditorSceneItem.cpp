@@ -14,9 +14,13 @@ void EditorSceneItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o
 	m_drawable->draw( myPainter );
 }
 
-QRectF EditorSceneItem::boundingRect() const {
+QRectF EditorSceneItem::getBoundingRect() const {
 	glm::vec2 min = glm::vec2(0,0);
 	glm::vec2 max = glm::vec2(0,0);
 	m_drawable->getBounds( &min, &max );
 	return QRectF( QPointF( min.x, min.y ), QPointF( max.x, max.y) );
+}
+
+QRectF EditorSceneItem::boundingRect() const {
+	return getBoundingRect();
 }

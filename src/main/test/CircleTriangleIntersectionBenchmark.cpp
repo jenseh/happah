@@ -16,7 +16,7 @@ CircleTriangleIntersectionBenchmark::CircleTriangleIntersectionBenchmark() {
       clock_t start, end;
       start = clock();
       bool result;
-      CircleHitResult* hitResult;
+      CircleHitResult hitResult = CircleHitResult();
       for (int count = 0; count < maxCount; count++) {
         result = circle.intersect(triangle, hitResult);
       }

@@ -59,7 +59,7 @@ SceneManager::SceneManager() {
     //drawables_->push_back(rack1_);
     drawables_->push_back(disc1_);
 
-    new WormGearGrindTest(gear1, gear2);
+//    new WormGearGrindTest(gear1, gear2);
 }
 
 SceneManager::~SceneManager() {

@@ -13,6 +13,8 @@ private:
 public:
 	EditorSceneItem( Drawable2D* myDrawable );
 
+	QRectF getBoundingRect() const;
+	// Included for compatibility with other Qt version
 	QRectF boundingRect() const;
 
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

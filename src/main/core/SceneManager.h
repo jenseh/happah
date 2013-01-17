@@ -13,9 +13,6 @@
 #include "simulations/DiscGearGrind.h"
 #include "primitives/Circle.h"
 
-// Qt includes are only for the timer
-#include <QGLShaderProgram>
-
 using namespace std;
 
 class SceneManager {

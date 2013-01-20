@@ -25,8 +25,8 @@ public:
 private:
    vector<Drawable*>* drawables_;
 
-    QTimer *timer_;
-    const static int WAIT_TIME = 40;
+    // QTimer *timer_;
+    // const static int WAIT_TIME = 40;
 
    //Just for the beginning to have some objects
    Drawable* gear1_;

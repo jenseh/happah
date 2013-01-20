@@ -54,7 +54,8 @@ HEADERS += \
     src/main/core/kdtree/BBox.h \
     src/main/core/kdtree/BSphere.h \
     src/main/test/CircleTriangleIntersectionBenchmark.h \
-    src/main/test/WormGearGrindTest.cpp
+    src/main/test/WormGearGrindTest.cpp \
+    src/main/stdafx.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
     src/main/gui/qt/ComponentList.cpp \
@@ -97,10 +98,11 @@ SOURCES += src/main/main.cpp \
     src/main/core/kdtree/BBox.cpp \
     src/main/core/kdtree/BSphere.cpp \
     src/main/test/CircleTriangleIntersectionBenchmark.cpp \
-    src/main/test/WormGearGrindTest.cpp
+    src/main/test/WormGearGrindTest.cpp \
+    src/main/glew.c
 FORMS += 
 RESOURCES += 
-INCLUDEPATH += /usr/include
+INCLUDEPATH += ../include
 QMAKE_CXXFLAGS += -DGL_GLEXT_PROTOTYPES
 
 release: DESTDIR = build/release

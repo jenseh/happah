@@ -1,7 +1,7 @@
 #ifndef DRAWMANAGER_H
 #define DRAWMANAGER_H
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include "../../core/models/Drawable.h"
 
 using namespace std;

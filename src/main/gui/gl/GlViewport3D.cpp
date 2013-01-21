@@ -1,4 +1,5 @@
-#include "../../stdafx.h"
+#include <GL/glew.h>
+
 #include "GlViewport3D.h"
 
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,

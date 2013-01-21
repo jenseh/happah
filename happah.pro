@@ -107,7 +107,6 @@ win32 {
 
 unix {
 	LIBS += -lGLEW
-	QMAKE_CXXFLAGS += -DGLEW_STATIC
 	INCLUDEPATH += /usr/include
 }
 

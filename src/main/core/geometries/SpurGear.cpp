@@ -1,471 +1,530 @@
 #include "SpurGear.h"
+#include <exception> //TODO: delete this or put it in header!
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-SpurGear::SpurGear(hpreal radius, hpreal length, int toothCount, int segmentCount, int zDetailLevel) {
-    m_radius = radius;
-    m_length = length;
-    m_toothCount = toothCount;
-    m_segmentCount = segmentCount;
-    m_zDetailLevel = zDetailLevel;
-    m_module = m_radius * 2.0f / m_toothCount;
+SpurGear::SpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
+                   hpreal bottomClearance, hpreal filletRadius) : 
+                   m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
+                   m_pressureAngle(pressureAngle),
+                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius) {
+
+    std::cout << toString() << std::endl;
 }
 
 SpurGear::~SpurGear() {}
 
-hpreal SpurGear::getRadius() {
-    return m_radius;
+bool SpurGear::verifyConstraints(bool print) {
+    bool isCorrect = true;
+    try {
+        if (m_toothCount <= 2) {
+            isCorrect = false;
+            throw "No involutes possible with only two or less teeth!";
+        }
+        if (m_pressureAngle >= M_PI / 2.0f) {
+            isCorrect = false;
+            throw "Pressure angle is too big. This would be a circle.";
+        }
+        if (getBaseRadius() > getReferenceRadius() - m_module) {
+            isCorrect = false;
+            throw "Working depth (gemeinsame Zahnhöhe) starts earlier than involute can start!";
+        }
+    } catch (char const* s) {
+        if (print) std::cerr << s << std::endl;
+    }
+
+    //start fillet has to be in first quarter of the angular pitch
+    try {
+        if (getStopFilletInvoluteAngle() < 0) {
+            isCorrect = false;
+            throw "Fillet and involute can't merge as fillet radius is too small or bottom clearance too big!";
+        }            
+        if (getShiftAngle() - getStartFilletAngle() < 0) {
+            isCorrect = false;
+            throw "Fillet is too big for the gap between the teeth!";
+        }
+        if (involuteToCircleAngle(getStopFilletInvoluteAngle()) 
+            > involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module)) {
+            isCorrect = false;
+            throw "Fillet ends when working depth (gemeinsame Zahnhöhe) already started!";
+        }
+    } catch (char const* s) {
+        if (print) std::cerr << s << std::endl;
+    } catch (exception &e) {
+        isCorrect = false;
+        if (print) std::cerr << e.what() << std::endl;
+    }
+    return isCorrect;
 }
 
-void SpurGear::createSinePartition() {
-    // Use this to draw a sinus surface
-    for (int i = 0; i < m_segmentCount; i++) {
-        hpreal position = (hpreal) i / (hpreal) m_segmentCount;
-        hpreal height = exp2f(sinf(position * 2.0f * M_PI));
-        m_heightProfilePartition.push_back(glm::vec2(position, height));
-        //cout << position << ": " << height << std::endl;
+uint   SpurGear::getToothCount() { return m_toothCount; }
+hpreal SpurGear::getModule() { return m_module; }
+hpreal SpurGear::getFacewidth() { return m_facewidth; }
+hpreal SpurGear::getPressureAngle() { return m_pressureAngle; }
+hpreal SpurGear::getBottomClearance() { return m_bottomClearance; }
+hpreal SpurGear::getFilletRadius() { return m_filletRadius; }
+
+//Teilkreisradius - where width of gaps and width of teeths have same size
+hpreal SpurGear::getReferenceRadius() {
+    return m_toothCount * m_module / 2.0f;
+}
+//Kopfkreisradius
+hpreal SpurGear::getTipRadius() {
+    return getReferenceRadius() + m_module;
+}
+//Fußkreisradius
+hpreal SpurGear::getRootRadius() {
+    return (getReferenceRadius() - m_module - m_bottomClearance);
+}
+//Grundkreisradius 
+hpreal SpurGear::getBaseRadius() {
+    return getReferenceRadius() * glm::cos(m_pressureAngle);
+}
+//Teilungswinkel
+hpreal SpurGear::getAngularPitch() {
+    return 2.0f * M_PI / getToothCount();
+}
+hpreal SpurGear::getStopFilletInvoluteAngle() {
+    hpreal ratio = pow((getRootRadius() + m_filletRadius) / getBaseRadius(), 2.0f);
+    return ((sqrt(ratio - 1.0f)) - (m_filletRadius / getBaseRadius()));
+}
+hpreal SpurGear::getStartFilletAngle() {
+    hpreal tangens = ((m_filletRadius + getStopFilletInvoluteAngle() * getBaseRadius()) / getBaseRadius());
+    return glm::atan(tangens) - getStopFilletInvoluteAngle();
+}
+hpreal SpurGear::getShiftAngle() {
+    hpreal intersectRefRadius = involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getReferenceRadius()));
+    return getAngularPitch() / 4.0f - intersectRefRadius;
+}
+hpreal SpurGear::involuteAngleOfIntersectionWithCircle(const hpreal &radius) {
+    return glm::sqrt(pow(radius / getBaseRadius(), 2) - 1.0f); 
+}
+hpreal SpurGear::involuteToCircleAngle(const hpreal &involuteAngle) {
+    return involuteAngle - glm::atan(involuteAngle);
+}
+hpvec2 SpurGear::mirrorPoint(const hpvec2 &point, const hpvec2 &axis){
+    hpvec2 normal = glm::normalize(hpvec2(-axis.y, axis.x));
+    return (point - (normal * (glm::dot(normal, point) * 2.0f)));
+}
+uint* SpurGear::getPossibleToothCounts(uint minCount, uint maxCount) {
+    return getPossibleValues<uint>(m_toothCount, minCount, maxCount, 1);
+}
+hpreal *SpurGear::getPossibleModules(hpreal minSize, hpreal maxSize) {
+    return getPossibleValues<hpreal>(m_module, minSize, maxSize, m_module/100.0f);
+}
+hpreal *SpurGear::getPossiblePressureAngles(hpreal minSize, hpreal maxSize) {
+    return getPossibleValues<hpreal>(m_pressureAngle, minSize, maxSize, m_pressureAngle/100.0f);
+}
+hpreal *SpurGear::getPossibleBottomClearances(hpreal minSize, hpreal maxSize) {
+    return getPossibleValues<hpreal>(m_bottomClearance, minSize, maxSize, m_bottomClearance/100.0f);
+}
+hpreal *SpurGear::getPossibleFilletRadien(hpreal minSize, hpreal maxSize) {
+    return getPossibleValues<hpreal>(m_filletRadius, minSize, maxSize, m_filletRadius/100.0f);
+}
+bool SpurGear::setToothCount(uint toothCount) {
+    uint oldValue = m_toothCount;
+    m_toothCount = toothCount;
+    if (!verifyConstraints()) {
+        m_toothCount = oldValue;
+        return false;
     }
+    return true;
+}
+bool SpurGear::setModule(hpreal module) {
+    hpreal oldValue = m_module;
+    m_module = module;
+    if(!verifyConstraints()) {
+        m_module = oldValue;
+        return false;
+    }
+    return true;
+}
+//Actually there is not constraint concerning the facewidth at the moment. But maybe there will be one in the future. Therefore constraints are tested anyway.
+bool SpurGear::setFacewidth(hpreal facewidth) {
+    hpreal oldValue = m_facewidth;
+    m_facewidth = facewidth;
+    if(!verifyConstraints()) {
+        m_facewidth = oldValue;
+        return false;
+    }
+    return true;
+}
+bool SpurGear::setPressureAngle(hpreal pressureAngle) {
+    hpreal oldValue = m_pressureAngle;
+    m_pressureAngle = pressureAngle;
+    if(!verifyConstraints()) {
+        m_pressureAngle = oldValue;
+        return false;
+    }
+    return true;
+}
+bool SpurGear::setBottomClearance(hpreal bottomClearance) {
+    hpreal oldValue = m_bottomClearance;
+    m_bottomClearance = bottomClearance;
+    if(!verifyConstraints()) {
+        m_bottomClearance = oldValue;
+        return false;
+    }
+    return true;
+}
+bool SpurGear::setFilletRadius(hpreal filletRadius) {
+    hpreal oldValue = m_filletRadius;
+    m_filletRadius = filletRadius;
+    if(!verifyConstraints()) {
+        m_filletRadius = oldValue;
+        return false;
+    }
+    return true;
 }
 
-void SpurGear::createApproximatedPartition() {
-    const int segmentsPerLine = m_segmentCount / 4;
+template <class T>
+T *SpurGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize) {
+    uint steps = (maxSize - minSize) / sampleSize;
+    T min = maxSize;
+    T max = minSize;
+    T savedParameter = testParameter;
+    bool rangeFound = false;
+    bool suitableRangeFound = false;
 
-    hpreal horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
-    hpreal flankX = 0.15f;
-
-    // Use this to draw a gear with straight flanks and a quadratic bottom
-    // horizontal teeth part
-    for (int i = 0; i < segmentsPerLine; i++) {
-        hpreal x = (hpreal) i / segmentsPerLine;
-        m_heightProfilePartition.push_back(glm::vec2(0.0f + x * horizX, 1.0f));
-    }
-
-    // right flank
-    for (int i = 0; i < segmentsPerLine; i++) {
-        hpreal x = (hpreal) i / segmentsPerLine;
-        m_heightProfilePartition.push_back(
-                glm::vec2(horizX + x * flankX, 1.0f - x * 0.8f));
-    }
-
-    // lower teeth part
-    // fit a quadratic function for the bottom part of a teeth hole
-    for (int i = 0; i < segmentsPerLine; i++) {
-        hpreal x = (hpreal) i / segmentsPerLine;
-        hpreal position = horizX + flankX + x * horizX;
-        hpreal height = 0.2f * pow(2.0f * x - 1.0f, 2.0f);
-        m_heightProfilePartition.push_back(glm::vec2(position, height));
-        //cout << position << ": " << height << std::endl;
-    }
-
-    //left flank
-    for (int i = 0; i < segmentsPerLine; i++) {
-        hpreal x = (hpreal) i / segmentsPerLine;
-        m_heightProfilePartition.push_back(
-                glm::vec2(horizX + flankX + horizX + x * flankX,
-                        0.2f + x * 0.8f));
-    }
-}
-
-// Create a profile of height values for one partition (german: Teilung)
-// x-values must be between 0 and p (partition, german: Teilung)
-// y-values must be between -p and p (height)
-void SpurGear::createHeightProfilePartition() {
-    m_heightProfilePartition = std::vector<glm::vec2>();
-
-    m_standardProfile = new StandardProfile(m_module, 10 / 180.0 * M_PI, 0, 0);
-    m_standardProfile->getProfilePartition(m_heightProfilePartition,
-            m_segmentCount);
-    //createApproximatedPartition();
-}
-
-// Create a profile of height values
-// x-values must be between 0 and 1 (position)
-// y-values must be between -1 and 1 (height)
-void SpurGear::createHeightProfile() {
-    createHeightProfilePartition();
-    m_heightProfile = std::vector<glm::vec2>();
-
-    for (int i = 0; i < m_toothCount; i++) {
-        for (unsigned int j = 0; j < m_heightProfilePartition.size(); j++) {
-            hpreal position = m_heightProfilePartition[j].x + i * m_module * M_PI;
-            hpreal height = m_heightProfilePartition[j].y;
-            m_heightProfile.push_back(glm::vec2(position, height));
+    for (uint i = 0; i < steps && !suitableRangeFound; ++i) {
+        T test = minSize + sampleSize * i;
+        testParameter = test;
+        if (verifyConstraints()) {
+            rangeFound = true;
+            min = glm::min(min, test);
+            max = glm::max(max, test);
+        } else if (rangeFound) {
+            if(savedParameter > max || savedParameter < min) {
+                // testParameter isn't in the found range => there has to be another range - search for it
+                min = maxSize;
+                max = test;
+                rangeFound = false;
+            } else {
+                // testParameter is in the found range => search can be finished
+                suitableRangeFound = true;
+            }
         }
     }
+    testParameter = savedParameter;
+    T *minmax = new T[2];
+    minmax[0] = min;
+    minmax[1] = max;
+    return minmax;
 }
 
-// This creates the quads for a gear. The gear axis is the model's z-axis.
-QuadMesh* SpurGear::toQuadMesh() {
-    const hpreal dz = m_length / m_zDetailLevel;
-    const hpreal innerRadius = m_radius * INNER_RADIUS_FACTOR;
+std::vector<hpvec2>* SpurGear::getToothProfile(uint sampleSize) {
 
-    // Create the height profile given the current gear settings
-    createHeightProfile();
-    const unsigned int profSize = m_heightProfile.size();
+   std::vector<hpvec2>* profile = new std::vector<hpvec2>(sampleSize);
 
+    if (!verifyConstraints()) {
+        return profile;
+    }
+
+    //angles of important locations of the toothprofile
+    //alpha for involute construction, beta is the "normal" angle, one would expect in a circle
+    hpreal beta1; //start fillet (Fußrundung)
+    hpreal beta2, alpha2; //end fillet (Fußrundung)
+    hpreal beta3, alpha3; //start tip circle (Kopfkreis)
+
+    alpha2 = getStopFilletInvoluteAngle();
+    beta1  = getShiftAngle() - getStartFilletAngle();
+    beta2  = getShiftAngle() + alpha2 - glm::atan(alpha2);
+    alpha3 = involuteAngleOfIntersectionWithCircle(getTipRadius());
+    beta3  = getShiftAngle() + involuteToCircleAngle(alpha3);
+
+    hpreal sampleAngleSize = getAngularPitch() / sampleSize;
+    int sampleBeta1 = static_cast<uint>(beta1 / sampleAngleSize + 0.5);
+    int sampleBeta2 = static_cast<uint>(beta2 / sampleAngleSize + 0.5);
+    int sampleBeta3 = static_cast<uint>(beta3 / sampleAngleSize + 0.5);
+    int sampleBeta4 = (sampleSize % 2 == 0) ? sampleSize / 2 : sampleSize / 2 + 1;
+
+    //if assertion fails, values haven't been possible for involute gear and construction would fail!
+    assert(sampleBeta1 >= 0
+        && sampleBeta2 >= sampleBeta1
+        && sampleBeta3 >= sampleBeta2
+        && sampleBeta4 >= sampleBeta3);
+
+    insertCirclePoints(  *profile,           0, sampleBeta1, sampleAngleSize, getRootRadius());
+    insertFilletPoints(  *profile, sampleBeta1, sampleBeta2, sampleAngleSize, alpha2);
+    insertInvolutePoints(*profile, sampleBeta2, sampleBeta3, alpha2, alpha3);
+    insertCirclePoints(  *profile, sampleBeta3, sampleBeta4, sampleAngleSize, getTipRadius());
+
+    return profile;
+}
+
+void SpurGear::insertCirclePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+                                                          const hpreal &sampleAngleSize,
+                                                          const hpreal &radius) {
+    for (uint i = start; i < stopBefore; ++i) {
+        v[i].x = radius * glm::sin(sampleAngleSize * i);
+        v[i].y = radius * glm::cos(sampleAngleSize * i);
+        uint j = v.size() - 1 - i; //mirrored side
+        v[j].x = radius * glm::sin(sampleAngleSize * j);
+        v[j].y = radius * glm::cos(sampleAngleSize * j);
+    }
+}
+void SpurGear::insertFilletPoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+                                                          const hpreal &sampleAngleSize,
+                                                          const hpreal &touchEvolvAngle) {
+    hpreal shift = getShiftAngle();
+    hpvec2 involutePoint = pointOnRightTurnedInvolute(shift, touchEvolvAngle);
+    hpvec2 center;
+    center.x = involutePoint.x - m_filletRadius * glm::cos(shift + touchEvolvAngle);
+    center.y = involutePoint.y + m_filletRadius * glm::sin(shift + touchEvolvAngle);
+    hpreal mirrorAngle = getAngularPitch() / 2.0f;
+    hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
+
+    for (uint i = start; i < stopBefore; ++i) {
+        hpvec2 direction;
+        direction.x = glm::sin(i * sampleAngleSize);
+        direction.y = glm::cos(i * sampleAngleSize);
+        hpreal dc = glm::dot(direction, center);
+        hpreal cc = glm::dot(center, center);
+        hpreal t = dc - (sqrt(dc * dc - cc + m_filletRadius * m_filletRadius));
+        
+        v[i] = direction * t;
+        v[v.size() - 1 - i] = mirrorPoint(v[i], mirrorAxis);
+    }
+}
+void SpurGear::insertInvolutePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+                                                            const hpreal &startInvAngle,
+                                                            const hpreal &stopInvAngle) {
+    hpreal mirrorAngle = getAngularPitch() / 2.0f;
+    hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
+    hpreal angleStep = (stopInvAngle - startInvAngle) / (stopBefore - start);
+
+    for (uint i = start; i < stopBefore; ++i) {
+        v[i] = pointOnRightTurnedInvolute(getShiftAngle(), startInvAngle + (i - start) * angleStep);
+        v[v.size() - 1 - i] = mirrorPoint(v[i], mirrorAxis);
+    }
+}
+
+
+hpvec2 SpurGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, const hpreal &angle){
+    hpreal radius = getBaseRadius();
+    hpvec2 point;
+    point.x = radius * glm::sin(involuteStartAngle + angle)
+                - radius * angle * glm::cos(involuteStartAngle + angle);
+    point.y = radius * glm::cos(involuteStartAngle + angle)
+                + radius * angle * glm::sin(involuteStartAngle + angle);
+    return point;
+}
+
+std::vector<hpvec2>* SpurGear::getGearProfile(uint toothSampleSize) {
+
+    std::vector<hpvec2> *profile = new std::vector<hpvec2>(toothSampleSize * getToothCount());
+    std::vector<hpvec2> *toothProfile = getToothProfile(toothSampleSize);
+
+    //TODO: I use this code to refuse an array-resizing, as we know the array size from the beginning
+    //But is this really necessary? Is it maybe even faster to use already provided methods?
+    for (uint i = 0; i < toothSampleSize; ++i) {
+        profile->at(i) = toothProfile->at(i);
+    }
+    //TODO: irgendwie muss speicherplatz für toothprofile freigegeben werden!
+
+    for (uint i = 1; i < getToothCount(); ++i) {
+        hpreal mirrorAngle = getAngularPitch() * i;
+        hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
+
+        for (uint j = 0; j < toothSampleSize; ++j) {
+            uint k = i * toothSampleSize + j;
+            profile->at(k) = mirrorPoint(profile->at(k-1-2*j), mirrorAxis);
+        }
+    }
+    return profile;
+}
+
+TriangleMesh* SpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
+    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &SpurGear::putTogetherAsTriangles);
+    smoothTriangleMeshNormals(vertexData, widthSampleSize);
+    TriangleMesh* mesh = new TriangleMesh(*vertexData);
+    mesh->setModelMatrix(modelMatrix_);
+    mesh->setName(name_ + " - Instance 1");
+    return mesh;
+}
+
+void SpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
+            //first triangle
+            vertexData->push_back(points[0]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[1]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[2]);
+            vertexData->push_back(normal);
+            //second triangle
+            vertexData->push_back(points[0]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[2]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[3]);
+            vertexData->push_back(normal);
+}
+
+QuadMesh* SpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
+    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &SpurGear::putTogetherAsQuads);
+    QuadMesh* mesh = new QuadMesh(*vertexData);
+    mesh->setModelMatrix(modelMatrix_);
+    mesh->setName(name_ + " - Instance 1");
+    return mesh;
+}
+
+void SpurGear::putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
+            vertexData->push_back(points[0]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[1]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[2]);
+            vertexData->push_back(normal);
+            vertexData->push_back(points[3]);
+            vertexData->push_back(normal);
+}
+
+std::vector<hpvec4>* SpurGear::toMesh(uint toothSampleSize, uint widthSampleSize,
+                                        void (SpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&)) {
     // Create vector for the result
-    std::vector<glm::vec4> vertexData;
+    std::vector<hpvec4> *vertexData = new std::vector<hpvec4>;
+    std::vector<hpvec2> *profile = getGearProfile(toothSampleSize);
 
-    // precompute sin and cos of angles
-    hpreal cosSegment[profSize + 2];
-    hpreal sinSegment[profSize + 2];
-    hpreal height[profSize + 2];
-    hpreal cosHeight[profSize + 2];
-    hpreal sinHeight[profSize + 2];
+    hpreal dz = m_facewidth / widthSampleSize;
 
-    for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
-            segmentNum++) {
-        hpreal phi = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
-        cosSegment[segmentNum] = cos(phi);
-        sinSegment[segmentNum] = sin(phi);
-        height[segmentNum] = m_radius + m_heightProfile[segmentNum % profSize].y;
-        cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
-        sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
-    }
+    hpvec4 wildcard = hpvec4(1.0f);
 
-    // draw the sides (german: Mantelflaechen) of the gear
-    // this is the important part where the height profile will come into play
-    for (int i = 0; i < m_zDetailLevel; i++) {
-        hpreal z = i * dz;
-        for (unsigned int segmentNum = 0; segmentNum < profSize;
-                segmentNum++) {
-
-            glm::vec4 a, b, c, d, normNext, norm;
-
-            a.x = cosHeight[segmentNum + 1];
-            a.y = sinHeight[segmentNum + 1];
-            a.z = z;
-            a.w = 1.0f;
-
-            b.x = cosHeight[segmentNum];
-            b.y = sinHeight[segmentNum];
-            b.z = z;
-            b.w = 1.0f;
-
-            c.x = cosHeight[segmentNum];
-            c.y = sinHeight[segmentNum];
-            c.z = z + dz;
-            c.w = 1.0f;
-
-            d.x = cosHeight[segmentNum + 1];
-            d.y = sinHeight[segmentNum + 1];
-            d.z = z + dz;
-            d.w = 1.0f;
-
-            // compute the 2 normals (each used twice
-            normNext = glm::vec4(
-                    glm::normalize(
-                            glm::cross(glm::vec3(0.0f, 0.0f, c.z - b.z),
-                                    glm::vec3(cosHeight[segmentNum + 2] - a.x,
-                                            sinHeight[segmentNum + 2] - a.y,
-                                            0.0f))), 1.0f);
-            norm = glm::vec4(
-                    glm::normalize(
-                            glm::cross(glm::vec3(0.0f, 0.0f, c.z - b.z),
-                                    glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
-                    1.0f);
-
-            vertexData.push_back(a);
-            vertexData.push_back(normNext);
-            vertexData.push_back(b);
-            vertexData.push_back(norm);
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
-            vertexData.push_back(d);
-            vertexData.push_back(normNext);
+    for (uint i = 0; i < widthSampleSize; ++i) {
+        for (uint j = 0; j < profile->size(); ++j) {
+            //TODO: why can't I use points[0].xy = ... ?
+            uint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
+            hpvec4 points[4];
+            points[0].x = profile->at(jNext).x;
+            points[0].y = profile->at(jNext).y;
+            points[0].z = i * dz;
+            points[0].w = 1.0f;
+            points[1].x = profile->at(j).x;
+            points[1].y = profile->at(j).y;
+            points[1].z = i * dz;
+            points[1].w = 1.0f;
+            points[2].x = profile->at(j).x;
+            points[2].y = profile->at(j).y;
+            points[2].z = (i + 1) * dz;
+            points[2].w = 1.0f;
+            points[3].x = profile->at(jNext).x;
+            points[3].y = profile->at(jNext).y;
+            points[3].z = (i + 1) * dz;
+            points[3].w = 1.0f;
+            
+            (this->*putTogetherAs)(points, wildcard, vertexData);
         }
     }
-
-//    // draw the front and back of the gear
-//    // this part is very straightforward. now alle quads have the
-//    // circle's center as a common point. for nicer highlights it
-//    // might be better to chose vertices in a more clever way.
-//    int i = 0;
-//    for (hpreal z = 0.0f; i < 2; i++, z += m_length) {
-//        for (unsigned int segmentNum = 0; segmentNum < profSize;
-//                segmentNum++) {
-//            glm::vec4 a, b, c, d, norm;
-
-//            a.x = cosHeight[segmentNum];
-//            a.y = sinHeight[segmentNum];
-//            a.z = z;
-//            a.w = 1.0f;
-
-//            b.x = cosHeight[segmentNum + 1];
-//            b.y = sinHeight[segmentNum + 1];
-//            b.z = z;
-//            b.w = 1.0f;
-
-//            c.x = cosSegment[segmentNum + 1] * innerRadius;
-//            c.y = sinSegment[segmentNum + 1] * innerRadius;
-//            c.z = z;
-//            c.w = 1.0f;
-
-//            d.x = cosSegment[segmentNum] * innerRadius;
-//            d.y = sinSegment[segmentNum] * innerRadius;
-//            d.z = z;
-//            d.w = 1.0f;
-//            norm = i == 0 ?
-//                    glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
-//                    glm::vec4(0.0f, 0.0f, -1.0, 1.0);
-
-//            vertexData.push_back(a);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(b);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(c);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(d);
-//            vertexData.push_back(norm);
-//        }
-//    }
-    QuadMesh* result = new QuadMesh(vertexData);
-    result->setModelMatrix(modelMatrix_);
-    result->setName(name_ + " - Instance 1");
-    return result;
+    //TODO profile Speicher freigeben!
+    return vertexData;
 }
 
-// This creates the triangle mesh representation of a gear. The gear axis is the model's z-axis.
-TriangleMesh* SpurGear::toTriangleMesh() {
-    hpreal dz = m_length / m_zDetailLevel;
-    hpreal innerRadius = m_radius * INNER_RADIUS_FACTOR;
+void SpurGear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData, uint numOfRows) {
+    //12 entries per knot of the profile in a triangleMesh (2 * 3 points, each with a normal)
+    uint pointsInRow = vertexData->size() / numOfRows;
+    uint quadsInRow  = pointsInRow / 12;
+    //array steps is necessary to walk in the vertexData array to the right places
+    int steps[] = {0, 6, 8, -(pointsInRow - 6), -4, -6};
 
-    // Create the height profile given the current gear settings
-    createHeightProfile();
-    unsigned int profSize = m_heightProfile.size();
+    for(uint i = 0; i < numOfRows; ++i) {
+        for (uint j = 0; j < quadsInRow; ++j) {
+            std::vector<hpvec3> nnnormals;//not normalized normals as size is needed for smoothing
+            hpreal areaSum = 0.0f;
 
-    // Create vector for the result
-    std::vector<glm::vec4> vertexData;
+            //calculate not normalized normals of the 6
+            //surrounding triangles and sum their area
+            //for every point of the gear profile
+            for (uint k = 0; k < 6; ++k) {
+                int da, db; //distances in vertexData array to other two triangle points
+                if(k < 2) {
+                    da = 4; db = 2;
+                } else if (k < 4) {
+                    da = -2; db = 2;
+                } else {
+                    da = -2; db = -4;
+                }
 
-    // precompute sin and cos of angles
-    hpreal cosSegment[profSize + 2];
-    hpreal sinSegment[profSize + 2];
-    hpreal height[profSize + 2];
-    hpreal cosHeight[profSize + 2];
-    hpreal sinHeight[profSize + 2];
-
-    for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
-            segmentNum++) {
-        hpreal phi = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
-        cosSegment[segmentNum] = cos(phi);
-        sinSegment[segmentNum] = sin(phi);
-        height[segmentNum] = m_radius + m_heightProfile[segmentNum % profSize].y;
-        cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
-        sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
-    }
-
-    // draw the sides (german: Mantelflaechen) of the gear
-    // this is the important part where the height profile will come into play
-    for (int i = 0; i < m_zDetailLevel; i++) {
-        hpreal z = i * dz;
-        for (unsigned int segmentNum = 0; segmentNum < profSize; segmentNum++) {
-
-            glm::vec4 a, b, c, d, normNext, norm;
-
-            a.x = cosHeight[segmentNum + 1];
-            a.y = sinHeight[segmentNum + 1];
-            a.z = z;
-            a.w = 1.0f;
-
-            b.x = cosHeight[segmentNum];
-            b.y = sinHeight[segmentNum];
-            b.z = z;
-            b.w = 1.0f;
-
-            c.x = cosHeight[segmentNum];
-            c.y = sinHeight[segmentNum];
-            c.z = z + dz;
-            c.w = 1.0f;
-
-            d.x = cosHeight[segmentNum + 1];
-            d.y = sinHeight[segmentNum + 1];
-            d.z = z + dz;
-            d.w = 1.0f;
-
-            // compute the 2 normals (each used twice)
-            normNext = glm::vec4(
-                    glm::normalize(
-                            glm::cross(glm::vec3(0.0f, 0.0f, dz),
-                                    glm::vec3(cosHeight[segmentNum + 2] - cosHeight[segmentNum + 1],
-                                              sinHeight[segmentNum + 2] - sinHeight[segmentNum + 1],
-                                              0.0f))),
-                    1.0f);
-            norm = glm::vec4(
-                    glm::normalize(
-                            glm::cross(glm::vec3(0.0f, 0.0f, dz),
-                                    glm::vec3(cosHeight[segmentNum + 1] - cosHeight[segmentNum],
-                                              sinHeight[segmentNum + 1] - sinHeight[segmentNum],
-                                              0.0f))),
-                    1.0f);
-
-            vertexData.push_back(a);
-            vertexData.push_back(normNext);
-            vertexData.push_back(b);
-            vertexData.push_back(norm);
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
-
-            vertexData.push_back(a);
-            vertexData.push_back(normNext);
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
-            vertexData.push_back(d);
-            vertexData.push_back(normNext);
+                //TODO: n ist int und wird mit uint verglichen! => static_cast???
+                int n = i * pointsInRow + j * 12 + steps[k];
+                if (k == 2 && j == quadsInRow - 1)
+                    n-= pointsInRow;
+                //not every point has 6 surrounding triangles. Use only the ones available:
+                if (n >= 0 && n < vertexData->size()) {
+                    hpvec4 a = vertexData->at(n + da) - vertexData->at(n);
+                    hpvec4 b = vertexData->at(n + db) - vertexData->at(n);
+                    nnnormals.push_back(hpvec3(glm::cross(hpvec3(a.x, a.y, a.z), hpvec3(b.x, b.y, b.z))));
+                    areaSum += glm::length(nnnormals.back());
+                }
+            }
+            hpvec4 normal = hpvec4(0.0f);
+            for (uint k = 0; k < nnnormals.size(); ++k) {
+                hpreal weight = (glm::length(nnnormals[k])) / areaSum;
+                normal += hpvec4(weight * glm::normalize(nnnormals[k]), 1.0f);
+            }
+            for (uint k = 0; k < 6; ++k) {
+                int n = i * pointsInRow + j * 12 + steps[k];
+                if (k == 2 && j == quadsInRow - 1)
+                    n-= pointsInRow;
+                //not every point has 6 surrounding triangles. Use only the ones available:
+                if (n >= 0 && n < vertexData->size())
+                    vertexData->at(n + 1) = normal; //insert the normal in the cell after the vertex
+            }
         }
     }
-
-//    // draw the front and back of the gear
-//    int i = 0;
-//    for (hpreal z = 0.0f; i < 2; i++, z += m_length) {
-//        for (unsigned int segmentNum = 0; segmentNum < profSize;
-//                segmentNum++) {
-//            glm::vec4 a, b, c, d, norm;
-
-//            a.x = cosHeight[segmentNum];
-//            a.y = sinHeight[segmentNum];
-//            a.z = z;
-//            a.w = 1.0f;
-
-//            b.x = cosHeight[segmentNum + 1];
-//            b.y = sinHeight[segmentNum + 1];
-//            b.z = z;
-//            b.w = 1.0f;
-
-//            c.x = cosSegment[segmentNum + 1] * innerRadius;
-//            c.y = sinSegment[segmentNum + 1] * innerRadius;
-//            c.z = z;
-//            c.w = 1.0f;
-
-//            d.x = cosSegment[segmentNum] * innerRadius;
-//            d.y = sinSegment[segmentNum] * innerRadius;
-//            d.z = z;
-//            d.w = 1.0f;
-//            norm = i == 0 ?
-//                    glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) :
-//                    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-
-//            vertexData.push_back(a);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(b);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(c);
-//            vertexData.push_back(norm);
-
-//            vertexData.push_back(c);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(d);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(a);
-//            vertexData.push_back(norm);
-//        }
-//    }
-    TriangleMesh* result = new TriangleMesh(vertexData);
-    result->setModelMatrix(modelMatrix_);
-    result->setName(name_ + " - Instance 1");
-    return result;
-}
-
-// This method converts a SpurGear to a Circle cloud representation.
-// Note that this is not more than a set of circles centered around
-// the gear center with various radii ranging from the minimum radius
-// to the maximum radius.
-CircleCloud* SpurGear::toCircleCloud() {
-  // Determine accuracy level of the simulation
-  const hpreal epsilon = 0.000001f;
-
-    // Determine radius constraints
-  const hpreal minRadius = m_radius * INNER_RADIUS_FACTOR - epsilon;
-  const hpreal maxRadius = m_radius + epsilon;
-
-  // Determine resolution (important for following simulations)
-  const int resolutionXY = m_segmentCount;
-  const int resolutionZ = m_zDetailLevel;
-
-  std::vector<Circle*> circles(resolutionXY * resolutionZ);
-
-  const hpreal diffRadius = maxRadius - minRadius;
-  const hpreal diffRadiusStep = diffRadius / resolutionXY;
-
-  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-    hpreal z = stepZ / resolutionZ * m_length;
-    for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
-        hpreal radius = minRadius + diffRadiusStep * stepXY;
-        glm::vec3 center = glm::vec3(0.0f, 0.0f, z);
-        circles[stepZ * resolutionZ + stepXY] = new Circle(center, glm::vec3(0.0f, 0.0f, 1.0f), radius);
-    }
-  }
-  return new CircleCloud(circles, resolutionXY, resolutionZ);
 }
 
 ZCircleCloud* SpurGear::toZCircleCloud() {
-  // Create the height profile given the current gear settings
-  createHeightProfile();
-  const unsigned int profSize = m_heightProfile.size();
+    // Create the profile given the current gear settings
+    std::vector<hpvec2> *profile = getGearProfile();
+    
+    const unsigned int profSize = profile->size();
 
-  // Determine resolution (important for following simulations)
-  const unsigned int resolutionXY = profSize;
-  const unsigned int resolutionZ = m_zDetailLevel;
+    // Determine resolution (important for following simulations)
+    const unsigned int resolutionXY = profSize;
+    const unsigned int resolutionZ = 1000;
 
-  std::vector<float>* radii = new std::vector<float>;
-  std::vector<CirclePoint>* points = new std::vector<CirclePoint>;
-  std::vector<float>* posZ = new std::vector<float>;
+    std::vector<hpreal>* radii = new std::vector<hpreal>;
+    std::vector<CirclePoint>* points = new std::vector<CirclePoint>;
+    std::vector<hpreal>* posZ = new std::vector<hpreal>;
 
-//  radii.reserve(resolutionXY);
-//  points.reserve(resolutionXY);
-//  posZ.reserve(resolutionZ);
+// radii.reserve(resolutionXY);
+// points.reserve(resolutionXY);
+// posZ.reserve(resolutionZ);
 
-  for (unsigned int segmentNum = 0; segmentNum < resolutionXY; segmentNum++) {
-      hpreal angle = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
-      hpreal radius = m_radius + m_heightProfile[segmentNum % profSize].y;
-//      std::cout << angle << ", " << radius << ", " << std::endl;
-      CirclePoint point = CirclePoint(angle, radius);
-      radii->push_back(radius);
-      points->push_back(point);
-  }
+    for (unsigned int segmentNum = 0; segmentNum < resolutionXY; ++segmentNum) {
+        hpvec2 v = profile->at(segmentNum % profSize);
+        hpreal radius = glm::length(v);
+        hpreal angle = glm::asin(v.x / radius);
+        // std::cout << angle << ", " << radius << ", " << std::endl;
+        CirclePoint point = CirclePoint(angle, radius);
+        radii->push_back(radius);
+        points->push_back(point);
+    }
 
-  for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-      float posZValue = stepZ * m_length / resolutionZ;
-      posZ->push_back(posZValue);
-//      std::cout << "posZValues: " << posZValue << ", " << std::endl;
-  }
+    for (unsigned int stepZ = 0; stepZ < resolutionZ; ++stepZ) {
+        hpreal posZValue = stepZ * m_facewidth / resolutionZ;
+        posZ->push_back(posZValue);
+        // std::cout << "posZValues: " << posZValue << ", " << std::endl;
+    }
 
-  glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
-//  std::cout << "Radii0: " << radii->size() << std::endl;
+    hpvec3 referenceDir = hpvec3(1.0f, 0.0f, 0.0f);
+    // std::cout << "Radii0: " << radii->size() << std::endl;
 
-  ZCircleCloud* result = new ZCircleCloud(radii, points, posZ, resolutionXY, resolutionZ, referenceDir);
-  result->setModelMatrix(modelMatrix_);
-  return result;
+    ZCircleCloud* result = new ZCircleCloud(radii, points, posZ, resolutionXY, resolutionZ, referenceDir);
+    result->setModelMatrix(modelMatrix_);
+    return result;
 }
 
-//ZCircleCloud* SpurGear::toZCircleCloud() {
-//  // Determine accuracy level of the simulation
-//  const float epsilon = 0.000001f;
-
-//    // Determine radius constraints
-//  const float minRadius = m_radius * INNER_RADIUS_FACTOR - epsilon;
-//  const float maxRadius = m_radius + epsilon;
-
-//  // Determine resolution (important for following simulations)
-//  const int resolutionXY = 1000;
-//  const int resolutionZ = 1000;
-
-//  const float diffRadius = maxRadius - minRadius;
-//  const float diffRadiusStep = diffRadius / resolutionXY;
-
-//  std::vector<float>* radii = new std::vector<float>(resolutionXY);
-//  std::vector<float>* posZ = new std::vector<float>(resolutionZ);
-
-//  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-//      float posZvalue = stepZ * m_length / resolutionZ;
-//      (*posZ)[stepZ] = posZvalue;
-//  }
-
-//  for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
-//      float radius = minRadius + diffRadiusStep * stepXY;
-//      (*radii)[stepXY] = radius;
-//  }
-
-//  glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
-//  ZCircleCloud* result = new ZCircleCloud(*radii, *posZ, resolutionXY, resolutionZ, referenceDir);
-//  result->setModelMatrix(modelMatrix_);
-//  return result;
-//}
+std::string SpurGear::toString() {
+    std::stringstream info;
+    info << "Gear:" << std::endl;
+    info << "tooth count      = " << getToothCount()<< std::endl;
+    info << "module           = " << m_module << std::endl;
+    info << "pressure angle   = " << m_pressureAngle << std::endl;
+    info << "tip radius       = " << getTipRadius() << std::endl;
+    info << "ref. radius      = " << getReferenceRadius() << std::endl;
+    info << "base radius      = " << getBaseRadius() << std::endl;
+    info << "root radius      = " << getRootRadius() << std::endl;
+    info << "fillet radius    = " << m_filletRadius << std::endl;
+    info << "bottom clearance = " << m_bottomClearance << std::endl;
+    info << "angular pitch    = " << getAngularPitch() << std::endl;
+    return info.str();
+}

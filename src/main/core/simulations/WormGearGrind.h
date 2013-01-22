@@ -5,6 +5,7 @@
 #include "../primitives/Circle.h"
 #include "../primitives/Triangle.h"
 #include "../kdtree/ImplicitKDTree.h"
+#include "../models/ZCircleCloud.h"
 
 
 class WormGearGrind

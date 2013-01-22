@@ -6,8 +6,8 @@ SceneManager::SceneManager() {
     // Load a few sample geometries
     Grid* grid = new Grid();
     Sphere* sphere = new Sphere(1.0f);
-    SpurGear* gear1 = new SpurGear(1.0f, 1.0f, 20);//gears of radius 1 with 20 teeth are ~1.5 units away
-    SpurGear* gear2 = new SpurGear(1.0f, 1.0f, 20);
+    SpurGear* gear1 = new SpurGear(15, 0.2f, 0.2f, M_PI/6.0f, 0.02f, 0.04f);
+    //SpurGear* gear2 = new SpurGear(15, 1.0f, 0.2f, M_PI/6.0f, 0.02f, 0.04f);
     BasicRack* rack1 = new BasicRack(2.0f,  0.6f, 0.4f, 5);
     Disc* disc1 = new Disc();
 
@@ -15,7 +15,7 @@ SceneManager::SceneManager() {
     grid->setName("Grid");
     sphere->setName("Sphere");
     gear1->setName("Gear 1");
-    gear2->setName("Gear 2");
+    //gear2->setName("Gear 2");
     rack1->setName("Rack 1");
     disc1->setName("Disc 1");
 

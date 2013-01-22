@@ -6,8 +6,8 @@ SceneManager::SceneManager() {
     // Load a few sample geometries
     Grid* grid = new Grid();
     Sphere* sphere = new Sphere(1.0f);
-    SpurGear* gear1 = new SpurGear(15, 0.2f, 0.2f, M_PI/6.0f, 0.02f, 0.04f);
-    //SpurGear* gear2 = new SpurGear(15, 1.0f, 0.2f, M_PI/6.0f, 0.02f, 0.04f);
+    InvoluteSpurGear* gear1 = new InvoluteSpurGear(15, 0.2f, 0.2f, M_PI/6.0f, 0.02f, 0.04f);
+    //InvoluteSpurGear* gear2 = new InvoluteSpurGear(15, 1.0f, 0.2f, M_PI/6.0f, 0.02f, 0.04f);
     BasicRack* rack1 = new BasicRack(2.0f,  0.6f, 0.4f, 5);
     Disc* disc1 = new Disc();
 

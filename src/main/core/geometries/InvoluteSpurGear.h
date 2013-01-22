@@ -1,5 +1,5 @@
-#ifndef SPURGEAR_H_
-#define SPURGEAR_H_
+#ifndef INVOLUTESPURGEAR_H
+#define INVOLUTESPURGEAR_H
 
 #include <glm/glm.hpp>
 #include <iostream>
@@ -31,15 +31,15 @@
  * the reflection property.
  */
 
-class SpurGear : public NonDrawable {
+class InvoluteSpurGear : public NonDrawable {
 public:
-    SpurGear(uint toothCount = 15,
+    InvoluteSpurGear(uint toothCount = 15,
              hpreal module = 0.13,
              hpreal facewidth = 0.2f,
              hpreal pressureAngle = M_PI / 6.0f,
              hpreal bottomClearance = 0.02f,
              hpreal filletRadius = 0.04f);
-    ~SpurGear();
+    ~InvoluteSpurGear();
 
     uint   getToothCount();
     hpreal getModule();
@@ -53,6 +53,12 @@ public:
     hpreal getBaseRadius(); //Grundkreisradius
     hpreal getAngularPitch(); //Teilungswinkel
 
+    /* getPossibleXXX methods return pointer to two values:
+     * first one is minimum, second one is maximum for parameter XXX
+     * with the current values.
+     * If minimum > maximum no value is found.
+     * methods start from the promise that current gear is a valid gear
+     */
     uint* getPossibleToothCounts(uint minCount = 3, uint maxCount = 100);
     hpreal* getPossibleModules(hpreal minSize = 0.0f, hpreal maxSize = 10.0f);
     hpreal* getPossiblePressureAngles(hpreal minSize = M_PI / 180.0f, hpreal maxSize = M_PI / 2.0f);
@@ -109,7 +115,7 @@ private:
     void putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData);
     void putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData);
     std::vector<hpvec4>* toMesh(uint toothSampleSize, uint widthSampleSize,
-                                        void (SpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&));
+                                        void (InvoluteSpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&));
 };
 
-#endif /* GEAR_H_ */
+#endif // INVOLUTESPURGEAR_H

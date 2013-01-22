@@ -6,7 +6,7 @@
 #include "geometries/GeometryObject.h"
 #include "geometries/Grid.h"
 #include "geometries/Sphere.h"
-#include "geometries/SpurGear.h"
+#include "geometries/InvoluteSpurGear.h"
 #include "geometries/BasicRack.h"
 #include "geometries/Disc.h"
 #include "simulations/WormGearGrind.h"

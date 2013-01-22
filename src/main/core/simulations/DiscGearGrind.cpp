@@ -1,6 +1,6 @@
 #include "DiscGearGrind.h"
 
-DiscGearGrind::DiscGearGrind(Disc* disc, SpurGear* gear):
+DiscGearGrind::DiscGearGrind(Disc* disc, InvoluteSpurGear* gear):
     m_disc(disc), m_gear(gear)
 {
     // both are initially placed in (0,0,0)

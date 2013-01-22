@@ -1,8 +1,8 @@
-#include "SpurGear.h"
+#include "InvoluteSpurGear.h"
 #include <exception> //TODO: delete this or put it in header!
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-SpurGear::SpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
+InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
                    hpreal bottomClearance, hpreal filletRadius) : 
                    m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
                    m_pressureAngle(pressureAngle),
@@ -11,9 +11,9 @@ SpurGear::SpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pres
     std::cout << toString() << std::endl;
 }
 
-SpurGear::~SpurGear() {}
+InvoluteSpurGear::~InvoluteSpurGear() {}
 
-bool SpurGear::verifyConstraints(bool print) {
+bool InvoluteSpurGear::verifyConstraints(bool print) {
     bool isCorrect = true;
     try {
         if (m_toothCount <= 2) {
@@ -56,71 +56,71 @@ bool SpurGear::verifyConstraints(bool print) {
     return isCorrect;
 }
 
-uint   SpurGear::getToothCount() { return m_toothCount; }
-hpreal SpurGear::getModule() { return m_module; }
-hpreal SpurGear::getFacewidth() { return m_facewidth; }
-hpreal SpurGear::getPressureAngle() { return m_pressureAngle; }
-hpreal SpurGear::getBottomClearance() { return m_bottomClearance; }
-hpreal SpurGear::getFilletRadius() { return m_filletRadius; }
+uint   InvoluteSpurGear::getToothCount() { return m_toothCount; }
+hpreal InvoluteSpurGear::getModule() { return m_module; }
+hpreal InvoluteSpurGear::getFacewidth() { return m_facewidth; }
+hpreal InvoluteSpurGear::getPressureAngle() { return m_pressureAngle; }
+hpreal InvoluteSpurGear::getBottomClearance() { return m_bottomClearance; }
+hpreal InvoluteSpurGear::getFilletRadius() { return m_filletRadius; }
 
 //Teilkreisradius - where width of gaps and width of teeths have same size
-hpreal SpurGear::getReferenceRadius() {
+hpreal InvoluteSpurGear::getReferenceRadius() {
     return m_toothCount * m_module / 2.0f;
 }
 //Kopfkreisradius
-hpreal SpurGear::getTipRadius() {
+hpreal InvoluteSpurGear::getTipRadius() {
     return getReferenceRadius() + m_module;
 }
 //Fußkreisradius
-hpreal SpurGear::getRootRadius() {
+hpreal InvoluteSpurGear::getRootRadius() {
     return (getReferenceRadius() - m_module - m_bottomClearance);
 }
 //Grundkreisradius 
-hpreal SpurGear::getBaseRadius() {
+hpreal InvoluteSpurGear::getBaseRadius() {
     return getReferenceRadius() * glm::cos(m_pressureAngle);
 }
 //Teilungswinkel
-hpreal SpurGear::getAngularPitch() {
+hpreal InvoluteSpurGear::getAngularPitch() {
     return 2.0f * M_PI / getToothCount();
 }
-hpreal SpurGear::getStopFilletInvoluteAngle() {
+hpreal InvoluteSpurGear::getStopFilletInvoluteAngle() {
     hpreal ratio = pow((getRootRadius() + m_filletRadius) / getBaseRadius(), 2.0f);
     return ((sqrt(ratio - 1.0f)) - (m_filletRadius / getBaseRadius()));
 }
-hpreal SpurGear::getStartFilletAngle() {
+hpreal InvoluteSpurGear::getStartFilletAngle() {
     hpreal tangens = ((m_filletRadius + getStopFilletInvoluteAngle() * getBaseRadius()) / getBaseRadius());
     return glm::atan(tangens) - getStopFilletInvoluteAngle();
 }
-hpreal SpurGear::getShiftAngle() {
+hpreal InvoluteSpurGear::getShiftAngle() {
     hpreal intersectRefRadius = involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getReferenceRadius()));
     return getAngularPitch() / 4.0f - intersectRefRadius;
 }
-hpreal SpurGear::involuteAngleOfIntersectionWithCircle(const hpreal &radius) {
+hpreal InvoluteSpurGear::involuteAngleOfIntersectionWithCircle(const hpreal &radius) {
     return glm::sqrt(pow(radius / getBaseRadius(), 2) - 1.0f); 
 }
-hpreal SpurGear::involuteToCircleAngle(const hpreal &involuteAngle) {
+hpreal InvoluteSpurGear::involuteToCircleAngle(const hpreal &involuteAngle) {
     return involuteAngle - glm::atan(involuteAngle);
 }
-hpvec2 SpurGear::mirrorPoint(const hpvec2 &point, const hpvec2 &axis){
+hpvec2 InvoluteSpurGear::mirrorPoint(const hpvec2 &point, const hpvec2 &axis){
     hpvec2 normal = glm::normalize(hpvec2(-axis.y, axis.x));
     return (point - (normal * (glm::dot(normal, point) * 2.0f)));
 }
-uint* SpurGear::getPossibleToothCounts(uint minCount, uint maxCount) {
+uint* InvoluteSpurGear::getPossibleToothCounts(uint minCount, uint maxCount) {
     return getPossibleValues<uint>(m_toothCount, minCount, maxCount, 1);
 }
-hpreal *SpurGear::getPossibleModules(hpreal minSize, hpreal maxSize) {
+hpreal *InvoluteSpurGear::getPossibleModules(hpreal minSize, hpreal maxSize) {
     return getPossibleValues<hpreal>(m_module, minSize, maxSize, m_module/100.0f);
 }
-hpreal *SpurGear::getPossiblePressureAngles(hpreal minSize, hpreal maxSize) {
+hpreal *InvoluteSpurGear::getPossiblePressureAngles(hpreal minSize, hpreal maxSize) {
     return getPossibleValues<hpreal>(m_pressureAngle, minSize, maxSize, m_pressureAngle/100.0f);
 }
-hpreal *SpurGear::getPossibleBottomClearances(hpreal minSize, hpreal maxSize) {
+hpreal *InvoluteSpurGear::getPossibleBottomClearances(hpreal minSize, hpreal maxSize) {
     return getPossibleValues<hpreal>(m_bottomClearance, minSize, maxSize, m_bottomClearance/100.0f);
 }
-hpreal *SpurGear::getPossibleFilletRadien(hpreal minSize, hpreal maxSize) {
+hpreal *InvoluteSpurGear::getPossibleFilletRadien(hpreal minSize, hpreal maxSize) {
     return getPossibleValues<hpreal>(m_filletRadius, minSize, maxSize, m_filletRadius/100.0f);
 }
-bool SpurGear::setToothCount(uint toothCount) {
+bool InvoluteSpurGear::setToothCount(uint toothCount) {
     uint oldValue = m_toothCount;
     m_toothCount = toothCount;
     if (!verifyConstraints()) {
@@ -129,7 +129,7 @@ bool SpurGear::setToothCount(uint toothCount) {
     }
     return true;
 }
-bool SpurGear::setModule(hpreal module) {
+bool InvoluteSpurGear::setModule(hpreal module) {
     hpreal oldValue = m_module;
     m_module = module;
     if(!verifyConstraints()) {
@@ -139,7 +139,7 @@ bool SpurGear::setModule(hpreal module) {
     return true;
 }
 //Actually there is not constraint concerning the facewidth at the moment. But maybe there will be one in the future. Therefore constraints are tested anyway.
-bool SpurGear::setFacewidth(hpreal facewidth) {
+bool InvoluteSpurGear::setFacewidth(hpreal facewidth) {
     hpreal oldValue = m_facewidth;
     m_facewidth = facewidth;
     if(!verifyConstraints()) {
@@ -148,7 +148,7 @@ bool SpurGear::setFacewidth(hpreal facewidth) {
     }
     return true;
 }
-bool SpurGear::setPressureAngle(hpreal pressureAngle) {
+bool InvoluteSpurGear::setPressureAngle(hpreal pressureAngle) {
     hpreal oldValue = m_pressureAngle;
     m_pressureAngle = pressureAngle;
     if(!verifyConstraints()) {
@@ -157,7 +157,7 @@ bool SpurGear::setPressureAngle(hpreal pressureAngle) {
     }
     return true;
 }
-bool SpurGear::setBottomClearance(hpreal bottomClearance) {
+bool InvoluteSpurGear::setBottomClearance(hpreal bottomClearance) {
     hpreal oldValue = m_bottomClearance;
     m_bottomClearance = bottomClearance;
     if(!verifyConstraints()) {
@@ -166,7 +166,7 @@ bool SpurGear::setBottomClearance(hpreal bottomClearance) {
     }
     return true;
 }
-bool SpurGear::setFilletRadius(hpreal filletRadius) {
+bool InvoluteSpurGear::setFilletRadius(hpreal filletRadius) {
     hpreal oldValue = m_filletRadius;
     m_filletRadius = filletRadius;
     if(!verifyConstraints()) {
@@ -177,7 +177,7 @@ bool SpurGear::setFilletRadius(hpreal filletRadius) {
 }
 
 template <class T>
-T *SpurGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize) {
+T *InvoluteSpurGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize) {
     uint steps = (maxSize - minSize) / sampleSize;
     T min = maxSize;
     T max = minSize;
@@ -211,7 +211,7 @@ T *SpurGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleS
     return minmax;
 }
 
-std::vector<hpvec2>* SpurGear::getToothProfile(uint sampleSize) {
+std::vector<hpvec2>* InvoluteSpurGear::getToothProfile(uint sampleSize) {
 
    std::vector<hpvec2>* profile = new std::vector<hpvec2>(sampleSize);
 
@@ -251,7 +251,7 @@ std::vector<hpvec2>* SpurGear::getToothProfile(uint sampleSize) {
     return profile;
 }
 
-void SpurGear::insertCirclePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+void InvoluteSpurGear::insertCirclePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
                                                           const hpreal &sampleAngleSize,
                                                           const hpreal &radius) {
     for (uint i = start; i < stopBefore; ++i) {
@@ -262,7 +262,7 @@ void SpurGear::insertCirclePoints(std::vector<hpvec2> &v, const uint &start, con
         v[j].y = radius * glm::cos(sampleAngleSize * j);
     }
 }
-void SpurGear::insertFilletPoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+void InvoluteSpurGear::insertFilletPoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
                                                           const hpreal &sampleAngleSize,
                                                           const hpreal &touchEvolvAngle) {
     hpreal shift = getShiftAngle();
@@ -285,7 +285,7 @@ void SpurGear::insertFilletPoints(std::vector<hpvec2> &v, const uint &start, con
         v[v.size() - 1 - i] = mirrorPoint(v[i], mirrorAxis);
     }
 }
-void SpurGear::insertInvolutePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+void InvoluteSpurGear::insertInvolutePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
                                                             const hpreal &startInvAngle,
                                                             const hpreal &stopInvAngle) {
     hpreal mirrorAngle = getAngularPitch() / 2.0f;
@@ -299,7 +299,7 @@ void SpurGear::insertInvolutePoints(std::vector<hpvec2> &v, const uint &start, c
 }
 
 
-hpvec2 SpurGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, const hpreal &angle){
+hpvec2 InvoluteSpurGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, const hpreal &angle){
     hpreal radius = getBaseRadius();
     hpvec2 point;
     point.x = radius * glm::sin(involuteStartAngle + angle)
@@ -309,7 +309,7 @@ hpvec2 SpurGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, co
     return point;
 }
 
-std::vector<hpvec2>* SpurGear::getGearProfile(uint toothSampleSize) {
+std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 
     std::vector<hpvec2> *profile = new std::vector<hpvec2>(toothSampleSize * getToothCount());
     std::vector<hpvec2> *toothProfile = getToothProfile(toothSampleSize);
@@ -333,8 +333,8 @@ std::vector<hpvec2>* SpurGear::getGearProfile(uint toothSampleSize) {
     return profile;
 }
 
-TriangleMesh* SpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
-    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &SpurGear::putTogetherAsTriangles);
+TriangleMesh* InvoluteSpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
+    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsTriangles);
     smoothTriangleMeshNormals(vertexData, widthSampleSize);
     TriangleMesh* mesh = new TriangleMesh(*vertexData);
     mesh->setModelMatrix(modelMatrix_);
@@ -342,7 +342,7 @@ TriangleMesh* SpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSiz
     return mesh;
 }
 
-void SpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
+void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
             //first triangle
             vertexData->push_back(points[0]);
             vertexData->push_back(normal);
@@ -359,15 +359,15 @@ void SpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &n
             vertexData->push_back(normal);
 }
 
-QuadMesh* SpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
-    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &SpurGear::putTogetherAsQuads);
+QuadMesh* InvoluteSpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
+    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsQuads);
     QuadMesh* mesh = new QuadMesh(*vertexData);
     mesh->setModelMatrix(modelMatrix_);
     mesh->setName(name_ + " - Instance 1");
     return mesh;
 }
 
-void SpurGear::putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
+void InvoluteSpurGear::putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
             vertexData->push_back(points[0]);
             vertexData->push_back(normal);
             vertexData->push_back(points[1]);
@@ -378,8 +378,8 @@ void SpurGear::putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &norma
             vertexData->push_back(normal);
 }
 
-std::vector<hpvec4>* SpurGear::toMesh(uint toothSampleSize, uint widthSampleSize,
-                                        void (SpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&)) {
+std::vector<hpvec4>* InvoluteSpurGear::toMesh(uint toothSampleSize, uint widthSampleSize,
+                                        void (InvoluteSpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&)) {
     // Create vector for the result
     std::vector<hpvec4> *vertexData = new std::vector<hpvec4>;
     std::vector<hpvec2> *profile = getGearProfile(toothSampleSize);
@@ -417,7 +417,7 @@ std::vector<hpvec4>* SpurGear::toMesh(uint toothSampleSize, uint widthSampleSize
     return vertexData;
 }
 
-void SpurGear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData, uint numOfRows) {
+void InvoluteSpurGear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData, uint numOfRows) {
     //12 entries per knot of the profile in a triangleMesh (2 * 3 points, each with a normal)
     uint pointsInRow = vertexData->size() / numOfRows;
     uint quadsInRow  = pointsInRow / 12;
@@ -471,7 +471,7 @@ void SpurGear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData, uint 
     }
 }
 
-ZCircleCloud* SpurGear::toZCircleCloud() {
+ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
     // Create the profile given the current gear settings
     std::vector<hpvec2> *profile = getGearProfile();
     
@@ -513,7 +513,7 @@ ZCircleCloud* SpurGear::toZCircleCloud() {
     return result;
 }
 
-std::string SpurGear::toString() {
+std::string InvoluteSpurGear::toString() {
     std::stringstream info;
     info << "Gear:" << std::endl;
     info << "tooth count      = " << getToothCount()<< std::endl;

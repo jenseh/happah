@@ -1,7 +1,7 @@
 #include "WormGearGrind.h"
 #include <time.h>
 
-WormGearGrind::WormGearGrind(SpurGear& worm, SpurGear& gear) {
+WormGearGrind::WormGearGrind(InvoluteSpurGear& worm, InvoluteSpurGear& gear) {
     m_worm = worm.toZCircleCloud();
     m_gear = gear.toTriangleMesh();
 }

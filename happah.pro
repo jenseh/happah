@@ -14,7 +14,7 @@ HEADERS += \
     src/main/core/Drawable2D.h \
     src/main/core/geometries/BSplineCurve.h \
     src/main/core/geometries/GeometryObject.h \
-    src/main/core/geometries/SpurGear.h \
+    src/main/core/geometries/InvoluteSpurGear.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/Happah.h \
@@ -66,7 +66,7 @@ SOURCES += src/main/main.cpp \
     src/main/core/Drawable2D.cpp \
     src/main/core/geometries/BSplineCurve.cpp \
     src/main/core/geometries/GeometryObject.cpp \
-    src/main/core/geometries/SpurGear.cpp \
+    src/main/core/geometries/InvoluteSpurGear.cpp \
     src/main/core/geometries/Sphere.cpp \
     src/main/core/geometries/StandardProfile.cpp \
     src/main/Happah.cpp \

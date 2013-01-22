@@ -1,6 +1,5 @@
 #include "DrawManager.h"
 
-#include <GL/glext.h>
 #include <fstream>
 #include <sstream>
 #include <string>

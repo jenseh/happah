@@ -1,38 +1,33 @@
-/*
- * SpurGear.cpp
- *
- *  Created on: Nov 28, 2012
- *      Author: matthias
- */
-
 #include "SpurGear.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-SpurGear::SpurGear(hpreal radius, hpreal length, int toothCount) {
-    radius_ = radius;
-    length_ = length;
-    toothCount_ = toothCount;
-    module_ = radius_ * 2.0f / toothCount_;
+SpurGear::SpurGear(hpreal radius, hpreal length, int toothCount, int segmentCount, int zDetailLevel) {
+    m_radius = radius;
+    m_length = length;
+    m_toothCount = toothCount;
+    m_segmentCount = segmentCount;
+    m_zDetailLevel = zDetailLevel;
+    m_module = m_radius * 2.0f / m_toothCount;
 }
 
 SpurGear::~SpurGear() {}
 
 hpreal SpurGear::getRadius() {
-    return radius_;
+    return m_radius;
 }
 
 void SpurGear::createSinePartition() {
     // Use this to draw a sinus surface
-    for (int i = 0; i < SEGMENT_COUNT; i++) {
-        hpreal position = (hpreal) i / (hpreal) SEGMENT_COUNT;
+    for (int i = 0; i < m_segmentCount; i++) {
+        hpreal position = (hpreal) i / (hpreal) m_segmentCount;
         hpreal height = exp2f(sinf(position * 2.0f * M_PI));
-        heightProfilePartition_.push_back(glm::vec2(position, height));
+        m_heightProfilePartition.push_back(glm::vec2(position, height));
         //cout << position << ": " << height << std::endl;
     }
 }
 
 void SpurGear::createApproximatedPartition() {
-    const int segmentsPerLine = SEGMENT_COUNT / 4;
+    const int segmentsPerLine = m_segmentCount / 4;
 
     hpreal horizX = 0.35f; //check whether 2*horiz + 2*flankX = 1.0
     hpreal flankX = 0.15f;
@@ -41,13 +36,13 @@ void SpurGear::createApproximatedPartition() {
     // horizontal teeth part
     for (int i = 0; i < segmentsPerLine; i++) {
         hpreal x = (hpreal) i / segmentsPerLine;
-        heightProfilePartition_.push_back(glm::vec2(0.0f + x * horizX, 1.0f));
+        m_heightProfilePartition.push_back(glm::vec2(0.0f + x * horizX, 1.0f));
     }
 
     // right flank
     for (int i = 0; i < segmentsPerLine; i++) {
         hpreal x = (hpreal) i / segmentsPerLine;
-        heightProfilePartition_.push_back(
+        m_heightProfilePartition.push_back(
                 glm::vec2(horizX + x * flankX, 1.0f - x * 0.8f));
     }
 
@@ -57,14 +52,14 @@ void SpurGear::createApproximatedPartition() {
         hpreal x = (hpreal) i / segmentsPerLine;
         hpreal position = horizX + flankX + x * horizX;
         hpreal height = 0.2f * pow(2.0f * x - 1.0f, 2.0f);
-        heightProfilePartition_.push_back(glm::vec2(position, height));
+        m_heightProfilePartition.push_back(glm::vec2(position, height));
         //cout << position << ": " << height << std::endl;
     }
 
     //left flank
     for (int i = 0; i < segmentsPerLine; i++) {
         hpreal x = (hpreal) i / segmentsPerLine;
-        heightProfilePartition_.push_back(
+        m_heightProfilePartition.push_back(
                 glm::vec2(horizX + flankX + horizX + x * flankX,
                         0.2f + x * 0.8f));
     }
@@ -74,11 +69,11 @@ void SpurGear::createApproximatedPartition() {
 // x-values must be between 0 and p (partition, german: Teilung)
 // y-values must be between -p and p (height)
 void SpurGear::createHeightProfilePartition() {
-    heightProfilePartition_ = std::vector<glm::vec2>();
+    m_heightProfilePartition = std::vector<glm::vec2>();
 
-    standardProfile = new StandardProfile(module_, 10 / 180.0 * M_PI, 0, 0);
-    standardProfile->getProfilePartition(heightProfilePartition_,
-            SEGMENT_COUNT);
+    m_standardProfile = new StandardProfile(m_module, 10 / 180.0 * M_PI, 0, 0);
+    m_standardProfile->getProfilePartition(m_heightProfilePartition,
+            m_segmentCount);
     //createApproximatedPartition();
 }
 
@@ -87,25 +82,25 @@ void SpurGear::createHeightProfilePartition() {
 // y-values must be between -1 and 1 (height)
 void SpurGear::createHeightProfile() {
     createHeightProfilePartition();
-    heightProfile_ = std::vector<glm::vec2>();
+    m_heightProfile = std::vector<glm::vec2>();
 
-    for (int i = 0; i < toothCount_; i++) {
-        for (unsigned int j = 0; j < heightProfilePartition_.size(); j++) {
-            hpreal position = heightProfilePartition_[j].x + i * module_ * M_PI;
-            hpreal height = heightProfilePartition_[j].y;
-            heightProfile_.push_back(glm::vec2(position, height));
+    for (int i = 0; i < m_toothCount; i++) {
+        for (unsigned int j = 0; j < m_heightProfilePartition.size(); j++) {
+            hpreal position = m_heightProfilePartition[j].x + i * m_module * M_PI;
+            hpreal height = m_heightProfilePartition[j].y;
+            m_heightProfile.push_back(glm::vec2(position, height));
         }
     }
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 QuadMesh* SpurGear::toQuadMesh() {
-    const hpreal dz = length_ / Z_DETAIL_LEVEL;
-    const hpreal innerRadius = radius_ * INNER_RADIUS_FACTOR;
+    const hpreal dz = m_length / m_zDetailLevel;
+    const hpreal innerRadius = m_radius * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
-    const unsigned int profSize = heightProfile_.size();
+    const unsigned int profSize = m_heightProfile.size();
 
     // Create vector for the result
     std::vector<glm::vec4> vertexData;
@@ -119,17 +114,17 @@ QuadMesh* SpurGear::toQuadMesh() {
 
     for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        hpreal phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
+        hpreal phi = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
         cosSegment[segmentNum] = cos(phi);
         sinSegment[segmentNum] = sin(phi);
-        height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
+        height[segmentNum] = m_radius + m_heightProfile[segmentNum % profSize].y;
         cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
         sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
     }
 
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
-    for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
+    for (int i = 0; i < m_zDetailLevel; i++) {
         hpreal z = i * dz;
         for (unsigned int segmentNum = 0; segmentNum < profSize;
                 segmentNum++) {
@@ -180,49 +175,49 @@ QuadMesh* SpurGear::toQuadMesh() {
         }
     }
 
-    // draw the front and back of the gear
-    // this part is very straightforward. now alle quads have the
-    // circle's center as a common point. for nicer highlights it
-    // might be better to chose vertices in a more clever way.
-    int i = 0;
-    for (hpreal z = 0.0f; i < 2; i++, z += length_) {
-        for (unsigned int segmentNum = 0; segmentNum < profSize;
-                segmentNum++) {
-            glm::vec4 a, b, c, d, norm;
+//    // draw the front and back of the gear
+//    // this part is very straightforward. now alle quads have the
+//    // circle's center as a common point. for nicer highlights it
+//    // might be better to chose vertices in a more clever way.
+//    int i = 0;
+//    for (hpreal z = 0.0f; i < 2; i++, z += m_length) {
+//        for (unsigned int segmentNum = 0; segmentNum < profSize;
+//                segmentNum++) {
+//            glm::vec4 a, b, c, d, norm;
 
-            a.x = cosHeight[segmentNum];
-            a.y = sinHeight[segmentNum];
-            a.z = z;
-            a.w = 1.0f;
+//            a.x = cosHeight[segmentNum];
+//            a.y = sinHeight[segmentNum];
+//            a.z = z;
+//            a.w = 1.0f;
 
-            b.x = cosHeight[segmentNum + 1];
-            b.y = sinHeight[segmentNum + 1];
-            b.z = z;
-            b.w = 1.0f;
+//            b.x = cosHeight[segmentNum + 1];
+//            b.y = sinHeight[segmentNum + 1];
+//            b.z = z;
+//            b.w = 1.0f;
 
-            c.x = cosSegment[segmentNum + 1] * innerRadius;
-            c.y = sinSegment[segmentNum + 1] * innerRadius;
-            c.z = z;
-            c.w = 1.0f;
+//            c.x = cosSegment[segmentNum + 1] * innerRadius;
+//            c.y = sinSegment[segmentNum + 1] * innerRadius;
+//            c.z = z;
+//            c.w = 1.0f;
 
-            d.x = cosSegment[segmentNum] * innerRadius;
-            d.y = sinSegment[segmentNum] * innerRadius;
-            d.z = z;
-            d.w = 1.0f;
-            norm = i == 0 ?
-                    glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
-                    glm::vec4(0.0f, 0.0f, -1.0, 1.0);
+//            d.x = cosSegment[segmentNum] * innerRadius;
+//            d.y = sinSegment[segmentNum] * innerRadius;
+//            d.z = z;
+//            d.w = 1.0f;
+//            norm = i == 0 ?
+//                    glm::vec4(0.0f, 0.0f, 1.0, 1.0) :
+//                    glm::vec4(0.0f, 0.0f, -1.0, 1.0);
 
-            vertexData.push_back(a);
-            vertexData.push_back(norm);
-            vertexData.push_back(b);
-            vertexData.push_back(norm);
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
-            vertexData.push_back(d);
-            vertexData.push_back(norm);
-        }
-    }
+//            vertexData.push_back(a);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(b);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(c);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(d);
+//            vertexData.push_back(norm);
+//        }
+//    }
     QuadMesh* result = new QuadMesh(vertexData);
     result->setModelMatrix(modelMatrix_);
     result->setName(name_ + " - Instance 1");
@@ -231,12 +226,12 @@ QuadMesh* SpurGear::toQuadMesh() {
 
 // This creates the triangle mesh representation of a gear. The gear axis is the model's z-axis.
 TriangleMesh* SpurGear::toTriangleMesh() {
-    hpreal dz = length_ / Z_DETAIL_LEVEL;
-    hpreal innerRadius = radius_ * INNER_RADIUS_FACTOR;
+    hpreal dz = m_length / m_zDetailLevel;
+    hpreal innerRadius = m_radius * INNER_RADIUS_FACTOR;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
-    unsigned int profSize = heightProfile_.size();
+    unsigned int profSize = m_heightProfile.size();
 
     // Create vector for the result
     std::vector<glm::vec4> vertexData;
@@ -250,17 +245,17 @@ TriangleMesh* SpurGear::toTriangleMesh() {
 
     for (unsigned int segmentNum = 0; segmentNum < profSize + 2;
             segmentNum++) {
-        hpreal phi = heightProfile_[segmentNum % profSize].x / radius_; //in radians
+        hpreal phi = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
         cosSegment[segmentNum] = cos(phi);
         sinSegment[segmentNum] = sin(phi);
-        height[segmentNum] = radius_ + heightProfile_[segmentNum % profSize].y;
+        height[segmentNum] = m_radius + m_heightProfile[segmentNum % profSize].y;
         cosHeight[segmentNum] = cosSegment[segmentNum] * height[segmentNum];
         sinHeight[segmentNum] = sinSegment[segmentNum] * height[segmentNum];
     }
 
     // draw the sides (german: Mantelflaechen) of the gear
     // this is the important part where the height profile will come into play
-    for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
+    for (int i = 0; i < m_zDetailLevel; i++) {
         hpreal z = i * dz;
         for (unsigned int segmentNum = 0; segmentNum < profSize; segmentNum++) {
 
@@ -318,51 +313,51 @@ TriangleMesh* SpurGear::toTriangleMesh() {
         }
     }
 
-    // draw the front and back of the gear
-    int i = 0;
-    for (hpreal z = 0.0f; i < 2; i++, z += length_) {
-        for (unsigned int segmentNum = 0; segmentNum < profSize;
-                segmentNum++) {
-            glm::vec4 a, b, c, d, norm;
+//    // draw the front and back of the gear
+//    int i = 0;
+//    for (hpreal z = 0.0f; i < 2; i++, z += m_length) {
+//        for (unsigned int segmentNum = 0; segmentNum < profSize;
+//                segmentNum++) {
+//            glm::vec4 a, b, c, d, norm;
 
-            a.x = cosHeight[segmentNum];
-            a.y = sinHeight[segmentNum];
-            a.z = z;
-            a.w = 1.0f;
+//            a.x = cosHeight[segmentNum];
+//            a.y = sinHeight[segmentNum];
+//            a.z = z;
+//            a.w = 1.0f;
 
-            b.x = cosHeight[segmentNum + 1];
-            b.y = sinHeight[segmentNum + 1];
-            b.z = z;
-            b.w = 1.0f;
+//            b.x = cosHeight[segmentNum + 1];
+//            b.y = sinHeight[segmentNum + 1];
+//            b.z = z;
+//            b.w = 1.0f;
 
-            c.x = cosSegment[segmentNum + 1] * innerRadius;
-            c.y = sinSegment[segmentNum + 1] * innerRadius;
-            c.z = z;
-            c.w = 1.0f;
+//            c.x = cosSegment[segmentNum + 1] * innerRadius;
+//            c.y = sinSegment[segmentNum + 1] * innerRadius;
+//            c.z = z;
+//            c.w = 1.0f;
 
-            d.x = cosSegment[segmentNum] * innerRadius;
-            d.y = sinSegment[segmentNum] * innerRadius;
-            d.z = z;
-            d.w = 1.0f;
-            norm = i == 0 ?
-                    glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) :
-                    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+//            d.x = cosSegment[segmentNum] * innerRadius;
+//            d.y = sinSegment[segmentNum] * innerRadius;
+//            d.z = z;
+//            d.w = 1.0f;
+//            norm = i == 0 ?
+//                    glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) :
+//                    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
-            vertexData.push_back(a);
-            vertexData.push_back(norm);
-            vertexData.push_back(b);
-            vertexData.push_back(norm);
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
+//            vertexData.push_back(a);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(b);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(c);
+//            vertexData.push_back(norm);
 
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
-            vertexData.push_back(d);
-            vertexData.push_back(norm);
-            vertexData.push_back(a);
-            vertexData.push_back(norm);
-        }
-    }
+//            vertexData.push_back(c);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(d);
+//            vertexData.push_back(norm);
+//            vertexData.push_back(a);
+//            vertexData.push_back(norm);
+//        }
+//    }
     TriangleMesh* result = new TriangleMesh(vertexData);
     result->setModelMatrix(modelMatrix_);
     result->setName(name_ + " - Instance 1");
@@ -378,12 +373,12 @@ CircleCloud* SpurGear::toCircleCloud() {
   const hpreal epsilon = 0.000001f;
 
     // Determine radius constraints
-  const hpreal minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
-  const hpreal maxRadius = radius_ + epsilon;
+  const hpreal minRadius = m_radius * INNER_RADIUS_FACTOR - epsilon;
+  const hpreal maxRadius = m_radius + epsilon;
 
   // Determine resolution (important for following simulations)
-  const int resolutionXY = 1000;
-  const int resolutionZ = 1000;
+  const int resolutionXY = m_segmentCount;
+  const int resolutionZ = m_zDetailLevel;
 
   std::vector<Circle*> circles(resolutionXY * resolutionZ);
 
@@ -391,7 +386,7 @@ CircleCloud* SpurGear::toCircleCloud() {
   const hpreal diffRadiusStep = diffRadius / resolutionXY;
 
   for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-    hpreal z = stepZ / resolutionZ * length_;
+    hpreal z = stepZ / resolutionZ * m_length;
     for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
         hpreal radius = minRadius + diffRadiusStep * stepXY;
         glm::vec3 center = glm::vec3(0.0f, 0.0f, z);
@@ -401,36 +396,76 @@ CircleCloud* SpurGear::toCircleCloud() {
   return new CircleCloud(circles, resolutionXY, resolutionZ);
 }
 
-
 ZCircleCloud* SpurGear::toZCircleCloud() {
-  // Determine accuracy level of the simulation
-  const float epsilon = 0.000001f;
-
-    // Determine radius constraints
-  const float minRadius = radius_ * INNER_RADIUS_FACTOR - epsilon;
-  const float maxRadius = radius_ + epsilon;
+  // Create the height profile given the current gear settings
+  createHeightProfile();
+  const unsigned int profSize = m_heightProfile.size();
 
   // Determine resolution (important for following simulations)
-  const int resolutionXY = 1000;
-  const int resolutionZ = 1000;
+  const unsigned int resolutionXY = profSize;
+  const unsigned int resolutionZ = m_zDetailLevel;
 
-  const float diffRadius = maxRadius - minRadius;
-  const float diffRadiusStep = diffRadius / resolutionXY;
+  std::vector<float>* radii = new std::vector<float>;
+  std::vector<CirclePoint>* points = new std::vector<CirclePoint>;
+  std::vector<float>* posZ = new std::vector<float>;
 
-  std::vector<float>* radii = new std::vector<float>(resolutionXY);
-  std::vector<float>* posZ = new std::vector<float>(resolutionZ);
+//  radii.reserve(resolutionXY);
+//  points.reserve(resolutionXY);
+//  posZ.reserve(resolutionZ);
 
-  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-      float posZvalue = stepZ * length_ / resolutionZ;
-      (*posZ)[stepZ] = posZvalue;
+  for (unsigned int segmentNum = 0; segmentNum < resolutionXY; segmentNum++) {
+      hpreal angle = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
+      hpreal radius = m_radius + m_heightProfile[segmentNum % profSize].y;
+//      std::cout << angle << ", " << radius << ", " << std::endl;
+      CirclePoint point = CirclePoint(angle, radius);
+      radii->push_back(radius);
+      points->push_back(point);
   }
 
-  for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
-      float radius = minRadius + diffRadiusStep * stepXY;
-      (*radii)[stepXY] = radius;
+  for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
+      float posZValue = stepZ * m_length / resolutionZ;
+      posZ->push_back(posZValue);
+//      std::cout << "posZValues: " << posZValue << ", " << std::endl;
   }
 
-  ZCircleCloud* result = new ZCircleCloud(radii, posZ, resolutionXY, resolutionZ);
+  glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
+//  std::cout << "Radii0: " << radii->size() << std::endl;
+
+  ZCircleCloud* result = new ZCircleCloud(radii, points, posZ, resolutionXY, resolutionZ, referenceDir);
   result->setModelMatrix(modelMatrix_);
   return result;
 }
+
+//ZCircleCloud* SpurGear::toZCircleCloud() {
+//  // Determine accuracy level of the simulation
+//  const float epsilon = 0.000001f;
+
+//    // Determine radius constraints
+//  const float minRadius = m_radius * INNER_RADIUS_FACTOR - epsilon;
+//  const float maxRadius = m_radius + epsilon;
+
+//  // Determine resolution (important for following simulations)
+//  const int resolutionXY = 1000;
+//  const int resolutionZ = 1000;
+
+//  const float diffRadius = maxRadius - minRadius;
+//  const float diffRadiusStep = diffRadius / resolutionXY;
+
+//  std::vector<float>* radii = new std::vector<float>(resolutionXY);
+//  std::vector<float>* posZ = new std::vector<float>(resolutionZ);
+
+//  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
+//      float posZvalue = stepZ * m_length / resolutionZ;
+//      (*posZ)[stepZ] = posZvalue;
+//  }
+
+//  for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
+//      float radius = minRadius + diffRadiusStep * stepXY;
+//      (*radii)[stepXY] = radius;
+//  }
+
+//  glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
+//  ZCircleCloud* result = new ZCircleCloud(*radii, *posZ, resolutionXY, resolutionZ, referenceDir);
+//  result->setModelMatrix(modelMatrix_);
+//  return result;
+//}

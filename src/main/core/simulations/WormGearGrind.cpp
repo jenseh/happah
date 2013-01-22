@@ -20,43 +20,43 @@ void WormGearGrind::calculateGrindingDepth(){
 
 
    clock_t start, end;
-   clock_t startZ, endZ;
+//   clock_t startZ, endZ;
 
    start = clock();
    // Compute the distance for between every circle and triangle
    // TODO: Optimize this using spatial data structures
    for (size_t z = 0; z < resolutionZ; z++) {
 //       startZ = clock();
-       std::list<Triangle*> hits;
+       std::list<CircleHitResult> hitResults;
        int minXY = 0;
        int maxXY = resolutionXY - 1;
        int intersectionCount = 0;
 
        // Check upper bound
        int xy = maxXY;
-       computeIntersectingTriangles(xy, z, tree, hits);
+       computeIntersectingTriangles(xy, z, tree, hitResults);
        intersectionCount++;
-       if (hits.size() <= 0) {
+       if (hitResults.size() <= 0) {
            std::cout << "No intersect inside: at [" << z << "]" << std::endl;
            continue;
          }
 
        // Check lower bound
        xy = minXY;
-       reduceIntersectingTriangles(xy, z, hits);
+       reduceIntersectingTriangles(xy, z, hitResults);
        intersectionCount++;
-       if (hits.size() <= 0) {
+       if (hitResults.size() <= 0) {
            std::cout << "No intersect in range: at [" << z << "]" << std::endl;
            continue;
        }
 
        // Start binary search
-       while (maxXY - minXY > 1 && hits.size() > 0) {
-           if (hits.size() == 0) std::cout << "Error: Invalid hits size: " << hits.size() << std::endl;
-//           else std::cout << "Hits size: " << hits.size() << std::endl;
+       while (maxXY - minXY > 1 && hitResults.size() > 0) {
+           if (hitResults.size() == 0) std::cout << "Error: Invalid hitResults size: " << hitResults.size() << std::endl;
+//           else std::cout << "HitResults size: " << hitResults.size() << std::endl;
            xy = (minXY + maxXY) / 2;
 
-           bool intersectsMiddle = reduceSubdivideTriangles(xy, z, hits);
+           bool intersectsMiddle = reduceSubdivideTriangles(xy, z, hitResults);
            intersectionCount++;
 
            if (intersectsMiddle) {
@@ -67,7 +67,7 @@ void WormGearGrind::calculateGrindingDepth(){
        }
 
        // We found a solution in minXY
-       if (hits.size() <= 0) {
+       if (hitResults.size() <= 0) {
            std::cout << "Error: at [" << z << ", " << minXY  << std::endl;
            continue;
        }
@@ -81,27 +81,7 @@ void WormGearGrind::calculateGrindingDepth(){
 }
 
 
-//bool inline WormGearGrind::checkIntersection(int& xy, size_t& z, std::vector<Triangle*>& triangles) {
-//  Circle circle = m_worm->computeCircle(z, xy);
-//  Circle transformedCircle = transformCircle(circle);
-//  for (std::vector<Triangle*>::iterator it = triangles.begin(); it != triangles.end();) {
-//      bool intersectionXY = transformedCircle.checkTriangleIntersection(**it);
-
-//      if (intersectionXY) {
-
-//          // TODO: Remember radius
-//          //          float curRadius = transformedCircle.m_radius;
-//          //          if (curRadius < minRadius) {
-//          //              minRadius = curRadius;
-//          //            }
-
-//          // Since we detected a collision we can return true
-//          return true;
-//        }
-//    }
-//  return false;
-//}
-void inline WormGearGrind::computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<Triangle*>& hits) {
+void inline WormGearGrind::computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<CircleHitResult>& hitResults) {
   Circle circle = m_worm->computeCircle(z, xy);
   Circle transformedCircle = transformCircle(circle);
   //      if ((**it).vertices[2].x * (**it).vertices[2].x + (**it).vertices[2].y * (**it).vertices[2].y <= 0.25f) {
@@ -117,7 +97,7 @@ void inline WormGearGrind::computeIntersectingTriangles(int& xy, size_t& z, Impl
   //          std::cout << "triangleC: " << (**it).vertices[2].x << ", " << (**it).vertices[2].y << ", " << (**it).vertices[2].z << std::endl;
   //        }
   //      }
-  bool intersectionXY = tree.intersect(transformedCircle, hits);
+  tree.intersectAll(transformedCircle, hitResults);
   //      if (intersectionXY) {
   //                    std::cout << "tcircle: " << transformedCircle.m_center.x << ", " << transformedCircle.m_center.y << ", " << transformedCircle.m_center.z << std::endl;
   //                    std::cout << "triangleA: " << (**it).vertices[0].x << ", " << (**it).vertices[0].y << ", " << (**it).vertices[0].z << std::endl;
@@ -125,21 +105,20 @@ void inline WormGearGrind::computeIntersectingTriangles(int& xy, size_t& z, Impl
   //                    std::cout << "triangleC: " << (**it).vertices[2].x << ", " << (**it).vertices[2].y << ", " << (**it).vertices[2].z << std::endl;
   //          std::cout << "intersectionXY: " << intersectionXY << std::endl;
   //      }
-
-  if (intersectionXY) {
-      // Since we detected a collision we can return true
-//      hits.push_back(*it);
-    }
 }
 
-// Returns whether a triangle could be removed from hits
-bool inline WormGearGrind::reduceIntersectingTriangles(int& xy, size_t& z, std::list<Triangle*>& hits) {
-  size_t startSize = hits.size();
+// Returns whether a triangle could be removed from hitResults
+bool inline WormGearGrind::reduceIntersectingTriangles(int& xy, size_t& z, std::list<CircleHitResult>& hitResults) {
+  size_t startSize = hitResults.size();
 
   Circle circle = m_worm->computeCircle(z, xy);
   Circle transformedCircle = transformCircle(circle);
-  for (std::list<Triangle*>::iterator it = hits.begin(); it != hits.end();) {
-      bool intersectionXY = transformedCircle.intersect(**it);
+
+  std::list<CircleHitResult>::iterator it = hitResults.begin();
+
+  for (; it != hitResults.end();) {
+      CircleHitResult hitResult = CircleHitResult();
+      bool intersectionXY = transformedCircle.intersect(*(*it).object, hitResult);
 //      if (intersectionXY) {
 //                    std::cout << "tcircle: " << transformedCircle.m_center.x << ", " << transformedCircle.m_center.y << ", " << transformedCircle.m_center.z << std::endl;
 //                    std::cout << "triangleA: " << (**it).vertices[0].x << ", " << (**it).vertices[0].y << ", " << (**it).vertices[0].z << std::endl;
@@ -149,23 +128,27 @@ bool inline WormGearGrind::reduceIntersectingTriangles(int& xy, size_t& z, std::
 //      }
 
       if (intersectionXY) {
-          it = hits.erase(it);
+          it = hitResults.erase(it);
       } else {
           it++;
       }
     }
-  return hits.size() == startSize;
+  return hitResults.size() == startSize;
 }
 
-bool inline WormGearGrind::reduceSubdivideTriangles(int& xy, size_t& z, std::list<Triangle*>& hits) {
-  size_t startSize = hits.size();
-  std::list<Triangle*> inside;
-  std::list<Triangle*> outside;
+bool inline WormGearGrind::reduceSubdivideTriangles(int& xy, size_t& z, std::list<CircleHitResult>& hitResults) {
+  size_t startSize = hitResults.size();
+  std::list<CircleHitResult> inside;
+  std::list<CircleHitResult> outside;
 
   Circle circle = m_worm->computeCircle(z, xy);
   Circle transformedCircle = transformCircle(circle);
-  for (std::list<Triangle*>::iterator it = hits.begin(); it != hits.end(); ++it) {
-      bool intersectionXY = transformedCircle.intersect(**it);
+
+  std::list<CircleHitResult>::iterator it = hitResults.begin();
+
+  for (; it != hitResults.end(); ++it) {
+      CircleHitResult hitResult = CircleHitResult();
+      bool intersectionXY = transformedCircle.intersect(*(*it).object, hitResult, m_worm->getReferenceDir());
 //      if (intersectionXY) {
 //                    std::cout << "tcircle: " << transformedCircle.m_center.x << ", " << transformedCircle.m_center.y << ", " << transformedCircle.m_center.z << std::endl;
 //                    std::cout << "triangleA: " << (**it).vertices[0].x << ", " << (**it).vertices[0].y << ", " << (**it).vertices[0].z << std::endl;
@@ -174,6 +157,7 @@ bool inline WormGearGrind::reduceSubdivideTriangles(int& xy, size_t& z, std::lis
 //          std::cout << "intersectionXY: " << intersectionXY << std::endl;
 //      }
 
+      //TODO:remove this stuff
       if (intersectionXY) {
           inside.push_back(*it);
       } else {
@@ -182,13 +166,13 @@ bool inline WormGearGrind::reduceSubdivideTriangles(int& xy, size_t& z, std::lis
     }
 
   if (inside.size() != 0) {
-      hits.clear();
-      hits.splice(hits.end(), inside);
+      hitResults.clear();
+      hitResults.splice(hitResults.end(), inside);
   } else {
-      hits.clear();
-      hits.splice(hits.end(), outside);
+      hitResults.clear();
+      hitResults.splice(hitResults.end(), outside);
   }
-  return hits.size() != startSize;
+  return hitResults.size() != startSize;
 }
 
 

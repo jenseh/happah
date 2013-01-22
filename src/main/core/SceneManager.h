@@ -13,9 +13,6 @@
 #include "simulations/DiscGearGrind.h"
 #include "primitives/Circle.h"
 
-// Qt includes are only for the timer
-#include <QGLShaderProgram>
-
 using namespace std;
 
 class SceneManager {
@@ -28,8 +25,8 @@ public:
 private:
    vector<Drawable*>* drawables_;
 
-    QTimer *timer_;
-    const static int WAIT_TIME = 40;
+    // QTimer *timer_;
+    // const static int WAIT_TIME = 40;
 
    //Just for the beginning to have some objects
    Drawable* gear1_;

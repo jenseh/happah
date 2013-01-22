@@ -2,21 +2,65 @@
 
 #include <iostream>
 #include <glm/glm.hpp>
+#include <cmath>
+#include <algorithm>
 
 #include "Triangle.h"
 #include "../kdtree/BBox.h"
 #include "../kdtree/BSphere.h"
+#include "../../HappahTypes.h"
+
+struct CirclePoint {
+  hpreal angle;
+  hpreal radius;
+
+  CirclePoint(hpreal angle_, hpreal radius_) {
+    angle = angle_;
+    radius = radius_;
+  }
+};
+
+struct CircleRange {
+  hpreal startAngle;
+  hpreal endAngle;
+  hpreal radius;
+
+  CircleRange(hpreal startAngle_, hpreal endAngle_, hpreal radius_) {
+    startAngle = startAngle_;
+    endAngle = endAngle_;
+    radius = radius_;
+  }
+};
+
+struct CircleHitResult {
+  CircleRange* range;
+  Triangle* object;
+
+  CircleHitResult(CircleRange* range_, Triangle* object_) {
+     range = range_;
+     object = object_;
+  }
+
+  CircleHitResult() {}
+};
 
 struct Circle {
 	glm::vec3 m_center;
-	glm::vec3 m_normal;
+	glm::vec3 m_normal; //normalized
 	float m_radius;
 
 	Circle(glm::vec3 center, glm::vec3 normal, float radius) :
 			m_center(center), m_normal(normal), m_radius(radius) {
 	}
 
+	bool intersect(Triangle& triangle, CircleHitResult& hitResult) {
+	  glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
+	  return intersect(triangle, hitResult, referenceDir);
+	}
+
 	// This method checks whether a (filled) triangle intersects a (filled) circle.
+	// Assumptions:
+	// - referenceDir and normal are normalized
 	// It works as follows:
 	// Check collinearity of plane normals
 	//    - Yes: Check whether planes are identical
@@ -33,7 +77,7 @@ struct Circle {
 	//                - No: -> Return false
 	//            - No: -> Return false
 	//        - No: -> Return false
-	bool intersect(Triangle& triangle) {
+	bool intersect(Triangle& triangle, CircleHitResult& hitResult, glm::vec3& referenceDir) {
 		glm::vec3& t_v0 = triangle.vertices[0];
 		glm::vec3& t_v1 = triangle.vertices[1];
 		glm::vec3& t_v2 = triangle.vertices[2];
@@ -78,12 +122,9 @@ struct Circle {
 			//2b: If planes are identical, compute planar intersection of triangle and circle
 			else {
 				// Compute the closest points on triangle sides to the circle center
-				glm::vec3 closestPoint01 = glm::closestPointOnLine(m_center, t_v0,
-						t_v1);
-				glm::vec3 closestPoint12 = glm::closestPointOnLine(m_center, t_v1,
-						t_v2);
-				glm::vec3 closestPoint02 = glm::closestPointOnLine(m_center, t_v0,
-						t_v2);
+				glm::vec3 closestPoint01 = glm::closestPointOnLine(m_center, t_v0, t_v1);
+				glm::vec3 closestPoint12 = glm::closestPointOnLine(m_center, t_v1, t_v2);
+				glm::vec3 closestPoint02 = glm::closestPointOnLine(m_center, t_v0, t_v2);
 
 				// Compute the respective distances
 				float distC01 = glm::distance(m_center, closestPoint01);
@@ -98,11 +139,36 @@ struct Circle {
 					// ..then the triangle is "inside" the circle
 				    // std::cout << distC01 << ", " << distC12 << ", " << distC02 << ", " << m_radius << std::endl;
 				    // std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
+
+
+				    // Compute the diff vector from center to triangle vertices
+				    glm::vec3 centerToV0 = glm::normalize(t_v0 - m_center);
+				    glm::vec3 centerToV1 = glm::normalize(t_v1 - m_center);
+				    glm::vec3 centerToV2 = glm::normalize(t_v2 - m_center);
+
+				    // Compute the angles of the triangle points to the reference dir/point
+				    // Note that we don't normalize here, since everything is already normalized
+				    float angle0 = acos(glm::dot(centerToV0, referenceDir));
+				    float angle1 = acos(glm::dot(centerToV1, referenceDir));
+				    float angle2 = acos(glm::dot(centerToV2, referenceDir));
+
+				    float startAngle = std::min(std::min(angle0, angle1), angle2);
+				    float endAngle = std::max(std::max(angle0, angle1), angle2);
+				    float radius = std::min(std::min(distC01, distC12), distC02);
+				    CircleRange circleRange = CircleRange(startAngle, endAngle, radius);
+				    hitResult.object = &triangle;
+				    hitResult.range = &circleRange;
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
 						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
+						float startAngle = 0;
+						float endAngle = 2 * M_PI;
+						float radius = 0.0f;
+						CircleRange circleRange = CircleRange(startAngle, endAngle, radius);
+						hitResult.object = &triangle;
+						hitResult.range = &circleRange;
 						return true;
 					} else {
 						// std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
@@ -136,8 +202,82 @@ struct Circle {
 				    float distanceTA = computeDistanceOnLine(triangleIntersectionA, linePoint, lineDirection);
 				    float distanceTB = computeDistanceOnLine(triangleIntersectionB, linePoint, lineDirection);
 
-				    if (overlapSegments(distanceCA, distanceCB, distanceTA, distanceTB)) {
+				    glm::vec3* minC;
+				    glm::vec3* maxC;
+				    glm::vec3* minT;
+				    glm::vec3* maxT;
+
+				    float* minCv;
+				    float* maxCv;
+				    float* minTv;
+				    float* maxTv;
+
+				    if (distanceCA < distanceCB) {
+					minCv = &distanceCA;
+					maxCv = &distanceCB;
+					minC = &circleIntersectionA;
+					maxC = &circleIntersectionB;
+				    } else {
+					minCv = &distanceCB;
+					maxCv = &distanceCA;
+					minC = &circleIntersectionB;
+					maxC = &circleIntersectionA;
+				    }
+
+				    if (distanceTA < distanceTB) {
+					minTv = &distanceTA;
+					maxTv = &distanceTB;
+					minT = &triangleIntersectionA;
+					maxT = &triangleIntersectionB;
+				    } else {
+					minTv = &distanceTB;
+					maxTv = &distanceTA;
+					minT = &triangleIntersectionB;
+					maxT = &triangleIntersectionA;
+				    }
+
+
+				    // Check whether the segments on the line overlap
+				    if (!(floatLess(*maxTv, *minCv) || floatLess(*maxCv, *minTv))) {
 					// std::cout << "Success: Overlapping!" << std::endl;
+
+					// Compute the 2 "inner" points along line
+					glm::vec3* minVec;
+					glm::vec3* maxVec;
+
+					if (*minTv < *minCv) {
+					    minVec = minC;
+					} else {
+					    minVec = minT;
+					}
+
+					if (*maxTv < *maxCv) {
+					    maxVec = maxT;
+					} else {
+					    maxVec = maxC;
+					}
+
+					// Compute the diff vector from center to intersection points
+					glm::vec3 centerToMin = *minVec - m_center;
+					glm::vec3 centerToMax = *maxVec - m_center;
+
+					float distCenterToMin = centerToMin.length();
+					float distCenterToMax = centerToMax.length();
+
+					glm::vec3 centerToMinNormalized = glm::normalize(centerToMin);
+					glm::vec3 centerToMaxNormalized = glm::normalize(centerToMax);
+
+                                        // Compute the angles of the triangle points to the reference dir/point
+                                        // Note that we don't normalize here, since everything is already normalized
+                                        float angle0 = acos(glm::dot(centerToMinNormalized, referenceDir));
+                                        float angle1 = acos(glm::dot(centerToMaxNormalized, referenceDir));
+
+					float startAngle = std::min(angle0, angle1);
+					float endAngle = std::max(angle0, angle1);
+					float radius = std::min(distCenterToMin, distCenterToMax);
+					CircleRange circleRange = CircleRange(startAngle, endAngle, radius);
+					hitResult.object = &triangle;
+					hitResult.range = &circleRange;
 					return true;
 				    }
 				    else {

@@ -1,3 +1,5 @@
+#include <GL/glew.h>
+
 #include "GlViewport3D.h"
 
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
@@ -32,7 +34,13 @@ void GlViewport3D::initializeGL() {
 	QGLFormat glFormat = QGLWidget::format();
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+	  /* Problem: glewInit failed, something is seriously wrong. */
+	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 
+	}
 	//Create DrawManager
 	drawManager_ = new DrawManager();
 

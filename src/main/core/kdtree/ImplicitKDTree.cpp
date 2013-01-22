@@ -1,5 +1,6 @@
 #include "ImplicitKDTree.h"
 
+template bool ImplicitKDTree::intersectAll(Circle& circle, typename std::list<CircleHitResult>& hitResults);
 
 template <class T>
 class TriangleSorter {
@@ -131,12 +132,14 @@ ImplicitKDTree::ImplicitKDTree(std::vector<Triangle*>& triangles) : m_triangles(
 //  std::cout << "BSphere: " << center.x << ", " << center.y << ", " << center.z << ": " << radius << std::endl;
 }
 
-bool ImplicitKDTree::intersect(Circle& circle, std::list<Triangle*>& hits) {
-  BBox circleBox = circle.computeBoundingBox();
-  return intersectRec(circle, hits, circleBox, 0, 0);
+template <typename Intersector>
+bool ImplicitKDTree::intersectAll(Intersector& intersector, std::list<CircleHitResult>& hitResults) {
+  BBox intersectorBox = intersector.computeBoundingBox();
+  return intersectAllRec(intersector, hitResults, intersectorBox, 0, 0);
 }
 
-bool ImplicitKDTree::intersectRec(Circle& circle, std::list<Triangle*>& hits, BBox& curBox, int depth, unsigned int kPos) {
+template <typename Intersector>
+bool ImplicitKDTree::intersectAllRec(Intersector& intersector, std::list<CircleHitResult>& hitResults, BBox& curBox, int depth, unsigned int kPos) {
   if (curBox.intersects(m_bBox)) {
       TreeNode node = m_tree[kPos];
       TreeNode* prevNode;
@@ -159,19 +162,21 @@ bool ImplicitKDTree::intersectRec(Circle& circle, std::list<Triangle*>& hits, BB
           unsigned int rightChild = leftChild + 1;
 
           // If the kPos value is still valid, continue with respective child node
-          bool intersectA = leftChild < m_tree.size() ? intersectRec(circle, hits, boxes[0], depth + 1, leftChild) : false;
-          bool intersectB = rightChild < m_tree.size() ? intersectRec(circle, hits, boxes[1], depth + 1, rightChild) : false;
+          bool intersectA = leftChild < m_tree.size() ? intersectAllRec(intersector, hitResults, boxes[0], depth + 1, leftChild) : false;
+          bool intersectB = rightChild < m_tree.size() ? intersectAllRec(intersector, hitResults, boxes[1], depth + 1, rightChild) : false;
 
           return (intersectA || intersectB);
       } else {
           // Leaf node
-          typename std::vector<Triangle*>::iterator pos = m_triangles.begin() + prevNode->treeIndex;
-          typename std::vector<Triangle*>::iterator end = m_triangles.begin() + node.treeIndex;
+          std::vector<Triangle*>::iterator pos = m_triangles.begin() + prevNode->treeIndex;
+          std::vector<Triangle*>::iterator end = m_triangles.begin() + node.treeIndex;
           bool hit = false;
           for (; pos != end; pos++) {
               Triangle triangle = **pos;
-              if (circle.intersect(triangle)) {
-                  hits.push_back(*pos);
+              CircleHitResult hitResult = CircleHitResult();
+              if (intersector.intersect(triangle, hitResult)) {
+//                  std::cout << "Intersect: " << hitResult.range->startAngle << ", " << hitResult.range->endAngle << ", " << hitResult.range->radius << std::endl;
+                  hitResults.push_back(hitResult);
                   hit = true;
               }
           }

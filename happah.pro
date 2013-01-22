@@ -5,14 +5,14 @@ QT += core \
     opengl
 HEADERS += \
     src/main/gui/qt/BSplineTool.h \
-	src/main/gui/qt/ComponentList.h \
+    src/main/gui/qt/ComponentList.h \
     src/main/gui/qt/EditorScene.h \
-	src/main/gui/qt/EditorSceneItem.h \
-	src/main/gui/qt/EditorSceneManager.h \
-	src/main/gui/qt/Painter2DQt.h \
-	src/main/core/Painter2D.h \
-	src/main/core/Drawable2D.h \
-	src/main/core/geometries/BSplineCurve.h \
+    src/main/gui/qt/EditorSceneItem.h \
+    src/main/gui/qt/EditorSceneManager.h \
+    src/main/gui/qt/Painter2DQt.h \
+    src/main/core/Painter2D.h \
+    src/main/core/Drawable2D.h \
+    src/main/core/geometries/BSplineCurve.h \
     src/main/core/geometries/GeometryObject.h \
     src/main/core/geometries/SpurGear.h \
     src/main/core/geometries/Sphere.h \
@@ -52,17 +52,19 @@ HEADERS += \
     src/main/core/simulations/Kinematic.h \
     src/main/core/kdtree/ImplicitKDTree.h \
     src/main/core/kdtree/BBox.h \
-    src/main/core/kdtree/BSphere.h
+    src/main/core/kdtree/BSphere.h \
+    src/main/test/CircleTriangleIntersectionBenchmark.h \
+    src/main/test/WormGearGrindTest.cpp
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
-	src/main/gui/qt/ComponentList.cpp \
+    src/main/gui/qt/ComponentList.cpp \
     src/main/gui/qt/EditorScene.cpp \
-	src/main/gui/qt/EditorSceneItem.cpp \
-	src/main/gui/qt/EditorSceneManager.cpp \
-	src/main/gui/qt/Painter2DQt.cpp \
-	src/main/core/Painter2D.cpp \
-	src/main/core/Drawable2D.cpp \
-	src/main/core/geometries/BSplineCurve.cpp \
+    src/main/gui/qt/EditorSceneItem.cpp \
+    src/main/gui/qt/EditorSceneManager.cpp \
+    src/main/gui/qt/Painter2DQt.cpp \
+    src/main/core/Painter2D.cpp \
+    src/main/core/Drawable2D.cpp \
+    src/main/core/geometries/BSplineCurve.cpp \
     src/main/core/geometries/GeometryObject.cpp \
     src/main/core/geometries/SpurGear.cpp \
     src/main/core/geometries/Sphere.cpp \
@@ -93,11 +95,20 @@ SOURCES += src/main/main.cpp \
     src/main/core/simulations/Kinematic.cpp \
     src/main/core/kdtree/ImplicitKDTree.cpp \
     src/main/core/kdtree/BBox.cpp \
-    src/main/core/kdtree/BSphere.cpp
+    src/main/core/kdtree/BSphere.cpp \
+    src/main/test/CircleTriangleIntersectionBenchmark.cpp \
+    src/main/test/WormGearGrindTest.cpp
 FORMS += 
 RESOURCES += 
-INCLUDEPATH += /usr/include
-QMAKE_CXXFLAGS += -DGL_GLEXT_PROTOTYPES
+
+win32 {
+	INCLUDEPATH += ../include
+}
+
+unix {
+	LIBS += -lGLEW
+	INCLUDEPATH += /usr/include
+}
 
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug

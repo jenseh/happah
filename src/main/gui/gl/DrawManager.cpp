@@ -86,7 +86,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-int DrawManager::createBuffer() {
+void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
 
@@ -94,14 +94,14 @@ int DrawManager::createBuffer() {
 	glGenBuffers(1, &m_vertexDataBuffer);
 
 	int nBytes = 0;
-	for (list<Drawable*>::iterator i = m_drawables.begin(), end = m_drawables.end(); i != end; ++i)
+	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i)
 		nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexDataBuffer);
 	glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
 
 	int offset = 0;
-	for (list<Drawable*>::iterator i = m_drawables.begin(), endi = m_drawables.end(); i != endi; ++i) {
+	for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
 		vector<glm::vec4>* vertexData = (*i)->getVertexData();
 		int vertexDataSize = vertexData->size() * sizeof(glm::vec4);
 		glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
@@ -115,22 +115,17 @@ int DrawManager::createBuffer() {
 	glEnableVertexAttribArray(m_normalLocation);
 
 	glBindVertexArray(0);
-
-	return 1;
 }
 
-// Note: as of now this method can only be called before createBuffer!
-void DrawManager::addDrawable(Drawable* drawable) {
-	m_drawables.push_back(drawable);
-}
+void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+	createBufferFor(drawables);
 
-void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
 	glBindVertexArray(m_coloredVertexArrayObject);
 	int offset = 0;
-	for (list<Drawable*>::iterator i = m_drawables.begin(), end = m_drawables.end(); i != end; ++i) {
+	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
 		QMatrix4x4 MV = *viewMatrix * *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * MV;
 		QMatrix3x3 normalMatrix = MV.normalMatrix();

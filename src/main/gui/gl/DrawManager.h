@@ -2,6 +2,7 @@
 #define DRAWMANAGER_H
 
 #include <GL/glew.h>
+#include <vector>
 #include "../../core/models/Drawable.h"
 
 using namespace std;
@@ -10,14 +11,12 @@ class DrawManager {
 public:
 	DrawManager();
 
-	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
-	void addDrawable(Drawable* drawable);
+	void draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	bool initShaderPrograms();
-	int createBuffer();
 
 private:
+	void createBufferFor(std::vector<Drawable*> *drawables);
 	void compileShader(GLuint shader, const char* filePath);
-	list<Drawable*> m_drawables;
 	GLuint m_fragmentShader;
 	GLuint m_program;
 	GLuint m_vertexShader;

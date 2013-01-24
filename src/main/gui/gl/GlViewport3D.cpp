@@ -11,7 +11,7 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
     setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
 
 	mainWindow_ = mainWindow;
-	sceneManager_ = sceneManager;
+	m_sceneManager = sceneManager;
 
 	projectionMatrix_.setToIdentity();
 	viewMatrix_.setToIdentity();
@@ -42,31 +42,17 @@ void GlViewport3D::initializeGL() {
 
 	}
 	//Create DrawManager
-	drawManager_ = new DrawManager();
+	m_drawManager = new DrawManager();
 
 	// Initialize shaders
-	if (!drawManager_->initShaderPrograms()) {
+	if (!m_drawManager->initShaderPrograms()) {
 		return;
 	}
 
-	vector<Drawable*>* drawables = sceneManager_->getDrawables();
-	// Initialize all drawables
-	for (unsigned int i = 0; i < drawables->size(); i++) {
-		Drawable* drawable = drawables->at(i);
-		drawManager_->addDrawable(drawable);
-    }
 	// Finalize vertex buffer
-    if (!drawManager_->createBuffer()) {
-	    return;
-	}
-
-	// Add each Drawable's label to the mainWindow (right panel)
-	for (unsigned int i = 0; i < drawables->size(); i++) {
-		mainWindow_->getComponentList()->addComponent(
-				drawables->at(i)->getName());
-		std::cout << drawables->at(i)->getName() << std::endl;
-	}
-
+//    if (!m_drawManager->createBufferFor() {
+//	    return;
+//	}
 	// Setup and start a timer
 	timer_ = new QTimer(this);
 	connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -82,7 +68,8 @@ void GlViewport3D::resizeGL(int width, int height) {
 void GlViewport3D::paintGL() {
 	updateView();
 
-	drawManager_->draw(&projectionMatrix_, &viewMatrix_, &eye_);
+	vector<Drawable*>* drawables = m_sceneManager->getDrawables();
+	m_drawManager->draw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
 }
 
 void GlViewport3D::updateView() {

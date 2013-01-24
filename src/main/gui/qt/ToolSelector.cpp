@@ -1,6 +1,8 @@
 #include <QVBoxLayout>
 #include <QTextStream>
 #include <QWidget>
+#include <typeinfo>
+#include <iostream> //delete!!!
 
 #include "ToolSelector.h"
 
@@ -53,15 +55,20 @@ void ToolSelector::addTool(Tool* tool) {
 }
 
 void ToolSelector::toolSelected(int toolID) {
+	std::cerr << "in tool selected of toolselector: toolId = " << toolID << std::endl;
 	settingsWidgetStack_->setCurrentIndex(toolID + 1);
 
 	toolList_[currToolID_]->finalise();
-	toolList_[currToolID_]->disconnect(SIGNAL(emitComponent(Drawable2D*)));
 	toolList_[currToolID_]->disconnect( SIGNAL(changed()) );
-	currToolID_ = toolID;
-	connect(toolList_[toolID], SIGNAL(emitComponent(Drawable2D*)), this,
-			SLOT(newComponent(Drawable2D*)));
+	toolList_[currToolID_]->disconnect( SIGNAL(emitComponent(Drawable2D*)));
+	toolList_[currToolID_]->disconnect( SIGNAL(emitComponent(Drawable*)));
+	
+	connect(toolList_[toolID], SIGNAL(emitComponent(Drawable2D*)), this, SLOT(newComponent(Drawable2D*)));
+	connect(toolList_[toolID], SIGNAL(emitComponent(Drawable*)), this, SLOT(newComponent(Drawable*)));
+
 	connect(toolList_[toolID], SIGNAL(changed()), this, SLOT(update()) );
+
+	currToolID_ = toolID;
 //	toolList_[currToolID_]->disconnect(SIGNAL(emitComponent(Component*)));
 //	connect(toolList_[toolID], SIGNAL(emitComponent(Component*)), this,
 //			SLOT(newComponent(Component*)));
@@ -79,6 +86,10 @@ void ToolSelector::newComponent(Drawable2D* drawable) {
 	emit emitDrawable( drawable );
 }
 
+void ToolSelector::newComponent(Drawable* drawable) {
+	emit emitDrawable( drawable );
+}
+
 void ToolSelector::update() {
 	emit changed();
 }
@@ -89,6 +100,7 @@ void ToolSelector::finalise() {
 
 
 void ToolSelector::leftClickAt( QPointF point ) {
+	std::cerr << "left click at in tool selector arrived" << std::endl;
 	toolList_[currToolID_]->leftClickAt( point );
 }
 

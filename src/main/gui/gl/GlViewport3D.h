@@ -1,6 +1,7 @@
 #ifndef GLVIEWPORT3D_H_
 #define GLVIEWPORT3D_H_
 
+#include <GL/glew.h>
 #include <QGLWidget>
 #include <QGLBuffer>
 #include <QGLShaderProgram>
@@ -14,6 +15,7 @@
 
 #include "../qt/MainWindow.h"
 #include "../../core/SceneManager.h"
+#include "DrawManager.h"
 
 using namespace std;
 
@@ -40,8 +42,8 @@ private:
 
 	QTimer *timer_;
 	MainWindow* mainWindow_;
-	SceneManager* sceneManager_;
-	DrawManager* drawManager_;
+	SceneManager* m_sceneManager;
+	DrawManager* m_drawManager;
 
 	QMatrix4x4 viewMatrix_;
 	QMatrix4x4 projectionMatrix_;

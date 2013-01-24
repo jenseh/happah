@@ -1,5 +1,6 @@
 #include "BSplineTool.h"
 
+#include <iostream>
 #include <QGroupBox>
 
 BSplineTool::BSplineTool() {
@@ -108,6 +109,7 @@ void BSplineTool::finalise() {
 }
 
 void BSplineTool::leftClickAt( QPointF point ) {
+	std::cerr << "left click at in BSplineTool arrived" << std::endl;
 	this->pointAdded( point.x(), point.y() );
 }
 

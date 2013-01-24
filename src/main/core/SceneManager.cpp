@@ -1,8 +1,10 @@
 #include "SceneManager.h"
 #include <time.h>
 #include "../test/WormGearGrindTest.h"
+#include <iostream>
 
 SceneManager::SceneManager() : m_iDCounter(0) {
+    std::cerr << " SM: size" << m_drawables.size()<< std::endl;
 }
 
 SceneManager::~SceneManager() {
@@ -17,10 +19,15 @@ uint SceneManager::addDrawable(Drawable *drawable) {
 }
 
 void SceneManager::removeDrawable(uint id) {
-    for(std::list<IdDrawable>::iterator it = m_drawables.begin(); it != m_drawables.end(); ++it) {
+    std::list<IdDrawable>::iterator candidate = m_drawables.end();
+    for(std::list<IdDrawable>::iterator it = m_drawables.begin(), eend = m_drawables.end(); it != eend; ++it) {
         if (it->id == id) {
-            m_drawables.erase(it);
+            candidate = it;
         }
+    }
+    if(candidate != m_drawables.end()){
+        m_drawables.erase(candidate);
+        m_deletedCounter += 1;
     }
 }
 
@@ -31,4 +38,8 @@ vector<Drawable*>* SceneManager::getDrawables() {
         drawables->push_back(it->drawable);
     }
     return drawables;
+}
+
+unsigned int SceneManager::getObjectState() {
+    return m_iDCounter + m_deletedCounter;
 }

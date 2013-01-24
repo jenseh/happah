@@ -3,20 +3,23 @@
 
 #include <GL/glew.h>
 #include <vector>
+#include "../../core/SceneManager.h"
 #include "../../core/models/Drawable.h"
 
 using namespace std;
 
 class DrawManager {
 public:
-	DrawManager();
+	DrawManager(SceneManager* sceneManager);
 
-	void draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
+	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	bool initShaderPrograms();
+	void createBufferFor(std::vector<Drawable*> *drawables);
 
 private:
-	void createBufferFor(std::vector<Drawable*> *drawables);
 	void compileShader(GLuint shader, const char* filePath);
+	SceneManager *m_sceneManager;
+	unsigned int m_sceneState;
 	GLuint m_fragmentShader;
 	GLuint m_program;
 	GLuint m_vertexShader;

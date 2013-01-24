@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-DrawManager::DrawManager() {
+DrawManager::DrawManager(SceneManager *sceneManager) : m_sceneManager(sceneManager), m_sceneState(0) {
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 	glClearDepth(1.0f);
 	glEnable (GL_DEPTH_TEST);
@@ -117,8 +117,15 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 	glBindVertexArray(0);
 }
 
-void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
-	createBufferFor(drawables);
+void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
+ QVector3D* cameraPosition) {
+
+ 	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
+
+ 	if (m_sceneState != m_sceneManager->getObjectState()) {
+ 		createBufferFor(drawables);
+ 		m_sceneState = m_sceneManager->getObjectState();
+ 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

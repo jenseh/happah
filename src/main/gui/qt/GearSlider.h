@@ -20,7 +20,7 @@ signals:
     //void valueChanged(int value);
     void valueChanged(hpreal value);
 
-public slots:
+public:
     void setNewRange(hpreal *minmax);
 
 private slots:
@@ -32,7 +32,7 @@ private slots:
 private:
     QSlider *m_slider;
     QLabel *m_minLabel, *m_maxLabel, *m_valueLabel;
-    hpreal   m_minValue,  m_maxValue,  m_value;
+    hpreal  m_minValue,  m_maxValue,  m_value;
     uint m_steps;
 
     void updateView();

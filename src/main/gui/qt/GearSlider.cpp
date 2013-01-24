@@ -88,5 +88,7 @@ int GearSlider::getValueForSlider(hpreal value) {
 void GearSlider::setNewRange(hpreal *minmax) {
     m_minValue = minmax[0];
     m_maxValue = minmax[1];
+    disconnect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
     updateView();
+    connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
 }

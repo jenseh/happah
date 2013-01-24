@@ -30,6 +30,7 @@ public slots:
 	void addDrawable(Drawable* drawable);
 	void selectByListID(unsigned int itemID);
 	void deleteCurrentDrawable();
+	void update();
 
 };
 

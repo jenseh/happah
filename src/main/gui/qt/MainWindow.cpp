@@ -62,7 +62,7 @@ MainWindow::MainWindow() {
 	connect(toolSelector_, SIGNAL(emitDrawable(Drawable*)),
 	        m_sceneManager3D, SLOT(addDrawable(Drawable*)));
 	connect(toolSelector_, SIGNAL(changed()),
-			viewport3D, SLOT(update()));
+			m_sceneManager3D, SLOT(update()));
 	connect(m_componentList, SIGNAL(deleteCurrent()),
 	        m_sceneManager3D, SLOT(deleteCurrentDrawable()));
 	//editor scene

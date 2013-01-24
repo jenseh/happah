@@ -31,12 +31,24 @@ private:
     uint m_toothCount;
     hpreal m_module, m_facewidth, m_pressureAngle, m_bottomClrearance, m_filletRadius;
 
+    void updateGear();
+    void setInitialState();
+
 public:
 	InvoluteSpurGearTool();
 	~InvoluteSpurGearTool();
 
 private slots:
+	
 	void createGear();
+	void setBack();
+	void updateRanges();
+	void changeToothCount(hpreal toothCount);
+	void changeModule(hpreal module);
+	void changeFacewidth(hpreal facewidth);
+	void changePressureAngle(hpreal angle);
+	void changeBottomClearance(hpreal bottomClearance);
+	void changeFilletRadius(hpreal radius);
 /*
 	void generateRndPoint();
 	void periodicChanged( int state );
@@ -46,8 +58,8 @@ private slots:
 	void pointAdded( int x, int y );*/
 
 public slots:
-    /*void finalise();
-	void leftClickAt( QPointF point );
+    void finalise();
+	/*void leftClickAt( QPointF point );
 	void rightClickAt( QPointF point );*/
 };
 

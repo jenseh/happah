@@ -17,6 +17,8 @@ public:
     uint addDrawable(Drawable *drawable);
     void removeDrawable(uint id);
 
+    unsigned int getObjectState();
+
 private:
     struct IdDrawable
     {
@@ -25,6 +27,7 @@ private:
     };
     std::list<IdDrawable> m_drawables;
     unsigned int m_iDCounter;
+    unsigned int m_deletedCounter;
 };
 
 #endif // SCENEMANAGER_H

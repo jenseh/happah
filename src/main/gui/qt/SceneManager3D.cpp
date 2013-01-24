@@ -51,3 +51,8 @@ void SceneManager3D::deleteCurrentDrawable() {
 	}
 }
 
+void SceneManager3D::update() {
+	deleteCurrentDrawable();
+
+}
+

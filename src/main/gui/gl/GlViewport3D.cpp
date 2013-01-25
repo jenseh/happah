@@ -42,7 +42,7 @@ void GlViewport3D::initializeGL() {
 
 	}
 	//Create DrawManager
-	m_drawManager = new DrawManager(m_sceneManager);
+	m_drawManager = new DrawManager();
 
 	// Initialize shaders
 	if (!m_drawManager->initShaderPrograms()) {
@@ -67,7 +67,9 @@ void GlViewport3D::resizeGL(int width, int height) {
 
 void GlViewport3D::paintGL() {
 	updateView();
-	m_drawManager->draw(&projectionMatrix_, &viewMatrix_, &eye_);
+
+	vector<Drawable*>* drawables = m_sceneManager->getDrawables();
+	m_drawManager->draw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
 }
 
 void GlViewport3D::updateView() {

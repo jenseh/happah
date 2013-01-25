@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-DrawManager::DrawManager(SceneManager *sceneManager) : m_sceneManager(sceneManager), m_sceneState(0) {
+DrawManager::DrawManager() {
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 	glClearDepth(1.0f);
 	glEnable (GL_DEPTH_TEST);
@@ -62,6 +62,9 @@ bool DrawManager::initShaderPrograms() {
 	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
 	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
 
+    m_vertexColor = glGetAttribLocation(m_program, "color");
+    if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
+
 	return true;
 }
 
@@ -90,7 +93,8 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
 
-	GLuint m_vertexDataBuffer;
+    // Vertex Data
+    //GLuint m_vertexDataBuffer;
 	glGenBuffers(1, &m_vertexDataBuffer);
 
 	int nBytes = 0;
@@ -107,25 +111,40 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 		glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
 		offset += vertexDataSize;
 	}
+    glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+    glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
 
-	glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
-	glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
+    glEnableVertexAttribArray(m_vertexLocation);
+    glEnableVertexAttribArray(m_normalLocation);
 
-	glEnableVertexAttribArray(m_vertexLocation);
-	glEnableVertexAttribArray(m_normalLocation);
+    glBindVertexArray(0);
 
-	glBindVertexArray(0);
+
+    // Color Data
+    glGenBuffers(2, &m_colorDataBuffer);
+    nBytes = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i)
+        nBytes += (*i)->getColorData()->size() * sizeof(Color);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_colorDataBuffer);
+    glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
+
+    offset = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
+        vector<Color>* colorData = (*i)->getColorData();
+        if( colorData->size() != 0 ){
+            int colorDataSize = colorData->size() * sizeof(Color);
+            glBufferSubData(GL_ARRAY_BUFFER, offset, colorDataSize, &(colorData->at(0)));
+            offset += colorDataSize;
+        }
+    }
+    glVertexAttribPointer(m_vertexColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(m_vertexColor);
 }
 
-void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix,
- QVector3D* cameraPosition) {
-
- 	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
-
- 	if (m_sceneState != m_sceneManager->getObjectState()) {
- 		createBufferFor(drawables);
- 		m_sceneState = m_sceneManager->getObjectState();
- 	}
+void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+	createBufferFor(drawables);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

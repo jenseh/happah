@@ -117,8 +117,6 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     glEnableVertexAttribArray(m_vertexLocation);
     glEnableVertexAttribArray(m_normalLocation);
 
-    glBindVertexArray(0);
-
 
     // Color Data
     glGenBuffers(2, &m_colorDataBuffer);
@@ -141,6 +139,8 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     glVertexAttribPointer(m_vertexColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
     glEnableVertexAttribArray(m_vertexColor);
+
+    glBindVertexArray(0);
 }
 
 void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {

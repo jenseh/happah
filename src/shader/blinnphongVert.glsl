@@ -6,6 +6,7 @@ uniform mat3 normalMat;
 
 // Kameraposition
 uniform vec3 eye;
+uniform int useColor;
 
 //input aus VBO
 in vec4 vertex;
@@ -22,9 +23,11 @@ void main(void)
         vNormal = normalize(normalMat * normal.xyz);
         vWorldPosition = vec4(MV * vertex).xyz;
         
-        //gl_FrontColor = gl_Color;
-        //vColor = gl_Color;
-        
-        gl_FrontColor = color;
-        vColor = color;
+        if( false){
+			gl_FrontColor = color;
+			vColor = color;
+		}else{ 
+			gl_FrontColor = gl_Color;
+			vColor = gl_Color; 
+		}
 }

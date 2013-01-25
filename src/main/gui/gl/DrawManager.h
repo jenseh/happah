@@ -32,6 +32,8 @@ private:
 	GLuint m_coloredVertexArrayObject;
 	GLuint m_vertexDataBuffer;
     GLuint m_colorDataBuffer;
+
+     GLint m_useColorLocation; // Wether the color buffer is used (1) or not (0)
 };
 
 #endif // DRAWMANAGER_H

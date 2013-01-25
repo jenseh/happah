@@ -34,7 +34,11 @@ bool DrawManager::initShaderPrograms() {
 
 	GLint diffuseColorLocation = glGetUniformLocation(m_program, "diffuseColor");
 	if(diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
-	else glUniform4f(diffuseColorLocation, 0.75f, 0.75f, 0.75f, 1.0f);
+    else glUniform4f(diffuseColorLocation, 0.75f, 0.75f, 0.75f, 1.0f);
+
+    m_useColorLocation = glGetUniformLocation(m_program, "useColor");
+    if(m_useColorLocation < 0) cerr << "Failed to find useColor information." << endl;
+    else glUniform1i(m_useColorLocation, 0);
 
 	m_eyeLocation = glGetUniformLocation(m_program, "eye");
 	if(m_eyeLocation < 0) cerr << "Failed to find eye." << endl;
@@ -64,6 +68,7 @@ bool DrawManager::initShaderPrograms() {
 
     m_vertexColor = glGetAttribLocation(m_program, "color");
     if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
+
 
 	return true;
 }

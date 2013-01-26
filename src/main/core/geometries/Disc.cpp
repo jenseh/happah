@@ -10,36 +10,36 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 Disc::Disc(hpreal radius) {
-    radius_ = radius; // doppelt so groß wie ein zahn
-    module_ = radius_/2.0;
-    length_ = module_ * M_PI;
-    standardProfile = new StandardProfile(module_, 30 / 180.0 * M_PI, 0, 0);
+    m_radius = radius; // doppelt so groß wie ein zahn
+    m_module = m_radius/2.0;
+    m_length = m_module * M_PI;
+    m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
 }
 
 Disc::~Disc() {
-    delete standardProfile;
+    delete m_standardProfile;
 }
 
 hpreal Disc::getRadius() {
-    return radius_;
+    return m_radius;
 }
 
 // Create a profile of height values
 void Disc::createHeightProfile() {
-    heightProfile_ = std::vector<glm::vec2>();
-    heightProfile_.resize(SEGMENT_COUNT);
-    hpreal x = length_/2.0;
-    hpreal deltaX = length_/(double)SEGMENT_COUNT;
+    m_heightProfile = std::vector<glm::vec2>();
+    m_heightProfile.resize(SEGMENT_COUNT);
+    hpreal x = m_length / 2.0;
+    hpreal deltaX = m_length/(double)SEGMENT_COUNT;
     for( int i = 0; i < SEGMENT_COUNT; i++){
-        heightProfile_[i].x = x;
-        heightProfile_[i].y = standardProfile->getHeight(x) + module_;
-        x+= deltaX;
+        m_heightProfile[i].x = x;
+        m_heightProfile[i].y = m_standardProfile->getHeight(x) + m_module;
+        x += deltaX;
     }
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 void Disc::createVertexData() {
-    vertexData_.clear();
+    m_vertexData.clear();
     float dalpha = 2*M_PI/ Z_DETAIL_LEVEL;
 
     // Create the height profile given the current gear settings
@@ -55,29 +55,29 @@ void Disc::createVertexData() {
         hpreal alpha2 = alpha1 + dalpha;
         hpreal sinAlpha2 = sin(alpha2);
         hpreal cosAlpha2 = cos(alpha2);
-        for (unsigned int segmentNum = 0; segmentNum < heightProfile_.size()-1;
+        for (unsigned int segmentNum = 0; segmentNum < m_heightProfile.size()-1;
                 segmentNum++) {
 
             glm::vec4 a, b, c, d, normNext, norm;
 
-            a.x = heightProfile_[segmentNum+1].x;
-            a.y = sinAlpha1 * heightProfile_[segmentNum+1].y;
-            a.z = cosAlpha1 * heightProfile_[segmentNum+1].y;
+            a.x = m_heightProfile[segmentNum+1].x;
+            a.y = sinAlpha1 * m_heightProfile[segmentNum+1].y;
+            a.z = cosAlpha1 * m_heightProfile[segmentNum+1].y;
             a.w = 1.0f;
 
-            b.x = heightProfile_[segmentNum].x;
-            b.y = sinAlpha1 * heightProfile_[segmentNum].y;
-            b.z = cosAlpha1 * heightProfile_[segmentNum].y;
+            b.x = m_heightProfile[segmentNum].x;
+            b.y = sinAlpha1 * m_heightProfile[segmentNum].y;
+            b.z = cosAlpha1 * m_heightProfile[segmentNum].y;
             b.w = 1.0f;
 
-            c.x = heightProfile_[segmentNum].x;
-            c.y = sinAlpha2 * heightProfile_[segmentNum].y;
-            c.z = cosAlpha2 * heightProfile_[segmentNum].y;
+            c.x = m_heightProfile[segmentNum].x;
+            c.y = sinAlpha2 * m_heightProfile[segmentNum].y;
+            c.z = cosAlpha2 * m_heightProfile[segmentNum].y;
             c.w = 1.0f;
 
-            d.x = heightProfile_[segmentNum+1].x;
-            d.y = sinAlpha2 * heightProfile_[segmentNum+1].y;
-            d.z = cosAlpha2 * heightProfile_[segmentNum+1].y;
+            d.x = m_heightProfile[segmentNum+1].x;
+            d.y = sinAlpha2 * m_heightProfile[segmentNum+1].y;
+            d.z = cosAlpha2 * m_heightProfile[segmentNum+1].y;
             d.w = 1.0f;
 
             /*norm = glm::vec4(
@@ -95,25 +95,25 @@ void Disc::createVertexData() {
 
 
 
-            vertexData_.push_back(a);
+            m_vertexData.push_back(a);
             //dataPushback(normNext);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(b);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(c);
-            vertexData_.push_back(norm);
-            vertexData_.push_back(d);
+            m_vertexData.push_back(norm);
+            m_vertexData.push_back(b);
+            m_vertexData.push_back(norm);
+            m_vertexData.push_back(c);
+            m_vertexData.push_back(norm);
+            m_vertexData.push_back(d);
             //dataPushback(normNext);
-            vertexData_.push_back(norm);
+            m_vertexData.push_back(norm);
         }
     }
 }
 
 QuadMesh* Disc::toQuadMesh(){
     createVertexData();
-    QuadMesh* result = new QuadMesh(vertexData_);
-    result->setModelMatrix(modelMatrix_);
-    result->setName(name_ + " - Instance 1");
+    QuadMesh* result = new QuadMesh(m_vertexData);
+    result->setModelMatrix(m_modelMatrix);
+    result->setName(m_name + " - Instance 1");
     return result;
 }
 

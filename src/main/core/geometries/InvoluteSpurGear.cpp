@@ -322,7 +322,10 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
     //TODO: irgendwie muss speicherplatz für toothprofile freigegeben werden!
 
     for (uint i = 1; i < getToothCount(); ++i) {
-        hpreal mirrorAngle = getAngularPitch() * i;
+        //TODO: Katja please look at this: I changed i to i + 1 since
+        // otherwise there would be 2 equal points in a sequence and
+        // that would lead to corrupt normals in my simulation...
+        hpreal mirrorAngle = getAngularPitch() * (i);
         hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 
         for (uint j = 0; j < toothSampleSize; ++j) {
@@ -330,6 +333,11 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
             profile->at(k) = mirrorPoint(profile->at(k-1-2*j), mirrorAxis);
         }
     }
+
+//    for (int i = 0; i < profile->size(); i++) {
+//        hpvec2 point = profile->at(i);
+//        std::cout << "Point: " << point.x << ", " << point.y << std::endl;
+//    }
     return profile;
 }
 
@@ -337,8 +345,8 @@ TriangleMesh* InvoluteSpurGear::toTriangleMesh(uint toothSampleSize, uint widthS
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsTriangles);
     smoothTriangleMeshNormals(vertexData, widthSampleSize);
     TriangleMesh* mesh = new TriangleMesh(*vertexData);
-    mesh->setModelMatrix(modelMatrix_);
-    mesh->setName(name_ + " - Instance 1");
+    mesh->setModelMatrix(m_modelMatrix);
+    mesh->setName(m_name + " - Instance 1");
     return mesh;
 }
 
@@ -349,7 +357,7 @@ void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const h
             vertexData->push_back(points[1]);
             vertexData->push_back(normal);
             vertexData->push_back(points[2]);
-            vertexData->push_back(normal);
+            vertexData->push_back(normal);//TODO: we need a normal for each vertex when rendering
             //second triangle
             vertexData->push_back(points[0]);
             vertexData->push_back(normal);
@@ -362,8 +370,8 @@ void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const h
 QuadMesh* InvoluteSpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsQuads);
     QuadMesh* mesh = new QuadMesh(*vertexData);
-    mesh->setModelMatrix(modelMatrix_);
-    mesh->setName(name_ + " - Instance 1");
+    mesh->setModelMatrix(m_modelMatrix);
+    mesh->setName(m_name + " - Instance 1");
     return mesh;
 }
 
@@ -479,7 +487,7 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 
     // Determine resolution (important for following simulations)
     const unsigned int resolutionXY = profSize;
-    const unsigned int resolutionZ = 1000;
+    const unsigned int resolutionZ = 10;
 
     std::vector<glm::vec2>* points = this->getGearProfile();
     std::vector<float>* posZ = new std::vector<float>;
@@ -492,7 +500,7 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
       glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
 
       ZCircleCloud* result = new ZCircleCloud(points, posZ, resolutionXY, resolutionZ, referenceDir);
-      result->setModelMatrix(modelMatrix_);
+      result->setModelMatrix(m_modelMatrix);
       return result;
 }
 

@@ -20,7 +20,7 @@ private:
   int m_angleSteps;
   int m_posZSteps;
   float m_angleRange;
-  glm::vec3 referenceDir;
+  glm::vec3 m_referenceDir;
 };
 
 #endif // CIRCULARSIMULATIONRESULT_H

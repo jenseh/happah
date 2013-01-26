@@ -9,22 +9,22 @@
 ToolSelector::ToolSelector(QWidget* parent) {
 	setParent(parent);
 
-	toolCount_ = 0;
-	currToolID_ = 0;
+	m_toolCount = 0;
+	m_currToolID = 0;
 
-	settingsWidgetStack_ = new QStackedWidget;
-	settingsWidgetStack_->addWidget(new QWidget);
+	m_settingsWidgetStack = new QStackedWidget;
+	m_settingsWidgetStack->addWidget(new QWidget);
 
-	buttonGroup_ = new QButtonGroup(this);
-	connect(buttonGroup_, SIGNAL(buttonClicked(int)), this,
+	m_buttonGroup = new QButtonGroup(this);
+	connect(m_buttonGroup, SIGNAL(buttonClicked(int)), this,
 			SLOT(toolSelected(int)));
 
 	QVBoxLayout* vBox = new QVBoxLayout(this);
 
-	selectorGrid_ = new QGridLayout();
-	selectorGrid_->setSpacing(2);
+	m_selectorGrid = new QGridLayout();
+	m_selectorGrid->setSpacing(2);
 
-	vBox->addLayout(selectorGrid_);
+	vBox->addLayout(m_selectorGrid);
 	vBox->addStretch(1);
 
 	setLayout(vBox);
@@ -34,43 +34,43 @@ ToolSelector::~ToolSelector() {
 }
 
 QWidget* ToolSelector::getSettingsWidget() {
-	return settingsWidgetStack_;
+	return m_settingsWidgetStack;
 }
 
 void ToolSelector::addTool(Tool* tool) {
-	toolList_.append(tool);
+	m_toolList.append(tool);
 
-	int row = (toolCount_ / BUTTONS_PER_ROW);
-	int col = (toolCount_ % BUTTONS_PER_ROW);
+	int row = (m_toolCount / BUTTONS_PER_ROW);
+	int col = (m_toolCount % BUTTONS_PER_ROW);
 
 	tool->getToolButton()->setFixedSize(40, 40);
 	tool->getToolButton()->setCheckable(true);
 //	toolButton->setParent(this);
-	buttonGroup_->addButton(tool->getToolButton(), toolCount_);
-	selectorGrid_->addWidget(tool->getToolButton(), row, col);
+	m_buttonGroup->addButton(tool->getToolButton(), m_toolCount);
+	m_selectorGrid->addWidget(tool->getToolButton(), row, col);
 
-	settingsWidgetStack_->addWidget(tool->getToolSettings());
+	m_settingsWidgetStack->addWidget(tool->getToolSettings());
 
-	toolCount_ += 1;
+	m_toolCount += 1;
 }
 
 void ToolSelector::toolSelected(int toolID) {
 	std::cerr << "in tool selected of toolselector: toolId = " << toolID << std::endl;
-	settingsWidgetStack_->setCurrentIndex(toolID + 1);
+	m_settingsWidgetStack->setCurrentIndex(toolID + 1);
 
-	toolList_[currToolID_]->finalise();
-	toolList_[currToolID_]->disconnect( SIGNAL(changed()) );
-	toolList_[currToolID_]->disconnect( SIGNAL(emitComponent(Drawable2D*)));
-	toolList_[currToolID_]->disconnect( SIGNAL(emitComponent(Drawable*)));
+	m_toolList[m_currToolID]->finalise();
+	m_toolList[m_currToolID]->disconnect( SIGNAL(changed()) );
+	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(Drawable2D*)));
+	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(Drawable*)));
 	
-	connect(toolList_[toolID], SIGNAL(emitComponent(Drawable2D*)), this, SLOT(newComponent(Drawable2D*)));
-	connect(toolList_[toolID], SIGNAL(emitComponent(Drawable*)), this, SLOT(newComponent(Drawable*)));
+	connect(m_toolList[toolID], SIGNAL(emitComponent(Drawable2D*)), this, SLOT(newComponent(Drawable2D*)));
+	connect(m_toolList[toolID], SIGNAL(emitComponent(Drawable*)), this, SLOT(newComponent(Drawable*)));
 
-	connect(toolList_[toolID], SIGNAL(changed()), this, SLOT(update()) );
+	connect(m_toolList[toolID], SIGNAL(changed()), this, SLOT(update()) );
 
-	currToolID_ = toolID;
-//	toolList_[currToolID_]->disconnect(SIGNAL(emitComponent(Component*)));
-//	connect(toolList_[toolID], SIGNAL(emitComponent(Component*)), this,
+	m_currToolID = toolID;
+//	m_toolList[m_currToolID]->disconnect(SIGNAL(emitComponent(Component*)));
+//	connect(m_toolList[toolID], SIGNAL(emitComponent(Component*)), this,
 //			SLOT(newComponent(Component*)));
 
 //	QTextStream out(stdout);
@@ -95,15 +95,15 @@ void ToolSelector::update() {
 }
 
 void ToolSelector::finalise() {
-	toolList_[currToolID_]->finalise();
+	m_toolList[m_currToolID]->finalise();
 }
 
 
 void ToolSelector::leftClickAt( QPointF point ) {
 	std::cerr << "left click at in tool selector arrived" << std::endl;
-	toolList_[currToolID_]->leftClickAt( point );
+	m_toolList[m_currToolID]->leftClickAt( point );
 }
 
 void ToolSelector::rightClickAt( QPointF point ) {
-	toolList_[currToolID_]->rightClickAt( point );
+	m_toolList[m_currToolID]->rightClickAt( point );
 }

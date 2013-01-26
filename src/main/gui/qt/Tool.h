@@ -24,8 +24,8 @@ signals:
 	void changed();
 
 private:
-	QPushButton* toolButton;
-	QWidget* toolSettings;
+	QPushButton* m_toolButton;
+	QWidget* m_toolSettings;
 
 public slots:
 	virtual void finalise();

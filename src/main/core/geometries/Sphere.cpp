@@ -8,7 +8,7 @@
 #include "Sphere.h"
 
 Sphere::Sphere(float radius) {
-    radius_ = radius;
+    m_radius = radius;
 }
 
 Sphere::~Sphere() {
@@ -19,13 +19,13 @@ bool Sphere::hit(glm::vec3 rayPos, glm::vec3 rayDir) {
     A = rayDir.x * rayDir.x + rayDir.y * rayDir.y + rayDir.z * rayDir.z;
     B = 2 * (rayDir.x * rayPos.x + rayDir.y * rayPos.y + rayDir.z * rayPos.z);
     C = rayPos.x * rayPos.x + rayPos.y * rayPos.y + rayPos.z * rayPos.z
-            - radius_ * radius_;
+            - m_radius * m_radius;
 
     float t0, t1;
     if (!quad(A, B, C, &t0, &t1))
         return false;
     float tmin = glm::min(t0, t1);
-    hitpoint_ = rayPos + tmin * rayDir;
+    m_hitpoint = rayPos + tmin * rayDir;
 
     return true;
 }
@@ -54,11 +54,11 @@ bool Sphere::quad(float A, float B, float C, float *t0, float *t1) {
 }
 
 float Sphere::getRadius() {
-    return radius_;
+    return m_radius;
 }
 
 glm::vec3 Sphere::getHitpoint() {
-    return hitpoint_;
+    return m_hitpoint;
 }
 
 QuadMesh* Sphere::toQuadMesh() {
@@ -92,19 +92,19 @@ QuadMesh* Sphere::toQuadMesh() {
             d.w = 1.0f;
             normD = glm::normalize(d);
 
-            vertexData_.push_back(a);
-            vertexData_.push_back(normA);
-            vertexData_.push_back(b);
-            vertexData_.push_back(normB);
-            vertexData_.push_back(c);
-            vertexData_.push_back(normC);
-            vertexData_.push_back(d);
-            vertexData_.push_back(normD);
+            m_vertexData.push_back(a);
+            m_vertexData.push_back(normA);
+            m_vertexData.push_back(b);
+            m_vertexData.push_back(normB);
+            m_vertexData.push_back(c);
+            m_vertexData.push_back(normC);
+            m_vertexData.push_back(d);
+            m_vertexData.push_back(normD);
         }
     }
-    QuadMesh* result = new QuadMesh(vertexData_);
-    result->setModelMatrix(modelMatrix_);
-    result->setName(name_ + " - Instance 1");
+    QuadMesh* result = new QuadMesh(m_vertexData);
+    result->setModelMatrix(m_modelMatrix);
+    result->setName(m_name + " - Instance 1");
     return result;
 }
 

@@ -20,10 +20,10 @@ public:
 			int numberSamples);
 
 private:
-    hpreal module_;
-    hpreal pressureAngle_; // Flankenwinkel
-    hpreal filletRadius_; // Fussrundungsradius
-    hpreal bottomClearance_; // Kopfspiel
+    hpreal m_module;
+    hpreal m_pressureAngle; // Flankenwinkel
+    hpreal m_filletRadius; // Fussrundungsradius
+    hpreal m_bottomClearance; // Kopfspiel
 
     void normalize(hpreal& x) const;
     void calcRootCircleCenter(hpreal *center) const;

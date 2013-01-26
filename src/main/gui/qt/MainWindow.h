@@ -30,12 +30,12 @@ private:
 	void createContainer();
 	//void createDockWindows();
 
-	QMenu* viewMenu_;
+	QMenu* m_viewMenu;
 	ComponentList* m_componentList;
 	QTabWidget* m_tabs;
-	ToolSelector* toolSelector_;
+	ToolSelector* m_toolSelector;
 	//2D components:
-	EditorScene* scene_;
+	EditorScene* m_scene;
 	EditorSceneManager* m_editorSceneManager;
 	//3D components:
 	SceneManager3D* m_sceneManager3D;

@@ -7,7 +7,7 @@
 #include "../../gui/Drawable2D.h"
 
 class BSplineCurve : public Drawable2D {
-	protected:
+protected:
 	int m_degree;
 	std::vector<glm::vec3> m_controlPoints;
 	std::vector<float> m_knots;
@@ -20,7 +20,7 @@ class BSplineCurve : public Drawable2D {
 	bool m_cyclic;
 
 
-	public:
+public:
 	BSplineCurve();
 	~BSplineCurve();
 
@@ -46,7 +46,6 @@ class BSplineCurve : public Drawable2D {
 
 	private:
 	void calculateDrawingData();
-
 };
 
 #endif

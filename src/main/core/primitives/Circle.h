@@ -86,11 +86,11 @@ struct Circle {
 		bool nullNormal = isNullVector(t_normal) || isNullVector(m_normal);
 		if (nullNormal) {
 		    std::cerr << "Error: One of the geometry's normals is a null vector!" << std::endl;
-		    // // std::cout << "EtriangleA: " << triangle->vertices[0].x << ", " << triangle->vertices[0].y << ", " << triangle->vertices[0].z << std::endl;
-		    // // std::cout << "EtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
-		    // // std::cout << "EtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
-		    // // std::cout << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
-		    // // std::cout << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+		      std::cout << "EtriangleA: " << triangle->vertices[0].x << ", " << triangle->vertices[0].y << ", " << triangle->vertices[0].z << std::endl;
+		      std::cout << "EtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
+		      std::cout << "EtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
+		      std::cout << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
+		      std::cout << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 		    exit(1);
 		  }
 		 // // std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
@@ -506,7 +506,8 @@ struct Circle {
 	// Check whether a vector has only zeros
 	// This requires a very small epsilon (i.e. 10-e7) to avoid misinterpretation of small normals
 	bool inline isNullVector(glm::vec3& vector) {
-		if (floatEquals(vector.x, 0.0f, 10e-07f) && floatEquals(vector.y, 0.0f, 10e-07f) && floatEquals(vector.z, 0.0f, 10e-07f)) {
+	  float epsilon = 10e-08f;
+		if (floatEquals(vector.x, 0.0f, epsilon) && floatEquals(vector.y, 0.0f, epsilon) && floatEquals(vector.z, 0.0f, epsilon)) {
 			// // std::cout << vector.x << ", " << vector.y << ", " << vector.z << std::endl;
 			return true;
 		} else {

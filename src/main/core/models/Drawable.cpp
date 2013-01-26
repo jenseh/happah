@@ -7,9 +7,9 @@ std::vector<glm::vec4>* Drawable::getVertexData() {}
 int Drawable::getTupleSize() {}
 
 void Drawable::setColorData(std::vector<Color>& colorData){
-    colorData_ = colorData;
+    m_colorData = colorData;
 }
 
 std::vector<Color>* Drawable::getColorData(){
-    return &colorData_;
+    return &m_colorData;
 }

@@ -34,10 +34,10 @@ public:
     void setModelMatrix(QMatrix4x4& modelMatrix);
 
 protected:
-    QMatrix4x4 modelMatrix_;
-    std::string name_;
-    int objectId_;
-    static int objectIdCounter_;
+    QMatrix4x4 m_modelMatrix;
+    std::string m_name;
+    int m_objectId;
+    static int m_objectIdCounter;
 };
 
 #endif /* GEOMETRYOBJECT_H_ */

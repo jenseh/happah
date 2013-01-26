@@ -2,7 +2,7 @@
 
 ZCircleCloud::ZCircleCloud(std::vector<glm::vec2>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir)
   : m_points(points), m_posZ(posZ), m_resolutionXY(resolutionXY), m_resolutionZ(resolutionZ), m_referenceDir(referenceDir) {
-  modelMatrix_.setToIdentity();
+  m_modelMatrix.setToIdentity();
 }
 
 
@@ -15,11 +15,11 @@ int ZCircleCloud::getResolutionZ() {
 }
 
 QMatrix4x4* ZCircleCloud::getModelMatrix() {
-    return &modelMatrix_;
+    return &m_modelMatrix;
 }
 
 void ZCircleCloud::setModelMatrix(QMatrix4x4& modelMatrix) {
-    modelMatrix_ = modelMatrix;
+    m_modelMatrix = modelMatrix;
 }
 
 glm::vec3& ZCircleCloud::getReferenceDir() {

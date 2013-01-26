@@ -28,9 +28,9 @@ public:
     TriangleMesh* toTriangleMesh();
 
 private:
-    float radius_;
-    glm::vec3 hitpoint_;
-    std::vector<glm::vec4> vertexData_;
+    float m_radius;
+    glm::vec3 m_hitpoint;
+    std::vector<glm::vec4> m_vertexData;
 
     bool quad(float A, float B, float C, float *t0, float* t1);
 };

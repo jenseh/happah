@@ -13,7 +13,7 @@ public:
 	virtual ~Happah();
 
 private:
-	MainWindow window_;
+	MainWindow m_window;
 
 };
 

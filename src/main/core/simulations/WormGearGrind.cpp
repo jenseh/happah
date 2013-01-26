@@ -14,6 +14,13 @@ void WormGearGrind::calculateGrindingDepth(){
    m_gear->translate(0.5f, 0.0f, 0.0f); //TODO:remove
    m_gear->fillTriangles();
    std::vector<Triangle*>* triangles = m_gear->getTriangles();
+
+//   for (int i = 0; i < triangles->size(); i++) {
+//         Triangle* triangle = triangles->at(i);
+//         std::cout << "EtriangleA: " << triangle->vertices[0].x << ", " << triangle->vertices[0].y << ", " << triangle->vertices[0].z << std::endl;
+//         std::cout << "EtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
+//         std::cout << "EtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
+//   }
    ExplicitKDTree tree = ExplicitKDTree(triangles);
    size_t resolutionZ = m_worm->getResolutionZ();
 

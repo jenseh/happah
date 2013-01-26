@@ -1,19 +1,19 @@
 #include "Tool.h"
 
 Tool::Tool() {
-	toolButton = new QPushButton();
-	toolSettings = new QWidget();
+	m_toolButton = new QPushButton();
+	m_toolSettings = new QWidget();
 }
 
 Tool::~Tool() {
 }
 
 QPushButton* Tool::getToolButton() {
-	return toolButton;
+	return m_toolButton;
 }
 
 QWidget* Tool::getToolSettings() {
-	return toolSettings;
+	return m_toolSettings;
 }
 
 void Tool::finalise() {

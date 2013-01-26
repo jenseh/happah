@@ -5,7 +5,8 @@
 
 
 SceneManager::SceneManager() : m_iDCounter(0) {
-    std::cerr << " SM: size" << m_drawables.size()<< std::endl;
+    std::cout << " SM: size" << m_drawables.size()<< std::endl;
+//    new WormGearGrindTest();
 }
 
 SceneManager::~SceneManager() {

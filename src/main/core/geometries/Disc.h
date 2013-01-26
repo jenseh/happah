@@ -26,12 +26,12 @@ public:
     glm::vec3 getCenter();
     QuadMesh* toQuadMesh();
 private:
-    hpreal radius_;// Radius der Scheibe ( y-achse und z-achse )
-    hpreal length_;// Länge/Breite der Scheibe ( x-achse )
-    hpreal module_; // Modul des höhenprofils
-    std::vector<glm::vec2> heightProfile_;
-    StandardProfile* standardProfile;
-    std::vector<glm::vec4> vertexData_;
+    hpreal m_radius;// Radius der Scheibe ( y-achse und z-achse )
+    hpreal m_length;// Länge/Breite der Scheibe ( x-achse )
+    hpreal m_module; // Modul des höhenprofils
+    std::vector<glm::vec2> m_heightProfile;
+    StandardProfile* m_standardProfile;
+    std::vector<glm::vec4> m_vertexData;
 
     const static int SEGMENT_COUNT = 50; //maximum: 4500
     const static int Z_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden

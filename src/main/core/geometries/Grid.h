@@ -14,7 +14,7 @@ public:
     TriangleMesh* toTriangleMesh();
 
 private:
-    std::vector<glm::vec4> vertexData_;
+    std::vector<glm::vec4> m_vertexData;
 };
 
 #endif // GRID_H

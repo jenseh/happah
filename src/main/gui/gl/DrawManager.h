@@ -27,13 +27,13 @@ private:
 	GLint m_normalMatLocation;
 	GLint m_normalLocation;
 	GLint m_vertexLocation;
-    GLint m_vertexColor;
+	GLint m_vertexColor;
 
 	GLuint m_coloredVertexArrayObject;
 	GLuint m_vertexDataBuffer;
-    GLuint m_colorDataBuffer;
+	GLuint m_colorDataBuffer;
 
-     GLint m_useColorLocation; // Wether the color buffer is used (1) or not (0)
+	GLint m_useColorLocation; // Wether the color buffer is used (1) or not (0)
 };
 
 #endif // DRAWMANAGER_H

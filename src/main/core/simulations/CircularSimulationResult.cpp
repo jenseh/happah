@@ -13,13 +13,13 @@ CircularSimulationResult::CircularSimulationResult(int angleSteps, int posZSteps
 
 
   m_entries = new hash_map<int, float>;
-  referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
+  m_referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
 void CircularSimulationResult::addItem(glm::vec3 point, int posZSlot) {
   // Compute the angles of the triangle points to the reference dir
   glm::vec3 centerToPoint = glm::normalize(point - glm::vec3(0.0f, 0.0f, point.z));
-  float angle = acos(glm::dot(centerToPoint, referenceDir));
+  float angle = acos(glm::dot(centerToPoint, m_referenceDir));
   float radius = glm::sqrt(point.x * point.x + point.y * point.y);
 
   int angleSlot = angle / m_angleRange;

@@ -14,7 +14,7 @@ public:
     std::vector<Color>* getColorData();
 
 private:
-    std::vector<Color> colorData_;
+    std::vector<Color> m_colorData;
 
 
 };

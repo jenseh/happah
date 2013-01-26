@@ -28,8 +28,8 @@ public:
     void fillTriangles();
 
 protected:
-    std::vector<glm::vec4> vertexData_;
-    std::vector<Triangle*> triangles_;
+    std::vector<glm::vec4> m_vertexData;
+    std::vector<Triangle*> m_triangles;
 };
 
 #endif // TRIANGLEMESH_H

@@ -43,14 +43,14 @@ public:
 	QWidget* getSettingsWidget();
 
 private:
-	int toolCount_; /**< Number of registered tools. */
-	int currToolID_; /**< Identifies currently selected tool. */
+	int m_toolCount; /**< Number of registered tools. */
+	int m_currToolID; /**< Identifies currently selected tool. */
 	static const int BUTTONS_PER_ROW = 4; /**< Number of tools per row in selector widget. */
 
-	QGridLayout* selectorGrid_; /**< Local layout for selection buttons. */
-	QButtonGroup* buttonGroup_; /**< Handles click events of tool selection. */
-	QStackedWidget* settingsWidgetStack_; /**< Widget to display tool settings. */
-	QList<Tool*> toolList_; /**< List of registered tools. */
+	QGridLayout* m_selectorGrid; /**< Local layout for selection buttons. */
+	QButtonGroup* m_buttonGroup; /**< Handles click events of tool selection. */
+	QStackedWidget* m_settingsWidgetStack; /**< Widget to display tool settings. */
+	QList<Tool*> m_toolList; /**< List of registered tools. */
 
 private slots:
 	void toolSelected(int toolID);

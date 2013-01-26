@@ -21,7 +21,7 @@ public:
     TriangleMesh* toTriangleMesh();
 
 protected:
-    std::vector<glm::vec4> vertexData_;
+    std::vector<glm::vec4> m_vertexData;
 };
 
 #endif // QUADMESH_H

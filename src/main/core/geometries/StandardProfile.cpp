@@ -3,23 +3,23 @@
 StandardProfile::StandardProfile(hpreal module, hpreal pressureAngle, // pressureAngle = Profilwinkel
 		hpreal filletRadius,                                          // filletRadius = Fußrundungsradius
 		hpreal bottomClearance) :                                     // bottomClearance = Kopfspiel
-		module_(module), pressureAngle_(pressureAngle), filletRadius_(
-				filletRadius), bottomClearance_(bottomClearance) {
+		m_module(module), m_pressureAngle(pressureAngle), m_filletRadius(
+				filletRadius), m_bottomClearance(bottomClearance) {
 	// Angle has to be smaller than approximately 38.146 degrees or 0.785 rad
-	if (tan(pressureAngle_) > M_PI / 4)
-		std::cerr << "ERROR: Your angle is too big with " << pressureAngle_
+	if (tan(m_pressureAngle) > M_PI / 4)
+		std::cerr << "ERROR: Your angle is too big with " << m_pressureAngle
 				<< std::endl;
-	if (filletRadius_ > bottomClearance_ / (1 - sin(pressureAngle_))
-			|| filletRadius_
-					> (sin(pressureAngle_) / (1 - sin(pressureAngle_)))
-							* (((M_PI - 4 * tan(pressureAngle_)) / 4
-									* tan(pressureAngle_)) * module_ - bottomClearance_))
+	if (m_filletRadius > m_bottomClearance / (1 - sin(m_pressureAngle))
+			|| m_filletRadius
+					> (sin(m_pressureAngle) / (1 - sin(m_pressureAngle)))
+							* (((M_PI - 4 * tan(m_pressureAngle)) / 4
+									* tan(m_pressureAngle)) * m_module - m_bottomClearance))
 		std::cerr << "ERROR: Your filletRadius is too big with "
-				<< filletRadius_ << std::endl;
+				<< m_filletRadius << std::endl;
 }
 
 void StandardProfile::normalize(hpreal& x) const {
-	x /= (module_ * M_PI);
+	x /= (m_module * M_PI);
 	// Modulo
 	while (x - 1.0 > 0) {
 		x -= 1.0;
@@ -28,15 +28,15 @@ void StandardProfile::normalize(hpreal& x) const {
 	if (x > 0.5) {
 		x = 1.0 - x;
 	}
-	x *= (module_ * M_PI);
+	x *= (m_module * M_PI);
 }
 
 void StandardProfile::calcRootCircleCenter(hpreal *center) const {
-	hpreal t = (bottomClearance_ + filletRadius_ * (1 + sin(pressureAngle_)))
-			/ cos(pressureAngle_);
-	center[0] = module_ * M_PI + cos(pressureAngle_) * filletRadius_
-			+ t * sin(pressureAngle_);
-	center[1] = sin(pressureAngle_) * filletRadius_ - t * cos(pressureAngle_);
+	hpreal t = (m_bottomClearance + m_filletRadius * (1 + sin(m_pressureAngle)))
+			/ cos(m_pressureAngle);
+	center[0] = m_module * M_PI + cos(m_pressureAngle) * m_filletRadius
+			+ t * sin(m_pressureAngle);
+	center[1] = sin(m_pressureAngle) * m_filletRadius - t * cos(m_pressureAngle);
 }
 
 /**
@@ -64,35 +64,35 @@ hpreal StandardProfile::getHeight(hpreal x) const {
 
 	//calculate x-function for half of one pitch
 
-	hpreal x_1 = (module_ * M_PI) / 4 - tan(pressureAngle_) * module_;
-	hpreal x_2 = (module_ * M_PI) / 4 + tan(pressureAngle_) * module_;
+	hpreal x_1 = (m_module * M_PI) / 4 - tan(m_pressureAngle) * m_module;
+	hpreal x_2 = (m_module * M_PI) / 4 + tan(m_pressureAngle) * m_module;
 	hpreal x_3 = x_2
-			+ (bottomClearance_ + filletRadius_ * (sin(pressureAngle_) - 1))
-					* tan(pressureAngle_);
-	hpreal x_4 = x_3 + filletRadius_ * cos(pressureAngle_);
-	hpreal x_5 = (module_ * M_PI) / 2;
+			+ (m_bottomClearance + m_filletRadius * (sin(m_pressureAngle) - 1))
+					* tan(m_pressureAngle);
+	hpreal x_4 = x_3 + m_filletRadius * cos(m_pressureAngle);
+	hpreal x_5 = (m_module * M_PI) / 2;
 
 	hpreal center[2];
 	calcRootCircleCenter(center);
 
 	if (x < x_1)
-		return module_;
+		return m_module;
 	else if (x < x_3)
-		return (x - (module_ * M_PI) / 4)
-				* (-cos(pressureAngle_) / sin(pressureAngle_));
+		return (x - (m_module * M_PI) / 4)
+				* (-cos(m_pressureAngle) / sin(m_pressureAngle));
 	else if (x < x_4)
 		return (center[1]
 				- sqrt(
-						filletRadius_ * filletRadius_
+						m_filletRadius * m_filletRadius
 								- (x - center[0]) * (x - center[0])));
 	else
-		return -module_ - bottomClearance_;
+		return -m_module - m_bottomClearance;
 }
 
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition,
 		int numberSamples) {
 	for (int i = 0; i < numberSamples; i++) {
-		hpreal x = ((hpreal) i / (hpreal) numberSamples) * module_ * M_PI;
+		hpreal x = ((hpreal) i / (hpreal) numberSamples) * m_module * M_PI;
 		hpreal y = getHeight(x);
 		partition.push_back(glm::vec2(x, y));
 	}

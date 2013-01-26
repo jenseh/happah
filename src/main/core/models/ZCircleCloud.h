@@ -31,6 +31,6 @@ private:
   int m_resolutionXY;
   int m_resolutionZ;
 
-  QMatrix4x4 modelMatrix_;
+  QMatrix4x4 m_modelMatrix;
 };
 #endif // ZCIRCLECLOUD_H

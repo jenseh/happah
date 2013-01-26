@@ -9,20 +9,21 @@
 class ZCircleCloud
 {
 public:
-  ZCircleCloud(std::vector<float>* radii, std::vector<CirclePoint>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir);
+  ZCircleCloud(std::vector<glm::vec2*>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir);
 
-//  std::vector<float>* getRadii();
   int getResolutionXY();
   int getResolutionZ();
   QMatrix4x4* getModelMatrix();
   void setModelMatrix(QMatrix4x4& modelMatrix);
   glm::vec3& getReferenceDir();
+  std::vector<glm::vec3*>* getClosestPoints(glm::vec3 hitPoint);
 
-  Circle computeCircle(int posZIdx, int radiusIdx);
+  glm::vec3 getPoint(int posXYIdx, int posZIdx);
+//  Circle computeCircle(int posZIdx, int radiusIdx);
+  Circle computeOuterCircle(int posZIdx);
 
 private:
-  std::vector<float>* m_radii;
-  std::vector<CirclePoint>* m_points;
+  std::vector<glm::vec2*>* m_points;
   std::vector<float>* m_posZ;
 
   glm::vec3& m_referenceDir;

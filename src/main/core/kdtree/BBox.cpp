@@ -1,5 +1,7 @@
 #include "BBox.h"
 
+#include <iostream>
+
 BBox::BBox(glm::vec3 min, glm::vec3 max)
 {
   m_min = min;
@@ -29,9 +31,9 @@ bool BBox::intersects(BBox* other) {
 }
 
 // Splits the current box into 2 boxes along the specified axis
-BBox* BBox::split(int axis, float axisValue) {
+std::vector<BBox*> BBox::split(int axis, float axisValue) {
   glm::vec3 minMiddle, maxMiddle;
-  if (axis == 0) {
+  if (axis == 0) {      
       minMiddle[0] = axisValue;
       minMiddle[1] = m_max[1];
       minMiddle[2] = m_max[2];
@@ -39,7 +41,7 @@ BBox* BBox::split(int axis, float axisValue) {
       maxMiddle[0] = axisValue;
       maxMiddle[1] = m_min[1];
       maxMiddle[2] = m_min[2];
-  } else if (axis == 0) {
+  } else if (axis == 1) {
       minMiddle[0] = m_max[0];
       minMiddle[1] = axisValue;
       minMiddle[2] = m_max[2];
@@ -57,7 +59,13 @@ BBox* BBox::split(int axis, float axisValue) {
       maxMiddle[2] = axisValue;
   }
 
-  BBox boxes[] = {BBox(m_min, minMiddle), BBox(maxMiddle, m_max)};
+  if (axisValue < m_min[axis] || axisValue > m_max[axis]) {
+      std::cout << "Error: Axisvalue not inside current box!" << std::endl;
+  }
+
+  std::vector<BBox*> boxes;
+  boxes.push_back(new BBox(m_min, minMiddle));
+  boxes.push_back(new BBox(maxMiddle, m_max));
 
   return boxes;
 }

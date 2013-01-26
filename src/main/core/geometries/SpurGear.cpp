@@ -400,72 +400,34 @@ ZCircleCloud* SpurGear::toZCircleCloud() {
   // Create the height profile given the current gear settings
   createHeightProfile();
   const unsigned int profSize = m_heightProfile.size();
+  std::cout << "ProfSize: " << profSize << std::endl;
 
   // Determine resolution (important for following simulations)
   const unsigned int resolutionXY = profSize;
-  const unsigned int resolutionZ = m_zDetailLevel;
+  const unsigned int resolutionZ = 4;//m_zDetailLevel;
 
-  std::vector<float>* radii = new std::vector<float>;
-  std::vector<CirclePoint>* points = new std::vector<CirclePoint>;
+  std::vector<glm::vec2*>* points = new std::vector<glm::vec2*>;
   std::vector<float>* posZ = new std::vector<float>;
 
-//  radii.reserve(resolutionXY);
 //  points.reserve(resolutionXY);
 //  posZ.reserve(resolutionZ);
 
   for (unsigned int segmentNum = 0; segmentNum < resolutionXY; segmentNum++) {
       hpreal angle = m_heightProfile[segmentNum % profSize].x / m_radius; //in radians
       hpreal radius = m_radius + m_heightProfile[segmentNum % profSize].y;
-//      std::cout << angle << ", " << radius << ", " << std::endl;
-      CirclePoint point = CirclePoint(angle, radius);
-      radii->push_back(radius);
+
+      glm::vec2* point = new glm::vec2(radius * cos(angle), radius * sin(angle));
       points->push_back(point);
   }
 
   for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
       float posZValue = stepZ * m_length / resolutionZ;
       posZ->push_back(posZValue);
-//      std::cout << "posZValues: " << posZValue << ", " << std::endl;
   }
 
   glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
-//  std::cout << "Radii0: " << radii->size() << std::endl;
 
-  ZCircleCloud* result = new ZCircleCloud(radii, points, posZ, resolutionXY, resolutionZ, referenceDir);
+  ZCircleCloud* result = new ZCircleCloud(points, posZ, resolutionXY, resolutionZ, referenceDir);
   result->setModelMatrix(modelMatrix_);
   return result;
 }
-
-//ZCircleCloud* SpurGear::toZCircleCloud() {
-//  // Determine accuracy level of the simulation
-//  const float epsilon = 0.000001f;
-
-//    // Determine radius constraints
-//  const float minRadius = m_radius * INNER_RADIUS_FACTOR - epsilon;
-//  const float maxRadius = m_radius + epsilon;
-
-//  // Determine resolution (important for following simulations)
-//  const int resolutionXY = 1000;
-//  const int resolutionZ = 1000;
-
-//  const float diffRadius = maxRadius - minRadius;
-//  const float diffRadiusStep = diffRadius / resolutionXY;
-
-//  std::vector<float>* radii = new std::vector<float>(resolutionXY);
-//  std::vector<float>* posZ = new std::vector<float>(resolutionZ);
-
-//  for (int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-//      float posZvalue = stepZ * m_length / resolutionZ;
-//      (*posZ)[stepZ] = posZvalue;
-//  }
-
-//  for (int stepXY = 0; stepXY < resolutionXY; stepXY++) {
-//      float radius = minRadius + diffRadiusStep * stepXY;
-//      (*radii)[stepXY] = radius;
-//  }
-
-//  glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
-//  ZCircleCloud* result = new ZCircleCloud(*radii, *posZ, resolutionXY, resolutionZ, referenceDir);
-//  result->setModelMatrix(modelMatrix_);
-//  return result;
-//}

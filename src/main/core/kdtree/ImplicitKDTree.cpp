@@ -1,6 +1,6 @@
 #include "ImplicitKDTree.h"
 
-template bool ImplicitKDTree::intersectAll(Circle& circle, typename std::list<CircleHitResult>& hitResults);
+template bool ImplicitKDTree::intersectAll(Circle& circle, typename std::list<CircleHitResult*>* hitResults);
 
 template <class T>
 class TriangleSorter {
@@ -62,17 +62,18 @@ ImplicitKDTree::ImplicitKDTree(std::vector<Triangle*>& triangles) : m_triangles(
         // Sort triangles (point A) along an axis
         std::sort(m_triangles.begin() + minTPos, m_triangles.begin() + maxTPos, TriangleSorter<Triangle>(axis));
 
+
         // Determine where separating axis should be
         int middleTPos = (minTPos + maxTPos) / 2;
-        float axisValue = m_triangles[middleTPos]->vertices[0].x;
+        float axisValue = m_triangles[middleTPos]->vertices[0][axis];
 
-        // Determine where separating axis actually is
-        for (; middleTPos < maxTPos; middleTPos++) {
-            float nextAxisValue = m_triangles[middleTPos + 1]->vertices[0][axis];
-            if (nextAxisValue != axisValue) {
-                break;
-            }
-        }
+//        // Determine where separating axis actually is
+//        for (; middleTPos < maxTPos; middleTPos++) {
+//            float nextAxisValue = m_triangles[middleTPos + 1]->vertices[0][axis];
+//            if (nextAxisValue != axisValue) {
+//                break;
+//            }
+//        }
 
         // Correct middleTPos if bigger than maxTPos
         int rightMiddleTPos = middleTPos < maxTPos ? middleTPos : maxTPos;
@@ -125,7 +126,7 @@ ImplicitKDTree::ImplicitKDTree(std::vector<Triangle*>& triangles) : m_triangles(
   // Compute bounding sphere (better for intersection test)
   glm::vec3 center = (min + max) / 2.0f;
   float radius = glm::distance(max, center);
-  m_bSphere = new BSphere(center, radius);
+  BSphere* m_bSphere = new BSphere(center, radius);
 
 //  std::cout << "BBox-Min: " << minX << ", " << minY << ", " << minZ << std::endl;
 //  std::cout << "BBox-Max: " << maxX << ", " << maxY << ", " << maxZ << std::endl;
@@ -133,14 +134,14 @@ ImplicitKDTree::ImplicitKDTree(std::vector<Triangle*>& triangles) : m_triangles(
 }
 
 template <typename Intersector>
-bool ImplicitKDTree::intersectAll(Intersector& intersector, std::list<CircleHitResult>& hitResults) {
+bool ImplicitKDTree::intersectAll(Intersector& intersector, std::list<CircleHitResult*>* hitResults) {
   BBox intersectorBox = intersector.computeBoundingBox();
-  return intersectAllRec(intersector, hitResults, intersectorBox, 0, 0);
+  return intersectAllRec(intersector, hitResults, &intersectorBox, 0, 0);
 }
 
 template <typename Intersector>
-bool ImplicitKDTree::intersectAllRec(Intersector& intersector, std::list<CircleHitResult>& hitResults, BBox& curBox, int depth, unsigned int kPos) {
-  if (curBox.intersects(m_bBox)) {
+bool ImplicitKDTree::intersectAllRec(Intersector& intersector, std::list<CircleHitResult*>* hitResults, BBox* curBox, int depth, unsigned int kPos) {
+  if (curBox->intersects(m_bBox)) {
       TreeNode node = m_tree[kPos];
       TreeNode* prevNode;
       int elementsAtNode = 0;
@@ -155,7 +156,7 @@ bool ImplicitKDTree::intersectAllRec(Intersector& intersector, std::list<CircleH
       if (elementsAtNode == 0) {
           // Inner node
           int axis = depth % 3;
-          BBox* boxes = curBox.split(axis, node.axisValue);
+          std::vector<BBox*> boxes = curBox->split(axis, node.axisValue);
 
           // Compute child nodes
           unsigned int leftChild = 2 * kPos + 1;
@@ -172,11 +173,9 @@ bool ImplicitKDTree::intersectAllRec(Intersector& intersector, std::list<CircleH
           std::vector<Triangle*>::iterator end = m_triangles.begin() + node.treeIndex;
           bool hit = false;
           for (; pos != end; pos++) {
-              Triangle triangle = **pos;
-              CircleHitResult hitResult = CircleHitResult();
-              if (intersector.intersect(triangle, hitResult)) {
-//                  std::cout << "Intersect: " << hitResult.range->startAngle << ", " << hitResult.range->endAngle << ", " << hitResult.range->radius << std::endl;
-                  hitResults.push_back(hitResult);
+              Triangle* triangle = *pos;
+              if (intersector.intersect(triangle, hitResults)) {
+//                  std::cout << "Intersect: " << hitResult->range->startAngle << ", " << hitResult->range->endAngle << ", " << hitResult->range->radius << std::endl;
                   hit = true;
               }
           }
@@ -184,8 +183,8 @@ bool ImplicitKDTree::intersectAllRec(Intersector& intersector, std::list<CircleH
       }
   } else {
 //      std::cout << "Exiting at depth: " << depth << std::endl;
-//      std::cout << "curBox-Min: " << curBox.getMin()->x << ", " << curBox.getMin()->y << ", " << curBox.getMin()->z << std::endl;
-//      std::cout << "curBox-Max: " << curBox.getMax()->x << ", " << curBox.getMax()->y << ", " << curBox.getMax()->z << std::endl;
+//      std::cout << "curBox-Min: " << curBox->getMin()->x << ", " << curBox->getMin()->y << ", " << curBox->getMin()->z << std::endl;
+//      std::cout << "curBox-Max: " << curBox->getMax()->x << ", " << curBox->getMax()->y << ", " << curBox->getMax()->z << std::endl;
 
 //      std::cout << "m_bBox-Min: " << m_bBox->getMin()->x << ", " << m_bBox->getMin()->y << ", " << m_bBox->getMin()->z << std::endl;
 //      std::cout << "m_bBox-Max: " << m_bBox->getMax()->x << ", " << m_bBox->getMax()->y << ", " << m_bBox->getMax()->z << std::endl;

@@ -1,6 +1,8 @@
 #include "SceneManager.h"
 #include <time.h>
 #include "../test/WormGearGrindTest.h"
+#include "../test/CircleTriangleIntersectionBenchmark.h"
+#include "../test/CircleTriangleIntersectionTest.h"
 
 SceneManager::SceneManager() {
     // Load a few sample geometries
@@ -39,8 +41,8 @@ SceneManager::SceneManager() {
 //    grid_->rotate(-45.0f, 1.0f, 1.0f, 1.0f);
 //    gear2_->rotate(45.0f, 0.0f, 0.0f, 1.0f);
 
-    DiscGearGrind myGrind(disc1, gear1);
-    vector<Color> colors = myGrind.calculateGrindingDepth();
+//    DiscGearGrind myGrind(disc1, gear1);
+//    vector<Color> colors = myGrind.calculateGrindingDepth();
 //    std::cout<<colors.size()<<endl;
     /*for(size_t i = 0; i < colors.size(); i++){
         colors[i].red = 0;
@@ -48,7 +50,7 @@ SceneManager::SceneManager() {
         colors[i].green = 1.0;
         colors[i].alpha = 1.0;
     }*/
-    gear1_->setColorData(colors);
+//    gear1_->setColorData(colors);
 
     // Add all quad meshs to a common vector
     drawables_ = new vector<Drawable*>();
@@ -60,6 +62,7 @@ SceneManager::SceneManager() {
     drawables_->push_back(disc1_);
 
 //    new WormGearGrindTest(gear1, gear2);
+//    new CircleTriangleIntersectionTest(gear1, gear2);
 }
 
 SceneManager::~SceneManager() {

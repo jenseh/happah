@@ -4,7 +4,8 @@
 #include "../geometries/SpurGear.h"
 #include "../primitives/Circle.h"
 #include "../primitives/Triangle.h"
-#include "../kdtree/ImplicitKDTree.h"
+#include "../kdtree/ExplicitKDTree.h"
+#include "CircularSimulationResult.h"
 
 
 class WormGearGrind
@@ -19,9 +20,8 @@ public:
 private:
   glm::vec3 inline transformVector(glm::vec3& vector, QMatrix4x4& transformation);
   glm::vec3 inline transformPoint(glm::vec3& point, QMatrix4x4& transformation);
-  void inline computeIntersectingTriangles(int& xy, size_t& z, ImplicitKDTree& tree, std::list<CircleHitResult>& hitResults);
-  bool inline reduceIntersectingTriangles(int& xy, size_t& z, std::list<CircleHitResult>& hitResults);
-  bool inline reduceSubdivideTriangles(int& xy, size_t& z, std::list<CircleHitResult>& hitResults);
+  void inline computeIntersectingTriangles(size_t& z, ExplicitKDTree& tree, std::list<CircleHitResult*>* hitResults);
+
 
   Triangle translateTriangle(Triangle& triangle, glm::vec3& vector);
 

@@ -2,6 +2,7 @@
 #define BBOX_H
 
 #include <glm/glm.hpp>
+#include <vector>
 
 class BBox
 {
@@ -9,7 +10,7 @@ public:
   BBox(glm::vec3 min, glm::vec3 max);
 
   bool intersects(BBox* other);
-  BBox* split(int axis, float axisValue);
+  std::vector<BBox*> split(int axis, float axisValue);
   glm::vec3* getMin();
   void setMin(glm::vec3 min);
   glm::vec3* getMax();

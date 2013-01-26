@@ -1,7 +1,8 @@
 #ifndef DRAWMANAGER_H
 #define DRAWMANAGER_H
 
-#include <GL/gl.h>
+#include <GL/glew.h>
+#include <vector>
 #include "../../core/models/Drawable.h"
 
 using namespace std;
@@ -10,14 +11,12 @@ class DrawManager {
 public:
 	DrawManager();
 
-	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
-	void addDrawable(Drawable* drawable);
+	void draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	bool initShaderPrograms();
-	int createBuffer();
 
 private:
+	void createBufferFor(std::vector<Drawable*> *drawables);
 	void compileShader(GLuint shader, const char* filePath);
-	list<Drawable*> m_drawables;
 	GLuint m_fragmentShader;
 	GLuint m_program;
 	GLuint m_vertexShader;
@@ -28,9 +27,13 @@ private:
 	GLint m_normalMatLocation;
 	GLint m_normalLocation;
 	GLint m_vertexLocation;
+    GLint m_vertexColor;
 
 	GLuint m_coloredVertexArrayObject;
 	GLuint m_vertexDataBuffer;
+    GLuint m_colorDataBuffer;
+
+     GLint m_useColorLocation; // Wether the color buffer is used (1) or not (0)
 };
 
 #endif // DRAWMANAGER_H

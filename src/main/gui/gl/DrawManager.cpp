@@ -1,4 +1,6 @@
-#include "../../stdafx.h"
+#define GLEW_STATIC //Very important for Windows users
+#include <GL/glew.h>
+#include <GL/gl.h>
 #include "DrawManager.h"
 #include <GL/glext.h>
 #include <fstream>
@@ -35,7 +37,11 @@ bool DrawManager::initShaderPrograms() {
 
 	GLint diffuseColorLocation = glGetUniformLocation(m_program, "diffuseColor");
 	if(diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
-	else glUniform4f(diffuseColorLocation, 0.75f, 0.75f, 0.75f, 1.0f);
+    else glUniform4f(diffuseColorLocation, 0.75f, 0.75f, 0.75f, 1.0f);
+
+    m_useColorLocation = glGetUniformLocation(m_program, "useColor");
+    if(m_useColorLocation < 0) cerr << "Failed to find useColor information." << endl;
+    else glUniform1i(m_useColorLocation, 0);
 
 	m_eyeLocation = glGetUniformLocation(m_program, "eye");
 	if(m_eyeLocation < 0) cerr << "Failed to find eye." << endl;
@@ -63,6 +69,10 @@ bool DrawManager::initShaderPrograms() {
 	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
 	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
 
+    m_vertexColor = glGetAttribLocation(m_program, "color");
+    if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
+
+
 	return true;
 }
 
@@ -87,51 +97,69 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-int DrawManager::createBuffer() {
+void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
 
-	GLuint m_vertexDataBuffer;
+    // Vertex Data
+    //GLuint m_vertexDataBuffer;
 	glGenBuffers(1, &m_vertexDataBuffer);
 
 	int nBytes = 0;
-	for (list<Drawable*>::iterator i = m_drawables.begin(), end = m_drawables.end(); i != end; ++i)
+	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i)
 		nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexDataBuffer);
 	glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
 
 	int offset = 0;
-	for (list<Drawable*>::iterator i = m_drawables.begin(), endi = m_drawables.end(); i != endi; ++i) {
+	for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
 		vector<glm::vec4>* vertexData = (*i)->getVertexData();
 		int vertexDataSize = vertexData->size() * sizeof(glm::vec4);
 		glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
 		offset += vertexDataSize;
 	}
+    glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+    glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
 
-	glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
-	glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
+    glEnableVertexAttribArray(m_vertexLocation);
+    glEnableVertexAttribArray(m_normalLocation);
 
-	glEnableVertexAttribArray(m_vertexLocation);
-	glEnableVertexAttribArray(m_normalLocation);
 
-	glBindVertexArray(0);
+    // Color Data
+    glGenBuffers(2, &m_colorDataBuffer);
+    nBytes = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i)
+        nBytes += (*i)->getColorData()->size() * sizeof(Color);
 
-	return 1;
+    glBindBuffer(GL_ARRAY_BUFFER, m_colorDataBuffer);
+    glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
+
+    offset = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
+        vector<Color>* colorData = (*i)->getColorData();
+        if( colorData->size() != 0 ){
+            int colorDataSize = colorData->size() * sizeof(Color);
+            glBufferSubData(GL_ARRAY_BUFFER, offset, colorDataSize, &(colorData->at(0)));
+            offset += colorDataSize;
+        }
+    }
+    glVertexAttribPointer(m_vertexColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(m_vertexColor);
+
+    glBindVertexArray(0);
 }
 
-// Note: as of now this method can only be called before createBuffer!
-void DrawManager::addDrawable(Drawable* drawable) {
-	m_drawables.push_back(drawable);
-}
+void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+	createBufferFor(drawables);
 
-void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
 	glBindVertexArray(m_coloredVertexArrayObject);
 	int offset = 0;
-	for (list<Drawable*>::iterator i = m_drawables.begin(), end = m_drawables.end(); i != end; ++i) {
+	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
 		QMatrix4x4 MV = *viewMatrix * *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * MV;
 		QMatrix3x3 normalMatrix = MV.normalMatrix();

@@ -2,14 +2,14 @@
 #define DISCGEARGRIND_H
 
 #include "../geometries/Disc.h"
-#include "../geometries/SpurGear.h"
+#include "../geometries/InvoluteSpurGear.h"
 #include "../kdtree/TriangleKDTree.h"
 #include "../primitives/Color.h"
 
 class DiscGearGrind
 {
 public:
-    DiscGearGrind(Disc* disc, SpurGear* gear);
+    DiscGearGrind(Disc* disc, InvoluteSpurGear* gear);
     ~DiscGearGrind();
 
     void runSimulation();
@@ -17,7 +17,7 @@ public:
 
 private:
     Disc* m_disc;
-    SpurGear* m_gear;
+    InvoluteSpurGear* m_gear;
 
 };
 

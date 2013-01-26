@@ -3,7 +3,7 @@
 
 #include <QGraphicsItem>
 
-#include "../../core/Drawable2D.h"
+#include "../Drawable2D.h"
 
 class EditorSceneItem : public QGraphicsItem {
 

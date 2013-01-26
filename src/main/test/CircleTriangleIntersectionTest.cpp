@@ -5,8 +5,11 @@ float getRand() {
   return (float)rand()/(float)RAND_MAX;
 }
 
-CircleTriangleIntersectionTest::CircleTriangleIntersectionTest(SpurGear* gear1, SpurGear* gear2) {
-  // Test cases
+CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
+    InvoluteSpurGear* gear1 = new InvoluteSpurGear();
+    InvoluteSpurGear* gear2 = new InvoluteSpurGear();
+
+    // Test cases
     Circle circle0 = Circle(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
     Circle circle1 = Circle(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
     Circle circle2 = Circle(glm::vec3(0.0f, 0.0f, 0.026f), glm::vec3(0.0f, 0.0f, 1.0f), 1.10031f);
@@ -65,10 +68,6 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest(SpurGear* gear1, 
                                         circle->m_center + glm::vec3(0.0f, circle->m_radius * 10.0f, 0.0f),
                                         circle->m_center + glm::vec3(circle->m_radius * -10.0f, circle->m_radius * -10.0f, 0.0f));
 
-//          Triangle triangle7 = Triangle(glm::vec3(-0.853045f, -0.694488f, 0.0f),
-//                                        glm::vec3(-0.858473f, -0.687767f, 0.025f),
-//                                        glm::vec3(-0.853045f, -0.694488f, 0.025f));
-
 
           std::vector<Triangle*> triangles;
           triangles.push_back(&triangle0);
@@ -78,7 +77,6 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest(SpurGear* gear1, 
           triangles.push_back(&triangle4);
           triangles.push_back(&triangle5);
           triangles.push_back(&triangle6);
-//          triangles.push_back(&triangle7);
 
           // Define the vector that holds the results
           bool results[7] = {1, 1, 1, 0, 0, 1, 1};

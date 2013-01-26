@@ -1,4 +1,3 @@
-//#include <QGLFormat>
 #include <QApplication>
 #include <QMenuBar>
 #include <QDockWidget>
@@ -9,6 +8,8 @@
 #include "MainWindow.h"
 #include "SplineTool.h"
 #include "BSplineTool.h"
+#include "InvoluteSpurGearTool.h"
+#include "../../core/SceneManager.h"
 #include "../gl/GlViewport3D.h"
 
 MainWindow::MainWindow() {
@@ -34,8 +35,8 @@ MainWindow::MainWindow() {
 
     m_tabs = new QTabWidget(this);
 
-        // Setting up logic
-        sceneManager = new SceneManager();
+    // Setting up logic
+    SceneManager *sceneManager = new SceneManager();
 
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
@@ -50,12 +51,20 @@ MainWindow::MainWindow() {
 	QGraphicsView* view2D = new QGraphicsView(scene_);
     m_tabs->addTab(view2D, "2D-View");
 
-    setCentralWidget(m_tabs);
+	setCentralWidget(m_tabs);
 	createTools();
 	createContainer();
 
+	m_sceneManager3D = new SceneManager3D(sceneManager, m_componentList);
 	m_editorSceneManager = new EditorSceneManager( scene_, m_componentList );
-
+	//3D scene
+	connect(toolSelector_, SIGNAL(emitDrawable(Drawable*)),
+	        m_sceneManager3D, SLOT(addDrawable(Drawable*)));
+	connect(toolSelector_, SIGNAL(changed()),
+			m_sceneManager3D, SLOT(update()));
+	connect(m_componentList, SIGNAL(deleteCurrent()),
+	        m_sceneManager3D, SLOT(deleteCurrentDrawable()));
+	//editor scene
 	connect( scene_, SIGNAL(rightClickedAt( QPointF )),
 	        toolSelector_, SLOT(rightClickAt( QPointF )) );
 	connect( scene_, SIGNAL(leftClickedAt( QPointF )),
@@ -65,6 +74,7 @@ MainWindow::MainWindow() {
 	connect(toolSelector_, SIGNAL(changed()), scene_, SLOT(update()));
 	connect(m_componentList, SIGNAL(deleteCurrent()),
 	        m_editorSceneManager, SLOT(deleteCurrentDrawable()) );
+	//everything
 	connect(m_componentList, SIGNAL(deleteCurrent()),
 	        toolSelector_, SLOT(finalise()) );
 
@@ -84,6 +94,9 @@ void MainWindow::createTools() {
 
 	BSplineTool* bSplineTool = new BSplineTool();
 	toolSelector_->addTool(bSplineTool);
+
+	InvoluteSpurGearTool* invGearTool = new InvoluteSpurGearTool();
+	toolSelector_->addTool(invGearTool);
 
 	dock->setWidget(toolSelector_);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

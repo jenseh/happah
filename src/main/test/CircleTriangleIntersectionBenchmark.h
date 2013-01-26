@@ -4,14 +4,14 @@
 #include <time.h>
 
 #include "../core/simulations/WormGearGrind.h"
-#include "../core/geometries/SpurGear.h"
+#include "../core/geometries/InvoluteSpurGear.h"
 #include "../core/primitives/Circle.h"
 #include "../core/primitives/Triangle.h"
 
 class CircleTriangleIntersectionBenchmark
 {
 public:
-  CircleTriangleIntersectionBenchmark(SpurGear* gear1, SpurGear* gear2);
+  CircleTriangleIntersectionBenchmark();
 };
 
 #endif // CIRCLETRIANGLEINTERSECTIONBENCHMARK_H

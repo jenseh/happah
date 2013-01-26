@@ -9,7 +9,7 @@
 class ZCircleCloud
 {
 public:
-  ZCircleCloud(std::vector<glm::vec2*>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir);
+  ZCircleCloud(std::vector<glm::vec2>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir);
 
   int getResolutionXY();
   int getResolutionZ();
@@ -23,7 +23,7 @@ public:
   Circle computeOuterCircle(int posZIdx);
 
 private:
-  std::vector<glm::vec2*>* m_points;
+  std::vector<glm::vec2>* m_points;
   std::vector<float>* m_posZ;
 
   glm::vec3& m_referenceDir;

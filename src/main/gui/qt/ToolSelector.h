@@ -9,7 +9,8 @@
 
 #include "Component.h"
 #include "Tool.h"
-#include "../../core/Drawable2D.h"
+#include "../../gui/Drawable2D.h"
+#include "../../core/models/Drawable.h"
 
 /** @brief This class manages the tool-selection process of Happah
  * 
@@ -55,6 +56,7 @@ private slots:
 	void toolSelected(int toolID);
 //	void newComponent(Component* component);
 	void newComponent(Drawable2D* drawable);
+	void newComponent(Drawable* drawable);
 	void update();
 
 public slots:
@@ -65,6 +67,7 @@ public slots:
 signals:
 //	void emitComponent(std::string name);
 	void emitDrawable(Drawable2D* drawable);
+	void emitDrawable(Drawable* drawable);
 	void changed();
 };
 

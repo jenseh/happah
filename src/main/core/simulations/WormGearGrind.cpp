@@ -1,7 +1,7 @@
 #include "WormGearGrind.h"
 #include <time.h>
 
-WormGearGrind::WormGearGrind(SpurGear& worm, SpurGear& gear) {
+WormGearGrind::WormGearGrind(InvoluteSpurGear& worm, InvoluteSpurGear& gear) {
     m_worm = worm.toZCircleCloud();
     m_gear = gear.toTriangleMesh();
 }
@@ -11,7 +11,7 @@ WormGearGrind::~WormGearGrind() {}
 
 void WormGearGrind::calculateGrindingDepth(){
    std::cout << "Starting simulation:" << std::endl;
-   m_gear->translate(0.0f, 0.0f, 0.0f); //TODO:remove
+   m_gear->translate(0.5f, 0.0f, 0.0f); //TODO:remove
    m_gear->fillTriangles();
    std::vector<Triangle*>* triangles = m_gear->getTriangles();
    ExplicitKDTree tree = ExplicitKDTree(triangles);

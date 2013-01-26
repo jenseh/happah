@@ -6,7 +6,7 @@
 #include "EditorScene.h"
 #include "EditorSceneItem.h"
 #include "ComponentList.h"
-#include "../../core/Drawable2D.h"
+#include "../Drawable2D.h"
 
 class EditorSceneManager : public QObject {
 Q_OBJECT

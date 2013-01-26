@@ -44,8 +44,7 @@ void TriangleMesh::fillTriangles(){
 
         triangles_.at(i)->vertices[2] = glm::vec3(vertexData_[i*6+4][0], vertexData_[i*6+4][1], vertexData_[i*6+4][2]);
         triangles_.at(i)->normals[2] = glm::vec3(vertexData_[i*6+5][0], vertexData_[i*6+5][1], vertexData_[i*6+5][2]);
-
-    }
+      }
 }
 
 

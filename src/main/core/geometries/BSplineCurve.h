@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "../Drawable2D.h"
+#include "../../gui/Drawable2D.h"
 
 class BSplineCurve : public Drawable2D {
 	protected:

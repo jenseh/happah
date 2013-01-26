@@ -1,6 +1,6 @@
 #include "ZCircleCloud.h"
 
-ZCircleCloud::ZCircleCloud(std::vector<glm::vec2*>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir)
+ZCircleCloud::ZCircleCloud(std::vector<glm::vec2>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir)
   : m_points(points), m_posZ(posZ), m_resolutionXY(resolutionXY), m_resolutionZ(resolutionZ), m_referenceDir(referenceDir) {
   modelMatrix_.setToIdentity();
 }
@@ -48,8 +48,8 @@ std::vector<glm::vec3*>* ZCircleCloud::getClosestPoints(glm::vec3 hitPoint) {
 //}
 
 glm::vec3 ZCircleCloud::getPoint(int posXYIdx, int posZIdx) {
-  glm::vec2* point2D = m_points->at(posXYIdx);
-  return glm::vec3(point2D->x, point2D->y, m_posZ->at(posZIdx));
+  glm::vec2 point2D = m_points->at(posXYIdx);
+  return glm::vec3(point2D.x, point2D.y, m_posZ->at(posZIdx));
 }
 
 Circle ZCircleCloud::computeOuterCircle(int posZIdx) {

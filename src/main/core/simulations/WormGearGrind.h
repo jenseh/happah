@@ -1,17 +1,18 @@
 #ifndef WORMGEARGRIND_H
 #define WORMGEARGRIND_H
 
-#include "../geometries/SpurGear.h"
+#include "../geometries/InvoluteSpurGear.h"
 #include "../primitives/Circle.h"
 #include "../primitives/Triangle.h"
 #include "../kdtree/ExplicitKDTree.h"
 #include "CircularSimulationResult.h"
+#include "../models/ZCircleCloud.h"
 
 
 class WormGearGrind
 {
 public:
-  WormGearGrind(SpurGear& worm, SpurGear& gear);
+  WormGearGrind(InvoluteSpurGear& worm, InvoluteSpurGear& gear);
   ~WormGearGrind();
 
   void runSimulation();

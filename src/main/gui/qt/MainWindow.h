@@ -10,7 +10,7 @@
 #include "ComponentList.h"
 #include "EditorScene.h"
 #include "EditorSceneManager.h"
-#include "../../core/SceneManager.h"
+#include "SceneManager3D.h"
 
 class MainWindow: public QMainWindow {
 Q_OBJECT
@@ -32,11 +32,14 @@ private:
 
 	QMenu* viewMenu_;
 	ComponentList* m_componentList;
+	QTabWidget* m_tabs;
 	ToolSelector* toolSelector_;
+	//2D components:
 	EditorScene* scene_;
 	EditorSceneManager* m_editorSceneManager;
-    SceneManager* sceneManager;
-    QTabWidget *m_tabs;
+	//3D components:
+	SceneManager3D* m_sceneManager3D;
+
 };
 
 #endif

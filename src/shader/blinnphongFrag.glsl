@@ -11,7 +11,6 @@ uniform vec3 eye;
 uniform vec4 ambientColor, diffuseColor, specularColor;
 uniform float shininess;
 
-
 // Output des VertexShaders
 in vec3 vNormal, vWorldPosition;
 in vec4 vColor;
@@ -48,5 +47,6 @@ void main( void)
     }
 //    gl_FragColor = vec4(normalize(vNormal), 1.0f);
     */
-      gl_FragColor = gl_Color;
+      //gl_FragColor = gl_Color;
+      gl_FragColor = vColor;
 }

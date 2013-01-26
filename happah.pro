@@ -5,16 +5,18 @@ QT += core \
     opengl
 HEADERS += \
     src/main/gui/qt/BSplineTool.h \
+    src/main/gui/qt/InvoluteSpurGearTool.h \
+    src/main/gui/qt/GearSlider.h \
     src/main/gui/qt/ComponentList.h \
     src/main/gui/qt/EditorScene.h \
     src/main/gui/qt/EditorSceneItem.h \
     src/main/gui/qt/EditorSceneManager.h \
+    src/main/gui/qt/SceneManager3D.h \
     src/main/gui/qt/Painter2DQt.h \
-    src/main/core/Painter2D.h \
-    src/main/core/Drawable2D.h \
+    src/main/gui/Painter2D.h \
+    src/main/gui/Drawable2D.h \
     src/main/core/geometries/BSplineCurve.h \
     src/main/core/geometries/GeometryObject.h \
-    src/main/core/geometries/SpurGear.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/Happah.h \
@@ -54,20 +56,28 @@ HEADERS += \
     src/main/core/kdtree/BBox.h \
     src/main/core/kdtree/BSphere.h \
     src/main/test/CircleTriangleIntersectionBenchmark.h \
-    src/main/test/WormGearGrindTest.cpp \
-    src/main/stdafx.h
+    src/main/core/kdtree/ExplicitKDTree.h \
+    src/main/core/kdtree/ExplicitKDTreeNode.h \
+    src/main/core/kdtree/ExplicitKDTreeLeaf.h \
+    src/main/core/kdtree/ExplicitKDTreeInnerNode.h \
+    src/main/test/CircleTriangleIntersectionTest.h \
+    src/main/core/simulations/CircularSimulationResult.h \
+    src/main/test/WormGearGrindTest.h
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
+    src/main/gui/qt/InvoluteSpurGearTool.cpp \
+    src/main/gui/qt/GearSlider.cpp \
     src/main/gui/qt/ComponentList.cpp \
     src/main/gui/qt/EditorScene.cpp \
     src/main/gui/qt/EditorSceneItem.cpp \
     src/main/gui/qt/EditorSceneManager.cpp \
+    src/main/gui/qt/SceneManager3D.cpp \
     src/main/gui/qt/Painter2DQt.cpp \
-    src/main/core/Painter2D.cpp \
-    src/main/core/Drawable2D.cpp \
+    src/main/gui/Painter2D.cpp \
+    src/main/gui/Drawable2D.cpp \
     src/main/core/geometries/BSplineCurve.cpp \
     src/main/core/geometries/GeometryObject.cpp \
-    src/main/core/geometries/SpurGear.cpp \
+    src/main/core/geometries/InvoluteSpurGear.cpp \
     src/main/core/geometries/Sphere.cpp \
     src/main/core/geometries/StandardProfile.cpp \
     src/main/Happah.cpp \
@@ -99,11 +109,28 @@ SOURCES += src/main/main.cpp \
     src/main/core/kdtree/BSphere.cpp \
     src/main/test/CircleTriangleIntersectionBenchmark.cpp \
     src/main/test/WormGearGrindTest.cpp \
-    src/main/glew.c
+    src/main/core/kdtree/ExplicitKDTree.cpp \
+    src/main/core/kdtree/ExplicitKDTreeNode.cpp \
+    src/main/core/kdtree/ExplicitKDTreeLeaf.cpp \
+    src/main/core/kdtree/ExplicitKDTreeInnerNode.cpp \
+    src/main/test/CircleTriangleIntersectionTest.cpp \
+    src/main/core/simulations/CircularSimulationResult.cpp \
+
 FORMS += 
 RESOURCES += 
-INCLUDEPATH += ../include
-QMAKE_CXXFLAGS += -DGL_GLEXT_PROTOTYPES
+
+
+win32 {
+        QMAKE_CXXFLAGS += -fexceptions -DGL_GLEXT_PROTOTYPES
+        CONFIG += exceptions
+        SOURCES += src/main/glew.c
+	INCLUDEPATH += ../include
+}
+
+unix {
+	LIBS += -lGLEW
+	INCLUDEPATH += /usr/include
+}
 
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug

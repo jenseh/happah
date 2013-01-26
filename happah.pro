@@ -17,6 +17,7 @@ HEADERS += \
     src/main/gui/Drawable2D.h \
     src/main/core/geometries/BSplineCurve.h \
     src/main/core/geometries/GeometryObject.h \
+    src/main/core/geometries/InvoluteSpurGear.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/Happah.h \
@@ -63,6 +64,7 @@ HEADERS += \
     src/main/test/CircleTriangleIntersectionTest.h \
     src/main/core/simulations/CircularSimulationResult.h \
     src/main/test/WormGearGrindTest.h
+
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
     src/main/gui/qt/InvoluteSpurGearTool.cpp \

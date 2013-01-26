@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include "DrawManager.h"
-#include <GL/glext.h>
+
 #include <fstream>
 #include <sstream>
 #include <string>

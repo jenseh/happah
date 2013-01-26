@@ -2,17 +2,13 @@
 #include <time.h>
 #include "../test/WormGearGrindTest.h"
 #include <iostream>
-#include "../test/CircleTriangleIntersectionBenchmark.h"
-#include "../test/CircleTriangleIntersectionTest.h"
+
 
 SceneManager::SceneManager() : m_iDCounter(0) {
     std::cerr << " SM: size" << m_drawables.size()<< std::endl;
-//    new WormGearGrindTest();
-//    new CircleTriangleIntersectionTest();
 }
 
 SceneManager::~SceneManager() {
-
 }
 
 //first idDrawable gets id 0, m_idCounter is has number of produced idDrawables
@@ -48,4 +44,3 @@ vector<Drawable*>* SceneManager::getDrawables() {
 unsigned int SceneManager::getObjectState() {
     return m_iDCounter + m_deletedCounter;
 }
-

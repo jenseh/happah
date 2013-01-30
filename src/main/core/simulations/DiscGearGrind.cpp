@@ -12,10 +12,11 @@ DiscGearGrind::~DiscGearGrind() {
 
 }
 
-vector<Color> DiscGearGrind::calculateGrindingDepth(){
+Drawable* DiscGearGrind::calculateGrindingDepth(){
 
     TriangleMesh* discMesh = m_disc->toQuadMesh()->toTriangleMesh();
-    RayCloud* rayCloud = m_gear->toQuadMesh()->toTriangleMesh()->toRayCloud(); //TODO: this is terribly inefficient
+    TriangleMesh* result = m_gear->toQuadMesh()->toTriangleMesh(); // TODO: m_gear->toTriangle does not work!?
+    RayCloud* rayCloud = result->toRayCloud();
     std::vector<Ray*> gearMesh = *(rayCloud->getRays());
     TriangleKDTree kdTree;
     kdTree.build(*discMesh);
@@ -40,7 +41,8 @@ vector<Color> DiscGearGrind::calculateGrindingDepth(){
         colorArray.push_back(curCol);
 
     }
-    return colorArray;
+    result->setColorData(colorArray);
+    return result;
 }
 
 void DiscGearGrind::runSimulation() {

@@ -1,12 +1,15 @@
 #include "SceneManager.h"
 #include <time.h>
 #include "../test/WormGearGrindTest.h"
+#include "../test/KinematicTest.h"
 #include <iostream>
 
 
 SceneManager::SceneManager() : m_iDCounter(0) {
     std::cout << " SM: size" << m_drawables.size()<< std::endl;
 //    new WormGearGrindTest();
+    //KinematicTest test;
+    //test.runLinearTest();
 }
 
 SceneManager::~SceneManager() {

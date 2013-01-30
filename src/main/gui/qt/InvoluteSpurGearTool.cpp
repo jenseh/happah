@@ -3,6 +3,7 @@
 #include <QGroupBox>
 #include "../../core/models/TriangleMesh.h"
 #include <iostream>
+#include "../../test/DiscGearGrindTest.h"
 
 InvoluteSpurGearTool::InvoluteSpurGearTool() {
     m_mode = this->IDLEMODE;
@@ -64,6 +65,9 @@ void InvoluteSpurGearTool::createGear() {
     m_gear = new InvoluteSpurGear(m_toothCount, m_module, m_facewidth, m_pressureAngle, m_bottomClrearance, m_filletRadius);
     TriangleMesh *drawable = m_gear->toTriangleMesh();
     emit emitComponent(drawable);
+    //DiscGearGrindTest test;
+    //emit emitComponent(test.runSimulation());
+
 }
 
 void InvoluteSpurGearTool::setInitialState() {

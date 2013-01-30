@@ -13,7 +13,7 @@ public:
     ~DiscGearGrind();
 
     void runSimulation();
-    vector<Color> calculateGrindingDepth();
+    Drawable* calculateGrindingDepth();
 
 private:
     Disc* m_disc;

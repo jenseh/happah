@@ -63,7 +63,8 @@ HEADERS += \
     src/main/core/kdtree/ExplicitKDTreeInnerNode.h \
     src/main/test/CircleTriangleIntersectionTest.h \
     src/main/core/simulations/CircularSimulationResult.h \
-    src/main/test/WormGearGrindTest.h
+    src/main/test/WormGearGrindTest.h \
+    src/main/gui/Picker.h
 
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -117,6 +118,7 @@ SOURCES += src/main/main.cpp \
     src/main/core/kdtree/ExplicitKDTreeInnerNode.cpp \
     src/main/test/CircleTriangleIntersectionTest.cpp \
     src/main/core/simulations/CircularSimulationResult.cpp \
+    src/main/gui/Picker.cpp
 
 FORMS += 
 RESOURCES += 
@@ -125,8 +127,8 @@ RESOURCES +=
 win32 {
         QMAKE_CXXFLAGS += -fexceptions -DGL_GLEXT_PROTOTYPES
         CONFIG += exceptions
-        SOURCES += src/main/glew.c
-	INCLUDEPATH += ../include
+        LIBS += -lglew32
+        INCLUDEPATH += ../include
 }
 
 unix {

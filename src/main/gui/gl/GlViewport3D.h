@@ -6,6 +6,7 @@
 #include <QGLBuffer>
 #include <QGLShaderProgram>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <QFlags>
 #include <QtGui>
@@ -16,6 +17,7 @@
 #include "../qt/MainWindow.h"
 #include "../../core/SceneManager.h"
 #include "DrawManager.h"
+#include "../Picker.h"
 
 using namespace std;
 

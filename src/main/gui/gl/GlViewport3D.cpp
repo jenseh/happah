@@ -1,4 +1,3 @@
-#define GLEW_STATIC //Very important for Windows users
 #include <GL/glew.h>
 #include <GL/gl.h>
 
@@ -134,71 +133,29 @@ void GlViewport3D::wheelEvent(QWheelEvent *event) {
 
 //TODO: Adapt to new achitecture
 void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
+        float x = (float) event->pos().x();
+        float y = (float) event->pos().y();
+        float width = (float) this->width();
+        float height = (float) this->height();
 
-//	float x = (float) event->pos().x();
-//	float y = (float) event->pos().y();
-//	float width = (float) this->width();
-//	float height = (float) this->height();
+  // Create 2World Matrix
 
-//	glm::vec3 lookAt, camPos, camUp, view, h, v;
-//	lookAt = glm::vec3(center_.x(), center_.y(), center_.z()); // TODO : Change that when lookat might move later
-//	camPos.x = eye_.x();
-//	camPos.y = eye_.y();
-//	camPos.z = eye_.z();
-//	camUp = glm::vec3(up_.x(), up_.y(), up_.z());
+        QMatrix4x4 VP = projectionMatrix_ * viewMatrix_ ;
+  float VPFloats[16];
+  const qreal* VPQreals = VP.constData();
 
-//	// Calc Camera Plane
-//	view = lookAt - camPos;
-//	glm::normalize(view);
-//	h = glm::cross(view, camUp);
-//	glm::normalize(h);
-//	v = glm::cross(h, view);
-//	glm::normalize(v);
+  for (int i = 0; i < 16; ++i) {
+      VPFloats[i] = VPQreals[i];
+    }
+  glm::mat4 toWorld = glm::make_mat4(VPFloats);
+  toWorld = glm::inverse(toWorld);
 
-//	// scale h,v
-//	float fovy = 45.0; // TODO : Get this from Global
-//	float fovyRad = fovy * M_PI / 180;
-//	float vLength = tan(fovyRad / 2) * 0.1f; // TODO 0.1f is near Clipping plane .. get that from Global
-//	float hLength = vLength * (width / height);
+  Picker* picker = new Picker();
+  bool hit = picker->select(x,y,
+                           width,height,
+                           &toWorld);
 
-//	v = v * vLength;
-//	h = h * hLength;
 
-//	// translate mouse coordinates to viewport
-//	x = x - width / 2;
-//	y = y - height / 2;
-//	x = x / (width / 2);
-//	y = y / (height / 2);
-
-//	glm::vec3 rayPos, rayDir;
-
-//	glm::vec3 hx = (float) x * h;
-//	glm::vec3 vy = (float) y * v;
-
-//	// Create Ray
-//	// TODO Create RayStruct or even Class
-//	rayPos = camPos + (0.1f * view) + hx + vy;
-
-//	//qWarning()<< rayPos.x << "   "<<rayPos.y<<"  "<<rayPos.z;
-//	rayDir = rayPos - camPos;
-
-//	if (sphere_->hit(rayPos, rayDir)) {
-
-//		qWarning() << sphere_->getHitpoint().x << " "
-//				<< sphere_->getHitpoint().y << " " << sphere_->getHitpoint().z;
-
-//		if (pointCount_ < 3) {
-//			triangleVP_[pointCount_] = glm::vec4(sphere_->getHitpoint(), 1.0f);
-//			pointCount_++;
-
-//		} else {
-//			pointCount_ = 0;
-//			triangleVP_[pointCount_] = glm::vec4(sphere_->getHitpoint(), 1.0f);
-//			pointCount_++;
-
-//		}
-//		//	triangleVBO_.write(0, triangleVP_, 3);
-//	}
 }
 
 void GlViewport3D::keyPressEvent(QKeyEvent *event) {

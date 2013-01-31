@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 
 #include "GlViewport3D.h"
+#include "../../core/geometries/Sphere.h"
 
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 		QWidget *parent, MainWindow* mainWindow) :
@@ -29,6 +30,10 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 	pointCount_ = 0;
 	theta_ = 0;
 	phi_ = 0;
+
+	Sphere * sphere = new Sphere(1.0f);
+	QuadMesh* dSphere = sphere->toQuadMesh();
+	sceneManager->addDrawable(dSphere);
 }
 
 void GlViewport3D::initializeGL() {
@@ -140,12 +145,14 @@ void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
 
   // Create 2World Matrix
 
-        QMatrix4x4 VP = projectionMatrix_ * viewMatrix_ ;
+        QMatrix4x4 VP = projectionMatrix_*viewMatrix_;
   float VPFloats[16];
   const qreal* VPQreals = VP.constData();
 
   for (int i = 0; i < 16; ++i) {
+
       VPFloats[i] = VPQreals[i];
+      cout << VPFloats[i] << " ";
     }
   glm::mat4 toWorld = glm::make_mat4(VPFloats);
   toWorld = glm::inverse(toWorld);

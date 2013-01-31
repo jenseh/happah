@@ -18,7 +18,7 @@ bool Picker::select(float x, float y, float width, float height, glm::mat4 *toWo
         float ndc_y = (y-(height/2.0f))/(height/2.0f);
         float ndc_z = -1.0f;
 
-        cout << "NDC's are "<< x << "/" << y << endl;
+        cout << "NDC's are "<< ndc_x << "/" << ndc_y << endl;
 
   // Create Ray
         glm::vec4 rayPos = glm::vec4(ndc_x,ndc_y,ndc_z,1.0f);

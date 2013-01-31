@@ -18,6 +18,7 @@ public:
     void removeDrawable(uint id);
 
     unsigned int getObjectState();
+    void buildScene();
 
 private:
     struct IdDrawable

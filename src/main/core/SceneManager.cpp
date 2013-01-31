@@ -2,6 +2,7 @@
 #include <time.h>
 #include "../test/WormGearGrindTest.h"
 #include "../test/KinematicTest.h"
+#include "geometries/Sphere.h"
 #include <iostream>
 
 
@@ -47,4 +48,14 @@ vector<Drawable*>* SceneManager::getDrawables() {
 
 unsigned int SceneManager::getObjectState() {
     return m_iDCounter + m_deletedCounter;
+}
+
+void SceneManager::buildScene(){
+  Sphere * sphere = new Sphere(1.0f);
+  QuadMesh* dSphere = sphere->toQuadMesh();
+  dSphere->setMaterial(.2f,        //ka
+                       .4f,        //kd
+                       .2f,        //ks
+                       20.0f);      //phong
+  uint result = addDrawable(dSphere);
 }

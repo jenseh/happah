@@ -15,8 +15,8 @@ bool Picker::select(float x, float y, float width, float height, glm::mat4 *toWo
 
   // Create Normalized Device Coordinates
         float ndc_x = (x-(width/2.0f))/(width/2.0f);
-        float ndc_y = (y-(height/2.0f))/(height/2.0f);
-        float ndc_z = -1.0f;
+        float ndc_y = -(y-(height/2.0f))/(height/2.0f);
+        float ndc_z = 0.0f;
 
         cout << "NDC's are "<< ndc_x << "/" << ndc_y << endl;
 

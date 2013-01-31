@@ -33,6 +33,11 @@ private:
 	GLuint m_vertexDataBuffer;
 	GLuint m_colorDataBuffer;
 
+	GLint m_shininessLocation;
+	GLint m_diffuseColorLocation;
+	GLint m_ambientColorLocation;
+	GLint m_specularColorLocation;
+
 	GLint m_useColorLocation; // Wether the color buffer is used (1) or not (0)
 };
 

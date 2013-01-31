@@ -2,7 +2,7 @@
 #include <GL/gl.h>
 
 #include "GlViewport3D.h"
-#include "../../core/geometries/Sphere.h"
+
 
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 		QWidget *parent, MainWindow* mainWindow) :
@@ -31,9 +31,8 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 	theta_ = 0;
 	phi_ = 0;
 
-	Sphere * sphere = new Sphere(1.0f);
-	QuadMesh* dSphere = sphere->toQuadMesh();
-	sceneManager->addDrawable(dSphere);
+
+	sceneManager->buildScene();
 }
 
 void GlViewport3D::initializeGL() {

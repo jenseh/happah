@@ -64,7 +64,8 @@ HEADERS += \
     src/main/test/CircleTriangleIntersectionTest.h \
     src/main/core/simulations/CircularSimulationResult.h \
     src/main/test/WormGearGrindTest.h \
-    src/main/gui/Picker.h
+    src/main/gui/Picker.h \
+    src/main/core/models/Material.h
 
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -118,7 +119,8 @@ SOURCES += src/main/main.cpp \
     src/main/core/kdtree/ExplicitKDTreeInnerNode.cpp \
     src/main/test/CircleTriangleIntersectionTest.cpp \
     src/main/core/simulations/CircularSimulationResult.cpp \
-    src/main/gui/Picker.cpp
+    src/main/gui/Picker.cpp \
+    src/main/core/models/Material.cpp
 
 FORMS += 
 RESOURCES += 

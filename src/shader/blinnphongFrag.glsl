@@ -8,7 +8,7 @@ uniform mat4 MVP, MV;
 uniform vec3 eye;
 
 // Colors
-uniform vec4 ambientColor, diffuseColor, specularColor;
+uniform float ka,kd,ks;
 uniform float shininess;
 
 // Output des VertexShaders
@@ -25,12 +25,15 @@ void main( void)
     vec4 lightColor[2];
     lightPosition[0] = vec3(5.0f, 5.0f, 5.0f);
     lightPosition[1] = vec3(-5.0f, 5.0f, -5.0f);
-    lightColor[0] = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    lightColor[1] = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    lightColor[0] = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    lightColor[1] = vec4(1.0f, 0.0f, 1.0f, 1.0f);
 
-    /*
-    // Ambient background lighting
-    gl_FragColor = ambientColor;
+    
+    // Own Object Color :
+
+    	
+   //gl_FragColor = ka*gl_Color;     // Uncomment to use vertices colors
+  
 
     // Blinn Phong lighting for each light source
     for(int i = 0; i < 2; i ++){
@@ -42,11 +45,8 @@ void main( void)
         float specular = pow(max(0.0f, dot(halfwayWS, vNormal)), shininess);
 
 
-         gl_FragColor += (diffuse * diffuseColor + specular * specularColor * 0.9) * lightColor[i];
+         gl_FragColor += (diffuse * kd + specular * ks) * lightColor[i];
 		
     }
-//    gl_FragColor = vec4(normalize(vNormal), 1.0f);
-    */
-      //gl_FragColor = gl_Color;
-      gl_FragColor = vColor;
+ 
 }

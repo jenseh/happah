@@ -58,13 +58,26 @@ bool DrawManager::initShaderPrograms() {
 	m_normalLocation = glGetAttribLocation(m_program, "normal");
 	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
 
-	GLint shininessLocation = glGetUniformLocation(m_program, "shininess");
-	if(shininessLocation < 0) cerr << "Failed to find shininess." << endl;
-	else glUniform1f(shininessLocation, 20.0f);
+	// Material uniforms
+	m_shininessLocation = glGetUniformLocation(m_program, "shininess");
+	if(m_shininessLocation < 0) cerr << "Failed to find shininess." << endl;
+	else glUniform1f(m_shininessLocation, 20.0f);
 
-	GLint specularColorLocation = glGetUniformLocation(m_program, "specularColor");
-	if(specularColorLocation < 0) cerr << "Failed to find specular color." << endl;
-	else glUniform4f(specularColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
+	m_diffuseColorLocation = glGetUniformLocation(m_program, "kd");
+	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
+	else glUniform1f(m_diffuseColorLocation, 1.0f);
+
+
+	m_ambientColorLocation = glGetUniformLocation(m_program, "ka");
+	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color." << endl;
+	else glUniform1f(m_ambientColorLocation, 1.0f);
+
+
+	m_specularColorLocation = glGetUniformLocation(m_program, "ks");
+	if(m_specularColorLocation < 0) cerr << "Failed to find specular color." << endl;
+	else glUniform1f(m_specularColorLocation, 1.0f);
+
+
 
 	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
 	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
@@ -183,8 +196,11 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		glUniformMatrix4fv(m_MVPLocation, 1, GL_FALSE, MVPFloats);
 		glUniformMatrix3fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
 		glUniform3f(m_eyeLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
-		glColor3f(1.0f, 0.0f, 0.0f);
-
+;
+		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
+		glUniform1f(m_ambientColorLocation,(*i)->getMaterial().m_ka);
+		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
+		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
 		int vertexDataSize = (*i)->getVertexData()->size();
 		int tupleSize = (*i)->getTupleSize();
 		int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;

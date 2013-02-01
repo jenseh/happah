@@ -55,9 +55,9 @@ void GlViewport3D::initializeGL() {
 	}
 
 	// Finalize vertex buffer
-//    if (!m_drawManager->createBufferFor() {
-//	    return;
-//	}
+	vector<Drawable*>* drawables = m_sceneManager->getDrawables();
+	m_drawManager->createBufferFor(drawables);
+
 	// Setup and start a timer
 	timer_ = new QTimer(this);
 	connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));

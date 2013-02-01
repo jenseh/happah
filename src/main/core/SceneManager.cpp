@@ -53,11 +53,22 @@ unsigned int SceneManager::getObjectState() {
 void SceneManager::buildScene(){
   Sphere * sphere = new Sphere(1.0f);
   QuadMesh* dSphere = sphere->toQuadMesh();
-  dSphere->setMaterial(0.3f,        //ka
-                       0.4f,        //kd
-                       0.3f,        //ks
-                       20.0f);      //phong
-
+  dSphere->setMaterial(1.0f,        //ka
+                       0.0f,        //kd
+                       0.0f,        //ks
+                       10.0f);      //phong
+  std::vector<Color>* colorData = new std::vector<Color>();
+  for(uint i = 0; i < (dSphere->getVertexData()->size()); i++){
+    Color color;
+    color.red = 1.0f;
+    color.blue = 1.0f;
+    color.green = 1.0f;
+    color.alpha = 1.0f;
+    colorData->push_back(color);
+}
+  dSphere->setColorData(*colorData);
+  std::cout << "VertexData size :" << dSphere->getVertexData()->size() << endl;
+  std::cout << " Color Data size :" << colorData->size() << endl;
   uint result = addDrawable(dSphere);
 
 }

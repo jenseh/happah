@@ -99,16 +99,16 @@ QuadMesh* Sphere::toQuadMesh() {
 
             m_vertexData.push_back(a);
             m_vertexData.push_back(normA);
-             m_vertexData.push_back(colA);
+
             m_vertexData.push_back(b);
             m_vertexData.push_back(normB);
-             m_vertexData.push_back(colB);
+
             m_vertexData.push_back(c);
             m_vertexData.push_back(normC);
-             m_vertexData.push_back(colC);
+
             m_vertexData.push_back(d);
             m_vertexData.push_back(normD);
-             m_vertexData.push_back(colC);
+
         }
     }
     QuadMesh* result = new QuadMesh(m_vertexData);

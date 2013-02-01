@@ -126,14 +126,14 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 		glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
 		offset += vertexDataSize;
 	}
-    glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(glm::vec4), 0);
-    glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
-    glVertexAttribPointer(m_vertexColor, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(glm::vec4), (void*)(sizeof(glm::vec4)*2));
+    glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+    glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
+
     glEnableVertexAttribArray(m_vertexLocation);
     glEnableVertexAttribArray(m_normalLocation);
-    glEnableVertexAttribArray(m_vertexColor);
 
-/*
+
+
     // Color Data
     glGenBuffers(2, &m_colorDataBuffer);
     nBytes = 0;
@@ -157,12 +157,11 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     glEnableVertexAttribArray(m_vertexColor);
 
     glBindVertexArray(0);
-*/
+
 }
 
 void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
-	createBufferFor(drawables);
-
+	updateBuffer(drawables);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
@@ -198,12 +197,17 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
 		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
 		int vertexDataSize = (*i)->getVertexData()->size();
-		std::cout << " vertexDataSize "<< vertexDataSize << endl;
+
 		int tupleSize = (*i)->getTupleSize();
 		int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;
 		glDrawArrays(mode, offset, vertexDataSize);
-		std::cout << "offset :" << offset << endl;
+
 		offset += vertexDataSize;
 	}
 	glBindVertexArray(0);
+}
+
+void DrawManager::updateBuffer(std::vector<Drawable *> *drawables){
+  // TODO : Find something thats perfoming Better Here :
+  //createBufferFor(drawables);
 }

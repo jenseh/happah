@@ -25,3 +25,6 @@ void Drawable::setMaterial(float ka, float kd, float ks, float shininess){
   m_material.m_shininess = shininess;
 }
 
+
+
+

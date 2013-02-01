@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 DrawManager::DrawManager() {
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
@@ -30,19 +31,17 @@ bool DrawManager::initShaderPrograms() {
 		cerr << "Linking failed." << endl;
 	else
 		cout << "Linking was successful." << endl;
+	// Vertex Attributes
+	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
+	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
 
-	GLint ambientColorLocation = glGetUniformLocation(m_program, "ambientColor");
-	if(ambientColorLocation < 0) cerr << "Failed to find ambient color." << endl;
-	else glUniform4f(ambientColorLocation, 0.053f, 0.020f, 0.112f, 1.0f);
+	m_normalLocation = glGetAttribLocation(m_program, "normal");
+	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
 
-	GLint diffuseColorLocation = glGetUniformLocation(m_program, "diffuseColor");
-	if(diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
-    else glUniform4f(diffuseColorLocation, 0.75f, 0.75f, 0.75f, 1.0f);
+        m_vertexColor = glGetAttribLocation(m_program, "color");
+        if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
 
-    m_useColorLocation = glGetUniformLocation(m_program, "useColor");
-    if(m_useColorLocation < 0) cerr << "Failed to find useColor information." << endl;
-    else glUniform1i(m_useColorLocation, 0);
-
+	// Matrix Uniforms
 	m_eyeLocation = glGetUniformLocation(m_program, "eye");
 	if(m_eyeLocation < 0) cerr << "Failed to find eye." << endl;
 
@@ -55,35 +54,26 @@ bool DrawManager::initShaderPrograms() {
 	m_normalMatLocation = glGetUniformLocation(m_program, "normalMat");
 	if(m_normalMatLocation < 0) cerr << "Failed to find normal matrix." << endl;
 
-	m_normalLocation = glGetAttribLocation(m_program, "normal");
-	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
-
 	// Material uniforms
 	m_shininessLocation = glGetUniformLocation(m_program, "shininess");
 	if(m_shininessLocation < 0) cerr << "Failed to find shininess." << endl;
 	else glUniform1f(m_shininessLocation, 20.0f);
 
 	m_diffuseColorLocation = glGetUniformLocation(m_program, "kd");
-	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
+	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color komponent." << endl;
 	else glUniform1f(m_diffuseColorLocation, 1.0f);
 
-
 	m_ambientColorLocation = glGetUniformLocation(m_program, "ka");
-	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color." << endl;
+	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color komponent." << endl;
 	else glUniform1f(m_ambientColorLocation, 1.0f);
 
-
 	m_specularColorLocation = glGetUniformLocation(m_program, "ks");
-	if(m_specularColorLocation < 0) cerr << "Failed to find specular color." << endl;
+	if(m_specularColorLocation < 0) cerr << "Failed to find specular color komponent." << endl;
 	else glUniform1f(m_specularColorLocation, 1.0f);
 
 
 
-	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
-	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
 
-    m_vertexColor = glGetAttribLocation(m_program, "color");
-    if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
 
 
 	return true;
@@ -102,8 +92,12 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		glCompileShader(shader);
 		GLint compileStatus;
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-		if(compileStatus == GL_FALSE)
-			cerr << "Compilation of shader failed." << endl;
+		if(compileStatus == GL_FALSE){
+		    char log[256];
+		    glGetShaderInfoLog( shader, 256, NULL, log);
+		    cerr << "Compilation of shader failed." << endl;
+		    printf(" Infolog: %s\n", log);
+		}
 		else
 			cout << "Compilation was successful." << endl;
 	} else
@@ -132,13 +126,14 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 		glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
 		offset += vertexDataSize;
 	}
-    glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
-    glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
-
+    glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(glm::vec4), 0);
+    glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
+    glVertexAttribPointer(m_vertexColor, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(glm::vec4), (void*)(sizeof(glm::vec4)*2));
     glEnableVertexAttribArray(m_vertexLocation);
     glEnableVertexAttribArray(m_normalLocation);
+    glEnableVertexAttribArray(m_vertexColor);
 
-
+/*
     // Color Data
     glGenBuffers(2, &m_colorDataBuffer);
     nBytes = 0;
@@ -162,6 +157,7 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     glEnableVertexAttribArray(m_vertexColor);
 
     glBindVertexArray(0);
+*/
 }
 
 void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
@@ -202,9 +198,11 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
 		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
 		int vertexDataSize = (*i)->getVertexData()->size();
+		std::cout << " vertexDataSize "<< vertexDataSize << endl;
 		int tupleSize = (*i)->getTupleSize();
 		int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;
 		glDrawArrays(mode, offset, vertexDataSize);
+		std::cout << "offset :" << offset << endl;
 		offset += vertexDataSize;
 	}
 	glBindVertexArray(0);

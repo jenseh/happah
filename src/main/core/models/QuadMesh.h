@@ -20,6 +20,7 @@ public:
 
     TriangleMesh* toTriangleMesh();
 
+
 protected:
     std::vector<glm::vec4> m_vertexData;
 };

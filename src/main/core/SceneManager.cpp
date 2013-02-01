@@ -53,9 +53,11 @@ unsigned int SceneManager::getObjectState() {
 void SceneManager::buildScene(){
   Sphere * sphere = new Sphere(1.0f);
   QuadMesh* dSphere = sphere->toQuadMesh();
-  dSphere->setMaterial(.2f,        //ka
-                       .4f,        //kd
-                       .2f,        //ks
+  dSphere->setMaterial(0.3f,        //ka
+                       0.4f,        //kd
+                       0.3f,        //ks
                        20.0f);      //phong
+
   uint result = addDrawable(dSphere);
+
 }

@@ -53,16 +53,16 @@ unsigned int SceneManager::getObjectState() {
 void SceneManager::buildScene(){
   Sphere * sphere = new Sphere(1.0f);
   QuadMesh* dSphere = sphere->toQuadMesh();
-  dSphere->setMaterial(1.0f,        //ka
-                       0.0f,        //kd
-                       0.0f,        //ks
+  dSphere->setMaterial(0.45f,        //ka
+                       0.5f,        //kd
+                       1.0f,        //ks
                        10.0f);      //phong
   std::vector<Color>* colorData = new std::vector<Color>();
-  for(uint i = 0; i < (dSphere->getVertexData()->size()); i++){
+  for(uint i = 0; i < (dSphere->getVertexData()->size()/2); i++){
     Color color;
-    color.red = 1.0f;
-    color.blue = 1.0f;
+    color.red =1.0f;
     color.green = 1.0f;
+    color.blue = 0.0f;
     color.alpha = 1.0f;
     colorData->push_back(color);
 }

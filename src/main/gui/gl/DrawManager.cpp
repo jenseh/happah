@@ -147,7 +147,9 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
         vector<Color>* colorData = (*i)->getColorData();
         if( colorData->size() != 0 ){
-            int colorDataSize = colorData->size() * sizeof(Color);
+            int colorDataSize = colorData->size()*sizeof(Color) ;
+            std::cout << "size of Color: " << sizeof(Color) << endl;
+            std::cout << " ColorDataSize for buffer: " << colorDataSize << endl;
             glBufferSubData(GL_ARRAY_BUFFER, offset, colorDataSize, &(colorData->at(0)));
             offset += colorDataSize;
         }
@@ -191,9 +193,8 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		glUniformMatrix4fv(m_MVPLocation, 1, GL_FALSE, MVPFloats);
 		glUniformMatrix3fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
 		glUniform3f(m_eyeLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
-;
-		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
 		glUniform1f(m_ambientColorLocation,(*i)->getMaterial().m_ka);
+		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
 		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
 		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
 		int vertexDataSize = (*i)->getVertexData()->size();

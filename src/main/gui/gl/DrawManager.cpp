@@ -16,10 +16,10 @@ DrawManager::DrawManager() {
 
 bool DrawManager::initShaderPrograms() {
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	compileShader(m_vertexShader, "./src/shader/blinnphongVert.glsl");
+	compileShader(m_vertexShader, "./src/shader/phong410Vert.glsl");
 
 	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	compileShader(m_fragmentShader, "./src/shader/blinnphongFrag.glsl");
+	compileShader(m_fragmentShader, "./src/shader/phong410Frag.glsl");
 
 	m_program = glCreateProgram();
 	glAttachShader(m_program, m_vertexShader);
@@ -70,11 +70,6 @@ bool DrawManager::initShaderPrograms() {
 	m_specularColorLocation = glGetUniformLocation(m_program, "ks");
 	if(m_specularColorLocation < 0) cerr << "Failed to find specular color komponent." << endl;
 	else glUniform1f(m_specularColorLocation, 1.0f);
-
-
-
-
-
 
 	return true;
 }
@@ -172,11 +167,11 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
 		QMatrix4x4 MV = *viewMatrix * *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * MV;
-		QMatrix3x3 normalMatrix = MV.normalMatrix();
+		QMatrix4x4 normalMatrix = MV.inverted();
 
 		GLfloat MVFloats[16];
 		GLfloat MVPFloats[16];
-		GLfloat normalMatrixFloats[9];
+		GLfloat normalMatrixFloats[16];
 
 		const qreal* MVQreals = MV.constData();
 		const qreal* MVPQreals = MVP.constData();
@@ -185,13 +180,14 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		for (int i = 0; i < 16; ++i) {
 	            MVFloats[i] = MVQreals[i];
 	            MVPFloats[i] = MVPQreals[i];
+		    normalMatrixFloats[i] = normalMatrixQreals[i];
 		}
-		for (int i = 0; i < 9; ++i)
-	            normalMatrixFloats[i] = normalMatrixQreals[i];
+
+
 
 		glUniformMatrix4fv(m_MVLocation, 1, GL_FALSE, MVFloats);
 		glUniformMatrix4fv(m_MVPLocation, 1, GL_FALSE, MVPFloats);
-		glUniformMatrix3fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
+		glUniformMatrix4fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
 		glUniform3f(m_eyeLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
 		glUniform1f(m_ambientColorLocation,(*i)->getMaterial().m_ka);
 		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
@@ -210,5 +206,5 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 
 void DrawManager::updateBuffer(std::vector<Drawable *> *drawables){
   // TODO : Find something thats perfoming Better Here :
-  //createBufferFor(drawables);
+  createBufferFor(drawables);
 }

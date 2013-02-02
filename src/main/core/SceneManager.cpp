@@ -61,7 +61,7 @@ void SceneManager::buildScene(){
   for(uint i = 0; i < (dSphere->getVertexData()->size()/2); i++){
     Color color;
     color.red =1.0f;
-    color.green = 1.0f;
+    color.green = 0.0f;
     color.blue = 0.0f;
     color.alpha = 1.0f;
     colorData->push_back(color);

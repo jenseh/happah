@@ -65,7 +65,8 @@ HEADERS += \
     src/main/core/simulations/CircularSimulationResult.h \
     src/main/test/WormGearGrindTest.h \
     src/main/gui/Picker.h \
-    src/main/core/models/Material.h
+    src/main/core/models/Material.h \
+    src/main/core/geometries/TriPatch.h
 
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -120,7 +121,9 @@ SOURCES += src/main/main.cpp \
     src/main/test/CircleTriangleIntersectionTest.cpp \
     src/main/core/simulations/CircularSimulationResult.cpp \
     src/main/gui/Picker.cpp \
-    src/main/core/models/Material.cpp
+    src/main/core/models/Material.cpp \
+    src/main/core/geometries/TriPatch.cpp
+
 
 FORMS += 
 RESOURCES += 

@@ -206,5 +206,5 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 
 void DrawManager::updateBuffer(std::vector<Drawable *> *drawables){
   // TODO : Find something thats perfoming Better Here :
-  createBufferFor(drawables);
+ // createBufferFor(drawables);
 }

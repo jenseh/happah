@@ -3,6 +3,7 @@
 #include "../test/WormGearGrindTest.h"
 #include "../test/KinematicTest.h"
 #include "geometries/Sphere.h"
+#include "geometries/TriPatch.h"
 #include <iostream>
 
 
@@ -51,7 +52,7 @@ unsigned int SceneManager::getObjectState() {
 }
 
 void SceneManager::buildScene(){
-  Sphere * sphere = new Sphere(1.0f);
+  Sphere * sphere = new Sphere(1.0f,glm::vec4(2.0f,0.0f,0.0f,1.0f));
   QuadMesh* dSphere = sphere->toQuadMesh();
   dSphere->setMaterial(0.45f,        //ka
                        0.5f,        //kd
@@ -69,6 +70,27 @@ void SceneManager::buildScene(){
   dSphere->setColorData(*colorData);
   std::cout << "VertexData size :" << dSphere->getVertexData()->size() << endl;
   std::cout << " Color Data size :" << colorData->size() << endl;
-  uint result = addDrawable(dSphere);
+  //uint result = addDrawable(dSphere);
 
+  TriPatch* tripatch = new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,2.0f,0.0f),glm::vec3(0.0f,2.0f,1.0f));
+  tripatch->setControlPoint(2,glm::vec3(1.0f,0.0f,2.0f));
+  tripatch->setControlPoint(4,glm::vec3(0.0f,1.0f,0.0f));
+  tripatch->setControlPoint(1,glm::vec3(1.0f,1.0f,1.0f));
+  tripatch->update();
+
+  TriPatch* tripatch2 = new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,0.0f,-1.0f),glm::vec3(0.0f,2.0f,0.0f));
+  tripatch2->setControlPoint(2,glm::vec3(1.0f,1.0f,1.0f));
+  tripatch2->update();
+
+  TriPatch* tripatch3 =  new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,2.0f,1.0f),glm::vec3(-2.0f,1.0f,0.0f));
+  tripatch3->setControlPoint(1,glm::vec3(1.0f,0.0f,2.0f));
+  tripatch3->update();
+
+  TriangleMesh* dTriPatch = tripatch->toTriangleMesh();
+  TriangleMesh* dTriPatch2 = tripatch2->toTriangleMesh();
+  TriangleMesh* dTriPatch3 = tripatch3->toTriangleMesh();
+  uint result;
+  result = addDrawable(dTriPatch);
+  result = addDrawable(dTriPatch2);
+  result = addDrawable(dTriPatch3);
 }

@@ -7,60 +7,25 @@
 
 #include "Sphere.h"
 #include <iostream>
+#include <glm/glm.hpp>
 
-Sphere::Sphere(float radius) {
+Sphere::Sphere(float radius, glm::vec4 center) {
     m_radius = radius;
+    m_center = center;
 }
 
 Sphere::~Sphere() {
 }
 
-bool Sphere::hit(glm::vec3 rayPos, glm::vec3 rayDir) {
-    float A, B, C;
-    A = rayDir.x * rayDir.x + rayDir.y * rayDir.y + rayDir.z * rayDir.z;
-    B = 2 * (rayDir.x * rayPos.x + rayDir.y * rayPos.y + rayDir.z * rayPos.z);
-    C = rayPos.x * rayPos.x + rayPos.y * rayPos.y + rayPos.z * rayPos.z
-            - m_radius * m_radius;
 
-    float t0, t1;
-    if (!quad(A, B, C, &t0, &t1))
-        return false;
-    float tmin = glm::min(t0, t1);
-    m_hitpoint = rayPos + tmin * rayDir;
 
-    return true;
-}
 
-bool Sphere::quad(float A, float B, float C, float *t0, float *t1) {
-    float q;
-    float discrim = B * B - 4.0f * A * C;
-
-    if (discrim < 0)
-        return false;
-    float root = std::sqrt(discrim);
-    if (B < 0)
-        q = -0.5f * (B - root);
-    else
-        q = -0.5f * (B + root);
-    *t0 = q / A;
-    *t1 = C / q;
-
-    if (*t0 > *t1) {
-        float temp = *t0;
-        *t0 = *t1;
-        *t1 = temp;
-    }
-    return true;
-
-}
 
 float Sphere::getRadius() {
     return m_radius;
 }
 
-glm::vec3 Sphere::getHitpoint() {
-    return m_hitpoint;
-}
+
 
 QuadMesh* Sphere::toQuadMesh() {
     int dtheta = 1;
@@ -69,33 +34,33 @@ QuadMesh* Sphere::toQuadMesh() {
     for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
         for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {
             glm::vec4 a, b, c, d, normA, normB, normC, normD,colA,colB,colC,colD;
-            a.x = cos(theta * toRad) * cos(phi * toRad);
-            a.y = cos(theta * toRad) * sin(phi * toRad);
-            a.z = sin(theta * toRad);
+            a.x = cos(theta * toRad) * cos(phi * toRad)+ m_center.x;
+            a.y = cos(theta * toRad) * sin(phi * toRad)+ m_center.y;
+            a.z = sin(theta * toRad)+m_center.z;
             a.w = 1.0f;
-            normA = glm::normalize(a);
-            colA = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+            normA = glm::normalize(a-m_center);
 
-            b.x = cos((theta + dtheta) * toRad) * cos(phi * toRad);
-            b.y = cos((theta + dtheta) * toRad) * sin(phi * toRad);
-            b.z = sin((theta + dtheta) * toRad);
+
+            b.x = cos((theta + dtheta) * toRad) * cos(phi * toRad)+ m_center.x;
+            b.y = cos((theta + dtheta) * toRad) * sin(phi * toRad)+ m_center.y;
+            b.z = sin((theta + dtheta) * toRad)+m_center.z;
             b.w = 1.0f;
-            normB = glm::normalize(b);
-            colB = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+            normB = glm::normalize(b-m_center);
 
-            c.x = cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad);
-            c.y = cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad);
-            c.z = sin((theta + dtheta) * toRad);
+
+            c.x = cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad)+ m_center.x;
+            c.y = cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad)+ m_center.y;
+            c.z = sin((theta + dtheta) * toRad)+m_center.z;
             c.w = 1.0f;
-            normC = glm::normalize(c);
-            colC = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+            normC = glm::normalize(c-m_center);
 
-            d.x = cos(theta * toRad) * cos((phi + dphi) * toRad);
-            d.y = cos(theta * toRad) * sin((phi + dphi) * toRad);
-            d.z = sin(theta * toRad);
+
+            d.x = cos(theta * toRad) * cos((phi + dphi) * toRad)+ m_center.x;
+            d.y = cos(theta * toRad) * sin((phi + dphi) * toRad)+ m_center.y;
+            d.z = sin(theta * toRad)+m_center.z;
             d.w = 1.0f;
-            normD = glm::normalize(d);
-            colD = glm::vec4(1.0f,0.0f,0.0f,0.0f);
+            normD = glm::normalize(d-m_center);
+
 
             m_vertexData.push_back(a);
             m_vertexData.push_back(normA);

@@ -12,6 +12,7 @@ public:
 	DrawManager();
 
 	void draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
+	void updateAndDraw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	bool initShaderPrograms();
 	void createBufferFor(std::vector<Drawable*> *drawables);
 	void updateBuffer(std::vector<Drawable*> *drawables);

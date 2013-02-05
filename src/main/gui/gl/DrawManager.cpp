@@ -157,8 +157,12 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 
 }
 
-void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+void DrawManager::updateAndDraw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
 	updateBuffer(drawables);
+	draw(drawables, projectionMatrix, viewMatrix, cameraPosition);
+}
+
+void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
@@ -206,5 +210,5 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 
 void DrawManager::updateBuffer(std::vector<Drawable *> *drawables){
   // TODO : Find something thats perfoming Better Here :
- // createBufferFor(drawables);
+  createBufferFor(drawables);
 }

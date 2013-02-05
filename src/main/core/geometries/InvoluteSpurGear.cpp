@@ -375,7 +375,7 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 TriangleMesh* InvoluteSpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsTriangles);
     smoothTriangleMeshNormals(vertexData, widthSampleSize);
-    TriangleMesh* mesh = new TriangleMesh(*vertexData, m_name + " - Instance ");
+    TriangleMesh* mesh = new TriangleMesh(*vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     mesh->setModelMatrix(m_modelMatrix);
     return mesh;
 }
@@ -399,7 +399,7 @@ void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const h
 
 QuadMesh* InvoluteSpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsQuads);
-    QuadMesh* mesh = new QuadMesh(*vertexData, m_name + " - Instance 1");
+    QuadMesh* mesh = new QuadMesh(*vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     mesh->setModelMatrix(m_modelMatrix);
     return mesh;
 }

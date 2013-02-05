@@ -28,6 +28,5 @@ void main(void)
         gl_Position = MVP * vertex;
         vNormal = normalize(normalMat * normal.xyz);
         vWorldPosition = vec4(MV * vertex).xyz;
-        vColor =color;
-	
+        vColor = color;
 }

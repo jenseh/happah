@@ -108,7 +108,7 @@ TriangleMesh* TriPatch::toTriangleMesh(){
         }
     }
 
-  TriangleMesh* result = new TriangleMesh(triangles, m_name + " - Instance 1");
+  TriangleMesh* result = new TriangleMesh(triangles, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
   result->setModelMatrix(m_modelMatrix);
   std::cout << "TriPatchVertices" << m_vertexData.size() << endl;
   return result;

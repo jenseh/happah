@@ -17,15 +17,9 @@ Sphere::Sphere(float radius, glm::vec4 center, std::string name) : NonDrawable(n
 Sphere::~Sphere() {
 }
 
-
-
-
-
 float Sphere::getRadius() {
     return m_radius;
 }
-
-
 
 QuadMesh* Sphere::toQuadMesh() {
     int dtheta = 1;
@@ -33,7 +27,7 @@ QuadMesh* Sphere::toQuadMesh() {
     const float toRad = M_PI / 180.0f;
     for (int theta = -90; theta <= 90 - dtheta; theta = theta + dtheta) {
         for (int phi = 0; phi <= 360 - dphi; phi = phi + dphi) {
-            glm::vec4 a, b, c, d, normA, normB, normC, normD,colA,colB,colC,colD;
+            glm::vec4 a, b, c, d, normA, normB, normC, normD;
             a.x = cos(theta * toRad) * cos(phi * toRad)+ m_center.x;
             a.y = cos(theta * toRad) * sin(phi * toRad)+ m_center.y;
             a.z = sin(theta * toRad)+m_center.z;
@@ -77,7 +71,7 @@ QuadMesh* Sphere::toQuadMesh() {
         }
     }
 
-    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
+    QuadMesh* result = new QuadMesh(m_vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     result->setModelMatrix(m_modelMatrix);
     std::cout << "Kreis Vertices" << m_vertexData.size()<<endl;
     return result;

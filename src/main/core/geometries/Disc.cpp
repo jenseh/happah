@@ -11,7 +11,7 @@
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 Disc::Disc(hpreal radius, std::string name) : NonDrawable(name) {
     m_radius = radius; // doppelt so groß wie ein zahn
-    m_module = m_radius/2.0;
+    m_module = m_radius / 2.0;
     m_length = m_module * M_PI;
     m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
 }
@@ -38,9 +38,10 @@ void Disc::createHeightProfile() {
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
-void Disc::createVertexData() {
-    m_vertexData.clear();
-    float dalpha = 2*M_PI/ Z_DETAIL_LEVEL;
+std::vector<glm::vec4> Disc::createVertexData() {
+    std::vector<glm::vec4> vertexData;
+
+    float dalpha = 2 * M_PI / Z_DETAIL_LEVEL;
 
     // Create the height profile given the current gear settings
     createHeightProfile();
@@ -95,23 +96,24 @@ void Disc::createVertexData() {
 
 
 
-            m_vertexData.push_back(a);
+            vertexData.push_back(a);
             //dataPushback(normNext);
-            m_vertexData.push_back(norm);
-            m_vertexData.push_back(b);
-            m_vertexData.push_back(norm);
-            m_vertexData.push_back(c);
-            m_vertexData.push_back(norm);
-            m_vertexData.push_back(d);
+            vertexData.push_back(norm);
+            vertexData.push_back(b);
+            vertexData.push_back(norm);
+            vertexData.push_back(c);
+            vertexData.push_back(norm);
+            vertexData.push_back(d);
             //dataPushback(normNext);
-            m_vertexData.push_back(norm);
+            vertexData.push_back(norm);
         }
     }
+    return vertexData;
 }
 
 QuadMesh* Disc::toQuadMesh(){
-    createVertexData();
-    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
+    std::vector<glm::vec4> vertexData = createVertexData();
+    QuadMesh* result = new QuadMesh(vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     result->setModelMatrix(m_modelMatrix);
     return result;
 }

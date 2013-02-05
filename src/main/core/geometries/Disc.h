@@ -31,12 +31,11 @@ private:
     hpreal m_module; // Modul des höhenprofils
     std::vector<glm::vec2> m_heightProfile;
     StandardProfile* m_standardProfile;
-    std::vector<glm::vec4> m_vertexData;
 
     const static int SEGMENT_COUNT = 50; //maximum: 4500
     const static int Z_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
 
-    void createVertexData();
+    std::vector<glm::vec4> createVertexData();
     void createHeightProfile();
 };
 #endif // DISC_H

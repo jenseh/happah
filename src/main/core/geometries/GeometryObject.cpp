@@ -8,17 +8,15 @@
 #include "GeometryObject.h"
 int GeometryObject::m_objectIdCounter = 0;
 
-std::string concatStringNumber(std::string str, int number) {
-  std::ostringstream sstream;
-  sstream << str << number;
-  return sstream.str();
+GeometryObject::GeometryObject(const std::string name) {
+    m_modelMatrix.setToIdentity();
+    m_name = name;
 }
 
-GeometryObject::GeometryObject(const std::string name) {
-    m_objectId = GeometryObject::m_objectIdCounter++;
+GeometryObject::GeometryObject() {
     m_modelMatrix.setToIdentity();
 
-    int randomInt = rand() % 255 + 1;
+    int randomInt = rand() % 1000;
     m_name = concatStringNumber("Unnamed", randomInt);
 }
 
@@ -47,6 +45,7 @@ int GeometryObject::getObjectId() {
 }
 
 void GeometryObject::setName(std::string name) {
+    std::cout << "Thou shalt not change an objects name if possible" << std::endl;
     m_name = concatStringNumber(name, m_objectIdCounter);
 }
 
@@ -55,4 +54,11 @@ QMatrix4x4* GeometryObject::getModelMatrix() {
 }
 void GeometryObject::setModelMatrix(QMatrix4x4 modelMatrix) {
     m_modelMatrix = modelMatrix;
+}
+
+// Just a utility function that appends a number to a string
+std::string GeometryObject::concatStringNumber(std::string str, int number) {
+  std::ostringstream sstream;
+  sstream << str << number;
+  return sstream.str();
 }

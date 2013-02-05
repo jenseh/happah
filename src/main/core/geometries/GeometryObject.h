@@ -21,6 +21,7 @@ class GeometryObject{
 
 public:
     GeometryObject(const std::string name);
+    GeometryObject();
     virtual ~GeometryObject();
 
 
@@ -34,6 +35,8 @@ public:
     void setName(std::string name);
     QMatrix4x4* getModelMatrix();
     void setModelMatrix(QMatrix4x4 modelMatrix);
+
+    std::string concatStringNumber(std::string str, int number);
 
 protected:
     QMatrix4x4 m_modelMatrix;

@@ -8,8 +8,7 @@
 
 
 SceneManager::SceneManager() : m_iDCounter(0) {
-    std::cout << " SM: size" << m_drawables.size()<< std::endl;
- //   new WormGearGrindTest();
+    //new WormGearGrindTest();
     //KinematicTest test;
     //test.runLinearTest();
 }
@@ -19,7 +18,7 @@ SceneManager::~SceneManager() {
 
 //first idDrawable gets id 0, m_idCounter is has number of produced idDrawables
 uint SceneManager::addDrawable(Drawable *drawable) {
-    IdDrawable  idDrawable = {m_iDCounter, drawable};
+    IdDrawable idDrawable = {m_iDCounter, drawable};
     m_drawables.push_back(idDrawable);
     m_iDCounter += 1;
     return idDrawable.id;
@@ -27,7 +26,7 @@ uint SceneManager::addDrawable(Drawable *drawable) {
 
 void SceneManager::removeDrawable(uint id) {
     std::list<IdDrawable>::iterator candidate = m_drawables.end();
-    for(std::list<IdDrawable>::iterator it = m_drawables.begin(), eend = m_drawables.end(); it != eend; ++it) {
+    for(std::list<IdDrawable>::iterator it = m_drawables.begin(), end = m_drawables.end(); it != end; ++it) {
         if (it->id == id) {
             candidate = it;
         }

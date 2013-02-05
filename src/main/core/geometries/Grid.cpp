@@ -21,7 +21,7 @@ QuadMesh* Grid::toQuadMesh() {
             m_vertexData.push_back(normal);
         }
     }
-    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
+    QuadMesh* result = new QuadMesh(m_vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     result->setModelMatrix(m_modelMatrix);
     return result;
 }

@@ -55,7 +55,6 @@ void ToolSelector::addTool(Tool* tool) {
 }
 
 void ToolSelector::toolSelected(int toolID) {
-	std::cerr << "in tool selected of toolselector: toolId = " << toolID << std::endl;
 	m_settingsWidgetStack->setCurrentIndex(toolID + 1);
 
 	m_toolList[m_currToolID]->finalise();
@@ -100,7 +99,6 @@ void ToolSelector::finalise() {
 
 
 void ToolSelector::leftClickAt( QPointF point ) {
-	std::cerr << "left click at in tool selector arrived" << std::endl;
 	m_toolList[m_currToolID]->leftClickAt( point );
 }
 

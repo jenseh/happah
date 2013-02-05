@@ -66,11 +66,11 @@ void SceneManager::buildScene(){
     color.blue = 0.0f;
     color.alpha = 1.0f;
     colorData->push_back(color);
-}
+  }
   dSphere->setColorData(*colorData);
   std::cout << "VertexData size :" << dSphere->getVertexData()->size() << endl;
   std::cout << " Color Data size :" << colorData->size() << endl;
-  //uint result = addDrawable(dSphere);
+//  uint result = addDrawable(dSphere);
 
   TriPatch* tripatch = new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,2.0f,0.0f),glm::vec3(0.0f,2.0f,1.0f), "patch");
   tripatch->setControlPoint(2,glm::vec3(1.0f,0.0f,2.0f));
@@ -89,8 +89,8 @@ void SceneManager::buildScene(){
   TriangleMesh* dTriPatch = tripatch->toTriangleMesh();
   TriangleMesh* dTriPatch2 = tripatch2->toTriangleMesh();
   TriangleMesh* dTriPatch3 = tripatch3->toTriangleMesh();
-  uint result;
-  result = addDrawable(dTriPatch);
-  result = addDrawable(dTriPatch2);
-  result = addDrawable(dTriPatch3);
+
+//  result = addDrawable(dTriPatch);
+//  result = addDrawable(dTriPatch2);
+//  result = addDrawable(dTriPatch3);
 }

@@ -46,11 +46,15 @@ bool InvoluteSpurGear::verifyConstraints(bool print) {
 			isCorrect = false;
 			throw "Fillet is too big for the gap between the teeth!";
 		}
-		if (getStopFilletInvoluteAngle() 
-			> involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module)) {
-			isCorrect = false;
-			throw "Fillet ends when working depth (gemeinsame Zahnhöhe) already started!";
-		}
+
+		//TODO: restore these lines once suitable parameters are set
+//		hpreal stopFilletAngle = getStopFilletInvoluteAngle();
+//		hpreal involuteAngle = involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module);
+//		std::cout << "stopFilletAngle: " << stopFilletAngle << ", involuteAngle: " << involuteAngle << std::endl;
+//		if (stopFilletAngle > involuteAngle) {
+//			isCorrect = false;
+//			throw "Fillet ends when working depth (gemeinsame Zahnhöhe) already started!";
+//		}
 	} catch (char const* s) {
 		if (print) std::cerr << s << std::endl;
 	} catch (exception &e) {

@@ -181,10 +181,10 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		const qreal* MVPQreals = MVP.constData();
 		const qreal* normalMatrixQreals = normalMatrix.constData();
 
-		for (int i = 0; i < 16; ++i) {
-	            MVFloats[i] = MVQreals[i];
-	            MVPFloats[i] = MVPQreals[i];
-		    normalMatrixFloats[i] = normalMatrixQreals[i];
+		for (int j = 0; j < 16; ++j) {
+	            MVFloats[j] = MVQreals[j];
+	            MVPFloats[j] = MVPQreals[j];
+		    normalMatrixFloats[j] = normalMatrixQreals[j];
 		}
 
 

@@ -7,7 +7,7 @@ uniform mat4 MVP, MV;
 // KameraPosition
 uniform vec3 eye;
 
-// Colors
+// Material
 uniform float ka,kd,ks;
 uniform float shininess;
 
@@ -28,12 +28,10 @@ void main( void)
     lightColor[0] = vec4(1.0f, 0.0f, 0.0f, 1.0f);
     lightColor[1] = vec4(1.0f, 0.0f, 1.0f, 1.0f);
 
-    
-    // Own Object Color :
-
-    	
-   gl_FragColor = ka * gl_Color;     // Uncomment to use vertices colors
-  
+    // Change as soon as every vertex has its own coloer
+    // Ambient background lighting
+   gl_FragColor =ka* vColor;
+  		 
 
     // Blinn Phong lighting for each light source
     for(int i = 0; i < 2; i ++){
@@ -45,8 +43,10 @@ void main( void)
         float specular = pow(max(0.0f, dot(halfwayWS, vNormal)), shininess);
 
 
+
+
          gl_FragColor += (diffuse * kd + specular * ks) * lightColor[i];
-		
+
     }
- 
+
 }

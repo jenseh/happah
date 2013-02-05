@@ -18,21 +18,18 @@ using namespace std;
 class Sphere: public NonDrawable {
 
 public:
-    Sphere(float radius = 1.0f,
+    Sphere(float radius = 1.0f, glm::vec4 center= glm::vec4(0.0f,0.0f,0.0f,1.0f),
            std::string name = "Sphere");
     ~Sphere();
 
-    bool hit(glm::vec3 rayPos, glm::vec3 rayDir);
     float getRadius();
-    glm::vec3 getHitpoint();
+
     QuadMesh* toQuadMesh();
     TriangleMesh* toTriangleMesh();
 
 private:
     float m_radius;
-    glm::vec3 m_hitpoint;
+    glm::vec4 m_center;
     std::vector<glm::vec4> m_vertexData;
-
-    bool quad(float A, float B, float C, float *t0, float* t1);
 };
 #endif /* SPHERE_H_ */

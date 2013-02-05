@@ -16,6 +16,10 @@ std::vector<Color>* Drawable::getColorData(){
     return &m_colorData;
 }
 
+bool Drawable::hasColorData() {
+  return m_colorData.size() != 0;
+}
+
 Material Drawable::getMaterial(){
   return m_material;
 }

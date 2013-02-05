@@ -12,9 +12,10 @@ in vec4 vertex;
 in vec4 normal;
 in vec4 color;
 
+uniform int hasVertexColor;
 
 //Material uniforms
-uniform float ka,kd,ks;
+uniform float ka, kd, ks;
 uniform float shininess;
 
 
@@ -22,6 +23,7 @@ uniform float shininess;
 // An FragmentShader weitergereichte Variablen
 out vec3 vNormal, vWorldPosition;
 out vec4 vColor;
+
 
 void main(void)
 {

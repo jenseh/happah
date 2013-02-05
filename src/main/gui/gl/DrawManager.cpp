@@ -60,16 +60,20 @@ bool DrawManager::initShaderPrograms() {
 	else glUniform1f(m_shininessLocation, 20.0f);
 
 	m_diffuseColorLocation = glGetUniformLocation(m_program, "kd");
-	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color komponent." << endl;
+	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color component." << endl;
 	else glUniform1f(m_diffuseColorLocation, 1.0f);
 
 	m_ambientColorLocation = glGetUniformLocation(m_program, "ka");
-	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color komponent." << endl;
+	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color component." << endl;
 	else glUniform1f(m_ambientColorLocation, 1.0f);
 
 	m_specularColorLocation = glGetUniformLocation(m_program, "ks");
-	if(m_specularColorLocation < 0) cerr << "Failed to find specular color komponent." << endl;
+	if(m_specularColorLocation < 0) cerr << "Failed to find specular color component." << endl;
 	else glUniform1f(m_specularColorLocation, 1.0f);
+
+	m_hasVertexColorLocation =  glGetUniformLocation(m_program, "hasVertexColor");
+	if(m_hasVertexColorLocation < 0) cerr << "Failed to find specular color component." << endl;
+	else glUniform1i(m_hasVertexColorLocation, 0);
 
 	return true;
 }
@@ -187,6 +191,7 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		    normalMatrixFloats[j] = normalMatrixQreals[j];
 		}
 
+		int hasVertexColor = (*i)->hasColorData();
 
 
 		glUniformMatrix4fv(m_MVLocation, 1, GL_FALSE, MVFloats);
@@ -197,6 +202,7 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
 		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
 		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
+		glUniform1i(m_hasVertexColorLocation, hasVertexColor);
 		int vertexDataSize = (*i)->getVertexData()->size();
 
 		int tupleSize = (*i)->getTupleSize();

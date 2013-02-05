@@ -16,6 +16,7 @@ public:
 
     void setColorData(std::vector<Color>& colorData);
     std::vector<Color>* getColorData();
+    bool hasColorData();
     Material getMaterial();
     void setMaterial(float ka,float kd,float ks,float shininess);
 

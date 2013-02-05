@@ -41,7 +41,7 @@ private:
 	GLint m_ambientColorLocation;
 	GLint m_specularColorLocation;
 
-	GLint m_useColorLocation; // Wether the color buffer is used (1) or not (0)
+	GLint m_hasVertexColorLocation; // Wether the color buffer is used (1) or not (0)
 };
 
 #endif // DRAWMANAGER_H

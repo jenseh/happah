@@ -32,7 +32,7 @@ void main( void)
     // Own Object Color :
 
     	
-   //gl_FragColor = ka*gl_Color;     // Uncomment to use vertices colors
+   gl_FragColor = ka * gl_Color;     // Uncomment to use vertices colors
   
 
     // Blinn Phong lighting for each light source

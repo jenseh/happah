@@ -7,7 +7,7 @@
 
 #include "Sphere.h"
 
-Sphere::Sphere(float radius) {
+Sphere::Sphere(float radius, std::string name) : NonDrawable(name) {
     m_radius = radius;
 }
 
@@ -102,9 +102,8 @@ QuadMesh* Sphere::toQuadMesh() {
             m_vertexData.push_back(normD);
         }
     }
-    QuadMesh* result = new QuadMesh(m_vertexData);
+    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
     result->setModelMatrix(m_modelMatrix);
-    result->setName(m_name + " - Instance 1");
     return result;
 }
 

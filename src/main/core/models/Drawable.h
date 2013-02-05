@@ -7,8 +7,8 @@
 
 class Drawable : public GeometryObject{
 
-
 public:
+    Drawable(std::string name);
     virtual ~Drawable();
 
     virtual std::vector<glm::vec4>* getVertexData();
@@ -21,11 +21,7 @@ public:
 
 private:
     std::vector<Color> m_colorData;
-
-
-
     Material m_material;
-
 };
 
 #endif // DRAWABLE_H

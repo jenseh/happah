@@ -12,7 +12,7 @@
 class QuadMesh : public Drawable {
 
 public:
-    QuadMesh(std::vector<glm::vec4> vertexData);
+    QuadMesh(std::vector<glm::vec4> vertexData, std::string name);
     ~QuadMesh();
 
     std::vector<glm::vec4>* getVertexData();

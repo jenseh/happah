@@ -1,6 +1,6 @@
 #include "TriangleMesh.h"
 
-TriangleMesh::TriangleMesh(std::vector<glm::vec4> vertexData)
+TriangleMesh::TriangleMesh(std::vector<glm::vec4> vertexData, std::string name) : Drawable(name)
 {
     m_vertexData = vertexData;
 }

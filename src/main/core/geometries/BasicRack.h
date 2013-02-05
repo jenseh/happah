@@ -14,7 +14,11 @@ using namespace std;
 
 class BasicRack: public NonDrawable {
 public:
-    BasicRack(hpreal length = 2.0f, hpreal depth = 0.6f, hpreal height = 0.7f, int toothCount = 5);
+    BasicRack(hpreal length = 2.0f,
+              hpreal depth = 0.6f,
+              hpreal height = 0.7f,
+              int toothCount = 5,
+              std::string name = "BasicRack");
     ~BasicRack();
 
     QuadMesh* toQuadMesh();

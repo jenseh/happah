@@ -8,9 +8,18 @@
 #include "GeometryObject.h"
 int GeometryObject::m_objectIdCounter = 0;
 
-GeometryObject::GeometryObject() {
+std::string concatStringNumber(std::string str, int number) {
+  std::ostringstream sstream;
+  sstream << str << number;
+  return sstream.str();
+}
+
+GeometryObject::GeometryObject(const std::string name) {
     m_objectId = GeometryObject::m_objectIdCounter++;
     m_modelMatrix.setToIdentity();
+
+    int randomInt = rand() % 255 + 1;
+    m_name = concatStringNumber("Unnamed", randomInt);
 }
 
 GeometryObject::~GeometryObject() {}
@@ -38,12 +47,12 @@ int GeometryObject::getObjectId() {
 }
 
 void GeometryObject::setName(std::string name) {
-    m_name = name;
+    m_name = concatStringNumber(name, m_objectIdCounter);
 }
 
 QMatrix4x4* GeometryObject::getModelMatrix() {
     return &m_modelMatrix;
 }
-void GeometryObject::setModelMatrix(QMatrix4x4& modelMatrix) {
+void GeometryObject::setModelMatrix(QMatrix4x4 modelMatrix) {
     m_modelMatrix = modelMatrix;
 }

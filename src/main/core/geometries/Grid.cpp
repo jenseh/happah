@@ -1,6 +1,6 @@
 #include "Grid.h"
 
-Grid::Grid() {
+Grid::Grid(std::string name) : NonDrawable(name) {
 }
 
 Grid::~Grid() {
@@ -21,9 +21,8 @@ QuadMesh* Grid::toQuadMesh() {
             m_vertexData.push_back(normal);
         }
     }
-    QuadMesh* result = new QuadMesh(m_vertexData);
+    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
     result->setModelMatrix(m_modelMatrix);
-    result->setName(m_name + " - Instance 1");
     return result;
 }
 

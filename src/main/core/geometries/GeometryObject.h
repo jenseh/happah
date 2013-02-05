@@ -12,13 +12,15 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <sstream>
 #include <QMatrix4x4>
 #include "../primitives/Color.h"
 
 class GeometryObject{
 
 public:
-    GeometryObject();
+    GeometryObject(const std::string name);
     virtual ~GeometryObject();
 
 
@@ -31,7 +33,7 @@ public:
     int getObjectId();
     void setName(std::string name);
     QMatrix4x4* getModelMatrix();
-    void setModelMatrix(QMatrix4x4& modelMatrix);
+    void setModelMatrix(QMatrix4x4 modelMatrix);
 
 protected:
     QMatrix4x4 m_modelMatrix;

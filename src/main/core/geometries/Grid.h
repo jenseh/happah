@@ -7,7 +7,7 @@
 class Grid : public NonDrawable
 {
 public:
-    Grid();
+    Grid(std::string name = "Grid");
     ~Grid();
 
     QuadMesh* toQuadMesh();

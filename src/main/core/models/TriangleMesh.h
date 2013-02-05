@@ -16,7 +16,7 @@ class TriangleMesh : public Drawable
 {
 public:
 
-    TriangleMesh(std::vector<glm::vec4> vertexData);
+    TriangleMesh(std::vector<glm::vec4> vertexData, std::string name);
     ~TriangleMesh();
 
     std::vector<glm::vec4>* getVertexData();

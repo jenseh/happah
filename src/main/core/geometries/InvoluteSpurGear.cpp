@@ -3,10 +3,10 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
-                   hpreal bottomClearance, hpreal filletRadius) : 
+                   hpreal bottomClearance, hpreal filletRadius, std::string name) :
                    m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
                    m_pressureAngle(pressureAngle),
-                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius) {
+                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), NonDrawable(name) {
 
     std::cout << toString() << std::endl;
 }
@@ -344,9 +344,8 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 TriangleMesh* InvoluteSpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsTriangles);
     smoothTriangleMeshNormals(vertexData, widthSampleSize);
-    TriangleMesh* mesh = new TriangleMesh(*vertexData);
+    TriangleMesh* mesh = new TriangleMesh(*vertexData, m_name + " - Instance ");
     mesh->setModelMatrix(m_modelMatrix);
-    mesh->setName(m_name + " - Instance 1");
     return mesh;
 }
 
@@ -369,9 +368,8 @@ void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const h
 
 QuadMesh* InvoluteSpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsQuads);
-    QuadMesh* mesh = new QuadMesh(*vertexData);
+    QuadMesh* mesh = new QuadMesh(*vertexData, m_name + " - Instance 1");
     mesh->setModelMatrix(m_modelMatrix);
-    mesh->setName(m_name + " - Instance 1");
     return mesh;
 }
 

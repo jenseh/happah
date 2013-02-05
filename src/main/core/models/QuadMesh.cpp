@@ -1,6 +1,6 @@
 #include "QuadMesh.h"
 
-QuadMesh::QuadMesh(std::vector<glm::vec4> vertexData)
+QuadMesh::QuadMesh(std::vector<glm::vec4> vertexData, std::string name) : Drawable(name)
 {
     m_vertexData = vertexData;
 }
@@ -47,7 +47,8 @@ TriangleMesh* QuadMesh::toTriangleMesh(){
         triVertexData[i*12+11] = m_vertexData[i*8+7];
 
     }
-    TriangleMesh* result = new TriangleMesh(triVertexData);
+    TriangleMesh* result = new TriangleMesh(triVertexData, getName() + "TriangleMesh");
+    result->setModelMatrix(getModelMatrix());
     return result;
 }
 

@@ -38,7 +38,8 @@ public:
              hpreal facewidth = 0.2f,
              hpreal pressureAngle = M_PI / 6.0f,
              hpreal bottomClearance = 0.02f,
-             hpreal filletRadius = 0.04f);
+             hpreal filletRadius = 0.04f,
+             std::string name = "InvoluteSpurGear");
     ~InvoluteSpurGear();
 
     uint   getToothCount();

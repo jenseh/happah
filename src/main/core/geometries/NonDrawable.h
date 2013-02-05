@@ -8,6 +8,7 @@
 class NonDrawable : public GeometryObject
 {
 public:
+    NonDrawable(std::string name);
     virtual ~NonDrawable();
     virtual QuadMesh* toQuadMesh();
     virtual TriangleMesh* toTriangleMesh();

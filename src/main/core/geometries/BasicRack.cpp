@@ -1,7 +1,7 @@
 #include "BasicRack.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-BasicRack::BasicRack(hpreal length, hpreal depth, hpreal height, int toothCount) {
+BasicRack::BasicRack(hpreal length, hpreal depth, hpreal height, int toothCount, std::string name) : NonDrawable(name) {
     m_length = length;
     m_depth = depth;
     m_height = height;
@@ -107,9 +107,8 @@ QuadMesh* BasicRack::toQuadMesh() {
         }
     }
 
-    QuadMesh* result = new QuadMesh(m_vertexData);
+    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
     result->setModelMatrix(m_modelMatrix);
-    result->setName(m_name + " - Instance 1");
     return result;
 }
 

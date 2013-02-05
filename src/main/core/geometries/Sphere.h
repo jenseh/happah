@@ -18,7 +18,8 @@ using namespace std;
 class Sphere: public NonDrawable {
 
 public:
-    Sphere(float radius = 1.0f);
+    Sphere(float radius = 1.0f,
+           std::string name = "Sphere");
     ~Sphere();
 
     bool hit(glm::vec3 rayPos, glm::vec3 rayDir);

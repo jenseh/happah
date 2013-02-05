@@ -1,5 +1,7 @@
 #include "Drawable.h"
 
+Drawable::Drawable(std::string name) : GeometryObject(name) {}
+
 Drawable::~Drawable() {}
 
 

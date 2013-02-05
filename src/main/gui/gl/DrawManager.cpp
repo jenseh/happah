@@ -16,10 +16,10 @@ DrawManager::DrawManager() {
 
 bool DrawManager::initShaderPrograms() {
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	compileShader(m_vertexShader, "./src/shader/phong410Vert.glsl");
+	compileShader(m_vertexShader, "./src/shader/blinnphongVert.glsl");
 
 	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	compileShader(m_fragmentShader, "./src/shader/phong410Frag.glsl");
+	compileShader(m_fragmentShader, "./src/shader/blinnphongFrag.glsl");
 
 	m_program = glCreateProgram();
 	glAttachShader(m_program, m_vertexShader);

@@ -33,13 +33,13 @@
 
 class InvoluteSpurGear : public NonDrawable {
 public:
-    InvoluteSpurGear(uint toothCount = 15,
-             hpreal module = 0.13,
-             hpreal facewidth = 0.2f,
-             hpreal pressureAngle = M_PI / 6.0f,
-             hpreal bottomClearance = 0.02f,
-             hpreal filletRadius = 0.04f,
-             std::string name = "InvoluteSpurGear");
+  InvoluteSpurGear(uint toothCount = 15,
+           hpreal module = 0.13,
+           hpreal facewidth = 0.2f,
+           hpreal pressureAngle = M_PI / 6.0f,
+           hpreal bottomClearance = 0.00f,
+           hpreal filletRadius = 0.00f,
+           std::string name = "InvoluteSpurGear");
              
     ~InvoluteSpurGear();
 

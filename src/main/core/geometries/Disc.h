@@ -19,7 +19,7 @@ using namespace std;
 
 class Disc: public NonDrawable {
 public:
-    Disc(hpreal radius = 1.0f);
+    Disc(hpreal radius = 1.0f, std::string name = "Disc");
 
     ~Disc();
     hpreal getRadius();

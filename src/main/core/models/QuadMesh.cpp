@@ -48,7 +48,7 @@ TriangleMesh* QuadMesh::toTriangleMesh(){
 
     }
     TriangleMesh* result = new TriangleMesh(triVertexData, getName() + "TriangleMesh");
-    result->setModelMatrix(getModelMatrix());
+    result->setModelMatrix(*getModelMatrix());
     return result;
 }
 

@@ -9,7 +9,7 @@
 
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Disc::Disc(hpreal radius) {
+Disc::Disc(hpreal radius, std::string name) : NonDrawable(name) {
     m_radius = radius; // doppelt so groß wie ein zahn
     m_module = m_radius/2.0;
     m_length = m_module * M_PI;
@@ -111,9 +111,8 @@ void Disc::createVertexData() {
 
 QuadMesh* Disc::toQuadMesh(){
     createVertexData();
-    QuadMesh* result = new QuadMesh(m_vertexData);
+    QuadMesh* result = new QuadMesh(m_vertexData, m_name + " - Instance 1");
     result->setModelMatrix(m_modelMatrix);
-    result->setName(m_name + " - Instance 1");
     return result;
 }
 

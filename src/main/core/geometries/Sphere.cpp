@@ -87,9 +87,3 @@ TriangleMesh* Sphere::toTriangleMesh() {
   //TODO: Implement this function
   return 0;
 }
-
-
-TriangleMesh* Sphere::toTriangleMesh() {
-  //TODO: Implement this function
-  return 0;
-}

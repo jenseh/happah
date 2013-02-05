@@ -2,20 +2,22 @@
 #define KINEMATIC_H
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "../primitives/Polynom.h"
 
 class Kinematic
 {
-    int m_Iterations;
-    int m_CurrentInteration;
-protected:
-    glm::mat4 m_CurrentMatrix;
+    Polynom<double> m_translateX, m_translateY, m_translateZ;
+    Polynom<double> m_rotateX, m_rotateY, m_rotateZ;
 
-public:
-  Kinematic(int iterations);
+public :
+    Kinematic(Polynom<double> transX = Polynom<double>(0), Polynom<double> transY = Polynom<double>(0), Polynom<double> transZ = Polynom<double>(0),
+              Polynom<double> rotX = Polynom<double>(0), Polynom<double> rotY = Polynom<double>(0), Polynom<double> rotZ = Polynom<double>(0));
 
-  bool done();
-  glm::mat4 getCurrentMatrix();
-  virtual void calcNextMatrix(); // needs to be implemented by specific kinematic
+    // Get Matrix at time t
+    glm::mat4 getMatrix(double t);
+
+    static Kinematic getLinearKinematic(glm::vec3 start, glm::vec3 end);
+
 };
 
 #endif // KINEMATIC_H

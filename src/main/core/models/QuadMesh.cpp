@@ -20,6 +20,10 @@ int QuadMesh::getTupleSize() {
   return 4;
 }
 
+
+
+
+
 TriangleMesh* QuadMesh::toTriangleMesh(){
     std::vector<glm::vec4> triVertexData;
     triVertexData.resize(m_vertexData.size() / 4 * 6);

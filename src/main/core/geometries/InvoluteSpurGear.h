@@ -40,6 +40,7 @@ public:
              hpreal bottomClearance = 0.02f,
              hpreal filletRadius = 0.04f,
              std::string name = "InvoluteSpurGear");
+             
     ~InvoluteSpurGear();
 
     uint   getToothCount();
@@ -60,11 +61,11 @@ public:
      * If minimum > maximum no value is found.
      * methods start from the promise that current gear is a valid gear
      */
-    uint* getPossibleToothCounts(uint minCount = 3, uint maxCount = 100);
-    hpreal* getPossibleModules(hpreal minSize = 0.0f, hpreal maxSize = 10.0f);
-    hpreal* getPossiblePressureAngles(hpreal minSize = M_PI / 180.0f, hpreal maxSize = M_PI / 2.0f);
-    hpreal* getPossibleBottomClearances(hpreal minSize = 0.0f, hpreal maxSize = 10.0f);
-    hpreal* getPossibleFilletRadien(hpreal minSize = 0.0f, hpreal maxSize = 10.0f);
+    uint* getPossibleToothCounts();
+    hpreal* getPossibleModules();
+    hpreal* getPossiblePressureAngles();
+    hpreal* getPossibleBottomClearances();
+    hpreal* getPossibleFilletRadien();
 
     // Values are only set, if they would produce proper gear.
     // The bool returned shows if value could be set.

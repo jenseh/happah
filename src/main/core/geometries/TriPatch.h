@@ -11,6 +11,7 @@ class TriPatch: public NonDrawable {
 public:
   // TODO : Add normals
   TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name);
+
   ~TriPatch();
   TriangleMesh* toTriangleMesh();
   void setControlPoint(int index,glm::vec3 value);

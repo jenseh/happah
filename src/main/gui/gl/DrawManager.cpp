@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 DrawManager::DrawManager() {
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
@@ -15,10 +16,10 @@ DrawManager::DrawManager() {
 
 bool DrawManager::initShaderPrograms() {
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	compileShader(m_vertexShader, "./src/shader/blinnphongVert.glsl");
+	compileShader(m_vertexShader, "./src/shader/phong410Vert.glsl");
 
 	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	compileShader(m_fragmentShader, "./src/shader/blinnphongFrag.glsl");
+	compileShader(m_fragmentShader, "./src/shader/phong410Frag.glsl");
 
 	m_program = glCreateProgram();
 	glAttachShader(m_program, m_vertexShader);
@@ -30,19 +31,17 @@ bool DrawManager::initShaderPrograms() {
 		cerr << "Linking failed." << endl;
 	else
 		cout << "Linking was successful." << endl;
+	// Vertex Attributes
+	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
+	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
 
-	GLint ambientColorLocation = glGetUniformLocation(m_program, "ambientColor");
-	if(ambientColorLocation < 0) cerr << "Failed to find ambient color." << endl;
-	else glUniform4f(ambientColorLocation, 0.053f, 0.020f, 0.112f, 1.0f);
+	m_normalLocation = glGetAttribLocation(m_program, "normal");
+	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
 
-	GLint diffuseColorLocation = glGetUniformLocation(m_program, "diffuseColor");
-	if(diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
-    else glUniform4f(diffuseColorLocation, 0.75f, 0.75f, 0.75f, 1.0f);
+        m_vertexColor = glGetAttribLocation(m_program, "color");
+        if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
 
-    m_useColorLocation = glGetUniformLocation(m_program, "useColor");
-    if(m_useColorLocation < 0) cerr << "Failed to find useColor information." << endl;
-    else glUniform1i(m_useColorLocation, 0);
-
+	// Matrix Uniforms
 	m_eyeLocation = glGetUniformLocation(m_program, "eye");
 	if(m_eyeLocation < 0) cerr << "Failed to find eye." << endl;
 
@@ -55,36 +54,22 @@ bool DrawManager::initShaderPrograms() {
 	m_normalMatLocation = glGetUniformLocation(m_program, "normalMat");
 	if(m_normalMatLocation < 0) cerr << "Failed to find normal matrix." << endl;
 
-	m_normalLocation = glGetAttribLocation(m_program, "normal");
-	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
-
 	// Material uniforms
 	m_shininessLocation = glGetUniformLocation(m_program, "shininess");
 	if(m_shininessLocation < 0) cerr << "Failed to find shininess." << endl;
 	else glUniform1f(m_shininessLocation, 20.0f);
 
 	m_diffuseColorLocation = glGetUniformLocation(m_program, "kd");
-	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color." << endl;
+	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color komponent." << endl;
 	else glUniform1f(m_diffuseColorLocation, 1.0f);
 
-
 	m_ambientColorLocation = glGetUniformLocation(m_program, "ka");
-	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color." << endl;
+	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color komponent." << endl;
 	else glUniform1f(m_ambientColorLocation, 1.0f);
 
-
 	m_specularColorLocation = glGetUniformLocation(m_program, "ks");
-	if(m_specularColorLocation < 0) cerr << "Failed to find specular color." << endl;
+	if(m_specularColorLocation < 0) cerr << "Failed to find specular color komponent." << endl;
 	else glUniform1f(m_specularColorLocation, 1.0f);
-
-
-
-	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
-	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
-
-    m_vertexColor = glGetAttribLocation(m_program, "color");
-    if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
-
 
 	return true;
 }
@@ -102,8 +87,12 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		glCompileShader(shader);
 		GLint compileStatus;
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-		if(compileStatus == GL_FALSE)
-			cerr << "Compilation of shader failed." << endl;
+		if(compileStatus == GL_FALSE){
+		    char log[256];
+		    glGetShaderInfoLog( shader, 256, NULL, log);
+		    cerr << "Compilation of shader failed." << endl;
+		    printf(" Infolog: %s\n", log);
+		}
 		else
 			cout << "Compilation was successful." << endl;
 	} else
@@ -139,6 +128,7 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     glEnableVertexAttribArray(m_normalLocation);
 
 
+
     // Color Data
     glGenBuffers(2, &m_colorDataBuffer);
     nBytes = 0;
@@ -152,7 +142,9 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
         vector<Color>* colorData = (*i)->getColorData();
         if( colorData->size() != 0 ){
-            int colorDataSize = colorData->size() * sizeof(Color);
+            int colorDataSize = colorData->size()*sizeof(Color) ;
+            std::cout << "size of Color: " << sizeof(Color) << endl;
+            std::cout << " ColorDataSize for buffer: " << colorDataSize << endl;
             glBufferSubData(GL_ARRAY_BUFFER, offset, colorDataSize, &(colorData->at(0)));
             offset += colorDataSize;
         }
@@ -162,11 +154,15 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     glEnableVertexAttribArray(m_vertexColor);
 
     glBindVertexArray(0);
+
+}
+
+void DrawManager::updateAndDraw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+	updateBuffer(drawables);
+	draw(drawables, projectionMatrix, viewMatrix, cameraPosition);
 }
 
 void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
-	createBufferFor(drawables);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
@@ -175,11 +171,11 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
 		QMatrix4x4 MV = *viewMatrix * *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * MV;
-		QMatrix3x3 normalMatrix = MV.normalMatrix();
+		QMatrix4x4 normalMatrix = MV.inverted();
 
 		GLfloat MVFloats[16];
 		GLfloat MVPFloats[16];
-		GLfloat normalMatrixFloats[9];
+		GLfloat normalMatrixFloats[16];
 
 		const qreal* MVQreals = MV.constData();
 		const qreal* MVPQreals = MVP.constData();
@@ -188,24 +184,31 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		for (int i = 0; i < 16; ++i) {
 	            MVFloats[i] = MVQreals[i];
 	            MVPFloats[i] = MVPQreals[i];
+		    normalMatrixFloats[i] = normalMatrixQreals[i];
 		}
-		for (int i = 0; i < 9; ++i)
-	            normalMatrixFloats[i] = normalMatrixQreals[i];
+
+
 
 		glUniformMatrix4fv(m_MVLocation, 1, GL_FALSE, MVFloats);
 		glUniformMatrix4fv(m_MVPLocation, 1, GL_FALSE, MVPFloats);
-		glUniformMatrix3fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
+		glUniformMatrix4fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
 		glUniform3f(m_eyeLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
-;
-		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
 		glUniform1f(m_ambientColorLocation,(*i)->getMaterial().m_ka);
+		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
 		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
 		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
 		int vertexDataSize = (*i)->getVertexData()->size();
+
 		int tupleSize = (*i)->getTupleSize();
 		int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;
 		glDrawArrays(mode, offset, vertexDataSize);
+
 		offset += vertexDataSize;
 	}
 	glBindVertexArray(0);
+}
+
+void DrawManager::updateBuffer(std::vector<Drawable *> *drawables){
+  // TODO : Find something thats perfoming Better Here :
+  createBufferFor(drawables);
 }

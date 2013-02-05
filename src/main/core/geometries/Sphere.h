@@ -20,6 +20,7 @@ class Sphere: public NonDrawable {
 public:
     Sphere(float radius = 1.0f, glm::vec4 center= glm::vec4(0.0f,0.0f,0.0f,1.0f),
            std::string name = "Sphere");
+           
     ~Sphere();
 
     float getRadius();

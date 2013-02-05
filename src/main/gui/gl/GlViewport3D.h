@@ -47,6 +47,7 @@ private:
 	SceneManager* m_sceneManager;
 	DrawManager* m_drawManager;
 
+	uint m_lastSceneState;
 	QMatrix4x4 viewMatrix_;
 	QMatrix4x4 projectionMatrix_;
 	QVector3D eye_, center_, up_;

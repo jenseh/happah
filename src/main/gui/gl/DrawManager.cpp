@@ -27,10 +27,9 @@ bool DrawManager::initShaderPrograms() {
 	glLinkProgram(m_program);
 	GLint linkStatus;
 	glGetProgramiv(m_program, GL_LINK_STATUS, &linkStatus);
-	if(linkStatus == GL_FALSE)
-		cerr << "Linking failed." << endl;
-	else
-		cout << "Linking was successful." << endl;
+	if(linkStatus == GL_FALSE) cerr << "Linking failed." << endl;
+	else cout << "Linking was successful." << endl;
+
 	// Vertex Attributes
 	m_vertexLocation = glGetAttribLocation(m_program, "vertex");
 	if(m_vertexLocation < 0) cerr << "Failed to find vertex." << endl;
@@ -193,7 +192,6 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 
 		int hasVertexColor = (*i)->hasColorData();
 
-
 		glUniformMatrix4fv(m_MVLocation, 1, GL_FALSE, MVFloats);
 		glUniformMatrix4fv(m_MVPLocation, 1, GL_FALSE, MVPFloats);
 		glUniformMatrix4fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
@@ -207,6 +205,9 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 
 		int tupleSize = (*i)->getTupleSize();
 		int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;
+		if (mode == -1) {
+		    std::cerr << "Error: Invalid tupleSize in DrawManager!" << std::endl;
+		}
 		glDrawArrays(mode, offset, vertexDataSize);
 
 		offset += vertexDataSize;

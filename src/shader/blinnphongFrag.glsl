@@ -37,7 +37,7 @@ void main(void)
 
         // Change as soon as every vertex has its own coloer
         // Ambient background lighting
-        vec3 backgroundLight = vec3(0.5f, 0.5f, 0.5f);
+        vec3 backgroundLight = vec3(1.0f, 1.0f, 1.0f);
         gl_FragColor = vec4(backgroundLight * ka, 1.0f);
 
 
@@ -50,10 +50,7 @@ void main(void)
             float diffuse = max(0.0f, dot(lightWS, normalize(vNormal)));
             float specular = pow(max(0.0f, dot(halfwayWS, vNormal)), shininess);
 
-
-
-
-             gl_FragColor += (diffuse * kd + specular * ks) * lightColor[i];
+            gl_FragColor += (diffuse * kd + specular * ks) * lightColor[i];
         }
     }
 }

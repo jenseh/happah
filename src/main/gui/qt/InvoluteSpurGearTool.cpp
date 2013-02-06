@@ -56,7 +56,7 @@ InvoluteSpurGearTool::~InvoluteSpurGearTool() {
 void InvoluteSpurGearTool::createGear() {
 	m_gear = new InvoluteSpurGear(m_toothCount, m_module, m_facewidth, m_pressureAngle, m_bottomClrearance, m_filletRadius);
 	TriangleMesh* drawable = m_gear->toTriangleMesh();
-	drawable->setMaterial(0.45f,        //ka
+	drawable->setMaterial(0.25f,        //ka
 			     0.5f,        //kd
 			     1.0f,        //ks
 			     10.0f);      //phong

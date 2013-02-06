@@ -20,10 +20,7 @@ int QuadMesh::getTupleSize() {
   return 4;
 }
 
-
-
-
-
+//TODO: remove this method and use GeometryObject->toTriangleMesh() !
 TriangleMesh* QuadMesh::toTriangleMesh(){
     std::vector<glm::vec4> triVertexData;
     triVertexData.resize(m_vertexData.size() / 4 * 6);
@@ -51,7 +48,7 @@ TriangleMesh* QuadMesh::toTriangleMesh(){
         triVertexData[i*12+11] = m_vertexData[i*8+7];
 
     }
-    TriangleMesh* result = new TriangleMesh(triVertexData, getName() + "TriangleMesh");
+    TriangleMesh* result = new TriangleMesh(triVertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     result->setModelMatrix(*getModelMatrix());
     return result;
 }

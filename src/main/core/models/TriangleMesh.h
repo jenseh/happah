@@ -16,7 +16,7 @@ class TriangleMesh : public Drawable
 {
 public:
 
-    TriangleMesh(std::vector<glm::vec4> vertexData, std::string name);
+    TriangleMesh(std::vector<glm::vec4> *vertexData, std::string name);
     ~TriangleMesh();
 
     std::vector<glm::vec4>* getVertexData();
@@ -28,7 +28,7 @@ public:
     void fillTriangles();
 
 protected:
-    std::vector<glm::vec4> m_vertexData;
+    std::vector<glm::vec4> *m_vertexData;
     std::vector<Triangle*> m_triangles;
 };
 

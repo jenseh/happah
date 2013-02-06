@@ -33,15 +33,15 @@
 
 class InvoluteSpurGear : public NonDrawable {
 public:
-  InvoluteSpurGear(uint toothCount = 15,
-           hpreal module = 0.13,
-           hpreal facewidth = 0.2f,
-           hpreal pressureAngle = M_PI / 6.0f,
-           hpreal bottomClearance = 0.00f,
-           hpreal filletRadius = 0.00f,
-           std::string name = "InvoluteSpurGear");
-             
-    ~InvoluteSpurGear();
+	InvoluteSpurGear(uint toothCount = 15,
+			hpreal module = 0.13,
+			hpreal facewidth = 0.2f,
+			hpreal pressureAngle = M_PI / 6.0f,
+			hpreal bottomClearance = 0.00f,
+			hpreal filletRadius = 0.00f,
+			std::string name = "InvoluteSpurGear");
+
+	~InvoluteSpurGear();
 
     uint   getToothCount();
     hpreal getModule();
@@ -78,9 +78,14 @@ public:
 
     std::vector<hpvec2>* getToothProfile(uint sampleSize = 100);
     std::vector<hpvec2>* getGearProfile(uint toothSampleSize = 100);
-    TriangleMesh* toTriangleMesh(uint toothSampleSize = 100, uint widthSampleSize = 10);
+
+    // The toTriangleMesh() and toQuadMesh() methods use a
+    // default toothSampleSize of 100 and a default widthSamplesize of 10
+    TriangleMesh* toTriangleMesh();
+    TriangleMesh* toTriangleMesh(uint toothSampleSize, uint widthSampleSize);
     // toQuadMesh has fake normals at the moment! TODO: must be changed
-    QuadMesh*     toQuadMesh(uint toothSampleSize = 100, uint widthSampleSize = 10);
+    QuadMesh*     toQuadMesh();
+    QuadMesh*     toQuadMesh(uint toothSampleSize, uint widthSampleSize);
     ZCircleCloud* toZCircleCloud();
 
     std::string toString();

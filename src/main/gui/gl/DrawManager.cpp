@@ -16,10 +16,10 @@ DrawManager::DrawManager() {
 
 bool DrawManager::initShaderPrograms() {
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	compileShader(m_vertexShader, "./src/shader/blinnphongVert.glsl");
+	compileShader(m_vertexShader, "./src/shader/phong410Vert.glsl");
 
 	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	compileShader(m_fragmentShader, "./src/shader/blinnphongFrag.glsl");
+	compileShader(m_fragmentShader, "./src/shader/phong410Frag.glsl");
 
 	m_program = glCreateProgram();
 	glAttachShader(m_program, m_vertexShader);
@@ -37,8 +37,8 @@ bool DrawManager::initShaderPrograms() {
 	m_normalLocation = glGetAttribLocation(m_program, "normal");
 	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
 
-        m_vertexColor = glGetAttribLocation(m_program, "color");
-        if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
+	m_vertexColor = glGetAttribLocation(m_program, "color");
+	if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
 
 	// Matrix Uniforms
 	m_eyeLocation = glGetUniformLocation(m_program, "eye");
@@ -185,9 +185,9 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 		const qreal* normalMatrixQreals = normalMatrix.constData();
 
 		for (int j = 0; j < 16; ++j) {
-	            MVFloats[j] = MVQreals[j];
-	            MVPFloats[j] = MVPQreals[j];
-		    normalMatrixFloats[j] = normalMatrixQreals[j];
+			MVFloats[j] = MVQreals[j];
+			MVPFloats[j] = MVPQreals[j];
+			normalMatrixFloats[j] = normalMatrixQreals[j];
 		}
 
 		int hasVertexColor = (*i)->hasColorData();
@@ -216,6 +216,6 @@ void DrawManager::draw(std::vector<Drawable*> *drawables, QMatrix4x4* projection
 }
 
 void DrawManager::updateBuffer(std::vector<Drawable *> *drawables){
-  // TODO : Find something thats perfoming Better Here :
-  createBufferFor(drawables);
+	// TODO : Find something thats perfoming Better Here :
+	createBufferFor(drawables);
 }

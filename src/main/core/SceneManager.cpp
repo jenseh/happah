@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-#include <time.h>
+#include <ctime>
 #include "../test/WormGearGrindTest.h"
 #include "../test/KinematicTest.h"
 #include "geometries/Sphere.h"

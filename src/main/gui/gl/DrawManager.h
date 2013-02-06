@@ -25,7 +25,7 @@ private:
 	GLuint m_vertexShader;
 	
 	GLint m_eyeLocation;
-	GLint m_MVLocation;
+	GLint m_modelMatrixLocation;
 	GLint m_MVPLocation;
 	GLint m_normalMatLocation;
 	GLint m_normalLocation;

@@ -8,7 +8,8 @@
 
 
 SceneManager::SceneManager() : m_iDCounter(0) {
-    //new WormGearGrindTest();
+//    new WormGearGrindTest(this);
+//    buildScene();
     //KinematicTest test;
     //test.runLinearTest();
 }
@@ -51,7 +52,7 @@ unsigned int SceneManager::getObjectState() {
 }
 
 void SceneManager::buildScene(){
-  Sphere * sphere = new Sphere(1.0f,glm::vec4(2.0f,0.0f,0.0f,1.0f));
+  Sphere* sphere = new Sphere(1.0f, glm::vec4(2.0f,0.0f,0.0f,1.0f));
   QuadMesh* dSphere = sphere->toQuadMesh();
   dSphere->setMaterial(0.45f,        //ka
                        0.5f,        //kd

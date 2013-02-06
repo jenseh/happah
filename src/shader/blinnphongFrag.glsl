@@ -1,22 +1,22 @@
 #version 330 compatibility
 
-// TransformationsMatritzen
-uniform mat4 MVP, MV;
+// TransformationsMatrizen vom Programm gesetzt
+uniform mat4 MVP, modelMatrix;
+uniform mat3 normalMat;
 
-uniform int hasVertexColor;
-
-// KameraPosition
+// Camera position
 uniform vec3 eye;
 
-// Material
+// Material uniforms
 uniform float ka, kd, ks;
 uniform float shininess;
 
-// Output des VertexShaders
-in vec3 vNormal, vWorldPosition;
+// Indicates whether a fixed vertex color is used
+uniform int hasVertexColor;
 in vec4 vColor;
 
-
+// Output des VertexShaders
+in vec3 vNormal, vWorldPosition;
 
 void main(void)
 {
@@ -43,14 +43,14 @@ void main(void)
 
         // Blinn Phong lighting for each light source
         for(int i = 0; i < 2; i ++){
-            vec3 lightWS  = normalize(lightPosition[i] - vWorldPosition);
-            vec3 viewWS   = normalize(eye - vWorldPosition);
-            vec3 halfwayWS = normalize(lightWS + viewWS);
+            vec3 lightWS    = normalize(lightPosition[i] - vWorldPosition);
+            vec3 viewWS     = normalize(eye - vWorldPosition);
+            vec3 halfwayWS  = normalize(lightWS + viewWS);
 
-            float diffuse = max(0.0f, dot(lightWS, normalize(vNormal)));
-            float specular = pow(max(0.0f, dot(halfwayWS, vNormal)), shininess);
+            float diffuse   = max(0.0f, dot(lightWS, normalize(vNormal)));
+            float specular  = pow(max(0.0f, dot(halfwayWS, vNormal)), shininess);
 
-            gl_FragColor += (diffuse * kd + specular * ks) * lightColor[i];
+            gl_FragColor   += (diffuse * kd + specular * ks) * lightColor[i];
         }
     }
 }

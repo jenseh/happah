@@ -11,7 +11,6 @@ WormGearGrind::~WormGearGrind() {}
 
 void WormGearGrind::calculateGrindingDepth(){
    std::cout << "Starting simulation:" << std::endl;
-   m_gear->translate(0.5f, 0.0f, 0.0f); //TODO:remove
    m_gear->fillTriangles();
    std::vector<Triangle*>* triangles = m_gear->getTriangles();
 
@@ -47,7 +46,8 @@ void WormGearGrind::calculateGrindingDepth(){
        for (; pos != end; pos++) {
            CircleHitResult* hitResult = *pos;
 
-           simResult.addItem(hitResult->hitPoint, z);
+           simResult.addItem(hitResult->hitPointA, z);
+           simResult.addItem(hitResult->hitPointB, z);
 
           //TODO: Implement this function
 //           std::vector<glm::vec3*>* closestPoints = m_worm->getClosestPoints(hitResult->hitPoint);
@@ -92,7 +92,9 @@ void WormGearGrind::calculateGrindingDepth(){
    for (size_t z = 0; z < resolutionZ; z++) {
      for (size_t angleSlot = 0; angleSlot < resultAngleSlotCount; angleSlot++) {
          float radius = simResult.getItem(angleSlot, z);
-         std::cout << "angleSlot: " << angleSlot << ", posZ: " << z << ", radius: " << radius << std::endl;
+         if (radius != INFINITY) {
+          std::cout << "angleSlot: " << angleSlot << ", posZ: " << z << ", radius: " << radius << std::endl;
+         }
      }
    }
 

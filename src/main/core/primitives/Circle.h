@@ -34,10 +34,11 @@ struct CircleRange {
 };
 
 struct CircleHitResult {
-  glm::vec3 hitPoint;
+  glm::vec3 hitPointA;
+  glm::vec3 hitPointB;
   Triangle* object;
 
-  CircleHitResult(glm::vec3 hitPoint_, Triangle* object_) : hitPoint(hitPoint_), object(object_) {
+  CircleHitResult(glm::vec3 hitPointA_, glm::vec3 hitPointB_, Triangle* object_) : hitPointA(hitPointA_), hitPointB(hitPointB_), object(object_) {
   }
 };
 
@@ -101,6 +102,8 @@ struct Circle {
 		// // std::cout << "Info: Collinear: " << collinear << std::endl;
 
 		if (collinear) {
+			std::cout << "Debug-Info: The very unlikely case of collinear Triangle-Circle intersection just happened!" << std::endl;
+		
 			//2: Check whether planes are identical or parallel
 			bool identical = floatEquals(glm::dot(m_center - triangle->vertices[2], t_normal), 0.0f);
 			// // std::cout << "Info: Identical: " << identical << std::endl;
@@ -143,14 +146,14 @@ struct Circle {
 					hitPoint = &closestPoint02;
 				    }
 
-				    CircleHitResult* tempHitResult = new CircleHitResult(*hitPoint, triangle);
+				    CircleHitResult* tempHitResult = new CircleHitResult(*hitPoint, *hitPoint, triangle);
 				    hitResults->push_back(tempHitResult);
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
 						// // std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
-						CircleHitResult* tempHitResult = new CircleHitResult(m_center, triangle);
+						CircleHitResult* tempHitResult = new CircleHitResult(m_center, m_center, triangle);
 						hitResults->push_back(tempHitResult);
 						return true;
 					} else {
@@ -271,7 +274,7 @@ struct Circle {
 					// In case min and max are equal, we would get tripple NAN
 					if (!isValidVector(closestPointToCenter)) closestPointToCenter = *minVec;
 
-					CircleHitResult* tempHitResult = new CircleHitResult(closestPointToCenter, triangle);
+					CircleHitResult* tempHitResult = new CircleHitResult(*minVec, *maxVec, triangle);
 					hitResults->push_back(tempHitResult);
 //					// // std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
 //					// // std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
@@ -506,7 +509,7 @@ struct Circle {
 	// Check whether a vector has only zeros
 	// This requires a very small epsilon (i.e. 10-e7) to avoid misinterpretation of small normals
 	bool inline isNullVector(glm::vec3& vector) {
-	  float epsilon = 10e-08f;
+	  float epsilon = 10e-10f;
 		if (floatEquals(vector.x, 0.0f, epsilon) && floatEquals(vector.y, 0.0f, epsilon) && floatEquals(vector.z, 0.0f, epsilon)) {
 			// // std::cout << vector.x << ", " << vector.y << ", " << vector.z << std::endl;
 			return true;

@@ -31,9 +31,6 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 	pointCount_ = 0;
 	theta_ = 0;
 	phi_ = 0;
-
-
-	//sceneManager->buildScene();
 }
 
 void GlViewport3D::initializeGL() {
@@ -75,9 +72,14 @@ void GlViewport3D::paintGL() {
 	updateView();
 
 	bool sceneStateChanged = (m_lastSceneState != m_sceneManager->getObjectState());
+	
 	vector<Drawable*>* drawables = m_sceneManager->getDrawables();
-	if (sceneStateChanged) m_drawManager->updateAndDraw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
-	else m_drawManager->draw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
+	if (sceneStateChanged) {
+	  m_drawManager->updateAndDraw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
+	  m_lastSceneState = m_sceneManager->getObjectState();
+	} else {
+	  m_drawManager->draw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
+	}
 }
 
 void GlViewport3D::updateView() {
@@ -112,8 +114,6 @@ void GlViewport3D::mouseMoveEvent(QMouseEvent *event) {
 		eye_.setX(zoomRad_ * (sin(thetaRad) * cos(phiRad))); //- sin(dx)*cos(dy)));
 		eye_.setY(zoomRad_ * (sin(thetaRad) * sin(phiRad))); //+ sin(dx)*cos (dy)));
 		eye_.setZ(zoomRad_ * (cos(thetaRad))); //*cos(dy)));
-
-		updateView();
 		updateGL();
 	}
 

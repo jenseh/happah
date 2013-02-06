@@ -33,25 +33,25 @@
 
 class InvoluteSpurGear : public NonDrawable {
 public:
-  InvoluteSpurGear(uint toothCount = 15,
-           hpreal module = 0.13,
-           hpreal facewidth = 0.2f,
-           hpreal pressureAngle = M_PI / 6.0f,
-           hpreal bottomClearance = 0.00f,
-           hpreal filletRadius = 0.00f,
-           std::string name = "InvoluteSpurGear");
-             
-    ~InvoluteSpurGear();
+	InvoluteSpurGear(uint toothCount = 15,
+			hpreal module = 0.13,
+			hpreal facewidth = 0.2f,
+			hpreal pressureAngle = M_PI / 6.0f,
+			hpreal bottomClearance = 0.00f,
+			hpreal filletRadius = 0.00f,
+			std::string name = "InvoluteSpurGear");
+
+	~InvoluteSpurGear();
 
     uint   getToothCount();
     hpreal getModule();
     hpreal getFacewidth(); //Zahnradbreite
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
-    hpreal getBottomClearance(); //Kopfspielh√∂he
-    hpreal getFilletRadius(); //Fu√ürundungsradius
+    hpreal getBottomClearance(); //Kopfspielhˆhe
+    hpreal getFilletRadius(); //Fuﬂrundungsradius
     hpreal getReferenceRadius(); //Teilkreisradius
     hpreal getTipRadius(); //Kopfkreisradius
-    hpreal getRootRadius(); //Fu√ükreisradius
+    hpreal getRootRadius(); //Fuﬂkreisradius
     hpreal getBaseRadius(); //Grundkreisradius
     hpreal getAngularPitch(); //Teilungswinkel
 
@@ -78,9 +78,14 @@ public:
 
     std::vector<hpvec2>* getToothProfile(uint sampleSize = 100);
     std::vector<hpvec2>* getGearProfile(uint toothSampleSize = 100);
-    TriangleMesh* toTriangleMesh(uint toothSampleSize = 100, uint widthSampleSize = 10);
+
+    // The toTriangleMesh() and toQuadMesh() methods use a
+    // default toothSampleSize of 100 and a default widthSamplesize of 10
+    TriangleMesh* toTriangleMesh();
+    TriangleMesh* toTriangleMesh(uint toothSampleSize, uint widthSampleSize);
     // toQuadMesh has fake normals at the moment! TODO: must be changed
-    QuadMesh*     toQuadMesh(uint toothSampleSize = 100, uint widthSampleSize = 10);
+    QuadMesh*     toQuadMesh();
+    QuadMesh*     toQuadMesh(uint toothSampleSize, uint widthSampleSize);
     ZCircleCloud* toZCircleCloud();
 
     std::string toString();
@@ -95,10 +100,10 @@ private:
 
     template <class T> T *getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize);
 
-    bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern √ºberhaupt erstellbar ist
-    hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Gr√∂√üe Zahnl√ºcke = Gr√∂√üe Zahnbreite
-    hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fu√ürundung endet/in Evolvente √ºbergeht
-    hpreal getStartFilletAngle(); //Winkel, an dem Fu√ürundung startet
+    bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern ¸berhaupt erstellbar ist
+    hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Grˆﬂe Zahnl¸cke = Grˆﬂe Zahnbreite
+    hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fuﬂrundung endet/in Evolvente ¸bergeht
+    hpreal getStartFilletAngle(); //Winkel, an dem Fuﬂrundung startet
     hpreal involuteToCircleAngle(const hpreal &involuteAngle); //calculates the normal angle, one would expect in a cirle, out of the involute angle, which is used to construct the involute
     hpreal involuteAngleOfIntersectionWithCircle(const hpreal &radius);
     hpvec2 mirrorPoint(const hpvec2 &point, const hpvec2 &axis);

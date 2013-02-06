@@ -4,10 +4,6 @@ Drawable::Drawable(std::string name) : GeometryObject(name) {}
 
 Drawable::~Drawable() {}
 
-
-std::vector<glm::vec4>* Drawable::getVertexData() {}
-int Drawable::getTupleSize() {}
-
 void Drawable::setColorData(std::vector<Color>& colorData){
     m_colorData = colorData;
 }

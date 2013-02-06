@@ -3,10 +3,10 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
-                   hpreal bottomClearance, hpreal filletRadius, std::string name) :
+                   hpreal bottomClearance, hpreal filletRadius, std::string name) : NonDrawable(name),
                    m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
                    m_pressureAngle(pressureAngle),
-                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), NonDrawable(name) {
+                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius) {
 
 	//std::cout << toString() << std::endl;
 }
@@ -46,12 +46,8 @@ bool InvoluteSpurGear::verifyConstraints(bool print) {
 			isCorrect = false;
 			throw "Fillet is too big for the gap between the teeth!";
 		}
-
-		//TODO: restore these lines once suitable parameters are set
-//		hpreal stopFilletAngle = getStopFilletInvoluteAngle();
-//		hpreal involuteAngle = involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module);
-//		std::cout << "stopFilletAngle: " << stopFilletAngle << ", involuteAngle: " << involuteAngle << std::endl;
-//		if (stopFilletAngle > involuteAngle) {
+//		if (getStopFilletInvoluteAngle() 
+//			> involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module)) {
 //			isCorrect = false;
 //			throw "Fillet ends when working depth (gemeinsame Zahnhöhe) already started!";
 //		}
@@ -354,12 +350,10 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 	for (uint i = 0; i < toothSampleSize - 1; ++i) {
 		profile->at(i) = toothProfile->at(i);
 	}
-	//TODO: irgendwie muss speicherplatz für toothprofile freigegeben werden!
+
+	delete toothProfile; //memory is freed as toothProfile isn't needed any longer
 
 	for (uint i = 1; i < getToothCount(); ++i) {
-		//TODO: Katja please look at this: I changed i to i + 1 since
-		// otherwise there would be 2 equal points in a sequence and
-		// that would lead to corrupt normals in my simulation...
 		hpreal mirrorAngle = getAngularPitch() * (i);
 		hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 
@@ -372,10 +366,13 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 	return profile;
 }
 
+TriangleMesh* InvoluteSpurGear::toTriangleMesh() {
+	return toTriangleMesh(100, 10);
+}
 TriangleMesh* InvoluteSpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsTriangles);
-    smoothTriangleMeshNormals(vertexData, widthSampleSize);
-    TriangleMesh* mesh = new TriangleMesh(*vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
+    //smoothTriangleMeshNormals(vertexData, widthSampleSize);
+    TriangleMesh* mesh = new TriangleMesh(vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
     mesh->setModelMatrix(m_modelMatrix);
     return mesh;
 }
@@ -397,6 +394,9 @@ void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const h
 			vertexData->push_back(normal);
 }
 
+QuadMesh* InvoluteSpurGear::toQuadMesh() {
+	return toQuadMesh(100, 10);
+}
 QuadMesh* InvoluteSpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
     std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsQuads);
     QuadMesh* mesh = new QuadMesh(*vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
@@ -450,7 +450,9 @@ std::vector<hpvec4>* InvoluteSpurGear::toMesh(uint toothSampleSize, uint widthSa
 			(this->*putTogetherAs)(points, wildcard, vertexData);
 		}
 	}
-	//TODO profile Speicher freigeben!
+
+	delete profile; //memory is freed as toothProfile isn't needed any longer
+
 	return vertexData;
 }
 

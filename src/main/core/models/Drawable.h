@@ -11,8 +11,8 @@ public:
     Drawable(std::string name);
     virtual ~Drawable();
 
-    virtual std::vector<glm::vec4>* getVertexData();
-    virtual int getTupleSize();
+    virtual std::vector<glm::vec4>* getVertexData() = 0;
+    virtual int getTupleSize() = 0;
 
     void setColorData(std::vector<Color>& colorData);
     std::vector<Color>* getColorData();

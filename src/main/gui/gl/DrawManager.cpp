@@ -37,8 +37,8 @@ bool DrawManager::initShaderPrograms() {
 	m_normalLocation = glGetAttribLocation(m_program, "normal");
 	if(m_normalLocation < 0) cerr << "Failed to find normal." << endl;
 
-        m_vertexColor = glGetAttribLocation(m_program, "color");
-        if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
+	m_vertexColor = glGetAttribLocation(m_program, "color");
+	if( m_vertexColor < 0 ) cerr << "Failed to find color." <<endl;
 
 	// Matrix Uniforms
 	m_eyeLocation = glGetUniformLocation(m_program, "eye");

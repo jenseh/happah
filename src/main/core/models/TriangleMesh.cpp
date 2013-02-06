@@ -1,6 +1,6 @@
 #include "TriangleMesh.h"
 
-TriangleMesh::TriangleMesh(std::vector<glm::vec4> vertexData, std::string name) : Drawable(name)
+TriangleMesh::TriangleMesh(std::vector<glm::vec4> *vertexData, std::string name) : Drawable(name)
 {
     m_vertexData = vertexData;
 }
@@ -12,7 +12,7 @@ TriangleMesh::~TriangleMesh()
 
 std::vector<glm::vec4>* TriangleMesh::getVertexData()
 {
-    return &m_vertexData;
+    return m_vertexData;
 }
 
 
@@ -25,25 +25,25 @@ std::vector<Triangle*>* TriangleMesh::getTriangles() {
 }
 
 void TriangleMesh::fillTriangles(){
-    if (m_vertexData.size() % 6 != 0) {
+    if (m_vertexData->size() % 6 != 0) {
       std::cerr << "Error: Invalid number of vertices and normals for a triangle!" << std::endl;
       return;
     }
 
-    size_t triangleCount = m_vertexData.size() / 6;
+    size_t triangleCount = m_vertexData->size() / 6;
     m_triangles.clear();
     m_triangles.resize(triangleCount);
     for(size_t i = 0; i < triangleCount; i++){
         m_triangles.at(i) = new Triangle();
 
-        m_triangles.at(i)->vertices[0] = glm::vec3(m_vertexData[i*6][0], m_vertexData[i*6][1], m_vertexData[i*6][2]);
-        m_triangles.at(i)->normals[0] = glm::vec3(m_vertexData[i*6+1][0], m_vertexData[i*6+1][1], m_vertexData[i*6+1][2]);
+        m_triangles.at(i)->vertices[0] = glm::vec3(m_vertexData->at(i*6)[0], m_vertexData->at(i*6)[1], m_vertexData->at(i*6)[2]);
+        m_triangles.at(i)->normals[0] = glm::vec3(m_vertexData->at(i*6+1)[0], m_vertexData->at(i*6+1)[1], m_vertexData->at(i*6+1)[2]);
 
-        m_triangles.at(i)->vertices[1] = glm::vec3(m_vertexData[i*6+2][0], m_vertexData[i*6+2][1], m_vertexData[i*6+2][2]);
-        m_triangles.at(i)->normals[1] = glm::vec3(m_vertexData[i*6+3][0], m_vertexData[i*6+3][1], m_vertexData[i*6+3][2]);
+        m_triangles.at(i)->vertices[1] = glm::vec3(m_vertexData->at(i*6+2)[0], m_vertexData->at(i*6+2)[1], m_vertexData->at(i*6+2)[2]);
+        m_triangles.at(i)->normals[1] = glm::vec3(m_vertexData->at(i*6+3)[0], m_vertexData->at(i*6+3)[1], m_vertexData->at(i*6+3)[2]);
 
-        m_triangles.at(i)->vertices[2] = glm::vec3(m_vertexData[i*6+4][0], m_vertexData[i*6+4][1], m_vertexData[i*6+4][2]);
-        m_triangles.at(i)->normals[2] = glm::vec3(m_vertexData[i*6+5][0], m_vertexData[i*6+5][1], m_vertexData[i*6+5][2]);
+        m_triangles.at(i)->vertices[2] = glm::vec3(m_vertexData->at(i*6+4)[0], m_vertexData->at(i*6+4)[1], m_vertexData->at(i*6+4)[2]);
+        m_triangles.at(i)->normals[2] = glm::vec3(m_vertexData->at(i*6+5)[0], m_vertexData->at(i*6+5)[1], m_vertexData->at(i*6+5)[2]);
       }
 }
 
@@ -69,4 +69,3 @@ RayCloud* TriangleMesh::toRayCloud(){
     }
     return new RayCloud(rayVector);
 }
-

@@ -90,7 +90,7 @@ glm::vec3 TriPatch::triPatch3(glm::vec3 p300,glm::vec3 p210,glm::vec3 p201,glm::
 }
 
 TriangleMesh* TriPatch::toTriangleMesh(){
-  std::vector<glm::vec4> triangles;
+  std::vector<glm::vec4> *triangles = new std::vector<glm::vec4>();
   int detail = m_detail;
   int save = 1;
   for (int n = 1;n <= detail;n++){
@@ -99,12 +99,12 @@ TriangleMesh* TriPatch::toTriangleMesh(){
     int b=a+n;
     int c=b+1;
     save = c -n;
-    triangles.push_back(m_vertexData.at((a-1)*2));
-    triangles.push_back(m_vertexData.at(a*2));
-    triangles.push_back(m_vertexData.at((b-1)*2));
-    triangles.push_back(m_vertexData.at(a*2));
-    triangles.push_back(m_vertexData.at((c-1)*2));
-    triangles.push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_vertexData.at((a-1)*2));
+    triangles->push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_vertexData.at((b-1)*2));
+    triangles->push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_vertexData.at((c-1)*2));
+    triangles->push_back(m_vertexData.at(a*2));
         }
     }
 

@@ -8,9 +8,9 @@
 #include <cstring>
 #include <sstream>
 #include "../../HappahTypes.h"
-#include "NonDrawable.h"
-#include "../models/TriangleMesh.h"
-#include "../models/QuadMesh.h"
+#include "Gear.h"
+//#include "../models/TriangleMesh.h"
+//#include "../models/QuadMesh.h"
 #include "../models/ZCircleCloud.h"
 
 /** @class InvoluteSpurGear
@@ -31,7 +31,7 @@
  * the reflection property.
  */
 
-class InvoluteSpurGear : public NonDrawable {
+class InvoluteSpurGear : public Gear {
 public:
 	InvoluteSpurGear(uint toothCount = 15,
 			hpreal module = 0.13,
@@ -76,17 +76,11 @@ public:
     bool setBottomClearance(hpreal bottomClearance);
     bool setFilletRadius(hpreal filletRadius);
 
-    std::vector<hpvec2>* getToothProfile(uint sampleSize = 100);
-    std::vector<hpvec2>* getGearProfile(uint toothSampleSize = 100);
+    std::vector<hpvec2>* getToothProfile();
+    std::vector<hpvec2>* getGearProfile(hpreal depth);
 
-    // The toTriangleMesh() and toQuadMesh() methods use a
-    // default toothSampleSize of 100 and a default widthSamplesize of 10
-    TriangleMesh* toTriangleMesh();
-    TriangleMesh* toTriangleMesh(uint toothSampleSize, uint widthSampleSize);
-    // toQuadMesh has fake normals at the moment! TODO: must be changed
-    QuadMesh*     toQuadMesh();
-    QuadMesh*     toQuadMesh(uint toothSampleSize, uint widthSampleSize);
     ZCircleCloud* toZCircleCloud();
+    //BSlineCurve*  toTransverseToothProfileSystem(hpreal z);
 
     std::string toString();
 
@@ -117,12 +111,6 @@ private:
                                                     const hpreal &angle);
     void insertInvolutePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
                                                     const hpreal &startInvAngle, const hpreal &stopInvAngle);
-
-    void smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData, uint widthSampleSize);
-    void putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData);
-    void putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData);
-    std::vector<hpvec4>* toMesh(uint toothSampleSize, uint widthSampleSize,
-                                        void (InvoluteSpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&));
 };
 
 #endif // INVOLUTESPURGEAR_H

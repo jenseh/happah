@@ -28,7 +28,12 @@ public:
 	void addControlPoint( float x, float y, float z );
 	void setControlPoint( unsigned int index, glm::vec3 newValue );
 	glm::vec3 getControlPoint( unsigned int index );
+//	unsigned int getNumberOfControlPoints(); //KATJA!!!
 	void resetKnots();
+
+	void reverse(); //KATJA!!!
+//	void addCurve( const BSplineCurve &curve ); //KATJA!!!
+//	void approximatePoints( std::vector<hpvec3> points ); //KATJA!!!
 
 	void setDegree( unsigned int degree );
 	int getDegree();

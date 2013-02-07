@@ -3,7 +3,7 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
-                   hpreal bottomClearance, hpreal filletRadius, std::string name) : NonDrawable(name),
+                   hpreal bottomClearance, hpreal filletRadius, std::string name) : Gear(name),
                    m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
                    m_pressureAngle(pressureAngle),
                    m_bottomClearance(bottomClearance), m_filletRadius(filletRadius) {
@@ -244,9 +244,9 @@ T *InvoluteSpurGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T
 	return minmax;
 }
 
-std::vector<hpvec2>* InvoluteSpurGear::getToothProfile(uint sampleSize) {
+std::vector<hpvec2>* InvoluteSpurGear::getToothProfile() {
 
-	std::vector<hpvec2>* profile = new std::vector<hpvec2>(sampleSize);
+	std::vector<hpvec2>* profile = new std::vector<hpvec2>(TOOTH_SAMPLE_SIZE);
 
 	if (!verifyConstraints()) {
 		return profile;
@@ -264,11 +264,11 @@ std::vector<hpvec2>* InvoluteSpurGear::getToothProfile(uint sampleSize) {
 	alpha3 = involuteAngleOfIntersectionWithCircle(getTipRadius());
 	beta3  = getShiftAngle() + involuteToCircleAngle(alpha3);
 
-	hpreal sampleAngleSize = getAngularPitch() / sampleSize;
+	hpreal sampleAngleSize = getAngularPitch() / TOOTH_SAMPLE_SIZE;
 	int sampleBeta1 = static_cast<uint>(beta1 / sampleAngleSize + 0.5);
 	int sampleBeta2 = static_cast<uint>(beta2 / sampleAngleSize + 0.5);
 	int sampleBeta3 = static_cast<uint>(beta3 / sampleAngleSize + 0.5);
-	int sampleBeta4 = (sampleSize % 2 == 0) ? sampleSize / 2 : sampleSize / 2 + 1;
+	int sampleBeta4 = (TOOTH_SAMPLE_SIZE % 2 == 0) ? TOOTH_SAMPLE_SIZE / 2 : TOOTH_SAMPLE_SIZE / 2 + 1;
 
 	//if assertion fails, values haven't been possible for involute gear and construction would fail!
 	assert(sampleBeta1 >= 0
@@ -339,15 +339,16 @@ hpvec2 InvoluteSpurGear::pointOnRightTurnedInvolute(const hpreal &involuteStartA
 	return point;
 }
 
-std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
+std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(hpreal depth) {
 
 	// last point of tooth profile isn't taken because next tooth profile would have the same one
-	std::vector<hpvec2> *profile = new std::vector<hpvec2>((toothSampleSize - 1) * getToothCount());
-	std::vector<hpvec2> *toothProfile = getToothProfile(toothSampleSize);
+	std::vector<hpvec2> *profile = new std::vector<hpvec2>((TOOTH_SAMPLE_SIZE - 1) * getToothCount());
+	std::vector<hpvec2> *toothProfile = getToothProfile();
 
+	//TODO: here we could insert something for the helixangle!
 	//TODO: I use this code to refuse an array-resizing, as we know the array size from the beginning
 	//But is this really necessary? Is it maybe even faster to use already provided methods?
-	for (uint i = 0; i < toothSampleSize - 1; ++i) {
+	for (uint i = 0; i < TOOTH_SAMPLE_SIZE - 1; ++i) {
 		profile->at(i) = toothProfile->at(i);
 	}
 
@@ -357,8 +358,8 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 		hpreal mirrorAngle = getAngularPitch() * (i);
 		hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 
-		for (uint j = 0; j < toothSampleSize - 1; ++j) {
-			uint k = i * (toothSampleSize - 1) + j;
+		for (uint j = 0; j < TOOTH_SAMPLE_SIZE - 1; ++j) {
+			uint k = i * (TOOTH_SAMPLE_SIZE - 1) + j;
 			profile->at(k) = mirrorPoint(profile->at(k - 1 - 2 * j), mirrorAxis);
 		}
 	}
@@ -366,153 +367,9 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(uint toothSampleSize) {
 	return profile;
 }
 
-TriangleMesh* InvoluteSpurGear::toTriangleMesh() {
-	return toTriangleMesh(100, 10);
-}
-TriangleMesh* InvoluteSpurGear::toTriangleMesh(uint toothSampleSize, uint widthSampleSize) {
-    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsTriangles);
-    //smoothTriangleMeshNormals(vertexData, widthSampleSize);
-    TriangleMesh* mesh = new TriangleMesh(vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-    mesh->setModelMatrix(m_modelMatrix);
-    return mesh;
-}
-
-void InvoluteSpurGear::putTogetherAsTriangles(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
-			//first triangle
-			vertexData->push_back(points[0]);
-			vertexData->push_back(normal);
-			vertexData->push_back(points[1]);
-			vertexData->push_back(normal);
-			vertexData->push_back(points[2]);
-			vertexData->push_back(normal);
-			//second triangle
-			vertexData->push_back(points[0]);
-			vertexData->push_back(normal);
-			vertexData->push_back(points[2]);
-			vertexData->push_back(normal);
-			vertexData->push_back(points[3]);
-			vertexData->push_back(normal);
-}
-
-QuadMesh* InvoluteSpurGear::toQuadMesh() {
-	return toQuadMesh(100, 10);
-}
-QuadMesh* InvoluteSpurGear::toQuadMesh(uint toothSampleSize, uint widthSampleSize) {
-    std::vector<hpvec4>* vertexData = toMesh(toothSampleSize, widthSampleSize, &InvoluteSpurGear::putTogetherAsQuads);
-    QuadMesh* mesh = new QuadMesh(*vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-    mesh->setModelMatrix(m_modelMatrix);
-    return mesh;
-}
-
-void InvoluteSpurGear::putTogetherAsQuads(const hpvec4 (&points)[4], const hpvec4 &normal, std::vector<hpvec4> *&vertexData) {
-	vertexData->push_back(points[0]);
-	vertexData->push_back(normal);
-	vertexData->push_back(points[1]);
-	vertexData->push_back(normal);
-	vertexData->push_back(points[2]);
-	vertexData->push_back(normal);
-	vertexData->push_back(points[3]);
-	vertexData->push_back(normal);
-}
-
-std::vector<hpvec4>* InvoluteSpurGear::toMesh(uint toothSampleSize, uint widthSampleSize,
-		void (InvoluteSpurGear::*putTogetherAs)(const hpvec4(&)[4], const hpvec4&, std::vector<hpvec4>*&)) {
-	// Create vector for the result
-	std::vector<hpvec4> *vertexData = new std::vector<hpvec4>;
-	std::vector<hpvec2> *profile = getGearProfile(toothSampleSize);
-
-	hpreal dz = m_facewidth / widthSampleSize;
-
-	hpvec4 wildcard = hpvec4(1.0f);
-
-	for (uint i = 0; i < widthSampleSize; ++i) {
-		for (uint j = 0; j < profile->size(); ++j) {
-			//TODO: why can't I use points[0].xy = ... ?
-			uint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
-			hpvec4 points[4];
-			points[0].x = profile->at(jNext).x;
-			points[0].y = profile->at(jNext).y;
-			points[0].z = i * dz;
-			points[0].w = 1.0f;
-			points[1].x = profile->at(j).x;
-			points[1].y = profile->at(j).y;
-			points[1].z = i * dz;
-			points[1].w = 1.0f;
-			points[2].x = profile->at(j).x;
-			points[2].y = profile->at(j).y;
-			points[2].z = (i + 1) * dz;
-			points[2].w = 1.0f;
-			points[3].x = profile->at(jNext).x;
-			points[3].y = profile->at(jNext).y;
-			points[3].z = (i + 1) * dz;
-			points[3].w = 1.0f;
-			
-			(this->*putTogetherAs)(points, wildcard, vertexData);
-		}
-	}
-
-	delete profile; //memory is freed as toothProfile isn't needed any longer
-
-	return vertexData;
-}
-
-void InvoluteSpurGear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData, uint numOfRows) {
-	//12 entries per knot of the profile in a triangleMesh (2 * 3 points, each with a normal)
-	uint pointsInRow = vertexData->size() / numOfRows;
-	uint quadsInRow  = pointsInRow / 12;
-	//array steps is necessary to walk in the vertexData array to the right places
-	int steps[] = {0, 6, 8, -(pointsInRow - 6), -4, -6};
-
-	for(uint i = 0; i < numOfRows; ++i) {
-		for (uint j = 0; j < quadsInRow; ++j) {
-			std::vector<hpvec3> nnnormals;//not normalized normals as size is needed for smoothing
-			hpreal areaSum = 0.0f;
-
-			//calculate not normalized normals of the 6
-			//surrounding triangles and sum their area
-			//for every point of the gear profile
-			for (uint k = 0; k < 6; ++k) {
-				int da, db; //distances in vertexData array to other two triangle points
-				if(k < 2) {
-					da = 4; db = 2;
-				} else if (k < 4) {
-					da = -2; db = 2;
-				} else {
-					da = -2; db = -4;
-				}
-
-				//TODO: n ist int und wird mit uint verglichen! => static_cast???
-				int n = i * pointsInRow + j * 12 + steps[k];
-				if (k == 2 && j == quadsInRow - 1)
-					n-= pointsInRow;
-				//not every point has 6 surrounding triangles. Use only the ones available:
-				if (n >= 0 && n < vertexData->size()) {
-					hpvec4 a = vertexData->at(n + da) - vertexData->at(n);
-					hpvec4 b = vertexData->at(n + db) - vertexData->at(n);
-					nnnormals.push_back(hpvec3(glm::cross(hpvec3(a.x, a.y, a.z), hpvec3(b.x, b.y, b.z))));
-					areaSum += glm::length(nnnormals.back());
-				}
-			}
-			hpvec4 normal = hpvec4(0.0f);
-			for (uint k = 0; k < nnnormals.size(); ++k) {
-				hpreal weight = (glm::length(nnnormals[k])) / areaSum;
-				normal += hpvec4(weight * glm::normalize(nnnormals[k]), 1.0f);
-			}
-			for (uint k = 0; k < 6; ++k) {
-				int n = i * pointsInRow + j * 12 + steps[k];
-				if (k == 2 && j == quadsInRow - 1)
-					n-= pointsInRow;
-				//not every point has 6 surrounding triangles. Use only the ones available:
-				if (n >= 0 && n < vertexData->size())
-					vertexData->at(n + 1) = normal; //insert the normal in the cell after the vertex
-			}
-		}
-	}
-}
-
 ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	// Create the profile given the current gear settings
-	std::vector<hpvec2> *profile = getGearProfile();
+	std::vector<hpvec2> *profile = getGearProfile(0);
 	
 	const unsigned int profSize = profile->size();
 
@@ -520,7 +377,7 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	const unsigned int resolutionXY = profSize;
 	const unsigned int resolutionZ = 10;
 
-	std::vector<glm::vec2>* points = this->getGearProfile();
+	std::vector<glm::vec2>* points = this->getGearProfile(0);
 	std::vector<float>* posZ = new std::vector<float>;
 
 	for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
@@ -534,6 +391,14 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	result->setModelMatrix(m_modelMatrix);
 	return result;
 }
+/*
+BSlineCurve* InvoluteSpurGear::toTransverseToothProfileSystem(hpreal z) {
+	BSplineCurve toothProfile();
+	toothProfile.approximatePoints(getToothProfile());
+	SimpleGear simpleGear(BSplineToothProfile(toothProfile), 0.0f, m_facewidth);
+	return simpleGear.toTransverseToothProfileSystem(z);
+}
+*/
 
 std::string InvoluteSpurGear::toString() {
 	std::stringstream info;

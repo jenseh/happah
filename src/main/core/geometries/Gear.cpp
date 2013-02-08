@@ -100,6 +100,7 @@ void Gear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
 			//for every point of the gear profile
+			int n = i * pointsInRow + j * 12;
 			for (uint k = 0; k < 6; ++k) {
 				int da, db; //distances in vertexData array to other two triangle points
 				if(k < 2) {
@@ -111,7 +112,7 @@ void Gear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData) {
 				}
 
 				//TODO: n ist int und wird mit uint verglichen! => static_cast???
-				int n = i * pointsInRow + j * 12 + steps[k];
+				n += steps[k];
 				if (k == 2 && j == quadsInRow - 1)
 					n-= pointsInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
@@ -127,8 +128,9 @@ void Gear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData) {
 				hpreal weight = (glm::length(nnnormals[k])) / areaSum;
 				normal += hpvec4(weight * glm::normalize(nnnormals[k]), 1.0f);
 			}
+			n = i * pointsInRow + j * 12;
 			for (uint k = 0; k < 6; ++k) {
-				int n = i * pointsInRow + j * 12 + steps[k];
+				n += steps[k];
 				if (k == 2 && j == quadsInRow - 1)
 					n-= pointsInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:

@@ -92,14 +92,13 @@ void Gear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData) {
 	//array steps is necessary to walk in the vertexData array to the right places
 	int steps[] = {0, 6, 8, -(pointsInRow - 6), -4, -6};
 
-	for(uint i = 0; i < WIDTH_SAMPLE_SIZE; ++i) {
+	// go one step further in width direction to reach all points
+	for(uint i = 0; i <= WIDTH_SAMPLE_SIZE; ++i) {
 		for (uint j = 0; j < quadsInRow; ++j) {
-			std::vector<hpvec3> nnnormals;//not normalized normals as size is needed for smoothing
-			hpreal areaSum = 0.0f;
-
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
 			//for every point of the gear profile
+			hpvec3 normal = hpvec3(0.0f);
 			int n = i * pointsInRow + j * 12;
 			for (uint k = 0; k < 6; ++k) {
 				int da, db; //distances in vertexData array to other two triangle points
@@ -119,14 +118,8 @@ void Gear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData) {
 				if (n >= 0 && n < vertexData->size()) {
 					hpvec4 a = vertexData->at(n + da) - vertexData->at(n);
 					hpvec4 b = vertexData->at(n + db) - vertexData->at(n);
-					nnnormals.push_back(hpvec3(glm::cross(hpvec3(a.x, a.y, a.z), hpvec3(b.x, b.y, b.z))));
-					areaSum += glm::length(nnnormals.back());
+					normal = normal + (hpvec3(glm::cross(hpvec3(a.x, a.y, a.z), hpvec3(b.x, b.y, b.z))));
 				}
-			}
-			hpvec4 normal = hpvec4(0.0f);
-			for (uint k = 0; k < nnnormals.size(); ++k) {
-				hpreal weight = (glm::length(nnnormals[k])) / areaSum;
-				normal += hpvec4(weight * glm::normalize(nnnormals[k]), 1.0f);
 			}
 			n = i * pointsInRow + j * 12;
 			for (uint k = 0; k < 6; ++k) {
@@ -135,7 +128,7 @@ void Gear::smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData) {
 					n-= pointsInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
 				if (n >= 0 && n < vertexData->size())
-					vertexData->at(n + 1) = normal; //insert the normal in the cell after the vertex
+					vertexData->at(n + 1) = hpvec4(glm::normalize(normal), 0.0f); //insert the normal in the cell after the vertex
 			}
 		}
 	}

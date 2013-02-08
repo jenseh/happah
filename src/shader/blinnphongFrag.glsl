@@ -32,8 +32,8 @@ void main(void)
         vec4 lightColor[2];
         lightPosition[0] = vec3(5.0f, 5.0f, 5.0f);
         lightPosition[1] = vec3(-5.0f, 5.0f, -5.0f);
-        lightColor[0] = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        lightColor[1] = vec4(1.0f, 0.0f, 1.0f, 1.0f);
+        lightColor[0] = vec4(1.0f, 0.8f, 0.0f, 1.0f);
+        lightColor[1] = vec4(1.0f, 0.8f, 0.6f, 1.0f);
 
         // Change as soon as every vertex has its own coloer
         // Ambient background lighting

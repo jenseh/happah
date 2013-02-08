@@ -140,7 +140,10 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
         glEnableVertexAttribArray(m_normalLocation);
     
     
-    
+    /* TODO!
+       I commented this out, because the program crashes with these code (at least on this processor).
+       Maybe because of the binded array, which is not really deleted or something like that
+       Please fix this before using it again. 
         // Color Data
         glGenBuffers(2, &m_colorDataBuffer);
         nBytes = 0;
@@ -166,7 +169,7 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     
         glEnableVertexAttribArray(m_vertexColor);
     
-        glBindVertexArray(0);
+        glBindVertexArray(0);*/
 }
 
 void DrawManager::updateAndDraw(std::vector<Drawable*>* drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {

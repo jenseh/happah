@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include "../geometries/GeometryObject.h"
+#include "../../HappahTypes.h"
 #include "Material.h"
 
 class Drawable : public GeometryObject{
@@ -15,6 +16,7 @@ public:
     virtual int getTupleSize() = 0;
 
     void setColorData(std::vector<Color>& colorData);
+    void setColor(hpreal red, hpreal green, hpreal blue, hpreal alpha);
     std::vector<Color>* getColorData();
     bool hasColorData();
     Material getMaterial();

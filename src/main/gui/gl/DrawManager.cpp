@@ -140,25 +140,21 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
         glEnableVertexAttribArray(m_normalLocation);
     
     
-    /* TODO!
-       I commented this out, because the program crashes with these code (at least on this processor).
-       Maybe because of the binded array, which is not really deleted or something like that
-       Please fix this before using it again. 
-        // Color Data
+    // Color Data
+    nBytes = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
+      nBytes += (*i)->getColorData()->size() * sizeof(Color);
+    }
+    if (nBytes > 0) {
         glGenBuffers(2, &m_colorDataBuffer);
-        nBytes = 0;
-        for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-          nBytes += (*i)->getColorData()->size() * sizeof(Color);
-        }
-    
         glBindBuffer(GL_ARRAY_BUFFER, m_colorDataBuffer);
         glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
-    
+        
         offset = 0;
         for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
             vector<Color>* colorData = (*i)->getColorData();
-            if( colorData->size() != 0 ){
-                int colorDataSize = colorData->size()*sizeof(Color) ;
+            if( !colorData->empty() ){
+                int colorDataSize = colorData->size()*sizeof(Color);
                 std::cout << "size of Color: " << sizeof(Color) << endl;
                 std::cout << " ColorDataSize for buffer: " << colorDataSize << endl;
                 glBufferSubData(GL_ARRAY_BUFFER, offset, colorDataSize, &(colorData->at(0)));
@@ -169,7 +165,8 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     
         glEnableVertexAttribArray(m_vertexColor);
     
-        glBindVertexArray(0);*/
+        glBindVertexArray(0);
+    }
 }
 
 void DrawManager::updateAndDraw(std::vector<Drawable*>* drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {

@@ -10,11 +10,7 @@ void Drawable::setColorData(std::vector<Color>& colorData){
 
 void Drawable::setColor(hpreal red, hpreal green, hpreal blue, hpreal alpha) {
 	for(uint i = 0; i < (getVertexData()->size()/2); i++){
-		Color color;
-		color.red = red;
-		color.green = green;
-		color.blue = blue;
-		color.alpha = alpha;
+		Color color = {red, green, blue, alpha};
 		m_colorData.push_back(color);
 	}
 }

@@ -6,8 +6,6 @@ struct Color{
     float green;
     float blue;
     float alpha;
-
-    Color(){}
 };
 
 

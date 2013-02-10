@@ -31,6 +31,8 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 	pointCount_ = 0;
 	theta_ = 0;
 	phi_ = 0;
+
+	m_sceneManager->buildScene();
 }
 
 void GlViewport3D::initializeGL() {

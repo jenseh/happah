@@ -72,25 +72,29 @@ void SceneManager::buildScene(){
   std::cout << " Color Data size :" << colorData->size() << endl;
 //  uint result = addDrawable(dSphere);
 
-  TriPatch* tripatch = new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,2.0f,0.0f),glm::vec3(0.0f,2.0f,1.0f), "patch");
-  tripatch->setControlPoint(2,glm::vec3(1.0f,0.0f,2.0f));
-  tripatch->setControlPoint(4,glm::vec3(0.0f,1.0f,0.0f));
-  tripatch->setControlPoint(1,glm::vec3(1.0f,1.0f,1.0f));
+  TriPatch* tripatch = new TriPatch(2,glm::vec3(0.0f,0.0f,1.0f),glm::vec3(1.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), "patch");
+  tripatch->setControlPoint(0,(tripatch->getControlPoint(0))*1.3f);
+//  tripatch->setControlPoint(4,glm::vec3(0.0f,1.0f,0.0f));
+//  tripatch->setControlPoint(1,glm::vec3(1.0f,1.0f,1.0f));
   tripatch->update();
 
-  TriPatch* tripatch2 = new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,0.0f,-1.0f),glm::vec3(0.0f,2.0f,0.0f), "patch2");
-  tripatch2->setControlPoint(2,glm::vec3(1.0f,1.0f,1.0f));
-  tripatch2->update();
+  TriPatch* tripatch2 = new TriPatch(2,glm::vec3(1.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,-1.0f),glm::vec3(0.0f,1.0f,0.0f), "patch2");
+//  tripatch2->setControlPoint(2,glm::vec3(1.0f,1.0f,1.0f));
+//  tripatch2->update();
 
-  TriPatch* tripatch3 =  new TriPatch(2,glm::vec3(0.0f),glm::vec3(0.0f,2.0f,1.0f),glm::vec3(-2.0f,1.0f,0.0f), "patch3");
-  tripatch3->setControlPoint(1,glm::vec3(1.0f,0.0f,2.0f));
-  tripatch3->update();
+  TriPatch* tripatch3 =  new TriPatch(2,glm::vec3(0.0f,0.0f,-1.0f),glm::vec3(-1.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), "patch3");
+//  tripatch3->setControlPoint(1,glm::vec3(1.0f,0.0f,2.0f));
+//  tripatch3->update();
+
+ TriPatch* tripatch4 =  new TriPatch(2,glm::vec3(-1.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,1.0f),glm::vec3(0.0f,1.0f,0.0f), "patch4");
 
   TriangleMesh* dTriPatch = tripatch->toTriangleMesh();
   TriangleMesh* dTriPatch2 = tripatch2->toTriangleMesh();
   TriangleMesh* dTriPatch3 = tripatch3->toTriangleMesh();
-
-//  result = addDrawable(dTriPatch);
-//  result = addDrawable(dTriPatch2);
-//  result = addDrawable(dTriPatch3);
+  TriangleMesh* dTriPatch4 = tripatch4->toTriangleMesh();
+  int result;
+  result = addDrawable(dTriPatch);
+  result = addDrawable(dTriPatch2);
+  result = addDrawable(dTriPatch3);
+  result = addDrawable(dTriPatch4);
 }

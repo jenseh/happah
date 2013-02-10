@@ -14,6 +14,8 @@ TriPatch::TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::strin
   glm::vec3 p000;
   m_detail = 100;
   int n=m_detail;
+  glm::vec3 center =glm::vec3(0.0f);
+  float radius = 1.0f;
   switch(m_degree){
 
     case(1):
@@ -38,10 +40,18 @@ TriPatch::TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::strin
                   m_v = (float)j/(float)n;
                   m_w = (float)k/(float)n;
                  p000 = triPatch2(m_controlPoints[0],m_controlPoints[1],m_controlPoints[2],m_controlPoints[3],m_controlPoints[4],m_controlPoints[5]);
+                 //spherealize
+                 glm::vec3 pot= (m_u*m_a)+(m_v*m_b)+(m_w*m_c);
+                 pot = pot - center;
+                 float offset = radius -glm::length(pot);
+                 glm::vec3 offsetVector = glm::normalize(p000);
+                 offsetVector = offset*offsetVector;
+                 p000 = p000+offsetVector;
                  std::cout<<"u/v/w"<<" "<<m_u<<"/"<<m_v<<"/"<<m_w<<endl;
                  //std::cout << "BezierPunkt: "<< p000.x << "/" << p000.y << "/" <<p000.z << endl;
                  m_vertexData.push_back(glm::vec4(p000,1.0f));
-                 m_vertexData.push_back(glm::vec4(0.0f,1.0f,0.0f,0.0f));
+                 glm::vec3 normal = (p000-center);
+                 m_vertexData.push_back(glm::vec4(normal,0.0f));
                 }
             }
         }
@@ -118,6 +128,8 @@ void TriPatch::update(){
   glm::vec3 p000;
   int n=m_detail;
   m_vertexData.clear();
+  glm::vec3 center = glm::vec3(0.0f);
+  float radius = 1.0f;
   switch(m_degree){
     case(1):
        p000 = triPatch1(m_controlPoints[0],m_controlPoints[1],m_controlPoints[2]);
@@ -135,11 +147,20 @@ void TriPatch::update(){
                   m_u = (float)i/(float)n;
                   m_v = (float)j/(float)n;
                   m_w = (float)k/(float)n;
+
                  p000 = triPatch2(m_controlPoints[0],m_controlPoints[1],m_controlPoints[2],m_controlPoints[3],m_controlPoints[4],m_controlPoints[5]);
                  std::cout<<"u/v/w"<<" "<<m_u<<"/"<<m_v<<"/"<<m_w<<endl;
                  //std::cout << "BezierPunkt: "<< p000.x << "/" << p000.y << "/" <<p000.z << endl;
+                  //spherealize
+                 glm::vec3 pot= (m_u*m_a)+(m_v*m_b)+(m_w*m_c);
+                 pot = pot - center;
+                 float offset = radius -glm::length(pot);
+                 glm::vec3 offsetVector = glm::normalize(p000);
+                 offsetVector = offset*offsetVector;
+                 p000 = p000+offsetVector;
                  m_vertexData.push_back(glm::vec4(p000,1.0f));
-                 m_vertexData.push_back(glm::vec4(0.0f,1.0f,0.0f,0.0f));
+                 glm::vec3 normal =(p000 - center);
+                 m_vertexData.push_back(glm::vec4(normal,0.0f));
                 }
             }
         }

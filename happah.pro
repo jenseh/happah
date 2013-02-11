@@ -65,6 +65,8 @@ HEADERS += \
     src/main/test/CircleTriangleIntersectionTest.h \
     src/main/core/simulations/CircularSimulationResult.h \
     src/main/test/WormGearGrindTest.h \
+    src/main/test/DiscGearGrindTest.h \
+    src/main/test/KinematicTest.h \
     src/main/gui/Picker.h \
     src/main/core/models/Material.h \
     src/main/core/geometries/TriPatch.h
@@ -121,6 +123,8 @@ SOURCES += src/main/main.cpp \
     src/main/core/kdtree/ExplicitKDTreeLeaf.cpp \
     src/main/core/kdtree/ExplicitKDTreeInnerNode.cpp \
     src/main/test/CircleTriangleIntersectionTest.cpp \
+    src/main/test/DiscGearGrindTest.cpp \
+    src/main/test/KinematicTest.cpp \
     src/main/core/simulations/CircularSimulationResult.cpp \
     src/main/gui/Picker.cpp \
     src/main/core/models/Material.cpp \
@@ -139,7 +143,8 @@ win32 {
 
 unix {
 	LIBS += -lGLEW
-	INCLUDEPATH += /usr/include
+        INCLUDEPATH += /usr/include \
+        ../
 }
 
 release: DESTDIR = build/release

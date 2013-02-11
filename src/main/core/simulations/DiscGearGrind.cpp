@@ -3,48 +3,62 @@
 DiscGearGrind::DiscGearGrind(Disc* disc, InvoluteSpurGear* gear):
     m_disc(disc), m_gear(gear)
 {
-    // both are initially placed in (0,0,0)
-    // move gear radius down
-    m_gear->translate(0, -m_disc->getRadius(), 0);
+    m_gearMouvement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius(),  -m_disc->getRadius()),
+                                                    glm::vec3(0, -m_disc->getRadius(), m_disc->getRadius()));
+    // Convert to right representation
+    m_discMesh = m_disc->toQuadMesh()->toTriangleMesh();
+    m_gearMesh = m_gear->toQuadMesh()->toTriangleMesh(); // TODO: m_gear->toTriangle does not work!?
+    m_gearRays = *m_gearMesh->toRayCloud()->getRays();
+    // resize distances array
+    m_distances.resize(m_gearRays.size());
+    // Add color Array
+    vector<Color> colorData(m_distances.size());
+    m_gearMesh->setColorData(colorData);
+    // Build kdtree
+    m_kdTree.build(*m_discMesh);
+
+
 }
 
 DiscGearGrind::~DiscGearGrind() {
 
 }
 
-Drawable* DiscGearGrind::calculateGrindingDepth(){
+void DiscGearGrind::calculateGrindingDepth(double time){
+    glm::mat4 matrix = m_gearMouvement.getMatrix(time);
+    for( size_t i = 0; i < m_gearRays.size(); i++){
+        // Transform Ray
+        Ray ray = *m_gearRays[i];
+        ray.transform(matrix);
+        Ray inverseRay = ray;
+        inverseRay.direction = ray.inverse_direction;
+        inverseRay.inverse_direction = ray.direction;
 
-    TriangleMesh* discMesh = m_disc->toQuadMesh()->toTriangleMesh();
-    TriangleMesh* result = m_gear->toQuadMesh()->toTriangleMesh(); // TODO: m_gear->toTriangle does not work!?
-    RayCloud* rayCloud = result->toRayCloud();
-    std::vector<Ray*> gearMesh = *(rayCloud->getRays());
-    TriangleKDTree kdTree;
-    kdTree.build(*discMesh);
-    vector<double> distances(gearMesh.size());
-    for( size_t i = 0; i < gearMesh.size(); i++){
+
+        // Calculate Ray triangle intersection
         IntersectInfo info;
-        distances[i] = 100;
-        Ray inverseRay = *gearMesh[i];
-        inverseRay.direction = gearMesh[i]->inverse_direction;
-        inverseRay.inverse_direction = gearMesh[i]->direction;
-        if( kdTree.intersect(inverseRay, info)){
-            distances[i] = -glm::distance(inverseRay.origin , info.hit_point);
-        }else if( kdTree.intersect(*gearMesh[i], info) ){
-            distances[i] = glm::distance(gearMesh[i]->origin , info.hit_point);
+        m_distances[i] = 100;
+        if( m_kdTree.intersect(inverseRay, info)){
+            m_distances[i] = -glm::distance(inverseRay.origin , info.hit_point);
+        }else if( m_kdTree.intersect(ray, info) ){
+            m_distances[i] = glm::distance(ray.origin , info.hit_point);
         }
     }
-    vector<Color> colorArray;
-    for( size_t i = 0; i < distances.size(); i++){
-        Color curCol;
-        curCol.red = distances[i];
-        curCol.alpha = 1.0;
-        colorArray.push_back(curCol);
-
-    }
-    result->setColorData(colorArray);
-    return result;
 }
 
-void DiscGearGrind::runSimulation() {
-  calculateGrindingDepth();
+
+Drawable* DiscGearGrind::getDisplay(double time){
+    calculateGrindingDepth(time);
+    // Fill color
+    vector<Color>* colorData = m_gearMesh->getColorData();
+    for( size_t i = 0; i < m_distances.size(); i++){
+        (*colorData)[i].red = min((*colorData)[i].red, (float)m_distances[i]);
+    }
+    // Transform gear
+    glm::mat4 tempMat = m_gearMouvement.getMatrix(time);
+    m_gearMesh->setModelMatrix(QMatrix4x4(tempMat[0][0], tempMat[1][0], tempMat[2][0], tempMat[3][0],
+                                          tempMat[0][1], tempMat[1][1], tempMat[2][1], tempMat[3][1],
+                                          tempMat[0][2], tempMat[1][2], tempMat[2][2], tempMat[3][2],
+                                          tempMat[0][3], tempMat[1][3], tempMat[2][3], tempMat[3][3]));
+    return m_gearMesh;
 }

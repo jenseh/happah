@@ -15,7 +15,6 @@ class DiscGearGrindTest
 public:
     DiscGearGrindTest();
 
-    Drawable* runSimulation();
+    Drawable* runSimulation(double t);
 };
-
 #endif // DISCGEARGRINDTEST_H

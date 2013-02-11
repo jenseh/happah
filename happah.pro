@@ -147,8 +147,7 @@ win32 {
 
 unix {
 	LIBS += -lGLEW
-        INCLUDEPATH += /usr/include \
-        ../
+        INCLUDEPATH += /usr/include
 }
 
 release: DESTDIR = build/release

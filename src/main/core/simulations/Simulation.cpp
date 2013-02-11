@@ -5,3 +5,5 @@ Simulation::~Simulation(){}
 
 
 void Simulation::runSimulation(){}
+
+Drawable* Simulation::getDisplay(double time){return NULL;}

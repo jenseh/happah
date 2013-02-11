@@ -8,10 +8,9 @@ DiscGearGrindTest::DiscGearGrindTest()
     std::cout<<"Test init done\n";
 }
 
-Drawable* DiscGearGrindTest::runSimulation(){
+Drawable* DiscGearGrindTest::runSimulation(double t){
     std::cout<<"Start calculating grinding depth\n";
-    return m_simulation->calculateGrindingDepth();
-    std::cout<<"Test finished\n";
+    return m_simulation->getDisplay(t);
 }
 
 

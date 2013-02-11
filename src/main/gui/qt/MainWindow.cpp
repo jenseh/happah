@@ -10,6 +10,7 @@
 #include "SplineTool.h"
 #include "BSplineTool.h"
 #include "InvoluteSpurGearTool.h"
+#include "DiscGearGrindTool.h"
 #include "../../core/SceneManager.h"
 #include "../gl/GlViewport3D.h"
 #include "../RenderItem3D.h"
@@ -98,7 +99,10 @@ void MainWindow::createTools() {
 	m_toolSelector->addTool(bSplineTool);
 
 	InvoluteSpurGearTool* invGearTool = new InvoluteSpurGearTool();
-	m_toolSelector->addTool(invGearTool);
+    m_toolSelector->addTool(invGearTool);
+
+    DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool();
+    m_toolSelector->addTool(discGearGrindTool);
 
 	//SimpleGearTool* simpleGearTool = new SimpleGearTool();
 	//m_toolSelector->addTool(simpleGearTool);

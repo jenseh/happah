@@ -76,7 +76,8 @@ HEADERS += \
     src/main/core/models/Material.h \
     src/main/core/geometries/TriPatch.h \
     src/main/core/models/PointCloud.h \
-    src/main/core/geometries/ControlNet2.h
+    src/main/core/geometries/ControlNet2.h \
+    src/main/gui/qt/DiscGearGrindTool.h
 
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -140,7 +141,8 @@ SOURCES += src/main/main.cpp \
     src/main/core/models/Material.cpp \
     src/main/core/geometries/TriPatch.cpp \
     src/main/core/models/PointCloud.cpp \
-    src/main/core/geometries/ControlNet2.cpp
+    src/main/core/geometries/ControlNet2.cpp \
+    src/main/gui/qt/DiscGearGrindTool.cpp
 
 FORMS += 
 RESOURCES += 
@@ -155,7 +157,7 @@ win32 {
 
 unix {
     LIBS += -lGLEW
-    INCLUDEPATH += /usr/include
+    INCLUDEPATH += /usr/include \
 }
 
 release: DESTDIR = build/release

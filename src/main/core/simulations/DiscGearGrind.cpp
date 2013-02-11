@@ -52,6 +52,7 @@ Drawable* DiscGearGrind::getDisplay(double time){
     // Fill color
     vector<Color>* colorData = m_gearMesh->getColorData();
     for( size_t i = 0; i < m_distances.size(); i++){
+        (*colorData)[i].green = 0.5;
         (*colorData)[i].red = min((*colorData)[i].red, (float)m_distances[i]);
     }
     // Transform gear

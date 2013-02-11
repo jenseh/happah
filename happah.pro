@@ -69,7 +69,9 @@ HEADERS += \
     src/main/test/KinematicTest.h \
     src/main/gui/Picker.h \
     src/main/core/models/Material.h \
-    src/main/core/geometries/TriPatch.h
+    src/main/core/geometries/TriPatch.h \
+    src/main/core/models/PointCloud.h \
+    src/main/core/geometries/ControlNet2.h
 
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -128,7 +130,9 @@ SOURCES += src/main/main.cpp \
     src/main/core/simulations/CircularSimulationResult.cpp \
     src/main/gui/Picker.cpp \
     src/main/core/models/Material.cpp \
-    src/main/core/geometries/TriPatch.cpp
+    src/main/core/geometries/TriPatch.cpp \
+    src/main/core/models/PointCloud.cpp \
+    src/main/core/geometries/ControlNet2.cpp
 
 FORMS += 
 RESOURCES += 

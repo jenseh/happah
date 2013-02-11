@@ -43,12 +43,15 @@ void DiscGearGrindTool::changeTime(hpreal time){
 }
 
 void DiscGearGrindTool::updateSimulation(){
-    m_gearMesh = m_simulation->getDisplay(m_time);
-    emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, "Gear: simulation result"));
+    if( m_gearMesh != NULL ){
+        m_gearMesh = m_simulation->getDisplay(m_time);
+        emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, "Gear: simulation result"));
+    }
 }
 
 void DiscGearGrindTool::setInitialState(){
     m_time = 0.0;
     m_timeSlider->setSliderValues(m_time*100.0, 0, 100);
+    m_gearMesh = NULL;
 }
 

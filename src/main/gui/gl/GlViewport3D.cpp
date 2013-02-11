@@ -159,12 +159,12 @@ void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
       cout << VPFloats[i] << " ";
     }
   glm::mat4 toWorld = glm::make_mat4(VPFloats);
-  toWorld = glm::inverse(toWorld);
+  // toWorld = glm::inverse(toWorld);
 
   Picker* picker = new Picker();
   bool hit = picker->select(x,y,
                            width,height,
-                           &toWorld);
+                           &toWorld,m_sceneManager);
 
 
 }

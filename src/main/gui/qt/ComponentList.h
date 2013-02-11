@@ -31,7 +31,7 @@ signals:
 	void itemEdit( unsigned int itemID );
 	void itemChanged( unsigned int itemID );
 	void selectionChanged( unsigned int itemID );
-	void deleteCurrent();
+	void deleteCurrent( std::string name );
 
 };
 

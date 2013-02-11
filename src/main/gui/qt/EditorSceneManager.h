@@ -31,7 +31,7 @@ public:
 public slots:
 	void addDrawable( Drawable2D* drawable );
 	void selectByListID( unsigned int itemID );
-	void deleteCurrentDrawable();
+	void deleteCurrentDrawable( std::string name );
 
 };
 

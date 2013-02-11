@@ -1,5 +1,4 @@
 #include "ComponentList.h"
-#include <iostream>
 
 ComponentList::ComponentList( QWidget* parent ) :
 		QListWidget(parent), m_uniqueIDCounter(0) {
@@ -59,5 +58,5 @@ void ComponentList::selectItem( unsigned int itemID ) {
 }
 
 void ComponentList::deleteButtonPressed() {
-	emit deleteCurrent();
+	emit deleteCurrent( currentItem()->text().toStdString() );
 }

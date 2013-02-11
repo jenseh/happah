@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../../gui/Drawable2D.h"
+#include "../../HappahTypes.h"
 
 class BSplineCurve : public Drawable2D {
 protected:
@@ -28,12 +29,11 @@ public:
 	void addControlPoint( float x, float y, float z );
 	void setControlPoint( unsigned int index, glm::vec3 newValue );
 	glm::vec3 getControlPoint( unsigned int index );
-//	unsigned int getNumberOfControlPoints(); //KATJA!!!
+	unsigned int getNumberOfControlPoints();
 	void resetKnots();
 
-	void reverse(); //KATJA!!!
-//	void addCurve( const BSplineCurve &curve ); //KATJA!!!
-//	void approximatePoints( std::vector<hpvec3> points ); //KATJA!!!
+	void addCurve( BSplineCurve *curve );
+	void approximatePoints( std::vector<hpvec2>* points , unsigned int numberOfControlPoints ); //KATJA!!!
 
 	void setDegree( unsigned int degree );
 	int getDegree();

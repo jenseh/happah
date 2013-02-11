@@ -1,9 +1,9 @@
 #include "InvoluteSpurGearTool.h"
 
 #include <QGroupBox>
-#include "../../core/models/TriangleMesh.h"
 #include <iostream>
 #include "../../test/DiscGearGrindTest.h"
+#include "../RenderItem3D.h"
 
 InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	m_mode = this->IDLEMODE;
@@ -46,6 +46,8 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	connect(m_bottomClearanceSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBottomClearance(hpreal)));
 	connect(m_filletRadiusSlider,    SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
 
+	m_gear = new InvoluteSpurGear();
+	m_gearMesh = m_gear->toTriangleMesh();
 	setInitialState();
 
 }
@@ -54,22 +56,22 @@ InvoluteSpurGearTool::~InvoluteSpurGearTool() {
 }
 
 void InvoluteSpurGearTool::createGear() {
-	m_gear = new InvoluteSpurGear(m_toothCount, m_module, m_facewidth, m_pressureAngle, m_bottomClrearance, m_filletRadius);
-	TriangleMesh* drawable = m_gear->toTriangleMesh();
+	m_gearMesh = m_gear->toTriangleMesh();
 	//drawable->setColor(0.8f, 0.5f, 0.1f, 0.5f);
-	drawable->setMaterial(0.25f,        //ka
+	m_gearMesh->setMaterial(0.25f,        //ka
 			     0.5f,        //kd
 			     1.0f,        //ks
 			     10.0f);      //phong
-	emit emitComponent(drawable);
+	emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
 	//DiscGearGrindTest test;
 	//emit emitComponent(test.runSimulation());
 
 }
 
 void InvoluteSpurGearTool::setInitialState() {
-	m_gear = new InvoluteSpurGear();
-
+	InvoluteSpurGear *gear = new InvoluteSpurGear();
+	*m_gear = *gear;
+	delete gear;
 	m_toothCount = m_gear->getToothCount();
 	m_module = m_gear->getModule();
 	m_facewidth = m_gear->getFacewidth();
@@ -85,9 +87,10 @@ void InvoluteSpurGearTool::setBack() {
 }
 
 void InvoluteSpurGearTool::updateGear() {
+	TriangleMesh *mesh = m_gear->toTriangleMesh();
+	*m_gearMesh = *mesh;
+	delete mesh;
 	emit changed();
-	createGear();
-	updateRanges();
 }
 
 void InvoluteSpurGearTool::updateRanges() {
@@ -153,7 +156,6 @@ void InvoluteSpurGearTool::finalise() {
 		delete m_gear;
 		m_gear = NULL;
 		emit changed();
-		std::cerr << "gear deleted and emitted changed()" << std::cerr;
 	}
 }
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include "models/Drawable.h"
 #include "geometries/NonDrawable.h"
+#include "../gui/SceneListener.h"
 
 using namespace std;
 
@@ -17,12 +18,14 @@ public:
 
     uint addDrawable(Drawable *drawable);
     void removeDrawable(uint id);
-
-    unsigned int getObjectState();
-    void buildScene();
+    void drawablesChanged();
 
     void addNonDrawable(NonDrawable *nonDrawable);
     vector<NonDrawable*>* getNonDrawables();
+
+
+    void buildScene();
+    void registerListener(SceneListener* sceneListener);
 
 private:
     struct IdDrawable
@@ -35,12 +38,12 @@ private:
       unsigned int id;
        NonDrawable *nonDrawable;
     };
-
-    std::list<IdNonDrawable> m_nonDrawables;
+    std::list<SceneListener*> m_listeners;
     std::list<IdDrawable> m_drawables;
+    std::list<IdNonDrawable> m_nonDrawables;
     unsigned int m_iDCounter;
     unsigned int m_iDNCounter;
-    unsigned int m_deletedCounter;
+    void notifyListeners();
 };
 
 #endif // SCENEMANAGER_H

@@ -6,7 +6,6 @@
 
 #include "Drawable.h"
 #include "TriangleMesh.h"
-#include "../../gui/gl/DrawManager.h"
 #include "../primitives/Color.h"
 #include "../../HappahTypes.h"
 

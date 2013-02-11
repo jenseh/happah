@@ -6,7 +6,6 @@
 
 #include "../primitives/Triangle.h"
 #include "Drawable.h"
-#include "../../gui/gl/DrawManager.h"
 #include "../primitives/Ray.h"
 #include "../primitives/Color.h"
 #include "RayCloud.h"
@@ -18,6 +17,8 @@ public:
 
     TriangleMesh(std::vector<glm::vec4> *vertexData, std::string name);
     ~TriangleMesh();
+    TriangleMesh& operator=(const TriangleMesh& other);
+
 
     std::vector<glm::vec4>* getVertexData();
     int getTupleSize();

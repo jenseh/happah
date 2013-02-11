@@ -1,7 +1,5 @@
 #include "EditorSceneManager.h"
 
-#include <iostream>
-
 EditorSceneManager::EditorSceneManager( EditorScene* scene, ComponentList* list )
 		: m_scene(scene), m_componentList(list)
 {
@@ -18,7 +16,7 @@ void EditorSceneManager::addDrawable( Drawable2D* drawable ) {
 	m_componentList->selectItem(item.listID);
 	for( std::list<ManagedItem>::iterator it = m_drawables.begin();
 	          it != m_drawables.end();
-	          it++ )
+	          ++it )
 	{
 		it->active=false;
 	}
@@ -30,19 +28,19 @@ void EditorSceneManager::addDrawable( Drawable2D* drawable ) {
 void EditorSceneManager::selectByListID( unsigned int itemID ) {
 	for( std::list<ManagedItem>::iterator it = m_drawables.begin();
 	          it != m_drawables.end();
-	          it++ )
+	          ++it )
 	{
 		it->active = it->listID == itemID;
 	}
 }
 
-void EditorSceneManager::deleteCurrentDrawable() {
+void EditorSceneManager::deleteCurrentDrawable( std::string name ) {
 	std::list<ManagedItem>::iterator candidate = m_drawables.end();
 	for( std::list<ManagedItem>::iterator it = m_drawables.begin();
 	          it != m_drawables.end();
-	          it++ )
+	          ++it )
 	{
-		if( it->active ) {
+		if( it->active && it->drawable->getName() == name ) {
 			candidate = it;
 		}
 	}

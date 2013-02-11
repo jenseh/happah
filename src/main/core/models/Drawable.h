@@ -13,6 +13,7 @@ public:
     virtual ~Drawable();
 
     virtual std::vector<glm::vec4>* getVertexData() = 0;
+//    virtual void setVertexData(std::vector<glm::vec4>*) = 0;
     virtual int getTupleSize() = 0;
 
     void setColorData(std::vector<Color>& colorData);
@@ -22,7 +23,7 @@ public:
     Material getMaterial();
     void setMaterial(float ka,float kd,float ks,float shininess);
 
-private:
+protected:
     std::vector<Color> m_colorData;
     Material m_material;
 };

@@ -3,7 +3,7 @@
 
 #include <list>
 #include "ComponentList.h"
-#include "../../core/models/Drawable.h"
+#include "../RenderItem3D.h"
 #include "../../core/SceneManager.h"
 
 class SceneManager3D : public QObject {
@@ -12,7 +12,7 @@ Q_OBJECT
 private:
 	struct ManagedItem
 	{
-		Drawable* drawable;
+		RenderItem3D* renderItem;
 		unsigned int sceneID;
 		unsigned int listID;
 		bool active;
@@ -27,9 +27,9 @@ public:
 	SceneManager3D(SceneManager* sceneManager, ComponentList* list);
 
 public slots:
-	void addDrawable(Drawable* drawable);
+	void addDrawable(RenderItem3D* renderItem);
 	void selectByListID(unsigned int itemID);
-	void deleteCurrentDrawable();
+	void deleteCurrentDrawable(std::string name);
 	void update();
 
 };

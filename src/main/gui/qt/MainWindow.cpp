@@ -4,6 +4,7 @@
 #include <QTabWidget>
 #include <QWidget>
 #include <QGraphicsView>
+#include <string>
 
 #include "MainWindow.h"
 #include "SplineTool.h"
@@ -11,6 +12,7 @@
 #include "InvoluteSpurGearTool.h"
 #include "../../core/SceneManager.h"
 #include "../gl/GlViewport3D.h"
+#include "../RenderItem3D.h"
 
 MainWindow::MainWindow() {
 	resize(DEFAULT_WIDTH + 470, DEFAULT_HEIGHT + 70);
@@ -58,25 +60,25 @@ MainWindow::MainWindow() {
 	m_sceneManager3D = new SceneManager3D(sceneManager, m_componentList);
 	m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
 	//3D scene
-	connect(m_toolSelector, SIGNAL(emitDrawable(Drawable*)),
-	        m_sceneManager3D, SLOT(addDrawable(Drawable*)));
-	connect(m_toolSelector, SIGNAL(changed()),
-			m_sceneManager3D, SLOT(update()));
-	connect(m_componentList, SIGNAL(deleteCurrent()),
-	        m_sceneManager3D, SLOT(deleteCurrentDrawable()));
+	connect( m_toolSelector, SIGNAL( emitDrawable( RenderItem3D* )),
+	        m_sceneManager3D, SLOT( addDrawable( RenderItem3D* )));
+	connect( m_toolSelector, SIGNAL( changed() ),
+			m_sceneManager3D, SLOT( update() ));
+	connect( m_componentList, SIGNAL( deleteCurrent( std::string )),
+	        m_sceneManager3D, SLOT( deleteCurrentDrawable( std::string ) ));
 	//editor scene
-	connect( m_scene, SIGNAL(rightClickedAt( QPointF )),
-		m_toolSelector, SLOT(rightClickAt( QPointF )) );
-	connect( m_scene, SIGNAL(leftClickedAt( QPointF )),
-		m_toolSelector, SLOT(leftClickAt( QPointF )) );
-	connect(m_toolSelector, SIGNAL(emitDrawable( Drawable2D* )),
+	connect( m_scene, SIGNAL( rightClickedAt( QPointF )),
+		m_toolSelector, SLOT( rightClickAt( QPointF )) );
+	connect( m_scene, SIGNAL( leftClickedAt( QPointF )),
+		m_toolSelector, SLOT( leftClickAt( QPointF )) );
+	connect( m_toolSelector, SIGNAL( emitDrawable( Drawable2D* )),
 	        m_editorSceneManager, SLOT(addDrawable( Drawable2D* )) );
-	connect(m_toolSelector, SIGNAL(changed()), m_scene, SLOT(update()));
-	connect(m_componentList, SIGNAL(deleteCurrent()),
-	        m_editorSceneManager, SLOT(deleteCurrentDrawable()) );
+	connect( m_toolSelector, SIGNAL( changed()), m_scene, SLOT( update() ));
+	connect( m_componentList, SIGNAL( deleteCurrent( std::string )),
+	        m_editorSceneManager, SLOT( deleteCurrentDrawable( std::string )) );
 	//everything
-	connect(m_componentList, SIGNAL(deleteCurrent()),
-		m_toolSelector, SLOT(finalise()) );
+	connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
+		m_toolSelector, SLOT( finalise( std::string ) ));
 
 
 //createDockWindows();
@@ -97,6 +99,9 @@ void MainWindow::createTools() {
 
 	InvoluteSpurGearTool* invGearTool = new InvoluteSpurGearTool();
 	m_toolSelector->addTool(invGearTool);
+
+	//SimpleGearTool* simpleGearTool = new SimpleGearTool();
+	//m_toolSelector->addTool(simpleGearTool);
 
 	dock->setWidget(m_toolSelector);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

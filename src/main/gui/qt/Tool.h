@@ -6,7 +6,7 @@
 
 //#include "Component.h"
 #include "../../gui/Drawable2D.h"
-#include "../../core/models/Drawable.h"
+#include "../RenderItem3D.h"
 
 class Tool: public QObject {
 Q_OBJECT
@@ -20,7 +20,7 @@ public:
 
 signals:
 	void emitComponent(Drawable2D* drawable);
-	void emitComponent(Drawable* drawable);
+	void emitComponent(RenderItem3D* renderItem);
 	void changed();
 
 private:

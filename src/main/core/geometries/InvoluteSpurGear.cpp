@@ -53,7 +53,7 @@ bool InvoluteSpurGear::verifyConstraints(bool print) {
 //		}
 	} catch (char const* s) {
 		if (print) std::cerr << s << std::endl;
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		isCorrect = false;
 		if (print) std::cerr << e.what() << std::endl;
 	}
@@ -391,14 +391,14 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	result->setModelMatrix(m_modelMatrix);
 	return result;
 }
-/*
-BSlineCurve* InvoluteSpurGear::toTransverseToothProfileSystem(hpreal z) {
-	BSplineCurve toothProfile();
-	toothProfile.approximatePoints(getToothProfile());
-	SimpleGear simpleGear(BSplineToothProfile(toothProfile), 0.0f, m_facewidth);
-	return simpleGear.toTransverseToothProfileSystem(z);
+
+BSplineCurve* InvoluteSpurGear::toTransverseToothProfileSystem(hpreal z) {
+	BSplineCurve *toothProfile = new BSplineCurve();
+	toothProfile->approximatePoints(getToothProfile(), 5);
+	SimpleGear *simpleGear = new SimpleGear(new BSplineToothProfile(toothProfile), 0.0f, m_facewidth);
+	return simpleGear->toTransverseToothProfileSystem(z);
 }
-*/
+
 
 std::string InvoluteSpurGear::toString() {
 	std::stringstream info;

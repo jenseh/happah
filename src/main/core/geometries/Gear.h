@@ -1,8 +1,9 @@
 #ifndef GEAR_H
 #define GEAR_H
 
-#include "NonDrawable.h"
 #include <glm/glm.hpp>
+#include <vector>
+#include "NonDrawable.h"
 #include "../../HappahTypes.h"
 #include "../models/TriangleMesh.h"
 #include "../models/QuadMesh.h"
@@ -28,13 +29,29 @@
 class Gear: public NonDrawable {
 
 public:
-	Gear(std::string name);
+	Gear(std::string name = "Gear");
 	~Gear();
+	/** @brief Get a 2D representation of the transverse profile (Stirnprofil)
+	 *
+	 * @param z cut is made at depth z of the gear
+	 */
+	//virtual BSlineCurve* toTransverseToothProfileSystem(hpreal z) = 0;
+	
+	//Following would be nice for the future
+	/** @brief Get a 2D representation of the Gear cut at sectionalPlane
+	 */
+	//virtual BSplineCurve* toToothProfileSystem(std::vector<hpvec4>sectionalPlane) = 0;
 
 	virtual hpreal getAngularPitch() = 0;
 	virtual uint getToothCount() = 0;
 	virtual hpreal getFacewidth() = 0;
+	//getToothProfile should return all points of one tooth,
+	//even the last point, which must be the same one as the
+	//first one of next tooth will be.
 	virtual std::vector<hpvec2>* getToothProfile() = 0;
+	//getGearProfile can use getToothProfile but has to bear in mind
+	//that no two points may lay on each other - so special care is
+	//needed for first and last point of the tooth profile.
 	virtual std::vector<hpvec2>* getGearProfile(hpreal depth) = 0;
 	TriangleMesh* toTriangleMesh(); //from NonDrawable
 	QuadMesh* toQuadMesh(); //from NonDrawable
@@ -48,6 +65,13 @@ private:
 	void putTogetherAsTriangles(const hpvec4 (&points)[4], std::vector<hpvec4> *&vertexData);
 	void putTogetherAsQuads(const hpvec4 (&points)[4], std::vector<hpvec4> *&vertexData);
 	void smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData);
+
+void printVec4(hpvec4 vec) {
+	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << " ]";
+}
+void printVec3(hpvec3 vec) {
+	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << " ]";
+}
 
 };
 

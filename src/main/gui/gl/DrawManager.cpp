@@ -8,10 +8,11 @@
 #include <string>
 #include <iostream>
 
-DrawManager::DrawManager() {
+DrawManager::DrawManager(SceneManager* sceneManager) : m_sceneManager(sceneManager) {
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 	glClearDepth(1.0f);
 	glEnable (GL_DEPTH_TEST);
+	m_sceneManager->registerListener(this);
 }
 
 bool DrawManager::initShaderPrograms() {
@@ -100,7 +101,8 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 	} else cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
+void DrawManager::sceneChanged() {
+	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
 
@@ -110,7 +112,7 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
 
 	int nBytes = 0;
 	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-	  nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
+		nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexDataBuffer);
@@ -169,17 +171,13 @@ void DrawManager::createBufferFor(std::vector<Drawable*> *drawables) {
     }
 }
 
-void DrawManager::updateAndDraw(std::vector<Drawable*>* drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
-	updateBuffer(drawables);
-	draw(drawables, projectionMatrix, viewMatrix, cameraPosition);
-}
-
-void DrawManager::draw(std::vector<Drawable*>* drawables, QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
 	glBindVertexArray(m_coloredVertexArrayObject);
 	int offset = 0;
+	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
 	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
 		QMatrix4x4 modelMatrix = *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * *viewMatrix * modelMatrix;
@@ -247,9 +245,4 @@ void DrawManager::draw(std::vector<Drawable*>* drawables, QMatrix4x4* projection
 		offset += vertexDataSize;
 	}
 	glBindVertexArray(0);
-}
-
-void DrawManager::updateBuffer(std::vector<Drawable*>* drawables){
-  // TODO : Find something thats perfoming Better Here :
-  createBufferFor(drawables);
 }

@@ -8,15 +8,15 @@ SceneManager3D::SceneManager3D(SceneManager* sceneManager, ComponentList* list)
 	connect(m_componentList, SIGNAL(selectionChanged(unsigned int)), this, SLOT(selectByListID(unsigned int)));
 }
 
-void SceneManager3D::addDrawable(Drawable* drawable) {
+void SceneManager3D::addDrawable(RenderItem3D* renderItem) {
 	ManagedItem item;
-	item.drawable = drawable;
-	item.sceneID = m_sceneManager->addDrawable(drawable);
-	item.listID = m_componentList->addNewItem(drawable->getName());
+	item.renderItem = renderItem;
+	item.sceneID = m_sceneManager->addDrawable(renderItem->getDrawable());
+	item.listID = m_componentList->addNewItem(renderItem->getName());
 	m_componentList->selectItem(item.listID);
 	for(std::list<ManagedItem>::iterator it = m_drawables.begin();
 				it != m_drawables.end();
-				it++ )
+				++it )
 	{
 		it->active=false;
 	}
@@ -28,19 +28,19 @@ void SceneManager3D::addDrawable(Drawable* drawable) {
 void SceneManager3D::selectByListID(unsigned int itemID) {
 	for(std::list<ManagedItem>::iterator it = m_drawables.begin();
 				it != m_drawables.end();
-				it++ )
+				++it )
 	{
 		it->active = it->listID == itemID;
 	}
 }
 
-void SceneManager3D::deleteCurrentDrawable() {
+void SceneManager3D::deleteCurrentDrawable(std::string name) {
 	std::list<ManagedItem>::iterator candidate = m_drawables.end();
 	for(std::list<ManagedItem>::iterator it = m_drawables.begin();
 				it != m_drawables.end();
-				it++)
+				++it)
 	{
-		if(it->active) {
+		if(it->active && it->renderItem->getName() == name) {
 			candidate = it;
 		}
 	}
@@ -52,6 +52,6 @@ void SceneManager3D::deleteCurrentDrawable() {
 }
 
 void SceneManager3D::update() {
-	deleteCurrentDrawable();
+	m_sceneManager->drawablesChanged();
 }
 

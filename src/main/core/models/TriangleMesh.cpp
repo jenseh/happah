@@ -7,14 +7,21 @@ TriangleMesh::TriangleMesh(std::vector<glm::vec4> *vertexData, std::string name)
 
 TriangleMesh::~TriangleMesh()
 {
+    for (unsigned int i = 0; i < m_triangles.size(); ++i) {
+        delete m_triangles[i];
+    }
+    delete m_vertexData;
+}
 
+TriangleMesh& TriangleMesh::operator=(const TriangleMesh& other) {
+    *m_vertexData = *(other.m_vertexData);
+    m_triangles = other.m_triangles;
 }
 
 std::vector<glm::vec4>* TriangleMesh::getVertexData()
 {
     return m_vertexData;
 }
-
 
 int TriangleMesh::getTupleSize() {
   return 3;

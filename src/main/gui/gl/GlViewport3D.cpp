@@ -9,12 +9,11 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 		QGLWidget(format, parent), vertexBuffer_(QGLBuffer::VertexBuffer), coordVBO_(
 				QGLBuffer::VertexBuffer), triangleVBO_(QGLBuffer::VertexBuffer) {
 
-
     setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
 
 	mainWindow_ = mainWindow;
 	m_sceneManager = sceneManager;
-	m_lastSceneState = m_sceneManager->getObjectState();
+	m_drawManager = new DrawManager(m_sceneManager);
 
 	projectionMatrix_.setToIdentity();
 	viewMatrix_.setToIdentity();
@@ -32,7 +31,7 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 	theta_ = 0;
 	phi_ = 0;
 
-	m_sceneManager->buildScene();
+	//m_sceneManager->buildScene();
 }
 
 void GlViewport3D::initializeGL() {
@@ -46,17 +45,15 @@ void GlViewport3D::initializeGL() {
 	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 
 	}
-	//Create DrawManager
-	m_drawManager = new DrawManager();
-
 	// Initialize shaders
 	if (!m_drawManager->initShaderPrograms()) {
 		return;
 	}
 
 	// Finalize vertex buffer
-	vector<Drawable*>* drawables = m_sceneManager->getDrawables();
-	m_drawManager->createBufferFor(drawables);
+	//vector<Drawable*>* drawables = m_sceneManager->getDrawables();
+	//m_drawManager->createBufferFor(drawables);
+	m_drawManager->sceneChanged();
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
@@ -72,16 +69,7 @@ void GlViewport3D::resizeGL(int width, int height) {
 
 void GlViewport3D::paintGL() {
 	updateView();
-
-	bool sceneStateChanged = (m_lastSceneState != m_sceneManager->getObjectState());
-	
-	vector<Drawable*>* drawables = m_sceneManager->getDrawables();
-	if (sceneStateChanged) {
-	  m_drawManager->updateAndDraw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
-	  m_lastSceneState = m_sceneManager->getObjectState();
-	} else {
-	  m_drawManager->draw(drawables, &projectionMatrix_, &viewMatrix_, &eye_);
-	}
+	m_drawManager->draw(&projectionMatrix_, &viewMatrix_, &eye_);
 }
 
 void GlViewport3D::updateView() {
@@ -164,7 +152,7 @@ void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
   Picker* picker = new Picker();
   bool hit = picker->select(x,y,
                            width,height,
-                           &toWorld,m_sceneManager);
+                           &toWorld, m_sceneManager);
 
 
 }

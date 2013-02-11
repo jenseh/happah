@@ -10,6 +10,7 @@
 #include "Tool.h"
 #include "GearSlider.h"
 #include "../../core/geometries/InvoluteSpurGear.h"
+#include "../../core/models/TriangleMesh.h"
 
 class InvoluteSpurGearTool: public Tool {
 Q_OBJECT
@@ -27,11 +28,13 @@ private:
     GearSlider* m_filletRadiusSlider;
 
     InvoluteSpurGear* m_gear;
+    TriangleMesh* m_gearMesh;
 
     uint m_toothCount;
     hpreal m_module, m_facewidth, m_pressureAngle, m_bottomClrearance, m_filletRadius;
 
     void updateGear();
+    void setNewGearValues();
     void setInitialState();
 
 public:
@@ -49,18 +52,9 @@ private slots:
 	void changePressureAngle(hpreal angle);
 	void changeBottomClearance(hpreal bottomClearance);
 	void changeFilletRadius(hpreal radius);
-/*
-	void generateRndPoint();
-	void periodicChanged( int state );
-	void uniformChanged( int state );
-	void clampedChanged( int state );
-	void degreeChanged(int degree);
-	void pointAdded( int x, int y );*/
 
 public slots:
     void finalise();
-	/*void leftClickAt( QPointF point );
-	void rightClickAt( QPointF point );*/
 };
 
 #endif //INVOLUTESPURGEARTOOL_H

@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-#include <time.h>
+#include <ctime>
 #include "../test/WormGearGrindTest.h"
 #include "../test/KinematicTest.h"
 #include "geometries/Sphere.h"
@@ -13,7 +13,7 @@ SceneManager::SceneManager() : m_iDCounter(0) {
 //    buildScene();
     //KinematicTest test;
     //test.runLinearTest();
-    m_iDNCounter = 0;
+   m_iDNCounter = 0;
 }
 
 SceneManager::~SceneManager() {
@@ -24,6 +24,7 @@ uint SceneManager::addDrawable(Drawable *drawable) {
     IdDrawable idDrawable = {m_iDCounter, drawable};
     m_drawables.push_back(idDrawable);
     m_iDCounter += 1;
+    notifyListeners();
     return idDrawable.id;
 }
 
@@ -36,7 +37,7 @@ void SceneManager::removeDrawable(uint id) {
     }
     if(candidate != m_drawables.end()){
         m_drawables.erase(candidate);
-        m_deletedCounter += 1;
+        notifyListeners();
     }
 }
 
@@ -47,10 +48,6 @@ vector<Drawable*>* SceneManager::getDrawables() {
         drawables->push_back(it->drawable);
     }
     return drawables;
-}
-
-unsigned int SceneManager::getObjectState() {
-    return m_iDCounter + m_deletedCounter;
 }
 
 void SceneManager::buildScene(){
@@ -160,4 +157,19 @@ std::vector<NonDrawable*>* SceneManager::getNonDrawables(){
       nonDrawables->push_back(it->nonDrawable);
   }
   return nonDrawables;
+}
+
+void SceneManager::drawablesChanged() {
+    notifyListeners();
+  }
+
+void SceneManager::registerListener(SceneListener* sceneListener) {
+    m_listeners.push_back(sceneListener);
+  }
+
+void SceneManager::notifyListeners() {
+  for(std::list<SceneListener*>::iterator it = m_listeners.begin(), end = m_listeners.end();
+    it != end; ++it) {
+    (*it)->sceneChanged();
+  }
 }

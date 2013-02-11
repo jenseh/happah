@@ -6,6 +6,7 @@ QT += core \
 HEADERS += \
     src/main/gui/qt/BSplineTool.h \
     src/main/gui/qt/InvoluteSpurGearTool.h \
+    src/main/gui/RenderItem3D.h \
     src/main/gui/qt/GearSlider.h \
     src/main/gui/qt/ComponentList.h \
     src/main/gui/qt/EditorScene.h \
@@ -18,7 +19,10 @@ HEADERS += \
     src/main/core/geometries/BSplineCurve.h \
     src/main/core/geometries/GeometryObject.h \
     src/main/core/geometries/Gear.h \
+    src/main/core/geometries/SimpleGear.h \
     src/main/core/geometries/InvoluteSpurGear.h \
+    src/main/core/geometries/ToothProfile.h \
+    src/main/core/geometries/BSplineToothProfile.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/Happah.h \
@@ -36,6 +40,7 @@ HEADERS += \
     src/main/core/geometries/NonDrawable.h \
     src/main/core/models/TriangleMesh.h \
     src/main/gui/gl/DrawManager.h \
+    src/main/gui/SceneListener.h \
     src/main/core/kdtree/TriangleKDTreeNode.h \
     src/main/core/kdtree/TriangleKDTree.h \
     src/main/core/kdtree/TriangleBox.h \
@@ -76,6 +81,7 @@ HEADERS += \
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
     src/main/gui/qt/InvoluteSpurGearTool.cpp \
+    src/main/gui/RenderItem3D.cpp \
     src/main/gui/qt/GearSlider.cpp \
     src/main/gui/qt/ComponentList.cpp \
     src/main/gui/qt/EditorScene.cpp \
@@ -88,7 +94,9 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/BSplineCurve.cpp \
     src/main/core/geometries/GeometryObject.cpp \
     src/main/core/geometries/Gear.cpp \
+    src/main/core/geometries/SimpleGear.cpp \
     src/main/core/geometries/InvoluteSpurGear.cpp \
+    src/main/core/geometries/BSplineToothProfile.cpp \
     src/main/core/geometries/Sphere.cpp \
     src/main/core/geometries/StandardProfile.cpp \
     src/main/Happah.cpp \
@@ -146,8 +154,8 @@ win32 {
 }
 
 unix {
-	LIBS += -lGLEW
-        INCLUDEPATH += /usr/include
+    LIBS += -lGLEW
+    INCLUDEPATH += /usr/include
 }
 
 release: DESTDIR = build/release

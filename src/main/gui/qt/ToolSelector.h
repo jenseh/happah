@@ -6,11 +6,12 @@
 #include <QButtonGroup>
 #include <QGridLayout>
 #include <QStackedWidget>
+#include <string>
 
 #include "Component.h"
 #include "Tool.h"
 #include "../../gui/Drawable2D.h"
-#include "../../core/models/Drawable.h"
+#include "../RenderItem3D.h"
 
 /** @brief This class manages the tool-selection process of Happah
  * 
@@ -56,18 +57,18 @@ private slots:
 	void toolSelected(int toolID);
 //	void newComponent(Component* component);
 	void newComponent(Drawable2D* drawable);
-	void newComponent(Drawable* drawable);
+	void newComponent(RenderItem3D* renderItem);
 	void update();
 
 public slots:
 	void leftClickAt( QPointF point );
 	void rightClickAt( QPointF point );
-	void finalise();
+	void finalise( std::string name );
 
 signals:
 //	void emitComponent(std::string name);
 	void emitDrawable(Drawable2D* drawable);
-	void emitDrawable(Drawable* drawable);
+	void emitDrawable(RenderItem3D* renderItem);
 	void changed();
 };
 

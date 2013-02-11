@@ -2,7 +2,6 @@
 #include <QTextStream>
 #include <QWidget>
 #include <typeinfo>
-#include <iostream> //delete!!!
 
 #include "ToolSelector.h"
 
@@ -60,10 +59,10 @@ void ToolSelector::toolSelected(int toolID) {
 	m_toolList[m_currToolID]->finalise();
 	m_toolList[m_currToolID]->disconnect( SIGNAL(changed()) );
 	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(Drawable2D*)));
-	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(Drawable*)));
+	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(RenderItem3D*)));
 	
 	connect(m_toolList[toolID], SIGNAL(emitComponent(Drawable2D*)), this, SLOT(newComponent(Drawable2D*)));
-	connect(m_toolList[toolID], SIGNAL(emitComponent(Drawable*)), this, SLOT(newComponent(Drawable*)));
+	connect(m_toolList[toolID], SIGNAL(emitComponent(RenderItem3D*)), this, SLOT(newComponent(RenderItem3D*)));
 
 	connect(m_toolList[toolID], SIGNAL(changed()), this, SLOT(update()) );
 
@@ -85,18 +84,17 @@ void ToolSelector::newComponent(Drawable2D* drawable) {
 	emit emitDrawable( drawable );
 }
 
-void ToolSelector::newComponent(Drawable* drawable) {
-	emit emitDrawable( drawable );
+void ToolSelector::newComponent(RenderItem3D* renderItem) {
+	emit emitDrawable( renderItem );
 }
 
 void ToolSelector::update() {
 	emit changed();
 }
 
-void ToolSelector::finalise() {
+void ToolSelector::finalise( std::string name ) {
 	m_toolList[m_currToolID]->finalise();
 }
-
 
 void ToolSelector::leftClickAt( QPointF point ) {
 	m_toolList[m_currToolID]->leftClickAt( point );

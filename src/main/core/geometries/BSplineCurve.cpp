@@ -21,7 +21,7 @@ void BSplineCurve::addControlPoint( glm::vec3 newPoint ) {
 	m_controlPoints.push_back(newPoint);
 
 	float scaleFact = 1 - 1.0f/(m_knots.size());
-	for( int i = 1; i < m_knots.size(); i++ ) {
+	for( unsigned int i = 1; i < m_knots.size(); i++ ) {
 		m_knots[i] *= scaleFact;
 	}
 	m_knots.push_back(1.0f );
@@ -31,6 +31,24 @@ void BSplineCurve::addControlPoint( glm::vec3 newPoint ) {
 
 void BSplineCurve::addControlPoint( float x, float y, float z ) {
 	addControlPoint( glm::vec3(x,y,z) );
+}
+
+//TODO: single insertion is not a good idea here. But as knots have similar weights at the moment, I'll leave it like that.
+void BSplineCurve::addCurve( BSplineCurve *curve ) {
+	for( unsigned int i = 0; i < curve->getNumberOfControlPoints(); ++i ) {
+		addControlPoint( curve->getControlPoint( i ));
+	}
+}
+
+//TODO: this method doesn't work at the moment. It's complete rubbish but I need it to see something ^^
+void BSplineCurve::approximatePoints( std::vector<hpvec2>* points, unsigned int numberOfControlPoints ) {
+	unsigned int stepSize = points->size() / numberOfControlPoints;
+	for( unsigned int i = 0; i < numberOfControlPoints; ++i ) {
+		addControlPoint( hpvec3(points->at( i*stepSize ), 0.0f ) );
+	}
+}
+unsigned int BSplineCurve::getNumberOfControlPoints() {
+	return m_controlPoints.size();
 }
 
 void BSplineCurve::resetKnots() {

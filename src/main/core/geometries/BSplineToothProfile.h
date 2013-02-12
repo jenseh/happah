@@ -7,7 +7,7 @@
 
 class BSplineToothProfile : public ToothProfile {
 public:
-	BSplineToothProfile(BSplineCurve *curve);
+	BSplineToothProfile(BSplineCurve *curve, unsigned int sampleRate = 10);
 	~BSplineToothProfile();
 
 	BSplineCurve* getRepresentation();

@@ -392,11 +392,13 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	return result;
 }
 
-BSplineCurve* InvoluteSpurGear::toTransverseToothProfileSystem(hpreal z) {
+SimpleGear* InvoluteSpurGear::toSimpleGear() {
 	BSplineCurve *toothProfile = new BSplineCurve();
-	toothProfile->approximatePoints(getToothProfile(), 5);
-	SimpleGear *simpleGear = new SimpleGear(new BSplineToothProfile(toothProfile), 0.0f, m_facewidth);
-	return simpleGear->toTransverseToothProfileSystem(z);
+	toothProfile->setDegree(1);
+	toothProfile->setPeriodic(false);
+	toothProfile->approximatePoints(getToothProfile(), 20);
+	SimpleGear *simpleGear = new SimpleGear(new BSplineToothProfile(toothProfile, 20), 0.0f, m_facewidth);
+	return simpleGear;
 }
 
 

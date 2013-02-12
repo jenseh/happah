@@ -24,7 +24,7 @@ void BSplineCurve::addControlPoint( glm::vec3 newPoint ) {
 	for( unsigned int i = 1; i < m_knots.size(); i++ ) {
 		m_knots[i] *= scaleFact;
 	}
-	m_knots.push_back(1.0f );
+	m_knots.push_back( 1.0f );
 
 	calculateDrawingData();
 }
@@ -42,10 +42,11 @@ void BSplineCurve::addCurve( BSplineCurve *curve ) {
 
 //TODO: this method doesn't work at the moment. It's complete rubbish but I need it to see something ^^
 void BSplineCurve::approximatePoints( std::vector<hpvec2>* points, unsigned int numberOfControlPoints ) {
-	unsigned int stepSize = points->size() / numberOfControlPoints;
-	for( unsigned int i = 0; i < numberOfControlPoints; ++i ) {
-		addControlPoint( hpvec3(points->at( i*stepSize ), 0.0f ) );
+	hpreal stepSize = points->size() / ( numberOfControlPoints - 1 ); //subtract one to have first and last point of points!
+	for( unsigned int i = 0; i < ( numberOfControlPoints - 1); ++i ) {
+		addControlPoint( hpvec3(points->at( static_cast<unsigned int>( i*stepSize ) ), 0.0f ) );
 	}
+	addControlPoint( hpvec3(points->back(), 0.0f));
 }
 unsigned int BSplineCurve::getNumberOfControlPoints() {
 	return m_controlPoints.size();

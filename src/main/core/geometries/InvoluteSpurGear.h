@@ -9,8 +9,8 @@
 #include <sstream>
 #include "../../HappahTypes.h"
 #include "Gear.h"
-#include "BSplineCurve.h"
 #include "SimpleGear.h"
+#include "BSplineCurve.h"
 //#include "../models/TriangleMesh.h"
 //#include "../models/QuadMesh.h"
 #include "../models/ZCircleCloud.h"
@@ -82,7 +82,7 @@ public:
     std::vector<hpvec2>* getGearProfile(hpreal depth);
 
     ZCircleCloud* toZCircleCloud();
-    BSplineCurve* toTransverseToothProfileSystem(hpreal z);
+    SimpleGear* toSimpleGear();
 
     std::string toString();
 

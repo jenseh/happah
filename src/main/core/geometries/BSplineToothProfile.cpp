@@ -1,7 +1,8 @@
 #include "BSplineToothProfile.h"
 #include "glm/gtx/rotate_vector.hpp"
+#include "iostream"
 
-BSplineToothProfile::BSplineToothProfile(BSplineCurve *curve) : m_curve(curve), m_sampleRate(10) {}
+BSplineToothProfile::BSplineToothProfile(BSplineCurve *curve, unsigned int sampleRate) : m_curve(curve), m_sampleRate(sampleRate) {}
 BSplineToothProfile::~BSplineToothProfile() {
 	delete m_curve;
 }
@@ -26,17 +27,23 @@ std::vector<hpvec2>* BSplineToothProfile::getAs2DPoints(){
 
 std::vector<hpvec2>* BSplineToothProfile::getAs2DPoints(hpvec3 removeDirection){
 	removeDirection = glm::normalize(removeDirection);
+	bool rotate = true;
+	if (removeDirection == hpvec3(0, 0, 1))
+		rotate = false;
 	hpvec3 rotationAxis = glm::cross(removeDirection, hpvec3(0, 0, 1));
-	hpreal angle = glm::acos(glm::dot(removeDirection, hpvec3(0, 0, 1)));
+	hpreal angle = (glm::acos(glm::dot(removeDirection, hpvec3(0, 0, 1)))) * 180.0f / M_PI;
 	
 	std::vector<hpvec2> *points = new std::vector<hpvec2>;
 	for (uint i = 0; i <= m_sampleRate; ++i) {//TODO: Attention, at the moment is "<=" to get the whole tooth
-		hpvec3 pointInZDirection = glm::rotate(m_curve->getValueAt(i / m_sampleRate), angle, rotationAxis);
+		hpvec3 pointInZDirection;
+		if (rotate)
+			pointInZDirection = glm::rotate(m_curve->getValueAt((hpreal) i / m_sampleRate), angle, rotationAxis);
+		else
+			pointInZDirection = m_curve->getValueAt((hpreal) i / m_sampleRate);
 		points->push_back(hpvec2(pointInZDirection.x, pointInZDirection.y));
 	}
 	return points;
 }
-
 
 bool BSplineToothProfile::isInClockDirection() {
 	hpvec3 first = m_curve->getValueAt(0.0f);
@@ -52,6 +59,5 @@ hpreal BSplineToothProfile::getAngularPitch() {
 	hpvec3 first = m_curve->getValueAt(0.0f);
 	hpvec3 last = m_curve->getValueAt(1.0f);
 	// if angularPitch > PI (more than half of circle), concstruction will fail!
-	return glm::acos(glm::dot(first, last) /
-					(glm::dot(glm::normalize(first), glm::normalize(last))));
+	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
 }

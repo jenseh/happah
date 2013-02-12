@@ -42,7 +42,6 @@ public:
 	~InvoluteSpurGearTool();
 
 private slots:
-	
 	void createGear();
 	void setBack();
 	void updateRanges();
@@ -52,6 +51,7 @@ private slots:
 	void changePressureAngle(hpreal angle);
 	void changeBottomClearance(hpreal bottomClearance);
 	void changeFilletRadius(hpreal radius);
+	void toSimpleGear();
 
 public slots:
     void finalise();

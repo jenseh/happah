@@ -102,6 +102,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 }
 
 void DrawManager::sceneChanged() {
+	std::cerr << "DrawManager: sceneChanged" << std::endl;
 	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);

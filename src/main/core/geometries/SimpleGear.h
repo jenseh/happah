@@ -19,8 +19,13 @@ public:
 
 	//TODO: leave methods virtual????!!!!
 	virtual hpreal getAngularPitch();
-	virtual uint getToothCount();
+	virtual uint   getToothCount();
+	virtual hpreal getHelixAngle();
 	virtual hpreal getFacewidth();
+
+	virtual void setHelixAngle(hpreal angle);
+	virtual void setFacewidth(hpreal facewidth);
+
 	virtual std::vector<hpvec2>* getToothProfile();
 	virtual std::vector<hpvec2>* getGearProfile(hpreal depth);
 };

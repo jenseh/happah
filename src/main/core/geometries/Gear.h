@@ -67,10 +67,10 @@ private:
 	void smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData);
 
 void printVec4(hpvec4 vec) {
-	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << " ]";
+	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << " ]" << std::endl;
 }
 void printVec3(hpvec3 vec) {
-	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << " ]";
+	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << " ]" << std::endl;
 }
 
 };

@@ -8,7 +8,7 @@
 InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	m_mode = this->IDLEMODE;
 
-	getToolButton()->setText("G");
+	getToolButton()->setText("IG");
 
 	QVBoxLayout* vbox = new QVBoxLayout();
 	QGroupBox* gbox = new QGroupBox("Involute Spur Gear");
@@ -22,8 +22,9 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	m_bottomClearanceSlider = new GearSlider(tr("bottom clearance"));
 	m_filletRadiusSlider    = new GearSlider(tr("fillet radius"));
 
-	QPushButton* setBackButton = new QPushButton("set back values"); //good if they are out of visible range
-	QPushButton* createButton  = new QPushButton("create gear");
+	QPushButton* setBackButton      = new QPushButton("set back values"); //good if they are out of visible range
+	QPushButton* toSimpleGearButton = new QPushButton("to gear mesh");
+	QPushButton* createButton       = new QPushButton("create gear");
 
 	vbox = new QVBoxLayout();
 	vbox->addWidget(m_toothCountSlider);
@@ -33,12 +34,14 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	vbox->addWidget(m_bottomClearanceSlider);
 	vbox->addWidget(m_filletRadiusSlider);
 	vbox->addWidget(setBackButton);
+	vbox->addWidget(toSimpleGearButton);
 	vbox->addWidget(createButton);
 
 	gbox->setLayout(vbox);
 
-	connect(createButton,  SIGNAL(clicked()), this, SLOT(createGear()));
-	connect(setBackButton, SIGNAL(clicked()), this, SLOT(setBack()));
+	connect(createButton,       SIGNAL(clicked()), this, SLOT(createGear()));
+	connect(toSimpleGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
+	connect(setBackButton,      SIGNAL(clicked()), this, SLOT(setBack()));
 	connect(m_toothCountSlider,      SIGNAL(valueChanged(hpreal)), this, SLOT(changeToothCount(hpreal)));
 	connect(m_moduleSlider,          SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
 	connect(m_facewidthSlider,       SIGNAL(valueChanged(hpreal)), this, SLOT(changeFacewidth(hpreal)));
@@ -157,5 +160,9 @@ void InvoluteSpurGearTool::finalise() {
 		m_gear = NULL;
 		emit changed();
 	}
+}
+
+void InvoluteSpurGearTool::toSimpleGear() {
+
 }
 

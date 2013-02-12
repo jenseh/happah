@@ -6,6 +6,7 @@ QT += core \
 HEADERS += \
     src/main/gui/qt/BSplineTool.h \
     src/main/gui/qt/InvoluteSpurGearTool.h \
+    src/main/gui/qt/SimpleGearTool.h \
     src/main/gui/RenderItem3D.h \
     src/main/gui/qt/GearSlider.h \
     src/main/gui/qt/ComponentList.h \
@@ -82,6 +83,7 @@ HEADERS += \
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
     src/main/gui/qt/InvoluteSpurGearTool.cpp \
+    src/main/gui/qt/SimpleGearTool.cpp \
     src/main/gui/RenderItem3D.cpp \
     src/main/gui/qt/GearSlider.cpp \
     src/main/gui/qt/ComponentList.cpp \
@@ -157,7 +159,7 @@ win32 {
 
 unix {
     LIBS += -lGLEW
-    INCLUDEPATH += /usr/include \
+    INCLUDEPATH += /usr/include
 }
 
 release: DESTDIR = build/release

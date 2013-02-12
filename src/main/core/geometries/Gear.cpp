@@ -51,36 +51,38 @@ void Gear::putTogetherAsQuads(const hpvec4 (&points)[4], std::vector<hpvec4> *&v
 std::vector<hpvec4>* Gear::toMesh(void (Gear::*putTogetherAs)(const hpvec4(&)[4], std::vector<hpvec4>*&)) {
 	// Create vector for the result
 	std::vector<hpvec4> *vertexData = new std::vector<hpvec4>;
-	std::vector<hpvec2> *profile;
+	std::vector<hpvec2> *profileA, *profileB;
 
 	hpreal dz = getFacewidth() / WIDTH_SAMPLE_SIZE;
 
 	for (uint i = 0; i < WIDTH_SAMPLE_SIZE; ++i) {
-		profile = getGearProfile(i * dz);
-		for (uint j = 0; j < profile->size(); ++j) {
+		profileA = getGearProfile(i * dz);
+		profileB = getGearProfile((i + 1) * dz);
+		for (uint j = 0; j < profileA->size(); ++j) {
 			//TODO: why can't I use points[0].xy = ... ?
-			uint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
+			uint jNext = (j == profileA->size() - 1) ? 0 : (j + 1);
 			hpvec4 points[4];
-			points[0].x = profile->at(jNext).x;
-			points[0].y = profile->at(jNext).y;
+			points[0].x = profileA->at(jNext).x;
+			points[0].y = profileA->at(jNext).y;
 			points[0].z = i * dz;
 			points[0].w = 1.0f;
-			points[1].x = profile->at(j).x;
-			points[1].y = profile->at(j).y;
+			points[1].x = profileA->at(j).x;
+			points[1].y = profileA->at(j).y;
 			points[1].z = i * dz;
 			points[1].w = 1.0f;
-			points[2].x = profile->at(j).x;
-			points[2].y = profile->at(j).y;
+			points[2].x = profileB->at(j).x;
+			points[2].y = profileB->at(j).y;
 			points[2].z = (i + 1) * dz;
 			points[2].w = 1.0f;
-			points[3].x = profile->at(jNext).x;
-			points[3].y = profile->at(jNext).y;
+			points[3].x = profileB->at(jNext).x;
+			points[3].y = profileB->at(jNext).y;
 			points[3].z = (i + 1) * dz;
 			points[3].w = 1.0f;
 			
 			(this->*putTogetherAs)(points, vertexData);
 		}
-		delete profile; //memory is freed as toothProfile isn't needed any longer
+		delete profileA; //memory is freed as toothProfile isn't needed any longer
+		delete profileB;
 	}
 	return vertexData;
 }

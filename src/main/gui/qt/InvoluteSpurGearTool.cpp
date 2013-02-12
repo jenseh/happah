@@ -21,6 +21,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	m_pressureAngleSlider   = new GearSlider(tr("pressure angle"));
 	m_bottomClearanceSlider = new GearSlider(tr("bottom clearance"));
 	m_filletRadiusSlider    = new GearSlider(tr("fillet radius"));
+	m_helixAngleSlider      = new GearSlider(tr("helix angle"));
 
 	QPushButton* setBackButton      = new QPushButton("set back values"); //good if they are out of visible range
 	QPushButton* toSimpleGearButton = new QPushButton("to gear mesh");
@@ -33,6 +34,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	vbox->addWidget(m_pressureAngleSlider);
 	vbox->addWidget(m_bottomClearanceSlider);
 	vbox->addWidget(m_filletRadiusSlider);
+	vbox->addWidget(m_helixAngleSlider);
 	vbox->addWidget(setBackButton);
 	vbox->addWidget(toSimpleGearButton);
 	vbox->addWidget(createButton);
@@ -48,6 +50,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	connect(m_pressureAngleSlider,   SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 	connect(m_bottomClearanceSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBottomClearance(hpreal)));
 	connect(m_filletRadiusSlider,    SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
+	connect(m_helixAngleSlider,      SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 
 	m_gear = new InvoluteSpurGear();
 	m_gearMesh = m_gear->toTriangleMesh();
@@ -81,6 +84,7 @@ void InvoluteSpurGearTool::setInitialState() {
 	m_pressureAngle = m_gear->getPressureAngle();
 	m_bottomClrearance = m_gear->getBottomClearance();
 	m_filletRadius = m_gear->getFilletRadius();
+	m_helixAngle = m_gear->getHelixAngle();
 	updateRanges();
 }
 
@@ -102,6 +106,7 @@ void InvoluteSpurGearTool::updateRanges() {
 	hpreal* pressureAngles = m_gear->getPossiblePressureAngles();
 	hpreal* bottomClearances = m_gear->getPossibleBottomClearances();
 	hpreal* filletRadien = m_gear->getPossibleFilletRadien();
+	hpreal epsilon = 0.0001f;
 
 	m_toothCountSlider->setSliderValues(m_toothCount, toothCounts[0], toothCounts[1]);
 	m_moduleSlider->setSliderValues(m_module, modules[0], modules[1]);
@@ -109,6 +114,7 @@ void InvoluteSpurGearTool::updateRanges() {
 	m_pressureAngleSlider->setSliderValues(m_pressureAngle, pressureAngles[0], pressureAngles[1]);
 	m_bottomClearanceSlider->setSliderValues(m_bottomClrearance, bottomClearances[0], bottomClearances[1]);
 	m_filletRadiusSlider->setSliderValues(m_filletRadius, filletRadien[0], filletRadien[1]);
+	m_helixAngleSlider->setSliderValues(m_helixAngle, -(epsilon + M_PI / 2.0f), epsilon + M_PI / 2.0f );
 }
 
 void InvoluteSpurGearTool::changeToothCount(hpreal toothCount) {
@@ -148,6 +154,13 @@ void InvoluteSpurGearTool::changeBottomClearance(hpreal bottomClearance) {
 void InvoluteSpurGearTool::changeFilletRadius(hpreal radius) {
 	if (m_gear->setFilletRadius(radius)) {
 		m_filletRadius = radius;
+		updateRanges();
+		updateGear();
+	}
+}
+void InvoluteSpurGearTool::changeHelixAngle(hpreal angle) {
+	if (m_gear->setHelixAngle(angle)) {
+		m_helixAngle = angle;
 		updateRanges();
 		updateGear();
 	}

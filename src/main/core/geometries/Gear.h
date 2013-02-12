@@ -43,8 +43,10 @@ public:
 	//virtual BSplineCurve* toToothProfileSystem(std::vector<hpvec4>sectionalPlane) = 0;
 
 	virtual hpreal getAngularPitch() = 0;
-	virtual uint getToothCount() = 0;
+	virtual uint   getToothCount() = 0;
 	virtual hpreal getFacewidth() = 0;
+	virtual hpreal getHelixAngle() = 0;
+	virtual bool   toothProfileIsInClockDirection();
 	//getToothProfile should return all points of one tooth,
 	//even the last point, which must be the same one as the
 	//first one of next tooth will be.
@@ -52,7 +54,7 @@ public:
 	//getGearProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
-	virtual std::vector<hpvec2>* getGearProfile(hpreal depth) = 0;
+	virtual std::vector<hpvec2>* getGearProfile(hpreal depth);
 	TriangleMesh* toTriangleMesh(); //from NonDrawable
 	QuadMesh* toQuadMesh(); //from NonDrawable
 

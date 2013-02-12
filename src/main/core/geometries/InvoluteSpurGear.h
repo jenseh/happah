@@ -39,8 +39,9 @@ public:
 			hpreal module = 0.13,
 			hpreal facewidth = 0.2f,
 			hpreal pressureAngle = M_PI / 6.0f,
-			hpreal bottomClearance = 0.00f,
-			hpreal filletRadius = 0.00f,
+			hpreal bottomClearance = 0.0f,
+			hpreal filletRadius = 0.0f,
+			hpreal helixAngle = 0.0f,
 			std::string name = "InvoluteSpurGear");
 
 	~InvoluteSpurGear();
@@ -51,6 +52,7 @@ public:
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
     hpreal getBottomClearance(); //Kopfspielhöhe
     hpreal getFilletRadius(); //Fußrundungsradius
+    hpreal getHelixAngle(); //Schrägungswinkel beta
     hpreal getReferenceRadius(); //Teilkreisradius
     hpreal getTipRadius(); //Kopfkreisradius
     hpreal getRootRadius(); //Fußkreisradius
@@ -77,9 +79,10 @@ public:
     bool setPressureAngle(hpreal pressureAngle);
     bool setBottomClearance(hpreal bottomClearance);
     bool setFilletRadius(hpreal filletRadius);
+    bool setHelixAngle(hpreal helixAngle);
 
     std::vector<hpvec2>* getToothProfile();
-    std::vector<hpvec2>* getGearProfile(hpreal depth);
+//    std::vector<hpvec2>* getGearProfile(hpreal depth);
 
     ZCircleCloud* toZCircleCloud();
     SimpleGear* toSimpleGear();
@@ -93,6 +96,7 @@ private:
     hpreal m_pressureAngle;
     hpreal m_bottomClearance;
     hpreal m_filletRadius;
+    hpreal m_helixAngle;
 
     template <class T> T *getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize);
 

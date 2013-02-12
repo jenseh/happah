@@ -3,10 +3,10 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
-                   hpreal bottomClearance, hpreal filletRadius, std::string name) : Gear(name),
+                   hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle, std::string name) : Gear(name),
                    m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
                    m_pressureAngle(pressureAngle),
-                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius) {
+                   m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), m_helixAngle(helixAngle) {
 
 	//std::cout << toString() << std::endl;
 }
@@ -66,6 +66,7 @@ hpreal InvoluteSpurGear::getFacewidth() { return m_facewidth; }
 hpreal InvoluteSpurGear::getPressureAngle() { return m_pressureAngle; }
 hpreal InvoluteSpurGear::getBottomClearance() { return m_bottomClearance; }
 hpreal InvoluteSpurGear::getFilletRadius() { return m_filletRadius; }
+hpreal InvoluteSpurGear::getHelixAngle() { return m_helixAngle; }
 
 //Teilkreisradius - where width of gaps and width of teeths have same size
 hpreal InvoluteSpurGear::getReferenceRadius() {
@@ -200,6 +201,14 @@ bool InvoluteSpurGear::setFilletRadius(hpreal filletRadius) {
 		return false;
 	}
 	return true;
+}
+bool InvoluteSpurGear::setHelixAngle(hpreal helixAngle) {
+	if( -(M_PI / 2.0f) < helixAngle && helixAngle < (M_PI / 2.0f) ) {
+		m_helixAngle = helixAngle;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 template <class T>
@@ -338,7 +347,7 @@ hpvec2 InvoluteSpurGear::pointOnRightTurnedInvolute(const hpreal &involuteStartA
 	point.y = radius * glm::cos(involuteStartAngle + angle) + radius * angle * glm::sin(involuteStartAngle + angle);
 	return point;
 }
-
+/*
 std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(hpreal depth) {
 
 	// last point of tooth profile isn't taken because next tooth profile would have the same one
@@ -365,7 +374,7 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(hpreal depth) {
 	}
 
 	return profile;
-}
+}*/
 
 ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	// Create the profile given the current gear settings
@@ -397,7 +406,7 @@ SimpleGear* InvoluteSpurGear::toSimpleGear() {
 	toothProfile->setDegree(1);
 	toothProfile->setPeriodic(false);
 	toothProfile->approximatePoints(getToothProfile(), 20);
-	SimpleGear *simpleGear = new SimpleGear(new BSplineToothProfile(toothProfile, 20), 0.0f, m_facewidth);
+	SimpleGear *simpleGear = new SimpleGear(new BSplineToothProfile(toothProfile, 20), m_helixAngle, m_facewidth);
 	return simpleGear;
 }
 
@@ -414,6 +423,7 @@ std::string InvoluteSpurGear::toString() {
 	info << "root radius      = " << getRootRadius() << std::endl;
 	info << "fillet radius    = " << m_filletRadius << std::endl;
 	info << "bottom clearance = " << m_bottomClearance << std::endl;
+	info << "helix angle      = " << m_helixAngle << std::endl;
 	info << "angular pitch    = " << getAngularPitch() << std::endl;
 	return info.str();
 }

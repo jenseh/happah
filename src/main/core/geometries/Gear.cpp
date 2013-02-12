@@ -1,7 +1,32 @@
 #include "Gear.h"
+#include "glm/gtx/rotate_vector.hpp"
 
 Gear::Gear(std::string name) : NonDrawable(name) {}
 Gear::~Gear() {}
+
+std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
+	hpreal rotation = glm::tan(getHelixAngle()) * depth;
+
+	std::vector<hpvec2>* toothProfile = getToothProfile();
+	std::vector<hpvec2>* gearProfile = new std::vector<hpvec2>();
+	hpreal angularPitch = getAngularPitch();
+	if (toothProfileIsInClockDirection())
+		angularPitch *= (-1.0f);
+	for(uint i = 0; i < getToothCount(); ++i) {
+		for(uint j = 0; j < toothProfile->size() - 1; ++j) {
+			hpreal degreeRotation = (float) ((angularPitch * i + rotation) * 180.0f / M_PI);
+			gearProfile->push_back(glm::rotate(toothProfile->at(j), degreeRotation));
+		}
+	}
+	return gearProfile;
+}
+
+bool Gear::toothProfileIsInClockDirection() {
+	std::vector<hpvec2>* toothProfile = getToothProfile();
+	hpvec2 first = toothProfile->at(0);
+	hpvec2 last = toothProfile->back();
+	return (first[0] * last[1] - first[1] * last[0]) < 0;
+}
 
 TriangleMesh* Gear::toTriangleMesh() {
     std::vector<hpvec4>* vertexData = toMesh(&Gear::putTogetherAsTriangles);

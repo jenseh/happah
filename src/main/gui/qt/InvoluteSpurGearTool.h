@@ -33,7 +33,7 @@ private:
     TriangleMesh* m_gearMesh;
 
     uint m_toothCount;
-    hpreal m_module, m_facewidth, m_pressureAngle, m_bottomClrearance, m_filletRadius, m_helixAngle;
+    hpreal m_module, m_facewidth, m_pressureAngle, m_bottomClearance, m_filletRadius, m_helixAngle;
 
     void updateGear();
     void setNewGearValues();
@@ -42,6 +42,9 @@ private:
 public:
 	InvoluteSpurGearTool();
 	~InvoluteSpurGearTool();
+
+	bool knowsItem(RenderItem3D* renderItem);
+	void reactivate(RenderItem3D* renderItem);
 
 private slots:
 	void createGear();

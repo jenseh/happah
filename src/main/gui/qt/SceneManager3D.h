@@ -32,6 +32,8 @@ public slots:
 	void deleteCurrentDrawable(std::string name);
 	void update();
 
+signals:
+	void updateTool(RenderItem3D*);
 };
 
 #endif // SCENEMANAGER3D_H

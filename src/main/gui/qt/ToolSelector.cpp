@@ -102,6 +102,15 @@ void ToolSelector::finalise( std::string name ) {
 	m_toolList[m_currToolID]->finalise();
 }
 
+void ToolSelector::activateTool ( RenderItem3D* renderItem) {
+	for (unsigned int i = 0; i < m_toolList.size(); ++i) {
+		if (m_toolList[i]->knowsItem(renderItem)) {
+			toolSelected(i);
+			m_toolList[i]->reactivate(renderItem);
+		}
+	}
+}
+
 void ToolSelector::leftClickAt( QPointF point ) {
 	m_toolList[m_currToolID]->leftClickAt( point );
 }

@@ -65,6 +65,7 @@ public slots:
 	void leftClickAt( QPointF point );
 	void rightClickAt( QPointF point );
 	void finalise( std::string name );
+	void activateTool( RenderItem3D* );
 
 signals:
 //	void emitComponent(std::string name);

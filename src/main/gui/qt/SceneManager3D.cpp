@@ -31,6 +31,9 @@ void SceneManager3D::selectByListID(unsigned int itemID) {
 				++it )
 	{
 		it->active = it->listID == itemID;
+		if (it->active) {
+			emit updateTool(it->renderItem);
+		}
 	}
 }
 

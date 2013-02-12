@@ -68,6 +68,8 @@ MainWindow::MainWindow() {
 			m_sceneManager3D, SLOT( update() ));
 	connect( m_componentList, SIGNAL( deleteCurrent( std::string )),
 	        m_sceneManager3D, SLOT( deleteCurrentDrawable( std::string ) ));
+	connect(m_sceneManager3D, SIGNAL( updateTool( RenderItem3D* )),
+			m_toolSelector, SLOT( activateTool( RenderItem3D* )));
 	//editor scene
 	connect( m_scene, SIGNAL( rightClickedAt( QPointF )),
 		m_toolSelector, SLOT( rightClickAt( QPointF )) );

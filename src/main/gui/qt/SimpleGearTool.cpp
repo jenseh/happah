@@ -73,5 +73,22 @@ void SimpleGearTool::changeFacewidth(hpreal facewidth) {
 }
 
 void SimpleGearTool::finalise() {
+	if(m_mode == this->EDITMODE) {
+		m_mode = this->IDLEMODE;
+		m_gear = NULL;
+		emit changed();
+	}
+}
 
+//TODO: We should find something else here. Dynamic casts are bad!!!
+bool SimpleGearTool::knowsItem(RenderItem3D* renderItem) {
+	return (dynamic_cast<SimpleGear*>(renderItem->getNonDrawable()) != NULL);
+}
+void SimpleGearTool::reactivate(RenderItem3D* renderItem) {
+	m_mode = this->EDITMODE;
+	m_gear = dynamic_cast<SimpleGear*>(renderItem->getNonDrawable());
+	m_gearMesh = dynamic_cast<TriangleMesh*>(renderItem->getDrawable());
+	m_helixAngle = m_gear->getHelixAngle();
+	m_facewidth = m_gear->getFacewidth();
+	updateRanges();
 }

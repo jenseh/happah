@@ -62,6 +62,7 @@ InvoluteSpurGearTool::~InvoluteSpurGearTool() {
 }
 
 void InvoluteSpurGearTool::createGear() {
+	m_gear = new InvoluteSpurGear(m_toothCount, m_module, m_facewidth, m_pressureAngle, m_bottomClearance, m_filletRadius, m_helixAngle);
 	m_gearMesh = m_gear->toTriangleMesh();
 	//drawable->setColor(0.8f, 0.5f, 0.1f, 0.5f);
 	m_gearMesh->setMaterial(0.25f,        //ka
@@ -82,7 +83,7 @@ void InvoluteSpurGearTool::setInitialState() {
 	m_module = m_gear->getModule();
 	m_facewidth = m_gear->getFacewidth();
 	m_pressureAngle = m_gear->getPressureAngle();
-	m_bottomClrearance = m_gear->getBottomClearance();
+	m_bottomClearance = m_gear->getBottomClearance();
 	m_filletRadius = m_gear->getFilletRadius();
 	m_helixAngle = m_gear->getHelixAngle();
 	updateRanges();
@@ -112,7 +113,7 @@ void InvoluteSpurGearTool::updateRanges() {
 	m_moduleSlider->setSliderValues(m_module, modules[0], modules[1]);
 	m_facewidthSlider->setSliderValues(m_facewidth, 0.0f, m_gear->getReferenceRadius() * 2.0f);
 	m_pressureAngleSlider->setSliderValues(m_pressureAngle, pressureAngles[0], pressureAngles[1]);
-	m_bottomClearanceSlider->setSliderValues(m_bottomClrearance, bottomClearances[0], bottomClearances[1]);
+	m_bottomClearanceSlider->setSliderValues(m_bottomClearance, bottomClearances[0], bottomClearances[1]);
 	m_filletRadiusSlider->setSliderValues(m_filletRadius, filletRadien[0], filletRadien[1]);
 	m_helixAngleSlider->setSliderValues(m_helixAngle, -(epsilon + M_PI / 2.0f), epsilon + M_PI / 2.0f );
 }
@@ -146,7 +147,7 @@ void InvoluteSpurGearTool::changePressureAngle(hpreal angle) {
 }
 void InvoluteSpurGearTool::changeBottomClearance(hpreal bottomClearance) {
 	if (m_gear->setBottomClearance(bottomClearance)) {
-		m_bottomClrearance = bottomClearance;
+		m_bottomClearance = bottomClearance;
 		updateRanges();
 		updateGear();
 	}
@@ -172,6 +173,24 @@ void InvoluteSpurGearTool::finalise() {
 		m_gear = NULL;
 		emit changed();
 	}
+}
+
+//TODO: We should find something else here. Dynamic casts are bad!!!
+bool InvoluteSpurGearTool::knowsItem(RenderItem3D* renderItem) {
+	return (dynamic_cast<InvoluteSpurGear*>(renderItem->getNonDrawable()) != NULL);
+}
+void InvoluteSpurGearTool::reactivate(RenderItem3D* renderItem) {
+	m_mode = this->EDITMODE;
+	m_gear = dynamic_cast<InvoluteSpurGear*>(renderItem->getNonDrawable());
+	m_gearMesh = dynamic_cast<TriangleMesh*>(renderItem->getDrawable());
+	m_toothCount = m_gear->getToothCount();
+	m_module = m_gear->getModule();
+	m_facewidth = m_gear->getFacewidth();
+	m_pressureAngle = m_gear->getPressureAngle();
+	m_bottomClearance = m_gear->getBottomClearance();
+	m_filletRadius = m_gear->getFilletRadius();
+	m_helixAngle = m_gear->getHelixAngle();
+	updateRanges();
 }
 
 void InvoluteSpurGearTool::toSimpleGear() {

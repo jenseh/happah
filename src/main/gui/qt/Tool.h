@@ -17,6 +17,10 @@ public:
 
 	QPushButton* getToolButton();
 	QWidget* getToolSettings();
+	virtual bool knowsItem( RenderItem3D* renderItem );
+	virtual bool knowsItem( Drawable2D* drawable );
+	virtual void reactivate( RenderItem3D* renderItem );
+	virtual void reactivate( Drawable2D* drawable );
 
 signals:
 	void emitComponent(Drawable2D* drawable);

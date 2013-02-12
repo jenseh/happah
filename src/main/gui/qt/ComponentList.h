@@ -22,6 +22,7 @@ public slots:
 	void deleteItem( unsigned int itemID );
 	void selectItem( unsigned int itemID );
 	void deleteButtonPressed();
+	void deleteCurrentComponent();
 
 private slots:
 	void changeItem( QListWidgetItem* current, QListWidgetItem* previous );

@@ -81,6 +81,8 @@ MainWindow::MainWindow() {
 	//everything
 	connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
 		m_toolSelector, SLOT( finalise( std::string ) ));
+	connect( m_toolSelector, SIGNAL( deleteCurrentComponent() ),
+		m_componentList, SLOT( deleteCurrentComponent() ));
 
 
 //createDockWindows();

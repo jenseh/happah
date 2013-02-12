@@ -59,6 +59,7 @@ private slots:
 	void newComponent(Drawable2D* drawable);
 	void newComponent(RenderItem3D* renderItem);
 	void update();
+	void deleteComponent();
 
 public slots:
 	void leftClickAt( QPointF point );
@@ -70,6 +71,7 @@ signals:
 	void emitDrawable(Drawable2D* drawable);
 	void emitDrawable(RenderItem3D* renderItem);
 	void changed();
+	void deleteCurrentComponent();
 };
 
 #endif

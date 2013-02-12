@@ -21,6 +21,7 @@ public:
 signals:
 	void emitComponent(Drawable2D* drawable);
 	void emitComponent(RenderItem3D* renderItem);
+	void deleteComponent();
 	void changed();
 
 private:

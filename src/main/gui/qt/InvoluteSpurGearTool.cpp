@@ -24,7 +24,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	m_helixAngleSlider      = new GearSlider(tr("helix angle"));
 
 	QPushButton* setBackButton      = new QPushButton("set back values"); //good if they are out of visible range
-	QPushButton* toSimpleGearButton = new QPushButton("to gear mesh");
+	QPushButton* toSimpleGearButton = new QPushButton("reduce values to simple gear");
 	QPushButton* createButton       = new QPushButton("create gear");
 
 	vbox = new QVBoxLayout();
@@ -169,13 +169,17 @@ void InvoluteSpurGearTool::changeHelixAngle(hpreal angle) {
 void InvoluteSpurGearTool::finalise() {
 	if( m_mode == this->EDITMODE ) {
 		m_mode = this->IDLEMODE;
-		delete m_gear;
 		m_gear = NULL;
 		emit changed();
 	}
 }
 
 void InvoluteSpurGearTool::toSimpleGear() {
-
+	SimpleGear* gear = m_gear->toSimpleGear();
+	TriangleMesh* mesh = gear->toTriangleMesh();
+	mesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f);
+	emit deleteComponent();
+	emit emitComponent(new RenderItem3D(gear, mesh, mesh->getName()));
+	finalise();
 }
 

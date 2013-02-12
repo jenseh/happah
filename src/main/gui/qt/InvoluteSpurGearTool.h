@@ -10,6 +10,7 @@
 #include "Tool.h"
 #include "GearSlider.h"
 #include "../../core/geometries/InvoluteSpurGear.h"
+#include "../../core/geometries/SimpleGear.h"
 #include "../../core/models/TriangleMesh.h"
 
 class InvoluteSpurGearTool: public Tool {

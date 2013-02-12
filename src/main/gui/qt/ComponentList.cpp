@@ -58,5 +58,9 @@ void ComponentList::selectItem( unsigned int itemID ) {
 }
 
 void ComponentList::deleteButtonPressed() {
+	deleteCurrentComponent();
+}
+
+void ComponentList::deleteCurrentComponent() {
 	emit deleteCurrent( currentItem()->text().toStdString() );
 }

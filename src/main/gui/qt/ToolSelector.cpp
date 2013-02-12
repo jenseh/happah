@@ -58,6 +58,7 @@ void ToolSelector::toolSelected(int toolID) {
 
 	m_toolList[m_currToolID]->finalise();
 	m_toolList[m_currToolID]->disconnect( SIGNAL(changed()) );
+	m_toolList[m_currToolID]->disconnect( SIGNAL(deleteComponent()) );
 	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(Drawable2D*)));
 	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(RenderItem3D*)));
 	
@@ -65,6 +66,7 @@ void ToolSelector::toolSelected(int toolID) {
 	connect(m_toolList[toolID], SIGNAL(emitComponent(RenderItem3D*)), this, SLOT(newComponent(RenderItem3D*)));
 
 	connect(m_toolList[toolID], SIGNAL(changed()), this, SLOT(update()) );
+	connect(m_toolList[toolID], SIGNAL(deleteComponent()), this, SLOT(deleteComponent()));
 
 	m_currToolID = toolID;
 //	m_toolList[m_currToolID]->disconnect(SIGNAL(emitComponent(Component*)));
@@ -90,6 +92,10 @@ void ToolSelector::newComponent(RenderItem3D* renderItem) {
 
 void ToolSelector::update() {
 	emit changed();
+}
+
+void ToolSelector::deleteComponent() {
+	emit deleteCurrentComponent();
 }
 
 void ToolSelector::finalise( std::string name ) {

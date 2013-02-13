@@ -8,15 +8,23 @@ SimpleGear::~SimpleGear(){}
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z){
-	hpreal rotation = glm::tan(m_helixAngle) * z;
+BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 
 	BSplineCurve *gearProfile = new BSplineCurve();
-//	gearProfile->setPeriodic(true);
-//	gearProfile->setDegree(2);
+	gearProfile->setPeriodic(true);
+	gearProfile->setDegree(2);
+
+	hpreal rotation = glm::tan(m_helixAngle) * depth;
+	hpreal angleStep = (m_toothProfile->isInClockDirection()) ? getAngularPitch() * (-1.0f) : getAngularPitch();
+	BSplineCurve *toothProfile = m_toothProfile->getRepresentation();
+
 	for (uint tooth = 0; tooth < getToothCount(); ++tooth) {
-		m_toothProfile->rotate(tooth * getAngularPitch() + rotation);
-		gearProfile->addCurve(m_toothProfile->getRepresentation());
+		hpreal degreeRotation = (float) ((angleStep * tooth + rotation) * 180.0f / M_PI);
+		for (uint i = 0; i < toothProfile->getNumberOfControlPoints(); ++i) {
+			hpvec3 controlPoint = toothProfile->getControlPoint(i);
+			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
+			gearProfile->addControlPoint(hpvec3(300, 300, 0) + turnedPoint * 250.0f); //TODO: only to make it "bigger" - find something else instead
+		}
 	}
 	return gearProfile;
 }

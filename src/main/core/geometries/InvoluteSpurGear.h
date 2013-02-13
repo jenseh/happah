@@ -44,7 +44,11 @@ public:
 			hpreal helixAngle = 0.0f,
 			std::string name = "InvoluteSpurGear");
 
+	InvoluteSpurGear(const InvoluteSpurGear& other);
+
 	~InvoluteSpurGear();
+
+	InvoluteSpurGear& operator=(const InvoluteSpurGear& other);
 
     uint   getToothCount();
     hpreal getModule();

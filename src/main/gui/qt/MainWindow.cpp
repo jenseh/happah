@@ -52,8 +52,8 @@ MainWindow::MainWindow() {
 	// Setting up 2D Editor
 	m_scene = new EditorScene(this);
 	m_scene->setSceneRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	QGraphicsView* view2D = new QGraphicsView(m_scene);
-    m_tabs->addTab(view2D, "2D-View");
+	m_view2D = new QGraphicsView(m_scene);
+    m_tabs->addTab(m_view2D, "2D-View");
 
 	setCentralWidget(m_tabs);
 	createTools();
@@ -75,11 +75,16 @@ MainWindow::MainWindow() {
 		m_toolSelector, SLOT( rightClickAt( QPointF )) );
 	connect( m_scene, SIGNAL( leftClickedAt( QPointF )),
 		m_toolSelector, SLOT( leftClickAt( QPointF )) );
+	connect( m_scene, SIGNAL( scaleScene( int )), this, SLOT( scaleView2D( int ) ));
+	connect( m_toolSelector, SIGNAL( changeViewTo( hpvec2, hpvec2 )),
+		this, SLOT( changeView2DTo( hpvec2, hpvec2 ) ));
 	connect( m_toolSelector, SIGNAL( emitDrawable( Drawable2D* )),
-	        m_editorSceneManager, SLOT(addDrawable( Drawable2D* )) );
+		 m_editorSceneManager, SLOT(addDrawable( Drawable2D* )) );
 	connect( m_toolSelector, SIGNAL( changed()), m_scene, SLOT( update() ));
 	connect( m_componentList, SIGNAL( deleteCurrent( std::string )),
 	        m_editorSceneManager, SLOT( deleteCurrentDrawable( std::string )) );
+	connect(m_editorSceneManager, SIGNAL( updateTool( Drawable2D* )),
+			m_toolSelector, SLOT( activateTool( Drawable2D* )));
 	//everything
 	connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
 		m_toolSelector, SLOT( finalise( std::string ) ));
@@ -161,4 +166,20 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
 ComponentList* MainWindow::getComponentList() {
 	return m_componentList;
+}
+
+void MainWindow::scaleView2D( int factor ) {
+	//as to read in QtDocu most often QGraphicsSceneWheelEvent::delta() will be a multiple of 120
+	//positive values imply the wheel was turned to front (away from user)
+	//negative values imply the wheel was turned toward the user
+	m_view2D->setAttribute(Qt::WA_StaticContents, true);
+	m_view2D->setTransformationAnchor(QGraphicsView::ViewportAnchor(2));
+	if (factor > 0)
+		m_view2D->scale(0.9f, 0.9f);
+	else if (factor < 0)
+		m_view2D->scale(1.1f, 1.1f);
+}
+
+void MainWindow::changeView2DTo( hpvec2 min, hpvec2 max ) {
+	m_view2D->fitInView(min.x, min.y, max.x - min.x, max.y - min.y, Qt::KeepAspectRatio);
 }

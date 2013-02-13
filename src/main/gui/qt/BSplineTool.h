@@ -9,6 +9,7 @@
 
 //#include "BSplineComponent.h"
 #include "../../core/geometries/BSplineCurve.h"
+#include "../Drawable2D.h"
 //#include "ToolSelector.h"
 #include "Tool.h"
 
@@ -29,6 +30,9 @@ private:
 public:
 	BSplineTool();
 	~BSplineTool();
+
+	bool knowsItem(Drawable2D* drawable);
+	void reactivate(Drawable2D* drawable);
 
 private slots:
 	void generateRndPoint();

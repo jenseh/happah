@@ -1,7 +1,5 @@
 #include "SceneManager3D.h"
 
-#include <iostream>
-
 SceneManager3D::SceneManager3D(SceneManager* sceneManager, ComponentList* list)
 		: m_sceneManager(sceneManager), m_componentList(list)
 {
@@ -50,6 +48,7 @@ void SceneManager3D::deleteCurrentDrawable(std::string name) {
 	if(candidate != m_drawables.end()) {
 		m_componentList->deleteItem(candidate->listID);
 		m_sceneManager->removeDrawable(candidate->sceneID);
+		delete candidate->renderItem;
 		m_drawables.erase(candidate);
 	}
 }

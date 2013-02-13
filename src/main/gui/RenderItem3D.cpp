@@ -3,7 +3,10 @@
 RenderItem3D::RenderItem3D(NonDrawable* nonDrawable, Drawable* drawable, std::string name) :
 				m_nonDrawable(nonDrawable), m_drawable(drawable), m_name(name) {}
 
-RenderItem3D::~RenderItem3D() {}
+RenderItem3D::~RenderItem3D() {
+	delete m_nonDrawable;
+	delete m_drawable;
+}
 
 Drawable* RenderItem3D::getDrawable() {
 	return m_drawable;

@@ -28,16 +28,13 @@ private:
     GearSlider* m_bottomClearanceSlider;
     GearSlider* m_filletRadiusSlider;
     GearSlider* m_helixAngleSlider;
+    QPushButton* m_toSimpleGearButton;
 
     InvoluteSpurGear* m_gear;
     TriangleMesh* m_gearMesh;
 
-    uint m_toothCount;
-    hpreal m_module, m_facewidth, m_pressureAngle, m_bottomClearance, m_filletRadius, m_helixAngle;
-
     void updateGear();
     void setNewGearValues();
-    void setInitialState();
 
 public:
 	InvoluteSpurGearTool();

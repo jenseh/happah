@@ -1,6 +1,5 @@
 #include "BSplineTool.h"
 
-#include <iostream>
 #include <QGroupBox>
 
 BSplineTool::BSplineTool() {
@@ -106,6 +105,15 @@ void BSplineTool::finalise() {
 		m_currentCurve = NULL;
 		emit changed();
 	}
+}
+
+bool BSplineTool::knowsItem(Drawable2D* drawable) {
+	return (dynamic_cast<BSplineCurve*>(drawable) != NULL);
+}
+void BSplineTool::reactivate(Drawable2D* drawable) {
+	m_mode = this->EDITMODE;
+	m_currentCurve = dynamic_cast<BSplineCurve*>(drawable);
+	emit changed();
 }
 
 void BSplineTool::leftClickAt( QPointF point ) {

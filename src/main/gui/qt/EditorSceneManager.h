@@ -33,6 +33,8 @@ public slots:
 	void selectByListID( unsigned int itemID );
 	void deleteCurrentDrawable( std::string name );
 
+signals:
+	void updateTool( Drawable2D* );
 };
 
 #endif // EDITORSCENEMANAGER_H

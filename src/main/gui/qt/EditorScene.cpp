@@ -13,3 +13,7 @@ void EditorScene::mousePressEvent( QGraphicsSceneMouseEvent* mouseEvent ) {
 	else if( mouseEvent->button() == Qt::RightButton )
 		emit rightClickedAt( mouseEvent->scenePos() );
 }
+
+void EditorScene::wheelEvent( QGraphicsSceneWheelEvent * wheelEvent ) {
+	emit scaleScene(wheelEvent->delta());
+}

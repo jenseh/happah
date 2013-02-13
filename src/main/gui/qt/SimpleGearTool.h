@@ -18,11 +18,11 @@ private:
 
 	GearSlider* m_helixAngleSlider;
 	GearSlider* m_facewidthSlider;
+	QPushButton* m_changeOutlineButton;
 
 	SimpleGear* m_gear;
 	TriangleMesh* m_gearMesh;
 	BSplineToothProfile* m_toothProfile;
-	hpreal m_helixAngle, m_facewidth;
 
 	void updateGear();
 	void updateRanges();
@@ -38,6 +38,7 @@ private slots:
 	void createGear();
 	void changeHelixAngle(hpreal);
 	void changeFacewidth(hpreal);
+	void toBSpline();
 
 public slots:
 	void finalise();

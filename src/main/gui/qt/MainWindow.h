@@ -11,6 +11,7 @@
 #include "EditorScene.h"
 #include "EditorSceneManager.h"
 #include "SceneManager3D.h"
+#include "../../HappahTypes.h"
 
 class MainWindow: public QMainWindow {
 Q_OBJECT
@@ -35,10 +36,15 @@ private:
 	QTabWidget* m_tabs;
 	ToolSelector* m_toolSelector;
 	//2D components:
+	QGraphicsView* m_view2D;
 	EditorScene* m_scene;
 	EditorSceneManager* m_editorSceneManager;
 	//3D components:
 	SceneManager3D* m_sceneManager3D;
+
+private slots:
+	void scaleView2D( int );
+	void changeView2DTo( hpvec2 min, hpvec2 max );
 
 };
 

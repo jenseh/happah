@@ -11,7 +11,25 @@ InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewi
 	//std::cout << toString() << std::endl;
 }
 
+InvoluteSpurGear::InvoluteSpurGear(const InvoluteSpurGear& other) : Gear(other.m_name),
+				m_toothCount(other.m_toothCount), m_module(other.m_module), m_facewidth(other.m_facewidth),
+				m_pressureAngle(other.m_pressureAngle), m_bottomClearance(other.m_bottomClearance),
+				m_filletRadius(other.m_filletRadius), m_helixAngle(other.m_helixAngle) {
+}
+
 InvoluteSpurGear::~InvoluteSpurGear() {}
+
+//TODO: do we need this?
+InvoluteSpurGear& InvoluteSpurGear::operator=(const InvoluteSpurGear& other) {
+	m_toothCount = other.m_toothCount;
+	m_module = other.m_module;
+	m_facewidth = other.m_facewidth;
+	m_pressureAngle = other.m_pressureAngle;
+	m_bottomClearance = other.m_bottomClearance;
+	m_filletRadius = other.m_filletRadius;
+	m_helixAngle = other.m_helixAngle;
+	m_name = other.m_name;
+}
 
 bool InvoluteSpurGear::verifyConstraints(bool print) {
 	bool isCorrect = true;

@@ -58,7 +58,8 @@ void ToolSelector::toolSelected(int toolID) {
 
 	m_toolList[m_currToolID]->finalise();
 	m_toolList[m_currToolID]->disconnect( SIGNAL(changed()) );
-	m_toolList[m_currToolID]->disconnect( SIGNAL(deleteComponent()) );
+	m_toolList[m_currToolID]->disconnect( SIGNAL(deleteCurrentAndEmitNew(Drawable2D*)));
+	m_toolList[m_currToolID]->disconnect( SIGNAL(deleteCurrentAndEmitNew(RenderItem3D*)));
 	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(Drawable2D*)));
 	m_toolList[m_currToolID]->disconnect( SIGNAL(emitComponent(RenderItem3D*)));
 	
@@ -66,7 +67,8 @@ void ToolSelector::toolSelected(int toolID) {
 	connect(m_toolList[toolID], SIGNAL(emitComponent(RenderItem3D*)), this, SLOT(newComponent(RenderItem3D*)));
 
 	connect(m_toolList[toolID], SIGNAL(changed()), this, SLOT(update()) );
-	connect(m_toolList[toolID], SIGNAL(deleteComponent()), this, SLOT(deleteComponent()));
+	connect(m_toolList[toolID], SIGNAL(deleteCurrentAndEmitNew(Drawable2D*)), this, SLOT(deleteCurrentAndEmitNew(Drawable2D*)));
+	connect(m_toolList[toolID], SIGNAL(deleteCurrentAndEmitNew(RenderItem3D*)), this, SLOT(deleteCurrentAndEmitNew(RenderItem3D*)));
 
 	m_currToolID = toolID;
 //	m_toolList[m_currToolID]->disconnect(SIGNAL(emitComponent(Component*)));
@@ -94,8 +96,13 @@ void ToolSelector::update() {
 	emit changed();
 }
 
-void ToolSelector::deleteComponent() {
+void ToolSelector::deleteCurrentAndEmitNew(Drawable2D* drawable) {
 	emit deleteCurrentComponent();
+	newComponent(drawable);
+}
+void ToolSelector::deleteCurrentAndEmitNew(RenderItem3D* renderItem) {
+	emit deleteCurrentComponent();
+	newComponent(renderItem);
 }
 
 void ToolSelector::finalise( std::string name ) {
@@ -107,6 +114,18 @@ void ToolSelector::activateTool ( RenderItem3D* renderItem) {
 		if (m_toolList[i]->knowsItem(renderItem)) {
 			toolSelected(i);
 			m_toolList[i]->reactivate(renderItem);
+		}
+	}
+}
+
+void ToolSelector::activateTool ( Drawable2D* drawable) {
+	for (unsigned int i = 0; i < m_toolList.size(); ++i) {
+		if (m_toolList[i]->knowsItem(drawable)) {
+			toolSelected(i);
+			m_toolList[i]->reactivate(drawable);
+			hpvec2 min, max;
+			drawable->getBounds(&min, &max);
+			emit changeViewTo(min, max);
 		}
 	}
 }

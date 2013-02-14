@@ -424,7 +424,7 @@ SimpleGear* InvoluteSpurGear::toSimpleGear() {
 	toothProfile->setDegree(1);
 	toothProfile->setPeriodic(false);
 	toothProfile->approximatePoints(getToothProfile(), 20);
-	SimpleGear *simpleGear = new SimpleGear(new BSplineToothProfile(toothProfile, 20), m_helixAngle, m_facewidth);
+	SimpleGear *simpleGear = new SimpleGear(toothProfile, m_helixAngle, m_facewidth);
 	return simpleGear;
 }
 

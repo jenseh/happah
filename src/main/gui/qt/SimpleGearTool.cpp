@@ -117,6 +117,7 @@ void SimpleGearTool::reactivate(RenderItem3D* renderItem) {
 
 void SimpleGearTool::toBSpline() {
 	if(m_mode == this->EDITMODE && m_gearMesh != NULL) {
+		m_gear->setScalingActivated(true);
 		BSplineCurve* bspline = m_gear->toTransverseToothProfileSystem(0);
 		bspline->setName("BSplineCurve of Gear");
 		emit deleteCurrentAndEmitNew(bspline);

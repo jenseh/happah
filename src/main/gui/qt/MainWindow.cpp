@@ -51,7 +51,8 @@ MainWindow::MainWindow() {
 
 	// Setting up 2D Editor
 	m_scene = new EditorScene(this);
-	m_scene->setSceneRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	//m_scene->setSceneRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	m_scene->setSceneRect(-2, -2, 4, 4);
 	m_view2D = new QGraphicsView(m_scene);
     m_tabs->addTab(m_view2D, "2D-View");
 

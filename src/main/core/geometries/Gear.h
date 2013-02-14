@@ -68,6 +68,7 @@ private:
 	void putTogetherAsQuads(const hpvec4 (&points)[4], std::vector<hpvec4> *&vertexData);
 	void smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData);
 
+public:
 void printVec4(hpvec4 vec) {
 	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << " ]" << std::endl;
 }

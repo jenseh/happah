@@ -14,8 +14,8 @@ BSplineCurve* BSplineToothProfile::getRepresentation() {
 
 void BSplineToothProfile::rotate(hpreal angle) {
 	BSplineCurve *curve = new BSplineCurve();
+	angle = angle * 180.0f / M_PI;
 	for (uint i = 0; i < m_curve->getNumberOfControlPoints(); ++i) {
-		angle = angle * 180.0f / M_PI;
 		curve->addControlPoint(glm::rotate(m_curve->getControlPoint(i), angle, hpvec3(0, 0, 1)));
 	}
 	delete m_curve;

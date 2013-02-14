@@ -9,12 +9,13 @@ std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
 
 	std::vector<hpvec2>* toothProfile = getToothProfile();
 	std::vector<hpvec2>* gearProfile = new std::vector<hpvec2>();
-	hpreal angularPitch = getAngularPitch();
+	int rotDirection = 1;
+	uint toothCount = getToothCount();
 	if (toothProfileIsInClockDirection())
-		angularPitch *= (-1.0f);
-	for(uint i = 0; i < getToothCount(); ++i) {
+		rotDirection = -1;
+	for(uint i = 0; i < toothCount; ++i) {
+		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / toothCount + rotation) * 180.0f / M_PI);
 		for(uint j = 0; j < toothProfile->size() - 1; ++j) {
-			hpreal degreeRotation = (float) ((angularPitch * i + rotation) * 180.0f / M_PI);
 			gearProfile->push_back(glm::rotate(toothProfile->at(j), degreeRotation));
 		}
 	}
@@ -29,11 +30,11 @@ bool Gear::toothProfileIsInClockDirection() {
 }
 
 TriangleMesh* Gear::toTriangleMesh() {
-    std::vector<hpvec4>* vertexData = toMesh(&Gear::putTogetherAsTriangles);
-    smoothTriangleMeshNormals(vertexData);
-    TriangleMesh* mesh = new TriangleMesh(vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-    mesh->setModelMatrix(m_modelMatrix);
-    return mesh;
+	std::vector<hpvec4>* vertexData = toMesh(&Gear::putTogetherAsTriangles);
+	smoothTriangleMeshNormals(vertexData);
+	TriangleMesh* mesh = new TriangleMesh(vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
+	mesh->setModelMatrix(m_modelMatrix);
+	return mesh;
 }
 
 void Gear::putTogetherAsTriangles(const hpvec4 (&points)[4], std::vector<hpvec4> *&vertexData) {

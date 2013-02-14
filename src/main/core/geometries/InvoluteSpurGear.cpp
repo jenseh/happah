@@ -420,7 +420,7 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 }
 
 SimpleGear* InvoluteSpurGear::toSimpleGear() {
-	BSplineCurve *toothProfile = new BSplineCurve();
+	BSplineGearCurve *toothProfile = new BSplineGearCurve();
 	toothProfile->setDegree(1);
 	toothProfile->setPeriodic(false);
 	toothProfile->approximatePoints(getToothProfile(), 20);

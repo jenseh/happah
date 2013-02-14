@@ -6,7 +6,7 @@
 #include <iostream>
 #include "../RenderItem3D.h"
 #include "../../core/geometries/InvoluteSpurGear.h"
-#include "../../core/geometries/BSplineCurve.h"
+#include "../../core/geometries/BSplineGearCurve.h"
 
 SimpleGearTool::SimpleGearTool() {
 	m_mode = this->IDLEMODE;
@@ -118,7 +118,7 @@ void SimpleGearTool::reactivate(RenderItem3D* renderItem) {
 void SimpleGearTool::toBSpline() {
 	if(m_mode == this->EDITMODE && m_gearMesh != NULL) {
 		m_gear->setScalingActivated(true);
-		BSplineCurve* bspline = m_gear->toTransverseToothProfileSystem(0);
+		BSplineGearCurve* bspline = m_gear->getBSplineToothProfileInXYPlane();
 		bspline->setName("BSplineCurve of Gear");
 		emit deleteCurrentAndEmitNew(bspline);
 		finalise();

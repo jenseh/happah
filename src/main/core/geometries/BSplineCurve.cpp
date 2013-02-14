@@ -48,7 +48,7 @@ void BSplineCurve::approximatePoints( std::vector<hpvec2>* points, unsigned int 
 	}
 	addControlPoint( hpvec3(points->back(), 0.0f));
 }
-unsigned int BSplineCurve::getNumberOfControlPoints() {
+unsigned int BSplineCurve::getNumberOfControlPoints() const {
 	return m_controlPoints.size();
 }
 
@@ -103,7 +103,7 @@ void BSplineCurve::setControlPoint( unsigned int index, glm::vec3 newValue ) {
 	calculateDrawingData();
 }
 
-glm::vec3 BSplineCurve::getControlPoint( unsigned int index ) {
+glm::vec3 BSplineCurve::getControlPoint( unsigned int index ) const {
 	if( index < m_controlPoints.size() ) {
 		return m_controlPoints[index];
 	}
@@ -132,7 +132,7 @@ void BSplineCurve::setDegree( unsigned int degree ) {
 	calculateDrawingData();
 }
 
-int BSplineCurve::getDegree() {
+int BSplineCurve::getDegree() const {
 	return m_degree;
 }
 
@@ -141,7 +141,7 @@ void BSplineCurve::setUniform( bool uniform ) {
 	calculateDrawingData();
 }
 
-bool BSplineCurve::getUniform() {
+bool BSplineCurve::getUniform() const {
 	return m_uniformKnots;
 }
 
@@ -150,7 +150,7 @@ void BSplineCurve::setPeriodic( bool periodic ) {
 	calculateDrawingData();
 }
 
-bool BSplineCurve::getPeriodic() {
+bool BSplineCurve::getPeriodic() const {
 	return m_cyclic;
 }
 
@@ -159,7 +159,7 @@ void BSplineCurve::setClamped( bool clamped ) {
 	calculateDrawingData();
 }
 
-bool BSplineCurve::getClamped() {
+bool BSplineCurve::getClamped() const {
 	return m_interpolateEnds;
 }
 
@@ -222,7 +222,7 @@ void BSplineCurve::getBounds( glm::vec2* min, glm::vec2* max ) const {
 	}
 }
 
-glm::vec3 BSplineCurve::getValueAt( float t ) {
+glm::vec3 BSplineCurve::getValueAt( float t ) const {
 	// only for uniform, noncyclic, without end-point-interpolation
 	if( m_drawKnots.size() < m_degree + 2 ) {
 		return glm::vec3(0,0,0);

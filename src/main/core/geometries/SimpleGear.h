@@ -2,12 +2,12 @@
 #define SIMPLEGEAR_H
 
 #include "Gear.h"
-#include "BSplineCurve.h"
+#include "BSplineGearCurve.h"
 
 class SimpleGear : public Gear {
 
 private:
-	BSplineCurve* m_toothProfile;
+	BSplineGearCurve* m_toothProfile;
 	hpreal m_helixAngle;
 	hpreal m_facewidth;
 	bool m_scalingActivated; //TODO remove
@@ -15,11 +15,11 @@ private:
 	hpreal getScaleFactor();
 
 public:
-	SimpleGear(BSplineCurve *toothProfile, hpreal helixAngle, hpreal facewidth);
+	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth);
 	virtual ~SimpleGear();
 
 	BSplineCurve* toTransverseToothProfileSystem(hpreal depth);
-	BSplineCurve* getBSplineToothProfileInXYPlane();
+	BSplineGearCurve* getBSplineToothProfileInXYPlane();
 
 	//TODO: leave methods virtual????!!!!
 	virtual hpreal getAngularPitch();
@@ -30,7 +30,7 @@ public:
 
 	virtual void setHelixAngle(hpreal angle);
 	virtual void setFacewidth(hpreal facewidth);
-	virtual void setToothProfile(BSplineCurve* curve);
+	virtual void setToothProfile(BSplineGearCurve* curve);
 
 	void setScalingActivated(bool activate); //TODO remove
 

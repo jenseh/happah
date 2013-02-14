@@ -10,7 +10,7 @@
 #include "../../HappahTypes.h"
 #include "Gear.h"
 #include "SimpleGear.h"
-#include "BSplineCurve.h"
+#include "BSplineGearCurve.h"
 //#include "../models/TriangleMesh.h"
 //#include "../models/QuadMesh.h"
 #include "../models/ZCircleCloud.h"

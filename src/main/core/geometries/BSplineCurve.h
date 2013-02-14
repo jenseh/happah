@@ -28,23 +28,23 @@ public:
 	void addControlPoint( glm::vec3 newPoint );
 	void addControlPoint( float x, float y, float z );
 	void setControlPoint( unsigned int index, glm::vec3 newValue );
-	glm::vec3 getControlPoint( unsigned int index );
-	unsigned int getNumberOfControlPoints();
+	glm::vec3 getControlPoint( unsigned int index ) const;
+	unsigned int getNumberOfControlPoints() const;
 	void resetKnots();
 
 	void addCurve( BSplineCurve *curve );
 	void approximatePoints( std::vector<hpvec2>* points , unsigned int numberOfControlPoints ); //KATJA!!!
 
 	void setDegree( unsigned int degree );
-	int getDegree();
+	int getDegree() const;
 	void setUniform( bool uniform );
 	void setPeriodic( bool periodic );
 	void setClamped( bool clamped );
-	bool getUniform();
-	bool getPeriodic();
-	bool getClamped();
+	bool getUniform() const;
+	bool getPeriodic() const;
+	bool getClamped() const;
 
-	glm::vec3 getValueAt( float t );
+	glm::vec3 getValueAt( float t ) const;
 
 	virtual void draw( Painter2D* painter );
 	virtual void getBounds( glm::vec2* min, glm::vec2* max ) const;

@@ -18,6 +18,7 @@ HEADERS += \
     src/main/gui/Painter2D.h \
     src/main/gui/Drawable2D.h \
     src/main/core/geometries/BSplineCurve.h \
+    src/main/core/geometries/BSplineGearCurve.h \
     src/main/core/geometries/GeometryObject.h \
     src/main/core/geometries/Gear.h \
     src/main/core/geometries/SimpleGear.h \
@@ -95,6 +96,7 @@ SOURCES += src/main/main.cpp \
     src/main/gui/Painter2D.cpp \
     src/main/gui/Drawable2D.cpp \
     src/main/core/geometries/BSplineCurve.cpp \
+    src/main/core/geometries/BSplineGearCurve.cpp \
     src/main/core/geometries/GeometryObject.cpp \
     src/main/core/geometries/Gear.cpp \
     src/main/core/geometries/SimpleGear.cpp \

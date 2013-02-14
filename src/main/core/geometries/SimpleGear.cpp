@@ -1,7 +1,7 @@
 #include "SimpleGear.h"
 #include "glm/gtx/rotate_vector.hpp"
 
-SimpleGear::SimpleGear(BSplineCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :
+SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :
 	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_facewidth(facewidth) {
 		m_scalingActivated = false; //TODO remove
 	}
@@ -32,8 +32,8 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 	return gearProfile;
 }
 
-BSplineCurve* SimpleGear::getBSplineToothProfileInXYPlane() {
-	BSplineCurve *toothProfileToTop = new BSplineCurve();
+BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane() {
+	BSplineGearCurve *toothProfileToTop = new BSplineGearCurve();
 	toothProfileToTop->setPeriodic(false);
 	toothProfileToTop->setDegree(2);
 
@@ -67,14 +67,11 @@ hpreal SimpleGear::getScaleFactor() { //TODO: only to have bigger values in edit
 }
 
 hpreal SimpleGear::getAngularPitch() {
-	hpvec3 first = m_toothProfile->getValueAt(0.0f);
-	hpvec3 last = m_toothProfile->getValueAt(1.0f);
-	// if angularPitch > PI (more than half of circle), concstruction will fail!
-	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
+	return m_toothProfile->getAngularPitch();
 }
 
 uint SimpleGear::getToothCount() {
-	return (uint) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
+	return m_toothProfile->getToothCount();
 }
 
 hpreal SimpleGear::getHelixAngle() {
@@ -93,7 +90,7 @@ void SimpleGear::setFacewidth(hpreal facewidth) {
 	m_facewidth = facewidth;
 }
 
-void SimpleGear::setToothProfile(BSplineCurve* curve) {
+void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	//TODO: do we need 'delete m_toothProfile'?
 	m_toothProfile = curve;
 }

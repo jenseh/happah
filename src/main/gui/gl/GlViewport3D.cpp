@@ -111,6 +111,7 @@ void GlViewport3D::mouseMoveEvent(QMouseEvent *event) {
 
 }
 void GlViewport3D::mousePressEvent(QMouseEvent *event) {
+	std::cerr << "GlViewport3D::mousePressEvent" << std::endl;
 	if (event->buttons() == Qt::LeftButton) {
 		// do something
 	} else if (event->buttons() == Qt::RightButton) {
@@ -119,10 +120,12 @@ void GlViewport3D::mousePressEvent(QMouseEvent *event) {
 }
 
 void GlViewport3D::wheelEvent(QWheelEvent *event) {
+	std::cerr << "GlViewport3D::wheelEvent" << std::endl;
 	float degrees = event->delta() / 8;
 	float steps = degrees / 15;
 
 	zoomRad_ = zoomRad_ - steps;
+	eye_.setZ(zoomRad_);
 	updateGL();
 
 }

@@ -23,8 +23,6 @@ HEADERS += \
     src/main/core/geometries/Gear.h \
     src/main/core/geometries/SimpleGear.h \
     src/main/core/geometries/InvoluteSpurGear.h \
-    src/main/core/geometries/ToothProfile.h \
-    src/main/core/geometries/BSplineToothProfile.h \
     src/main/core/geometries/Sphere.h \
     src/main/core/geometries/StandardProfile.h \
     src/main/Happah.h \
@@ -101,7 +99,6 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/Gear.cpp \
     src/main/core/geometries/SimpleGear.cpp \
     src/main/core/geometries/InvoluteSpurGear.cpp \
-    src/main/core/geometries/BSplineToothProfile.cpp \
     src/main/core/geometries/Sphere.cpp \
     src/main/core/geometries/StandardProfile.cpp \
     src/main/Happah.cpp \

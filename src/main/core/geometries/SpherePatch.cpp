@@ -121,14 +121,25 @@ TriangleMesh* SpherePatch::toTriangleMesh(){
     int c=b+1;
     save = c -n;
     triangles->push_back(m_vertexData.at((a-1)*2));
-    triangles->push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_vertexData.at(((a-1)*2)+1));
     triangles->push_back(m_vertexData.at((b-1)*2));
-    triangles->push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_vertexData.at(((b-1)*2)+1));
     triangles->push_back(m_vertexData.at((c-1)*2));
-    triangles->push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_vertexData.at(((c-1)*2)+1));
+    int stop = ((n+1)*(n+2))/2;
+    if (c<stop){
+      int d = a ;
+      int e = b+1;
+      int f = c-n;
+    triangles->push_back(m_vertexData.at((d-1)*2));
+    triangles->push_back(m_vertexData.at(((d-1)*2)+1));
+    triangles->push_back(m_vertexData.at((e-1)*2));
+     triangles->push_back(m_vertexData.at(((e-1)*2)+1));
+    triangles->push_back(m_vertexData.at((f-1)*2));
+     triangles->push_back(m_vertexData.at(((f-1)*2)+1));
         }
     }
-
+}
   TriangleMesh* result = new TriangleMesh(triangles, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
   result->setModelMatrix(m_modelMatrix);
   std::cout << "TriPatchVertices" << m_vertexData.size() << std::endl;

@@ -15,8 +15,8 @@ hpreal BSplineGearCurve::getAngularPitch() const {
 	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
 }
 
-uint BSplineGearCurve::getToothCount() const {
-	return (uint) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
+unsigned int BSplineGearCurve::getToothCount() const {
+	return (unsigned int) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
 }
 
 hpreal BSplineGearCurve::getMiddleLength() const {
@@ -25,7 +25,7 @@ hpreal BSplineGearCurve::getMiddleLength() const {
 
 hpreal BSplineGearCurve::getMaxLength() const {
 	hpreal max = glm::length(getValueAt(0));
-	for (uint i = 1; i <= 100; ++i) {
+	for (unsigned int i = 1; i <= 100; ++i) {
 		hpreal value = glm::length(getValueAt((1.0f / 100) * i));
 		if (value > max)
 			max = value;
@@ -35,7 +35,7 @@ hpreal BSplineGearCurve::getMaxLength() const {
 
 hpreal BSplineGearCurve::getMinLength() const {
 	hpreal min = glm::length(getValueAt(0));
-	for (uint i = 1; i <= 100; ++i) {
+	for (unsigned int i = 1; i <= 100; ++i) {
 		hpreal value = glm::length(getValueAt((1.0f / 100) * i));
 		if (value < min)
 			min = value;
@@ -44,7 +44,7 @@ hpreal BSplineGearCurve::getMinLength() const {
 }
 
 void BSplineGearCurve::scale(hpreal scaleFactor) {
-	for(uint i = 0; i < m_controlPoints.size(); ++i) {
+	for(unsigned int i = 0; i < m_controlPoints.size(); ++i) {
 		setControlPoint(i, scaleFactor * getControlPoint(i));
 	}
 }
@@ -61,9 +61,9 @@ BSplineCurve* BSplineGearCurve::getEntireGear() const {
 	gearProfile->setPeriodic(true);
 	gearProfile->setDegree(m_degree);
 
-	for (uint tooth = 0; tooth < getToothCount(); ++tooth) {
+	for (unsigned int tooth = 0; tooth < getToothCount(); ++tooth) {
 		hpreal degreeRotation = -(M_PI * 2.0f * tooth / getToothCount()) * 180.0f / M_PI;
-		for (uint i = 0; i < getNumberOfControlPoints(); ++i) {
+		for (unsigned int i = 0; i < getNumberOfControlPoints(); ++i) {
 			hpvec3 controlPoint = getControlPoint(i);
 			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
 			gearProfile->addControlPoint(turnedPoint);

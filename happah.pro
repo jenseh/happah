@@ -77,7 +77,8 @@ HEADERS += \
     src/main/core/geometries/TriPatch.h \
     src/main/core/models/PointCloud.h \
     src/main/core/geometries/ControlNet2.h \
-    src/main/gui/qt/DiscGearGrindTool.h
+    src/main/gui/qt/DiscGearGrindTool.h \
+    src/main/core/geometries/SpherePatch.h
 
 SOURCES += src/main/main.cpp \
     src/main/gui/qt/BSplineTool.cpp \
@@ -143,7 +144,8 @@ SOURCES += src/main/main.cpp \
     src/main/core/geometries/TriPatch.cpp \
     src/main/core/models/PointCloud.cpp \
     src/main/core/geometries/ControlNet2.cpp \
-    src/main/gui/qt/DiscGearGrindTool.cpp
+    src/main/gui/qt/DiscGearGrindTool.cpp \
+    src/main/core/geometries/SpherePatch.cpp
 
 FORMS += 
 RESOURCES += 

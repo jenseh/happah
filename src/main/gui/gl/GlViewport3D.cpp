@@ -31,7 +31,7 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 	theta_ = 0;
 	phi_ = 0;
 
-	//m_sceneManager->buildScene();
+
 }
 
 void GlViewport3D::initializeGL() {
@@ -59,6 +59,8 @@ void GlViewport3D::initializeGL() {
 	timer_ = new QTimer(this);
 	connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
 	timer_->start(WAIT_TIME);
+
+	m_sceneManager->buildScene();
 }
 
 void GlViewport3D::resizeGL(int width, int height) {

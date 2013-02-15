@@ -5,6 +5,7 @@
 #include "geometries/Sphere.h"
 #include "geometries/TriPatch.h"
 #include "geometries/ControlNet2.h"
+#include "geometries/SpherePatch.h"
 #include <iostream>
 
 
@@ -51,7 +52,7 @@ vector<Drawable*>* SceneManager::getDrawables() {
 }
 
 void SceneManager::buildScene(){
-  Sphere* sphere = new Sphere(1.0f, glm::vec4(2.0f,0.0f,0.0f,1.0f));
+  /*Sphere* sphere = new Sphere(1.0f, glm::vec4(2.0f,0.0f,0.0f,1.0f));
   QuadMesh* dSphere = sphere->toQuadMesh();
   dSphere->setMaterial(0.45f,        //ka
                        0.5f,        //kd
@@ -142,7 +143,33 @@ ControlNet2* cnet4 = new ControlNet2(tripatch4->getControlPoint(0),
   result = addDrawable(dcnet2);
   result = addDrawable(dcnet3);
   result = addDrawable(dcnet4);
+*/
+  SpherePatch* spherePatch = new SpherePatch(2,glm::vec3(0.0f,0.0f,1.5f),glm::vec3(1.5f,0.0f,0.0f),glm::vec3(0.0f,1.5f,0.0f),"SpherePatch");
+  TriangleMesh* dSpherePatch = spherePatch->toTriangleMesh();
+  dSpherePatch->setColor(1.0f,1.0f,1.0f,1.0f);
+
+  SpherePatch* spherePatch1 = new SpherePatch(2,glm::vec3(1.5f,0.0f,0.0f),glm::vec3(0.0f,0.0f,-1.5f),glm::vec3(0.0f,1.5f,0.0f),"SpherePatch1");
+  TriangleMesh* dSpherePatch1 = spherePatch1->toTriangleMesh();
+  dSpherePatch1->setColor(1.0f,0.0f,0.0f,1.0f);
+
+  SpherePatch* spherePatch2 = new SpherePatch(2,glm::vec3(0.0f,0.0f,-1.5f),glm::vec3(-1.5f,0.0f,0.0f),glm::vec3(0.0f,1.5f,0.0f),"SpherePatch2");
+  TriangleMesh* dSpherePatch2 = spherePatch2->toTriangleMesh();
+  dSpherePatch2->setColor(0.0f,1.0f,0.0f,1.0f);
+
+  SpherePatch* spherePatch3 = new SpherePatch(2,glm::vec3(-1.5f,0.0f,0.0f),glm::vec3(0.0f,0.0f,1.5f),glm::vec3(0.0f,1.5f,0.0f),"SpherePatch3");
+  TriangleMesh* dSpherePatch3 = spherePatch3->toTriangleMesh();
+  dSpherePatch3->setColor(0.0f,0.0f,1.0f,1.0f);
+
+
+
+  int result;
+
+  result = addDrawable(dSpherePatch);
+  result = addDrawable(dSpherePatch1);
+  result = addDrawable(dSpherePatch2);
+  result = addDrawable(dSpherePatch3);
 }
+
 
 void SceneManager::addNonDrawable(NonDrawable *nonDrawable){
   IdNonDrawable idNonDrawable = {m_iDNCounter, nonDrawable};

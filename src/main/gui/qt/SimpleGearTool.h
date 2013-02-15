@@ -5,7 +5,6 @@
 #include "GearSlider.h"
 #include "../../HappahTypes.h"
 #include "../../core/geometries/SimpleGear.h"
-#include "../../core/geometries/BSplineToothProfile.h"
 #include "../../core/models/TriangleMesh.h"
 
 class SimpleGearTool : public Tool {
@@ -22,7 +21,6 @@ private:
 
 	SimpleGear* m_gear;
 	TriangleMesh* m_gearMesh;
-	BSplineToothProfile* m_toothProfile;
 
 	void updateGear();
 	void updateRanges();

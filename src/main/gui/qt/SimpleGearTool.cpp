@@ -20,6 +20,7 @@ SimpleGearTool::SimpleGearTool() {
 
 	m_helixAngleSlider = new GearSlider(tr("helix angle"));
 	m_facewidthSlider  = new GearSlider(tr("facewidth"));
+	m_radiusSlider     = new GearSlider(tr("approximated radius"));
 
 	QPushButton* createButton = new QPushButton("create gear");
 	m_changeOutlineButton = new QPushButton("change outline");
@@ -28,6 +29,7 @@ SimpleGearTool::SimpleGearTool() {
 	vbox = new QVBoxLayout();
 	vbox->addWidget(m_helixAngleSlider);
 	vbox->addWidget(m_facewidthSlider);
+	vbox->addWidget(m_radiusSlider);
 	vbox->addWidget(createButton);
 	vbox->addWidget(m_changeOutlineButton);
 
@@ -35,6 +37,7 @@ SimpleGearTool::SimpleGearTool() {
 
 	connect(m_helixAngleSlider,    SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 	connect(m_facewidthSlider,     SIGNAL(valueChanged(hpreal)), this, SLOT(changeFacewidth(hpreal)));
+	connect(m_radiusSlider,        SIGNAL(valueChanged(hpreal)), this, SLOT(changeRadius(hpreal)));
 	connect(createButton,          SIGNAL(clicked()), this, SLOT(createGear()));
 	connect(m_changeOutlineButton, SIGNAL(clicked()), this, SLOT(toBSpline()));
 
@@ -74,6 +77,7 @@ void SimpleGearTool::updateGear() {
 void SimpleGearTool::updateRanges() {
 	m_helixAngleSlider->setSliderValues(m_gear->getHelixAngle(), 0.0f, M_PI / 2.0f);
 	m_facewidthSlider->setSliderValues(m_gear->getFacewidth(), 0.0f, 2.0f);
+	m_radiusSlider->setSliderValues(m_gear->getRadius(), m_gear->getRadius() / 2.0f, m_gear->getRadius() * 2.0f);
 }
 
 void SimpleGearTool::changeHelixAngle(hpreal angle) {
@@ -83,6 +87,12 @@ void SimpleGearTool::changeHelixAngle(hpreal angle) {
 
 void SimpleGearTool::changeFacewidth(hpreal facewidth) {
 	m_gear->setFacewidth(facewidth);
+	updateGear();
+}
+
+void SimpleGearTool::changeRadius(hpreal radius) {
+	m_gear->setRadius(radius);
+	updateRanges();
 	updateGear();
 }
 
@@ -117,7 +127,7 @@ void SimpleGearTool::reactivate(RenderItem3D* renderItem) {
 
 void SimpleGearTool::toBSpline() {
 	if(m_mode == this->EDITMODE && m_gearMesh != NULL) {
-		m_gear->setScalingActivated(true);
+		//m_gear->setScalingActivated(true);
 		BSplineGearCurve* bspline = m_gear->getBSplineToothProfileInXYPlane();
 		bspline->setName("BSplineCurve of Gear");
 		emit deleteCurrentAndEmitNew(bspline);

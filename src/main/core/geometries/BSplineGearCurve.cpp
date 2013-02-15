@@ -3,6 +3,9 @@
 
 BSplineGearCurve::BSplineGearCurve() {}
 
+BSplineGearCurve::BSplineGearCurve(const BSplineCurve& bspline) : BSplineCurve(bspline){
+}
+
 BSplineGearCurve::~BSplineGearCurve() {}
 
 hpreal BSplineGearCurve::getAngularPitch() const {
@@ -14,6 +17,36 @@ hpreal BSplineGearCurve::getAngularPitch() const {
 
 uint BSplineGearCurve::getToothCount() const {
 	return (uint) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
+}
+
+hpreal BSplineGearCurve::getMiddleLength() const {
+	return getMinLength() + 0.5f * (getMaxLength() - getMinLength());
+}
+
+hpreal BSplineGearCurve::getMaxLength() const {
+	hpreal max = glm::length(getValueAt(0));
+	for (uint i = 1; i <= 100; ++i) {
+		hpreal value = glm::length(getValueAt((1.0f / 100) * i));
+		if (value > max)
+			max = value;
+	}
+	return max;
+}
+
+hpreal BSplineGearCurve::getMinLength() const {
+	hpreal min = glm::length(getValueAt(0));
+	for (uint i = 1; i <= 100; ++i) {
+		hpreal value = glm::length(getValueAt((1.0f / 100) * i));
+		if (value < min)
+			min = value;
+	}
+	return min;
+}
+
+void BSplineGearCurve::scale(hpreal scaleFactor) {
+	for(uint i = 0; i < m_controlPoints.size(); ++i) {
+		setControlPoint(i, scaleFactor * getControlPoint(i));
+	}
 }
 
 void BSplineGearCurve::draw(Painter2D* painter) {

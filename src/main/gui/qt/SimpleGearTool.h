@@ -17,6 +17,7 @@ private:
 
 	GearSlider* m_helixAngleSlider;
 	GearSlider* m_facewidthSlider;
+	GearSlider* m_radiusSlider;
 	QPushButton* m_changeOutlineButton;
 
 	SimpleGear* m_gear;
@@ -36,6 +37,7 @@ private slots:
 	void createGear();
 	void changeHelixAngle(hpreal);
 	void changeFacewidth(hpreal);
+	void changeRadius(hpreal);
 	void toBSpline();
 
 public slots:

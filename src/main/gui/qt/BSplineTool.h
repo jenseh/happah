@@ -24,8 +24,13 @@ private:
 	QCheckBox* m_chkPeriodic;
 	QCheckBox* m_chkUniform;
 	QCheckBox* m_chkInterpolateEnds;
+	QVBoxLayout* m_options;
 
 	BSplineCurve* m_currentCurve;
+
+	void addGearOptions();
+	void addCurveOptions();
+	void deleteOptions();
 
 public:
 	BSplineTool();
@@ -41,6 +46,8 @@ private slots:
 	void clampedChanged( int state );
 	void degreeChanged(int degree);
 	void pointAdded( int x, int y );
+	void toGearCurve();
+	void toSimpleGear();
 
 public slots:
 	void finalise();

@@ -87,8 +87,8 @@ MainWindow::MainWindow() {
 	connect(m_editorSceneManager, SIGNAL( updateTool( Drawable2D* )),
 			m_toolSelector, SLOT( activateTool( Drawable2D* )));
 	//everything
-	connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
-		m_toolSelector, SLOT( finalise( std::string ) ));
+	//connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
+	//	m_toolSelector, SLOT( finalise( std::string ) )); I don't think we need that, as by deleting the toolselector already calls finalise
 	connect( m_toolSelector, SIGNAL( deleteCurrentComponent() ),
 		m_componentList, SLOT( deleteCurrentComponent() ));
 

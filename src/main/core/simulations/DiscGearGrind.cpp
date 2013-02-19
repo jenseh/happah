@@ -11,6 +11,7 @@ DiscGearGrind::DiscGearGrind(Disc* disc, InvoluteSpurGear* gear):
     m_gearRays = *m_gearMesh->toRayCloud()->getRays();
     // resize distances array
     m_distances.resize(m_gearRays.size());
+    m_discMesh->setColor(0.5,0.5,0.5,0.5);
     // Add color Array
     vector<Color> colorData(m_distances.size());
     m_gearMesh->setColorData(colorData);
@@ -21,7 +22,11 @@ DiscGearGrind::DiscGearGrind(Disc* disc, InvoluteSpurGear* gear):
 }
 
 DiscGearGrind::~DiscGearGrind() {
-
+    delete m_discMesh;
+    delete m_gearMesh;
+    for(size_t i = 0; i < m_gearRays.size(); i++){
+        delete m_gearRays[i];
+    }
 }
 
 void DiscGearGrind::calculateGrindingDepth(double time){
@@ -47,19 +52,21 @@ void DiscGearGrind::calculateGrindingDepth(double time){
 }
 
 
-Drawable* DiscGearGrind::getDisplay(double time){
+pair<TriangleMesh*,TriangleMesh*> DiscGearGrind::getDisplay(double time){
     calculateGrindingDepth(time);
     // Fill color
     vector<Color>* colorData = m_gearMesh->getColorData();
     for( size_t i = 0; i < m_distances.size(); i++){
         (*colorData)[i].green = 0.5;
-        (*colorData)[i].red = min((*colorData)[i].red, (float)m_distances[i]);
+        //(*colorData)[i].red = min((*colorData)[i].red, (float)(m_distances[i]*0.2));
+        (*colorData)[i].red = m_distances[i];
     }
-    // Transform gear
+    // Transform disc ethen though gear is actually mouving
+    //glm::mat4 tempMat = glm::inverse(m_gearMouvement.getMatrix(time));
     glm::mat4 tempMat = m_gearMouvement.getMatrix(time);
     m_gearMesh->setModelMatrix(QMatrix4x4(tempMat[0][0], tempMat[1][0], tempMat[2][0], tempMat[3][0],
                                           tempMat[0][1], tempMat[1][1], tempMat[2][1], tempMat[3][1],
                                           tempMat[0][2], tempMat[1][2], tempMat[2][2], tempMat[3][2],
                                           tempMat[0][3], tempMat[1][3], tempMat[2][3], tempMat[3][3]));
-    return m_gearMesh;
+    return pair<TriangleMesh*,TriangleMesh*>(m_gearMesh, m_discMesh);
 }

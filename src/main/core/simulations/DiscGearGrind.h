@@ -13,7 +13,7 @@ public:
     DiscGearGrind(Disc* disc, InvoluteSpurGear* gear);
     ~DiscGearGrind();
 
-    Drawable* getDisplay(double time);
+    pair<TriangleMesh*,TriangleMesh*> getDisplay(double time);
 
 private:
     Disc* m_disc;

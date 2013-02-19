@@ -22,8 +22,9 @@ private:
     hpreal m_time;
 
     InvoluteSpurGear* m_gear;
-    Drawable* m_gearMesh;
+    TriangleMesh* m_gearMesh;
     Disc* m_disc;
+    TriangleMesh* m_discMesh;
     DiscGearGrind* m_simulation;
 
     void updateSimulation();

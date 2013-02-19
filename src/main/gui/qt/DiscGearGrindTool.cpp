@@ -34,8 +34,11 @@ void DiscGearGrindTool::createSimulation(){
     m_gear = new InvoluteSpurGear();
     m_disc = new Disc();
     m_simulation = new DiscGearGrind(m_disc, m_gear);
-    m_gearMesh = m_simulation->getDisplay(m_time);
+    pair<TriangleMesh*, TriangleMesh*> displayRes = m_simulation->getDisplay(m_time);
+    m_gearMesh = displayRes.first;
     emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, "Gear: simulation result"));
+    m_discMesh = displayRes.second;
+    emit emitComponent(new RenderItem3D(m_disc, m_discMesh, "Disc: simulation result"));
 }
 void DiscGearGrindTool::changeTime(hpreal time){
     m_time = time*0.01;
@@ -44,8 +47,11 @@ void DiscGearGrindTool::changeTime(hpreal time){
 
 void DiscGearGrindTool::updateSimulation(){
     if( m_gearMesh != NULL ){
-        m_gearMesh = m_simulation->getDisplay(m_time);
-        emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, "Gear: simulation result"));
+        pair<TriangleMesh*, TriangleMesh*> displayRes = m_simulation->getDisplay(m_time);
+        // Does not have to be deleted because the simulation takes care of memory managment
+        m_gearMesh = displayRes.first;
+        m_discMesh = displayRes.second;
+        emit changed();
     }
 }
 

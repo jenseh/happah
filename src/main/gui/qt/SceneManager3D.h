@@ -9,14 +9,14 @@
 class SceneManager3D : public QObject {
 Q_OBJECT
 
-private:
-	struct ManagedItem
-	{
-		RenderItem3D* renderItem;
-		unsigned int sceneID;
-		unsigned int listID;
-		bool active;
-	};
+public:
+    struct ManagedItem
+    {
+        RenderItem3D* renderItem;
+        unsigned int sceneID;
+        unsigned int listID;
+        bool active;
+    };
 
 private:
 	SceneManager* m_sceneManager;
@@ -25,6 +25,7 @@ private:
 
 public:
 	SceneManager3D(SceneManager* sceneManager, ComponentList* list);
+    std::list<ManagedItem> getItems();
 
 public slots:
 	void addDrawable(RenderItem3D* renderItem);

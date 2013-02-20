@@ -1,6 +1,6 @@
 #include "DiscGearGrind.h"
 
-DiscGearGrind::DiscGearGrind(Disc* disc, InvoluteSpurGear* gear):
+DiscGearGrind::DiscGearGrind(Disc* disc, Gear* gear):
     m_disc(disc), m_gear(gear)
 {
     m_gearMouvement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius(),  -m_disc->getRadius()),
@@ -11,7 +11,7 @@ DiscGearGrind::DiscGearGrind(Disc* disc, InvoluteSpurGear* gear):
     m_gearRays = *m_gearMesh->toRayCloud()->getRays();
     // resize distances array
     m_distances.resize(m_gearRays.size());
-    m_discMesh->setColor(0.5,0.5,0.5,0.5);
+    m_discMesh->setColor(0.2,0.5,0.5,0.5);
     // Add color Array
     vector<Color> colorData(m_distances.size());
     m_gearMesh->setColorData(colorData);

@@ -2,7 +2,7 @@
 #define DISCGEARGRIND_H
 
 #include "../geometries/Disc.h"
-#include "../geometries/InvoluteSpurGear.h"
+#include "../geometries/Gear.h"
 #include "../kdtree/TriangleKDTree.h"
 #include "../primitives/Color.h"
 #include "Kinematic.h"
@@ -10,14 +10,14 @@
 class DiscGearGrind
 {
 public:
-    DiscGearGrind(Disc* disc, InvoluteSpurGear* gear);
+    DiscGearGrind(Disc* disc, Gear* gear);
     ~DiscGearGrind();
 
-    Drawable* getDisplay(double time);
+    pair<TriangleMesh*,TriangleMesh*> getDisplay(double time);
 
 private:
     Disc* m_disc;
-    InvoluteSpurGear* m_gear;
+    Gear* m_gear;
 
     TriangleMesh* m_discMesh;
     TriangleMesh* m_gearMesh;

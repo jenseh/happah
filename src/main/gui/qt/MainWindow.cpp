@@ -40,11 +40,11 @@ MainWindow::MainWindow() {
     m_tabs = new QTabWidget(this);
 
     // Setting up logic
-    SceneManager *sceneManager = new SceneManager();
+    m_sceneManager = new SceneManager();
 
 	// Setting up OpenGl 3D-viewport
 	QWidget* viewportWidget = new QWidget();
-	GlViewport3D* viewport3D = new GlViewport3D(sceneManager, glFormat, viewportWidget,
+    GlViewport3D* viewport3D = new GlViewport3D(m_sceneManager, glFormat, viewportWidget,
 			this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     m_tabs->addTab(viewportWidget, "3D-View");
@@ -56,12 +56,13 @@ MainWindow::MainWindow() {
 	m_view2D = new QGraphicsView(m_scene);
     m_tabs->addTab(m_view2D, "2D-View");
 
-	setCentralWidget(m_tabs);
-	createTools();
-	createContainer();
+    setCentralWidget(m_tabs);
+    createContainer();
 
-	m_sceneManager3D = new SceneManager3D(sceneManager, m_componentList);
-	m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
+    m_sceneManager3D = new SceneManager3D(m_sceneManager, m_componentList);
+    createTools();
+
+    m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
 	//3D scene
 	connect( m_toolSelector, SIGNAL( emitDrawable( RenderItem3D* )),
 	        m_sceneManager3D, SLOT( addDrawable( RenderItem3D* )));
@@ -87,8 +88,8 @@ MainWindow::MainWindow() {
 	connect(m_editorSceneManager, SIGNAL( updateTool( Drawable2D* )),
 			m_toolSelector, SLOT( activateTool( Drawable2D* )));
 	//everything
-	connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
-		m_toolSelector, SLOT( finalise( std::string ) ));
+	//connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
+	//	m_toolSelector, SLOT( finalise( std::string ) )); I don't think we need that, as by deleting the toolselector already calls finalise
 	connect( m_toolSelector, SIGNAL( deleteCurrentComponent() ),
 		m_componentList, SLOT( deleteCurrentComponent() ));
 
@@ -115,8 +116,9 @@ void MainWindow::createTools() {
 	SimpleGearTool* simpleGearTool = new SimpleGearTool();
 	m_toolSelector->addTool(simpleGearTool);
 
-	DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool();
+    DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool(m_sceneManager3D);
 	m_toolSelector->addTool(discGearGrindTool);
+    m_sceneManager->registerListener(discGearGrindTool);
 
 	dock->setWidget(m_toolSelector);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

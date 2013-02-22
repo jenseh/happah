@@ -35,6 +35,8 @@ private:
 	ComponentList* m_componentList;
 	QTabWidget* m_tabs;
 	ToolSelector* m_toolSelector;
+
+    SceneManager *m_sceneManager;
 	//2D components:
 	QGraphicsView* m_view2D;
 	EditorScene* m_scene;

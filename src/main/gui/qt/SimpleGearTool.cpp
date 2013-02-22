@@ -75,7 +75,8 @@ void SimpleGearTool::updateGear() {
 }
 
 void SimpleGearTool::updateRanges() {
-	m_helixAngleSlider->setSliderValues(m_gear->getHelixAngle(), 0.0f, M_PI / 2.0f);
+	hpreal epsilon = 0.0001f;
+	m_helixAngleSlider->setSliderValues(m_gear->getHelixAngle(), -(epsilon + M_PI / 2.0f), epsilon + M_PI / 2.0f );
 	m_facewidthSlider->setSliderValues(m_gear->getFacewidth(), 0.0f, 2.0f);
 	m_radiusSlider->setSliderValues(m_gear->getRadius(), m_gear->getRadius() / 2.0f, m_gear->getRadius() * 2.0f);
 }

@@ -57,3 +57,7 @@ void SceneManager3D::update() {
 	m_sceneManager->drawablesChanged();
 }
 
+std::list<SceneManager3D::ManagedItem> SceneManager3D::getItems(){
+    return m_drawables;
+}
+

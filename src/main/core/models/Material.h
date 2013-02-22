@@ -6,6 +6,16 @@ class Material
 {
 public:
   Material();
+  void setKa(float ka);
+  void setKd(float kd);
+  void setKs(float ks);
+  void setShininess(float shininess);
+
+  float getKa();
+  float getKd();
+  float getKs();
+  float getShininess();
+private:
   float m_ka;
   float m_kd;
   float m_ks;

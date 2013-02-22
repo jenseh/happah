@@ -22,7 +22,8 @@ private:
 	GLuint m_fragmentShader;
 	GLuint m_program;
 	GLuint m_vertexShader;
-	
+
+	GLint m_phong;     // some weird bug that messed with uniforms .. naming shininess randomly solved it
 	GLint m_eyeLocation;
 	GLint m_modelMatrixLocation;
 	GLint m_MVPLocation;

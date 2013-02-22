@@ -28,8 +28,8 @@ Material Drawable::getMaterial(){
 }
 
 void Drawable::setMaterial(float ka, float kd, float ks, float shininess){
-	m_material.m_ka = ka;
-	m_material.m_kd = kd;
-	m_material.m_ks = ks;
-	m_material.m_shininess = shininess;
+	m_material.setKa(ka);
+	m_material.setKd(kd);
+	m_material.setKs(ks);
+	m_material.setShininess(shininess);
 }

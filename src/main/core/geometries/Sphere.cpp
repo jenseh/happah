@@ -33,28 +33,28 @@ QuadMesh* Sphere::toQuadMesh() {
             a.z = sin(theta * toRad)+m_center.z;
             a.w = 1.0f;
             normA = glm::normalize(a-m_center);
-
+            //normA = glm::vec4(1.0f,0.0f,0.0f,0.0f);
 
             b.x = cos((theta + dtheta) * toRad) * cos(phi * toRad)+ m_center.x;
             b.y = cos((theta + dtheta) * toRad) * sin(phi * toRad)+ m_center.y;
             b.z = sin((theta + dtheta) * toRad)+m_center.z;
             b.w = 1.0f;
             normB = glm::normalize(b-m_center);
-
+            //normB = glm::vec4(0.0f,1.0f,0.0f,0.0f);
 
             c.x = cos((theta + dtheta) * toRad) * cos((phi + dphi) * toRad)+ m_center.x;
             c.y = cos((theta + dtheta) * toRad) * sin((phi + dphi) * toRad)+ m_center.y;
             c.z = sin((theta + dtheta) * toRad)+m_center.z;
             c.w = 1.0f;
             normC = glm::normalize(c-m_center);
-
+            //normC = glm::vec4(0.0f,0.0f,1.0f,0.0f);
 
             d.x = cos(theta * toRad) * cos((phi + dphi) * toRad)+ m_center.x;
             d.y = cos(theta * toRad) * sin((phi + dphi) * toRad)+ m_center.y;
             d.z = sin(theta * toRad)+m_center.z;
             d.w = 1.0f;
             normD = glm::normalize(d-m_center);
-
+            //normD = glm::vec4(1.0f,1.0f,0.0f,0.0f);
 
             m_vertexData.push_back(a);
             m_vertexData.push_back(normA);

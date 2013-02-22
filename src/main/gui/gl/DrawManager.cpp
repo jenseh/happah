@@ -1,6 +1,7 @@
 #define GLEW_STATIC //Very important for Windows users
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include "../../core/models/Material.h"
 #include "DrawManager.h"
 
 #include <fstream>
@@ -17,10 +18,10 @@ DrawManager::DrawManager(SceneManager* sceneManager) : m_sceneManager(sceneManag
 
 bool DrawManager::initShaderPrograms() {
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	compileShader(m_vertexShader, "./src/shader/blinnphongVert.glsl");
+	compileShader(m_vertexShader, "./src/shader/phong410Vert.glsl");
 
 	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	compileShader(m_fragmentShader, "./src/shader/blinnphongFrag.glsl");
+	compileShader(m_fragmentShader, "./src/shader/phong410Frag.glsl");
 
 	m_program = glCreateProgram();
 	glAttachShader(m_program, m_vertexShader);
@@ -51,29 +52,42 @@ bool DrawManager::initShaderPrograms() {
 	m_MVPLocation = glGetUniformLocation(m_program, "MVP");
 	if(m_MVPLocation < 0) cerr << "Failed to find MVP." << endl;
 
+
+
 	m_normalMatLocation = glGetUniformLocation(m_program, "normalMat");
 	if(m_normalMatLocation < 0) cerr << "Failed to find normal matrix." << endl;
 
+
+	m_phong = glGetUniformLocation(m_program, "phong");
+	if(m_phong < 0) cerr << "Failed to find phong exponent." << endl;
+
+
+
 	// Material uniforms
-	m_shininessLocation = glGetUniformLocation(m_program, "shininess");
-	if(m_shininessLocation < 0) cerr << "Failed to find shininess." << endl;
-	else glUniform1f(m_shininessLocation, 20.0f);
 
 	m_diffuseColorLocation = glGetUniformLocation(m_program, "kd");
 	if(m_diffuseColorLocation < 0) cerr << "Failed to find diffuse color component." << endl;
-	else glUniform1f(m_diffuseColorLocation, 1.0f);
+
+	std::cout << "kd Location: " << m_diffuseColorLocation << std::endl;
 
 	m_ambientColorLocation = glGetUniformLocation(m_program, "ka");
 	if(m_ambientColorLocation < 0) cerr << "Failed to find ambient color component." << endl;
-	else glUniform1f(m_ambientColorLocation, 1.0f);
+
+	std::cout << "ka Location: " << m_ambientColorLocation << std::endl;
 
 	m_specularColorLocation = glGetUniformLocation(m_program, "ks");
 	if(m_specularColorLocation < 0) cerr << "Failed to find specular color component." << endl;
-	else glUniform1f(m_specularColorLocation, 1.0f);
 
-	m_hasVertexColorLocation =  glGetUniformLocation(m_program, "hasVertexColor");
-	if(m_hasVertexColorLocation < 0) cerr << "Failed to find specular color component." << endl;
-	else glUniform1i(m_hasVertexColorLocation, 0);
+	std::cout << "ks Location: " << m_specularColorLocation << std::endl;
+
+	m_shininessLocation = glGetUniformLocation(m_program, "shininess");
+	if(m_shininessLocation < 0) cerr << "Failed to find shininess." << endl;
+
+	std::cout << "Shininess Location: " << m_shininessLocation << std::endl;
+
+	//m_hasVertexColorLocation =  glGetUniformLocation(m_program, "hasVertexColor");
+	//if(m_hasVertexColorLocation < 0) cerr << "Failed to check for color component." << endl;
+
 
 	return true;
 }
@@ -183,22 +197,25 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		QMatrix4x4 modelMatrix = *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * *viewMatrix * modelMatrix;
 		QMatrix3x3 normalMatrix = modelMatrix.normalMatrix(); //Do not change this to "inverted" again!
-
 		GLfloat modelMatrixFloats[16];
 		GLfloat MVPFloats[16];
 		GLfloat normalMatrixFloats[9];
+
 
 		const qreal* modelMatrixQreals = modelMatrix.constData();
 		const qreal* MVPQreals = MVP.constData();
 		const qreal* normalMatrixQreals = normalMatrix.constData();
 
+
 		for (int j = 0; j < 16; ++j) {
 	            modelMatrixFloats[j] = modelMatrixQreals[j];
 	            MVPFloats[j] = MVPQreals[j];
+
 		}
 		
 		for (int j = 0; j < 9; ++j) {
 		    normalMatrixFloats[j] = normalMatrixQreals[j];
+
 		}
 
 		int hasVertexColor = (*i)->hasColorData();
@@ -224,16 +241,18 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 //		}
 //		std::cout << "----------------" << std::endl;
 		//TODO: until here
+		Material material = (*i)->getMaterial();
 
 		glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, modelMatrixFloats);
 		glUniformMatrix4fv(m_MVPLocation, 1, GL_FALSE, MVPFloats);
+		glUniform1f(m_phong,material.getShininess());
 		glUniformMatrix3fv(m_normalMatLocation, 1, GL_FALSE, normalMatrixFloats);
 		glUniform3f(m_eyeLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
-		glUniform1f(m_ambientColorLocation,(*i)->getMaterial().m_ka);
-		glUniform1f(m_diffuseColorLocation,(*i)->getMaterial().m_kd);
-		glUniform1f(m_specularColorLocation,(*i)->getMaterial().m_ks);
-		glUniform1f(m_shininessLocation,(*i)->getMaterial().m_shininess);
+		glUniform1f(m_ambientColorLocation,material.getKa());
+		glUniform1f(m_diffuseColorLocation,material.getKd());
+		glUniform1f(m_specularColorLocation,material.getKs());
 		glUniform1i(m_hasVertexColorLocation, hasVertexColor);
+
 		int vertexDataSize = (*i)->getVertexData()->size();
 
 		int tupleSize = (*i)->getTupleSize();

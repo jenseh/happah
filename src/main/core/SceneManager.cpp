@@ -52,12 +52,12 @@ vector<Drawable*>* SceneManager::getDrawables() {
 }
 
 void SceneManager::buildScene(){
-  /*Sphere* sphere = new Sphere(1.0f, glm::vec4(2.0f,0.0f,0.0f,1.0f));
+  Sphere* sphere = new Sphere(1.0f, glm::vec4(0.0f,0.0f,0.0f,1.0f));
   QuadMesh* dSphere = sphere->toQuadMesh();
-  dSphere->setMaterial(0.45f,        //ka
-                       0.5f,        //kd
-                       1.0f,        //ks
-                       10.0f);      //phong
+  dSphere->setMaterial(1.0f,        //ka
+                       1.5f,        //kd
+                       1.8f,        //ks
+                       5.0f);      //phong
   std::vector<Color>* colorData = new std::vector<Color>();
   for(uint i = 0; i < (dSphere->getVertexData()->size()/2); i++){
     Color color;
@@ -70,8 +70,8 @@ void SceneManager::buildScene(){
   dSphere->setColorData(*colorData);
   std::cout << "VertexData size :" << dSphere->getVertexData()->size() << endl;
   std::cout << " Color Data size :" << colorData->size() << endl;
-//  uint result = addDrawable(dSphere);
-
+  uint result = addDrawable(dSphere);
+/*
   TriPatch* tripatch = new TriPatch(2,glm::vec3(0.0f,0.0f,1.0f),glm::vec3(1.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), "patch");
   addNonDrawable(tripatch);
   tripatch->setControlPoint(0,(tripatch->getControlPoint(0))*1.3f);
@@ -143,7 +143,7 @@ ControlNet2* cnet4 = new ControlNet2(tripatch4->getControlPoint(0),
   result = addDrawable(dcnet2);
   result = addDrawable(dcnet3);
   result = addDrawable(dcnet4);
-*/
+
   SpherePatch* spherePatch = new SpherePatch(2,glm::vec3(0.0f,0.0f,1.5f),glm::vec3(1.5f,0.0f,0.0f),glm::vec3(0.0f,1.5f,0.0f),"SpherePatch");
   TriangleMesh* dSpherePatch = spherePatch->toTriangleMesh();
   dSpherePatch->setColor(1.0f,1.0f,1.0f,1.0f);
@@ -168,6 +168,7 @@ ControlNet2* cnet4 = new ControlNet2(tripatch4->getControlPoint(0),
   result = addDrawable(dSpherePatch1);
   result = addDrawable(dSpherePatch2);
   result = addDrawable(dSpherePatch3);
+  */
 }
 
 

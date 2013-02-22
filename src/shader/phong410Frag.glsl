@@ -1,44 +1,47 @@
-#version 410 compatibility
+#version 410 core
 
-in vec4 vPosWS;
-in vec4 vNormalWS;
+in vec4 vPos;           //World Space
+in vec4 vNormal;        //World Space
 in vec4 vColor;
 
-//uniform float ka;
-//uniform float kd;
-//uniform float ks;
-//uniform float shininess;
-
+uniform mat4 modelMatrix;
+uniform mat4 MVP;
+uniform mat3 normalMat;
+uniform float ka;
+uniform float kd;
+uniform float ks;
+uniform float shininess;
+uniform vec3 eye;
+uniform float phong;
+uniform int hasVertexColor;
 
 layout (location = 0) out vec4 fragmentColor;
 
 
 void main() {
 
-	vec4 lightPosWS = vec4(2.0f, 2.0f, 2.0f,1.0f);
-	vec4 lightColor = vec4(0.4f, 0.0f, 0.8f,1.0f);
-	//vec4 ka = vec4(1.0f,1.0f,1.0f,1.0f);
-	//vec4 kd = vec4(0.5f,0.5f,0.5f,0.0f);
-	//vec4 ks = vec4(1.6f,1.6f,1.6f,1.0f);	
-	float ka= 1.0f;
-	float kd = 0.5f;
- 	float ks = 1.0f;
-	float shininess = 20.0f;
-	
-	vec4 normalWS = normalize(vNormalWS);
-	vec4 lightWS = normalize(lightPosWS - vPosWS);
-	vec4 viewWS = normalize(vPosWS);
-	vec4 halfWS = normalize(viewWS + lightWS);
+        vec4 lightPos = vec4(8.0f, 8.0f, 0.0f,1.0f); // CameraSpace
+        vec4 lightColor = vec4(0.6f, 0.6f, 0.6f,1.0f);
+
+        vec4 eyeWS   = vec4(eye,1.0f);
+        vec4 normalWS = normalize(vNormal);
+        vec4 lightWS = normalize(lightPos - vPos);
+        vec4 viewWS = normalize(eyeWS-vPos);
+        vec4 halfWS = normalize(viewWS + lightWS);
 
 
 	// Ambient Part
-	vec4 Iambient = vec4(0.3f,0.3f,0.3f,1.0f) * ka;			
+        vec4 Iambient = ka* vColor;
 	// Diffuse Part
-	vec4 Idiff    = lightColor * kd * max(dot(lightWS,normalWS),0.0f) ;
-	
-	//Specular Part
-	vec4 Ispec    = lightColor * ks * pow(max(dot(halfWS,normalWS),0.0f),shininess) ;	
+        float NdotL = dot(normalWS,lightWS);
+        vec4 Idiffuse =lightColor* kd * max(NdotL,0.0f) ;
 
-	fragmentColor = Iambient+Idiff+Ispec;	
+	//Specular Part
+        float HdotN = dot(halfWS,normalWS);
+
+        vec4 Ispecular  = lightColor * ks* pow(max(HdotN,0.0f),phong);
+
+       fragmentColor = clamp(Iambient+Idiffuse+Ispecular,0.0f,1.0f);
+      //  fragmentColor = vec4(phong,ks,0.0f,1.0f);
 	
 }

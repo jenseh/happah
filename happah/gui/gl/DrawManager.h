@@ -24,7 +24,7 @@ private:
 	GLuint m_program;
 	GLuint m_vertexShader;
 
-	GLuint m_coloredVertexArrayObject;
+	GLuint m_vertexArrayObject;
 	GLuint m_vertexDataBuffer;
 	GLuint m_colorDataBuffer;
 

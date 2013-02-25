@@ -13,11 +13,11 @@ public:
 
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	bool initGL();
-	void updateScene();
+	void sceneChanged();
 private:
 
 	void compileShader(GLuint shader, const char* filePath);
-	void createBuffers();
+	bool createBuffers();
 	bool initShaderPrograms();
 	SceneManager* m_sceneManager;
 	GLuint m_fragmentShader;

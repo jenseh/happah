@@ -10,9 +10,7 @@
 #include <iostream>
 
 DrawManager::DrawManager(SceneManager* sceneManager) : m_sceneManager(sceneManager) {
-	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
-	glClearDepth(1.0f);
-	glEnable (GL_DEPTH_TEST);
+
 	m_sceneManager->registerListener(this);
 }
 
@@ -39,7 +37,6 @@ bool DrawManager::initShaderPrograms() {
 	if(m_normalLocation < 0) cerr << "Failed to find normalLocation." << endl;
 	m_colorLocation = glGetAttribLocation(m_program, "color");
 	if( m_colorLocation < 0 ) cerr << "Failed to find colorLocation." <<endl;
-
 
 	// Matrix Uniforms
 	m_modelMatrixLocation = glGetUniformLocation(m_program, "modelMatrix");
@@ -89,7 +86,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 	} else cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::createBuffers() {
+bool DrawManager::createBuffers() {
 	glEnable(GL_DEPTH_TEST);
 	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
@@ -158,6 +155,7 @@ void DrawManager::createBuffers() {
     
         glBindVertexArray(0);
     }
+   return true;
 }
 
 void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
@@ -224,7 +222,9 @@ void DrawManager::sceneChanged(){
 }
 
 bool DrawManager::initGL(){
-	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearDepth(1.0f);
+	glEnable (GL_DEPTH_TEST);
 	if(!initShaderPrograms())
 		return false;
 	if(!createBuffers())

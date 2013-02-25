@@ -1,13 +1,11 @@
-#include "SceneManager.h"
 #include <ctime>
-#include "../test/WormGearGrindTest.h"
-#include "../test/KinematicTest.h"
-#include "geometries/Sphere.h"
-#include "geometries/TriPatch.h"
-#include "geometries/ControlNet2.h"
-#include "geometries/SpherePatch.h"
 #include <iostream>
 
+#include "happah/geometries/ControlNet2.h"
+#include "happah/geometries/Sphere.h"
+#include "happah/geometries/SpherePatch.h"
+#include "happah/geometries/TriPatch.h"
+#include "happah/scene/SceneManager.h"
 
 SceneManager::SceneManager() : m_iDCounter(0) {
 //    new WormGearGrindTest(this);

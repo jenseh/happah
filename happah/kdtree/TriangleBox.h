@@ -6,6 +6,7 @@
     Code Based on "heatray" project by Cody White.
 */
 #pragma once
+
 #include <math.h>
 #include <stdio.h>
 

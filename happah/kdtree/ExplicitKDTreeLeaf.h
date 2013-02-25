@@ -1,12 +1,12 @@
 #ifndef EXPLICITKDTREELEAF_H
 #define EXPLICITKDTREELEAF_H
 
-#include <vector>
 #include <list>
+#include <vector>
 
-#include "ExplicitKDTreeNode.h"
-#include "../primitives/Circle.h"
-#include "../primitives/Triangle.h"
+#include "happah/kdtree/ExplicitKDTreeNode.h"
+#include "happah/primitives/Circle.h"
+#include "happah/primitives/Triangle.h"
 
 class ExplicitKDTreeLeaf : public ExplicitKDTreeNode
 {

@@ -1,4 +1,4 @@
-#include "ImplicitKDTree.h"
+#include "happah/kdtree/ImplicitKDTree.h"
 
 template bool ImplicitKDTree::intersectAll(Circle& circle, typename std::list<CircleHitResult*>* hitResults);
 

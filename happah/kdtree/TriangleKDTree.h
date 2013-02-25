@@ -3,15 +3,17 @@
 */
 
 #pragma once
+
 #include <iostream>
 #include <glm/glm.hpp>
 #include <list>
-#include <vector>
 #include <set>
-#include "TriangleKDTreeNode.h"
-#include "IntersectInfo.h"
-#include "../models/TriangleMesh.h"
-#include "Box.h"
+#include <vector>
+
+#include "happah/kdtree/Box.h"
+#include "happah/kdtree/IntersectInfo.h"
+#include "happah/kdtree/TriangleKDTreeNode.h"
+#include "happah/models/TriangleMesh.h"
 
 
 /**

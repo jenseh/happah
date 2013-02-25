@@ -1,9 +1,9 @@
 #ifndef EXPLICITKDTREEINNERNODE_H
 #define EXPLICITKDTREEINNERNODE_H
 
-#include "ExplicitKDTreeNode.h"
-#include "ExplicitKDTreeInnerNode.h"
-#include "ExplicitKDTreeLeaf.h"
+#include "happah/kdtree/ExplicitKDTreeInnerNode.h"
+#include "happah/kdtree/ExplicitKDTreeLeaf.h"
+#include "happah/kdtree/ExplicitKDTreeNode.h"
 
 class ExplicitKDTreeInnerNode : public ExplicitKDTreeNode
 {

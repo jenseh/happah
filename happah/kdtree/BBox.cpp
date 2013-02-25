@@ -1,6 +1,6 @@
-#include "BBox.h"
-
 #include <iostream>
+
+#include "happah/kdtree/BBox.h"
 
 BBox::BBox(glm::vec3 min, glm::vec3 max)
 {

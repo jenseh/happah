@@ -1,4 +1,4 @@
-#include "Drawable2D.h"
+#include "happah/gui/Drawable2D.h"
 
 void Drawable2D::setName( std::string newName ) {
 	m_name = newName;

@@ -1,18 +1,18 @@
 #ifndef TOOLSELECTOR_H
 #define TOOLSELECTOR_H
 
-#include <QWidget>
-#include <QPushButton>
 #include <QButtonGroup>
 #include <QGridLayout>
+#include <QPushButton>
 #include <QStackedWidget>
+#include <QWidget>
 #include <string>
 
-#include "Component.h"
-#include "Tool.h"
-#include "../../gui/Drawable2D.h"
-#include "../RenderItem3D.h"
-#include "../../HappahTypes.h"
+#include "happah/HappahTypes.h"
+#include "happah/gui/Drawable2D.h"
+#include "happah/gui/RenderItem3D.h"
+#include "happah/gui/qt/Component.h"
+#include "happah/gui/qt/Tool.h"
 
 /** @brief This class manages the tool-selection process of Happah
  * 

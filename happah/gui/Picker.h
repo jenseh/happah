@@ -4,7 +4,8 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "../core/SceneManager.h"
+
+#include "happah/scene/SceneManager.h"
 
 class Picker
 {

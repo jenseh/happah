@@ -1,4 +1,4 @@
-#include "CircleCloud.h"
+#include "happah/models/CircleCloud.h"
 
 CircleCloud::CircleCloud(std::vector<Circle*> circles, size_t resolutionXY, size_t resolutionZ)
   : m_circles(circles), m_resolutionXY(resolutionXY), m_resolutionZ(resolutionZ)

@@ -1,6 +1,6 @@
-#include "CircularSimulationResult.h"
 #include <iostream>
 
+#include "happah/simulations/CircularSimulationResult.h"
 
 CircularSimulationResult::CircularSimulationResult(int angleSteps, int posZSteps)
 {

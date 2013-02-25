@@ -1,8 +1,9 @@
 #ifndef POLYNOM_H
 #define POLYNOM_H
+
 #include <stdarg.h>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 

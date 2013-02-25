@@ -80,8 +80,8 @@ HEADERS += \
 \
 	happah/scene/SceneManager.h \
 \
-	happah/simulations/DiscGearGrind.h \
 	happah/simulations/CircularSimulationResult.h \
+	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
 	happah/simulations/Simulation.h \
 	happah/simulations/WormGearGrind.h

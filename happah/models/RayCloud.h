@@ -2,7 +2,8 @@
 #define RAYCLOUD_H
 
 #include <vector>
-#include "../primitives/Ray.h"
+
+#include "happah/primitives/Ray.h"
 
 class RayCloud
 {

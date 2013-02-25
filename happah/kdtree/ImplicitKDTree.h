@@ -1,15 +1,15 @@
 #ifndef IMPLICITKDTREE_H
 #define IMPLICITKDTREE_H
 
-#include <vector>
-#include <list>
 #include <algorithm>
 #include <iostream>
+#include <list>
+#include <vector>
 
-#include "../primitives/Triangle.h"
-#include "../primitives/Circle.h"
-#include "BBox.h"
-#include "BSphere.h"
+#include "happah/kdtree/BBox.h"
+#include "happah/kdtree/BSphere.h"
+#include "happah/primitives/Triangle.h"
+#include "happah/primitives/Circle.h"
 
 struct TreeNode {
   float axisValue;

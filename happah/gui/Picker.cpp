@@ -1,10 +1,11 @@
-#include "Picker.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "../core/models/Drawable.h"
-#include "../core/geometries/NonDrawable.h"
 #include <QMatrix4x4>
+
+#include "happah/geometries/NonDrawable.h"
+#include "happah/gui/Picker.h"
+#include "happah/models/Drawable.h"
 
 using namespace std;
 Picker::Picker()

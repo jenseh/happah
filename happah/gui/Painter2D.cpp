@@ -1,4 +1,4 @@
-#include "Painter2D.h"
+#include "happah/gui/Painter2D.h"
 
 void Painter2D::drawPoint( glm::vec3 point ) {
 	drawPoint( glm::vec2( point.x, point.y ) );

@@ -1,8 +1,10 @@
 #ifndef KINEMATIC_H
 #define KINEMATIC_H
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../primitives/Polynom.h"
+
+#include "happah/primitives/Polynom.h"
 
 class Kinematic
 {

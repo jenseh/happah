@@ -1,4 +1,4 @@
-#include "TriangleKDTree.h"
+#include "happah/kdtree/TriangleKDTree.h"
 
 
 TriangleKDTree::TriangleKDTree()

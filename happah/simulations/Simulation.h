@@ -1,7 +1,7 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
-#include "../models/Drawable.h"
+#include "happah/models/Drawable.h"
 
 class Simulation
 {

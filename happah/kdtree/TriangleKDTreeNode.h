@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "../primitives/Ray.h"
-#include "../primitives/Triangle.h"
-#include "Box.h"
+#include "happah/kdtree/Box.h"
+#include "happah/primitives/Ray.h"
+#include "happah/primitives/Triangle.h"
 
 
 /**

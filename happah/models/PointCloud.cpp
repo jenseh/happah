@@ -1,6 +1,6 @@
-#include "PointCloud.h"
+#include "happah/models/PointCloud.h"
 
-PointCloud::PointCloud(std::vector<glm::vec4> *vertexData, string name): Drawable(name)
+PointCloud::PointCloud(std::vector<glm::vec4> *vertexData, std::string name): Drawable(name)
 {
   m_vertexData = vertexData;
 }

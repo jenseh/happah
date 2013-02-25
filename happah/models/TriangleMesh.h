@@ -1,15 +1,14 @@
 #ifndef TRIANGLEMESH_H
 #define TRIANGLEMESH_H
 
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
-#include "../primitives/Triangle.h"
-#include "Drawable.h"
-#include "../primitives/Ray.h"
-#include "../primitives/Color.h"
-#include "RayCloud.h"
-
+#include "happah/models/Drawable.h"
+#include "happah/models/RayCloud.h"
+#include "happah/primitives/Color.h"
+#include "happah/primitives/Ray.h"
+#include "happah/primitives/Triangle.h"
 
 class TriangleMesh : public Drawable
 {

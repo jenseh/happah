@@ -2,9 +2,10 @@
 #define DRAWABLE_H
 
 #include <glm/glm.hpp>
-#include "../geometries/GeometryObject.h"
-#include "../../HappahTypes.h"
-#include "Material.h"
+
+#include "happah/HappahTypes.h"
+#include "happah/geometries/GeometryObject.h"
+#include "happah/models/Material.h"
 
 class Drawable : public GeometryObject{
 

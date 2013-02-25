@@ -2,8 +2,8 @@
 #define RENDERITEM3D_H
 
 #include <string>
-#include "../core/geometries/NonDrawable.h"
-#include "../core/models/Drawable.h"
+#include "happah/geometries/NonDrawable.h"
+#include "happah/models/Drawable.h"
 
 class RenderItem3D {
 

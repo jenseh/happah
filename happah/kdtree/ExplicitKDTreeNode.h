@@ -1,13 +1,13 @@
 #ifndef EXPLICITKDTREENODE_H
 #define EXPLICITKDTREENODE_H
 
-#include <vector>
-#include <list>
 #include <algorithm>
 #include <iostream>
+#include <list>
+#include <vector>
 
-#include "../primitives/Triangle.h"
-#include "../primitives/Circle.h"
+#include "happah/primitives/Circle.h"
+#include "happah/primitives/Triangle.h"
 
 
 class ExplicitKDTreeNode

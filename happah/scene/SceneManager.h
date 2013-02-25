@@ -3,9 +3,10 @@
 
 #include <list>
 #include <vector>
-#include "models/Drawable.h"
-#include "geometries/NonDrawable.h"
-#include "../gui/SceneListener.h"
+
+#include "happah/geometries/NonDrawable.h"
+#include "happah/gui/SceneListener.h"
+#include "happah/models/Drawable.h"
 
 using namespace std;
 

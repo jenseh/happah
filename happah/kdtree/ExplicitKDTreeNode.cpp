@@ -1,4 +1,4 @@
-#include "ExplicitKDTreeNode.h"
+#include "happah/kdtree/ExplicitKDTreeNode.h"
 
 ExplicitKDTreeNode::~ExplicitKDTreeNode() {}
 

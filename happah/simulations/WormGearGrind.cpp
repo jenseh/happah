@@ -1,5 +1,6 @@
-#include "WormGearGrind.h"
 #include <time.h>
+
+#include "happah/simulations/WormGearGrind.h"
 
 WormGearGrind::WormGearGrind(InvoluteSpurGear& worm, InvoluteSpurGear& gear) {
     m_worm = worm.toZCircleCloud();

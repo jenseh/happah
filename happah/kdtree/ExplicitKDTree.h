@@ -1,14 +1,14 @@
 #ifndef EXPLICITKDTREE_H
 #define EXPLICITKDTREE_H
 
-#include <vector>
 #include <list>
+#include <vector>
 
-#include "../primitives/Triangle.h"
-#include "../primitives/Circle.h"
-#include "ExplicitKDTreeInnerNode.h"
-#include "BBox.h"
-#include "BSphere.h"
+#include "happah/kdtree/BBox.h"
+#include "happah/kdtree/BSphere.h"
+#include "happah/kdtree/ExplicitKDTreeInnerNode.h"
+#include "happah/primitives/Circle.h"
+#include "happah/primitives/Triangle.h"
 
 
 class ExplicitKDTree

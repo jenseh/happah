@@ -1,4 +1,4 @@
-#include "BSphere.h"
+#include "happah/kdtree/BSphere.h"
 
 BSphere::BSphere(glm::vec3 center, float radius)
 {

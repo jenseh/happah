@@ -1,11 +1,11 @@
 #ifndef DISCGEARGRIND_H
 #define DISCGEARGRIND_H
 
-#include "../geometries/Disc.h"
-#include "../geometries/Gear.h"
-#include "../kdtree/TriangleKDTree.h"
-#include "../primitives/Color.h"
-#include "Kinematic.h"
+#include "happah/geometries/Disc.h"
+#include "happah/geometries/Gear.h"
+#include "happah/kdtree/TriangleKDTree.h"
+#include "happah/primitives/Color.h"
+#include "happah/simulations/Kinematic.h"
 
 class DiscGearGrind
 {

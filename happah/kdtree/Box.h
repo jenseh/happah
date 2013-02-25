@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include "../kdtree/TriangleBox.h"
-#include "../primitives/Triangle.h"
-#include "../primitives/Ray.h"
 #include <glm/glm.hpp>
 #include <iostream>
+
+#include "happah/kdtree/TriangleBox.h"
+#include "happah/primitives/Ray.h"
+#include "happah/primitives/Triangle.h"
 
 struct Box
 {

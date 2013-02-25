@@ -1,4 +1,4 @@
-#include "ExplicitKDTree.h"
+#include "happah/kdtree/ExplicitKDTree.h"
 
 ExplicitKDTree::ExplicitKDTree(std::vector<Triangle*>* triangles) {
   // Compute bounding box for whole tree

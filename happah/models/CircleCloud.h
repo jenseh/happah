@@ -1,9 +1,9 @@
 #ifndef CIRCLECLOUD_H
 #define CIRCLECLOUD_H
 
-
 #include <vector>
-#include "../primitives/Circle.h"
+
+#include "happah/primitives/Circle.h"
 
 class CircleCloud
 {

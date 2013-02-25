@@ -1,4 +1,4 @@
-#include "RayCloud.h"
+#include "happah/models/RayCloud.h"
 
 RayCloud::RayCloud(std::vector<Ray*> rays)
 {

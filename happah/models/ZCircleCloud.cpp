@@ -1,4 +1,4 @@
-#include "ZCircleCloud.h"
+#include "happah/models/ZCircleCloud.h"
 
 ZCircleCloud::ZCircleCloud(std::vector<glm::vec2>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir)
   : m_points(points), m_posZ(posZ), m_resolutionXY(resolutionXY), m_resolutionZ(resolutionZ), m_referenceDir(referenceDir) {

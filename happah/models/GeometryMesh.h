@@ -1,10 +1,10 @@
 #ifndef GEOMETRYMESH_H
 #define GEOMETRYMESH_H
 
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
-#include "Drawable.h"
+#include "happah/models/Drawable.h"
 
 struct TriangleFace{
  unsigned int a,b,c;

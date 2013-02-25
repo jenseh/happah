@@ -1,4 +1,4 @@
-#include "DiscGearGrind.h"
+#include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(Disc* disc, Gear* gear):
     m_disc(disc), m_gear(gear)

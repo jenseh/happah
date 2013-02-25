@@ -1,4 +1,4 @@
-#include "ExplicitKDTreeInnerNode.h"
+#include "happah/kdtree/ExplicitKDTreeInnerNode.h"
 
 template <class T>
 class TriangleSorter {

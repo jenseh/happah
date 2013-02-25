@@ -1,4 +1,4 @@
-#include "Tool.h"
+#include "happah/gui/qt/Tool.h"
 
 Tool::Tool() {
 	m_toolButton = new QPushButton();

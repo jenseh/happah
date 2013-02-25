@@ -1,13 +1,13 @@
 #ifndef POINTCLOUD_H
 #define POINTCLOUD_H
 
-#include <vector>
 #include <glm/glm.hpp>
+#include <string>
+#include <vector>
 
-#include "Drawable.h"
-#include "../../gui/gl/DrawManager.h"
-#include "../primitives/Ray.h"
-#include "../primitives/Color.h"
+#include "happah/models/Drawable.h"
+#include "happah/primitives/Color.h"
+#include "happah/primitives/Ray.h"
 
 class PointCloud :public Drawable
 {

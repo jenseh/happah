@@ -1,4 +1,4 @@
-#include "TriangleMesh.h"
+#include "happah/models/TriangleMesh.h"
 
 TriangleMesh::TriangleMesh(std::vector<glm::vec4> *vertexData, std::string name) : Drawable(name)
 {

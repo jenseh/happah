@@ -1,4 +1,4 @@
-#include "ExplicitKDTreeLeaf.h"
+#include "happah/kdtree/ExplicitKDTreeLeaf.h"
 
 ExplicitKDTreeLeaf::ExplicitKDTreeLeaf(std::vector<Triangle*>* triangles, int depth)
 {

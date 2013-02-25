@@ -1,12 +1,11 @@
 #ifndef TOOL_H
 #define TOOL_H
 
-#include <QWidget>
 #include <QPushButton>
+#include <QWidget>
 
-//#include "Component.h"
-#include "../../gui/Drawable2D.h"
-#include "../RenderItem3D.h"
+#include "happah/gui/Drawable2D.h"
+#include "happah/gui/RenderItem3D.h"
 
 class Tool: public QObject {
 Q_OBJECT

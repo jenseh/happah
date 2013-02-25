@@ -1,13 +1,12 @@
 #ifndef WORMGEARGRIND_H
 #define WORMGEARGRIND_H
 
-#include "../geometries/InvoluteSpurGear.h"
-#include "../primitives/Circle.h"
-#include "../primitives/Triangle.h"
-#include "../kdtree/ExplicitKDTree.h"
-#include "CircularSimulationResult.h"
-#include "../models/ZCircleCloud.h"
-
+#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/kdtree/ExplicitKDTree.h"
+#include "happah/models/ZCircleCloud.h"
+#include "happah/primitives/Circle.h"
+#include "happah/primitives/Triangle.h"
+#include "happah/simulations/CircularSimulationResult.h"
 
 class WormGearGrind
 {

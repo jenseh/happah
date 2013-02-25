@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Painter2D.h"
+#include "happah/gui/Painter2D.h"
 
 class Drawable2D {
 

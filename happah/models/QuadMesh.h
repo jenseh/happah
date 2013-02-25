@@ -1,13 +1,13 @@
 #ifndef QUADMESH_H
 #define QUADMESH_H
 
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
-#include "Drawable.h"
-#include "TriangleMesh.h"
-#include "../primitives/Color.h"
-#include "../../HappahTypes.h"
+#include "happah/HappahTypes.h"
+#include "happah/models/Drawable.h"
+#include "happah/models/TriangleMesh.h"
+#include "happah/primitives/Color.h"
 
 class QuadMesh : public Drawable {
 

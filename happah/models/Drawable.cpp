@@ -1,4 +1,4 @@
-#include "Drawable.h"
+#include "happah/models/Drawable.h"
 
 Drawable::Drawable(std::string name) : GeometryObject(name) {}
 

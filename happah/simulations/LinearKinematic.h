@@ -1,6 +1,7 @@
 #ifndef LINEARKINEMATIC_H
 #define LINEARKINEMATIC_H
-#include "Kinematic.h"
+
+#include "happah/simulations/Kinematic.h"
 
 class LinearKinematic: public Kinematic
 {

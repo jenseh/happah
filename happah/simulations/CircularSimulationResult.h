@@ -1,9 +1,9 @@
 #ifndef CIRCULARSIMULATIONRESULT_H
 #define CIRCULARSIMULATIONRESULT_H
 
-#include <math.h>
 #include <ext/hash_map>
 #include <glm/glm.hpp>
+#include <math.h>
 
 using namespace __gnu_cxx;
 

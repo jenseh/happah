@@ -1,6 +1,7 @@
 #ifndef SCENELISTENER_H
 #define SCENELISTENER_H
-#include "../core/SceneManager.h"
+
+#include "happah/scene/SceneManager.h"
 
 class SceneListener {
 

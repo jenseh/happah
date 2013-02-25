@@ -1,9 +1,9 @@
-#include <QVBoxLayout>
 #include <QTextStream>
+#include <QVBoxLayout>
 #include <QWidget>
 #include <typeinfo>
 
-#include "ToolSelector.h"
+#include "happah/gui/qt/ToolSelector.h"
 
 ToolSelector::ToolSelector(QWidget* parent) {
 	setParent(parent);

@@ -1,4 +1,4 @@
-#include "GeometryMesh.h"
+#include "happah/models/GeometryMesh.h"
 
 GeometryMesh::GeometryMesh(std::vector<glm::vec4> *vertices,std::vector<glm::vec4> *normals,std::string name):Drawable(name)
 {

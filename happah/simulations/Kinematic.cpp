@@ -1,4 +1,4 @@
-#include "Kinematic.h"
+#include "happah/simulations/Kinematic.h"
 
 Kinematic::Kinematic(Polynom<double> transX, Polynom<double> transY, Polynom<double> transZ,
                      Polynom<double> rotX, Polynom<double> rotY, Polynom<double> rotZ):

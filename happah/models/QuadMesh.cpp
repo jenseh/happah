@@ -1,4 +1,4 @@
-#include "QuadMesh.h"
+#include "happah/models/QuadMesh.h"
 
 QuadMesh::QuadMesh(std::vector<glm::vec4> vertexData, std::string name) : Drawable(name)
 {

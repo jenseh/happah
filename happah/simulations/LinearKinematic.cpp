@@ -1,4 +1,4 @@
-#include "LinearKinematic.h"
+#include "happah/simulations/LinearKinematic.h"
 
 LinearKinematic::LinearKinematic(int iterations, glm::vec3 start, glm::vec3 end):Kinematic(iterations)
 {

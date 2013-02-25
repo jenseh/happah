@@ -1,10 +1,10 @@
 #ifndef ZCIRCLECLOUD_H
 #define ZCIRCLECLOUD_H
 
+#include <QMatrix4x4>
 #include <vector>
 
-#include <QMatrix4x4>
-#include "../primitives/Circle.h"
+#include "happah/primitives/Circle.h"
 
 class ZCircleCloud
 {

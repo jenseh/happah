@@ -1,15 +1,15 @@
 #pragma once
 
-#include <iostream>
-#include <glm/glm.hpp>
-#include <cmath>
 #include <algorithm>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <iostream>
 #include <list>
 
-#include "Triangle.h"
-#include "../kdtree/BBox.h"
-#include "../kdtree/BSphere.h"
-#include "../../HappahTypes.h"
+#include "happah/HappahTypes.h"
+#include "happah/kdtree/BBox.h"
+#include "happah/kdtree/BSphere.h"
+#include "happah/primitives/Triangle.h"
 
 struct CirclePoint {
   hpreal angle;

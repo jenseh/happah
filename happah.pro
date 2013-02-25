@@ -4,7 +4,7 @@ QT += core \
 	gui \
 	opengl
 	
-QMAKE_LFLAGS_RELEASE += /DEBUG
+QMAKE_CXXFLAGS_RELEASE += -g
 
 #KEEP HEADERS SORTED!!!
 HEADERS += \

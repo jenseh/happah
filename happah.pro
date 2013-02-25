@@ -1,10 +1,9 @@
 TEMPLATE = app
 TARGET = happah
+CONFIG += debug
 QT += core \
 	gui \
 	opengl
-	
-QMAKE_CXXFLAGS_RELEASE += -g
 
 #KEEP HEADERS SORTED!!!
 HEADERS += \
@@ -177,8 +176,6 @@ unix {
 }
 
 debug:   DESTDIR = build/debug
-release: DESTDIR = build/release
-
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc

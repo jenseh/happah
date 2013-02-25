@@ -32,7 +32,7 @@ void main() {
         vec4 diffuseIntensity = lightColor * diffuseFactor * max(normalDotLightDirection, 0.0f) ;
 
 	// specular contribution
-        float halfwayVectorDotNormal = dot(halfwayVector,normal);
+        float halfwayVectorDotNormal = dot(halfwayVector, normal);
         vec4 specularIntensity  = lightColor * specularFactor * pow(max(halfwayVectorDotNormal, 0.0f), phongExponent);
 
 	// add all Contributions

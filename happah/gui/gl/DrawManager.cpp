@@ -65,7 +65,7 @@ bool DrawManager::initShaderPrograms() {
 
 void DrawManager::compileShader(GLuint shader, const char* filePath) {
 	ifstream sourceFile(filePath);
-	if(sourceFile) {
+	//if(sourceFile) {
 		stringstream temp;
 		temp << sourceFile.rdbuf();
 		sourceFile.close();
@@ -83,7 +83,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		    printf(" Infolog: %s\n", log);
 		}
 		else cout << "Compilation was successful." << endl;
-	} else cerr << "Failed to open source file." << endl;
+	//} else cerr << "Failed to open source file." << endl;
 }
 
 bool DrawManager::createBuffers() {

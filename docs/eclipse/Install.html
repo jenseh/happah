@@ -1,0 +1,28 @@
+<html>
+<head> 
+    <title>Install manual for IDE eclipse</title> 
+</head> 
+<body>
+
+<ul type = "square">
+	<li>How to get Happah running in eclipse:</li>
+	<ul type = "circle">
+		<li>Open eclipse with fresh empty workspace</li>
+		<li><i>File</i>><i>Import</i>><i>Git</i>><i>Project from Git</i></li>
+		<li>Choose <i>Uri</i> and input git url</li>
+		<li><b>Important</b>: Change project directory from .../workspace/happah to .../happah so that the project is not in the eclipse workspace directory</li>
+		<li>Choose <i>Import as general project</i> and goto next and then finish</li>
+		<li>Now there should be the project happah in the project explorer</li>
+		<li>Right-click new><i>Convert to native C/C++ project</i></li>
+		<li>As project type choose <i>Makefile Project</i>><i>Linux gcc</i></li>
+		<li>Press finish and run qmake from terminal</li>
+	</ul>
+	<li>Other helpfull settings:</li>
+ 	<ul type = "circle">
+		<li>To get rid of the eclipse error messages go to: <i>Project</i>><i>Properties</i>><i>C/C++ Build</i>><i>Discovery Options</i> and choose <i>gcc C++ Compiler</i> instead of <i>gcc C Compiler</i></li>
+	</ul>
+</ul>
+</body>
+</html>
+
+

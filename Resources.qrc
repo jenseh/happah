@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>src/shader/blinnphongFrag.glsl</file>
-        <file>src/shader/blinnphongVert.glsl</file>
-        <file>src/shader/simpleFrag.glsl</file>
-        <file>src/shader/simpleVert.glsl</file>
-    </qresource>
-</RCC>

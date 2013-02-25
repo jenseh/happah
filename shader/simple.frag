@@ -1,51 +1,42 @@
 #version 330 compatibility
 
-// === VERTEX SHADER OUTPUT === //
-in vec4 vVertex;				// interpolated position in world space           
-in vec4 vNormal;        		// interpolated normal in world space
-in vec4 vColor;					// interpolated color
+in vec4 vVertex; // interpolated position in world space           
+in vec4 vNormal; // interpolated normal in world space
+in vec4 vColor; // interpolated color
 
-// === 		UNIFORMS		=== //
-uniform vec3 cameraPosition;    // camera position in world space
+uniform vec3 cameraPosition;    
+uniform float ambientFactor; 				
+uniform float diffuseFactor;				
+uniform float specularFactor;				
+uniform float phongExponent;			
 
-//		shading materials		//
-uniform float ka; 				// ambient  factor
-uniform float kd;				// diffuse  factor
-uniform float ks;				// specular factor	
-uniform float phong;			// phong exponent for specular lighting
+out vec4 fragmentColor; // color of each pixel	
 
-
-// === FRAGMENT SHADER OUTPUT === //
-out vec4 fragmentColor;			  // color of each pixel	
-
-
+//SIMPLE BLINN-PHONG SHADING
 void main() {
-		// SIMPLE BLINN-PHONG SHADING //
-		
-        vec4 lightPos 	= vec4(8.0f, 8.0f, 0.0f,1.0f);    
+        vec4 lightPosition 	= vec4(8.0f, 8.0f, 0.0f,1.0f);    
         vec4 lightColor = vec4(0.6f, 0.6f, 0.6f,1.0f);
 
-		// calculate vectors needed  
-        vec4 camPosWS   = vec4(cameraPosition,1.0f);
-        vec4 normalWS 	= normalize(vNormal);
-        vec4 lightWS 	= normalize(lightPos - vVertex);
-        vec4 viewWS 	= normalize(camPosWS-vVertex);
-        vec4 halfWS 	= normalize(viewWS + lightWS);
-
+		// calculate lighting in worldspace 
+        vec4 cameraPosition4D = vec4(cameraPosition,1.0f);
+        vec4 normal = normalize(vNormal);
+        vec4 lightDirection = normalize(lightPosition - vVertex);
+        vec4 viewVector = normalize(cameraPosition4D-vVertex);
+        vec4 halfWayVector = normalize(viewVector + lightDirection);
 
 		// ambient contribution 
-        vec4 Iambient 	= ka* vColor;
+        vec4 ambientIntensity = ambientFactor* vColor;
         
 		// diffuse contribution
-        float NdotL 	= dot(normalWS,lightWS);
-        vec4 Idiffuse 	=lightColor* kd * max(NdotL,0.0f) ;
+        float NdotL 	= dot(normal,lightDirection);
+        vec4 diffuseIntensity 	=lightColor* diffuseFactor * max(NdotL,0.0f) ;
 
 		// specular contribution
-        float HdotN 	= dot(halfWS,normalWS);
-        vec4 Ispecular  = lightColor * ks* pow(max(HdotN,0.0f),phong);
+        float HdotN 	= dot(halfWayVector,normal);
+        vec4 specularIntensity  = lightColor * specularFactor* pow(max(HdotN,0.0f),phongExponent);
 
        // add all Contributions
-       fragmentColor 	= clamp(Iambient+Idiffuse+Ispecular,0.0f,1.0f);
+       fragmentColor 	= clamp(ambientIntensity+diffuseIntensity+specularIntensity,0.0f,1.0f);
      
 	
 }

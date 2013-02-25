@@ -42,22 +42,22 @@ bool DrawManager::initShaderPrograms() {
 
 
 	// Matrix Uniforms
-	m_MMatrixLocation = glGetUniformLocation(m_program, "MMatrix");
-	if(m_MMatrixLocation < 0) cerr << "Failed to find MMatrixLocation." << endl;
-	m_MVPMatrixLocation = glGetUniformLocation(m_program, "MVPMatrix");
-	if(m_MVPMatrixLocation < 0) cerr << "Failed to find MVPMatrixLocation." << endl;
-	m_NMatrixLocation = glGetUniformLocation(m_program, "NMatrix");
-	if(m_NMatrixLocation < 0) cerr << "Failed to find NMatrixLocation." << endl;
+	m_modelMatrixLocation = glGetUniformLocation(m_program, "modelMatrix");
+	if(m_modelMatrixLocation < 0) cerr << "Failed to find ModelMatrixLocation." << endl;
+	m_modelViewProjectionMatrixLocation = glGetUniformLocation(m_program, "modelViewProjectionMatrix");
+	if(m_modelViewProjectionMatrixLocation < 0) cerr << "Failed to find modelViewProjectionMatrixLocation." << endl;
+	m_normalMatrixLocation = glGetUniformLocation(m_program, "normalMatrix");
+	if(m_normalMatrixLocation < 0) cerr << "Failed to find normalMatrixLocation." << endl;
 
 	// Material uniforms
-	m_kaLocation = glGetUniformLocation(m_program, "ka");
-		if(m_kaLocation < 0) cerr << "Failed to find kaLocation." << endl;
-	m_kdLocation = glGetUniformLocation(m_program, "kd");
-	if(m_kdLocation < 0) cerr << "Failed to find kdLocation." << endl;
-	m_ksLocation = glGetUniformLocation(m_program, "ks");
-	if(m_ksLocation < 0) cerr << "Failed to find ksLocation." << endl;
-	m_phongLocation = glGetUniformLocation(m_program, "phong");
-	if(m_phongLocation < 0) cerr << "Failed to find phongLocation." << endl;
+	m_ambientFactorLocation = glGetUniformLocation(m_program, "ambientFactor");
+		if(m_ambientFactorLocation < 0) cerr << "Failed to find ambientFactorLocation." << endl;
+	m_diffuseFactorLocation = glGetUniformLocation(m_program, "diffuseFactor");
+	if(m_diffuseFactorLocation < 0) cerr << "Failed to find diffuseFactorLocation." << endl;
+	m_specularFactorLocation = glGetUniformLocation(m_program, "specularFactor");
+	if(m_specularFactorLocation < 0) cerr << "Failed to find specularFactorLocation." << endl;
+	m_phongExponentLocation = glGetUniformLocation(m_program, "phongExponent");
+	if(m_phongExponentLocation < 0) cerr << "Failed to find phongLocation." << endl;
 
 	//Camera and Light uniforms
 	m_cameraPositionLocation = glGetUniformLocation(m_program, "cameraPosition");
@@ -192,18 +192,17 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 
 		}
 
-		int hasVertexColor = (*i)->hasColorData();
-		
+
 
 		Material material = (*i)->getMaterial();
 
-		glUniformMatrix4fv(m_MMatrixLocation, 1, GL_FALSE, modelMatrixFloats);
-		glUniformMatrix4fv(m_MVPMatrixLocation, 1, GL_FALSE, MVPFloats);
-		glUniformMatrix3fv(m_NMatrixLocation, 1, GL_FALSE, normalMatrixFloats);
-		glUniform1f(m_kaLocation,material.getKa());
-		glUniform1f(m_kdLocation,material.getKd());
-		glUniform1f(m_ksLocation,material.getKs());
-		glUniform1f(m_phongLocation,material.getShininess());
+		glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, modelMatrixFloats);
+		glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, MVPFloats);
+		glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, normalMatrixFloats);
+		glUniform1f(m_ambientFactorLocation,material.getKa());
+		glUniform1f(m_diffuseFactorLocation,material.getKd());
+		glUniform1f(m_specularFactorLocation,material.getKs());
+		glUniform1f(m_phongExponentLocation,material.getShininess());
 		glUniform3f(m_cameraPositionLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
 
 		int vertexDataSize = (*i)->getVertexData()->size();

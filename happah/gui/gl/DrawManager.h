@@ -33,14 +33,14 @@ private:
 	GLint m_colorLocation;
 
 	//uniform locations
-	GLint m_MMatrixLocation;     	//model matrix
-	GLint m_MVPMatrixLocation;		//model view projection matrix
-	GLint m_NMatrixLocation;		//normal matrix
-	GLint m_kaLocation;				// MATERIAL ambient part
-	GLint m_kdLocation;				// MATERIAL diffuse part
-	GLint m_ksLocation;				// MATERIAL specular part
-	GLint m_phongLocation;			// MATERIAL phong exponent
-	GLint m_cameraPositionLocation; // camera position
+	GLint m_modelMatrixLocation;
+	GLint m_modelViewProjectionMatrixLocation;
+	GLint m_normalMatrixLocation;
+	GLint m_ambientFactorLocation;
+	GLint m_diffuseFactorLocation;
+	GLint m_specularFactorLocation;
+	GLint m_phongExponentLocation;
+	GLint m_cameraPositionLocation;
 
 
 };

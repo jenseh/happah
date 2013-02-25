@@ -3,34 +3,31 @@
 
 #include "happah/gui/gl/GlViewport3D.h"
 
-
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 		QWidget *parent, MainWindow* mainWindow) :
-		QGLWidget(format, parent), vertexBuffer_(QGLBuffer::VertexBuffer), coordVBO_(
-				QGLBuffer::VertexBuffer), triangleVBO_(QGLBuffer::VertexBuffer) {
+		QGLWidget(format, parent), m_vertexBuffer(QGLBuffer::VertexBuffer), m_coordVBO(
+				QGLBuffer::VertexBuffer), m_triangleVBO(QGLBuffer::VertexBuffer) {
 
-    setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
+	setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
 
-	mainWindow_ = mainWindow;
+	m_mainWindow = mainWindow;
 	m_sceneManager = sceneManager;
 	m_drawManager = new DrawManager(m_sceneManager);
 
-	projectionMatrix_.setToIdentity();
-	viewMatrix_.setToIdentity();
-	zoomRad_ = 5.0f;
-	eye_.setX(0.0f);
-	eye_.setY(0.0f);
-	eye_.setZ(zoomRad_);
-	center_.setX(0.0f);
-	center_.setY(0.0f);
-	center_.setZ(0.0f);
-	up_.setX(0.0f);
-	up_.setY(1.0f);
-	up_.setZ(0.0f);
-	pointCount_ = 0;
-	theta_ = 0;
-	phi_ = 0;
-
+	m_projectionMatrix.setToIdentity();
+	m_viewMatrix.setToIdentity();
+	m_zoomRad = 5.0f;
+	m_camera.setX(0.0f);
+	m_camera.setY(0.0f);
+	m_camera.setZ(m_zoomRad);
+	m_center.setX(0.0f);
+	m_center.setY(0.0f);
+	m_center.setZ(0.0f);
+	m_up.setX(0.0f);
+	m_up.setY(m_zoomRad);
+	m_up.setZ(0.0f);
+	m_theta = 0;
+	m_phi = 0;
 
 }
 
@@ -39,10 +36,17 @@ void GlViewport3D::initializeGL() {
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
 	GLenum err = glewInit();
+<<<<<<< HEAD
+	if (GLEW_OK != err) {
+		/* Problem: glewInit failed, something is seriously wrong. */
+		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+
+=======
 	if (GLEW_OK != err)
 	{
 	  /* Problem: glewInit failed, something is seriously wrong. */
 	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+>>>>>>> 457b183a60a0ee169c1b64f714e14d110986e350
 	}
 
 	if (!m_drawManager->initGL()) {
@@ -50,75 +54,90 @@ void GlViewport3D::initializeGL() {
 	}
 
 	// Setup and start a timer
-	timer_ = new QTimer(this);
-	connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
-	timer_->start(WAIT_TIME);
+	m_timer = new QTimer(this);
+	connect(m_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
+	m_timer->start(WAIT_TIME);
 
+<<<<<<< HEAD
+	//m_sceneManager->buildScene();
+=======
+>>>>>>> 457b183a60a0ee169c1b64f714e14d110986e350
 }
 
 void GlViewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
-	projectionMatrix_.perspective(45.0f, ratio, 0.1f, 100.0f);
+	m_projectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
 }
 
 void GlViewport3D::paintGL() {
 	updateView();
-	m_drawManager->draw(&projectionMatrix_, &viewMatrix_, &eye_);
+	m_drawManager->draw(&m_projectionMatrix, &m_viewMatrix, &m_camera);
 }
 
 void GlViewport3D::updateView() {
 	//Update ViewMatrix
 	QMatrix4x4 LookatMatrix;
-	LookatMatrix.lookAt(eye_, center_, up_);
-	viewMatrix_ = LookatMatrix;
+	LookatMatrix.lookAt(m_camera, m_center, m_up);
+	m_viewMatrix = LookatMatrix;
 }
 
 void GlViewport3D::mouseMoveEvent(QMouseEvent *event) {
 
 	int width = this->width();
 	int height = this->height();
-	float stepSize = 150.0f;
 
-	float dx = (float) (event->x() - mousePos_.x()) / width;
-	float dy = (float) (event->y() - mousePos_.y()) / height;
+	float dx = (float) (event->x() - m_mousePos.x()) / width;
+	float dy = (float) (event->y() - m_mousePos.y()) / height;
 
-	if (event->buttons() == Qt::RightButton) {
+	QVector3D forward =m_center - m_camera;
+	forward.normalize();
+	forward *= m_zoomRad;
+	QVector3D right = QVector3D::crossProduct(m_up, forward);
+	right.normalize();
+	right *= m_zoomRad;
+	m_up.normalize();
+	m_up *= m_zoomRad;
 
-		if (theta_ < 360) {
-			theta_ = theta_ + (stepSize * dx);
-		} else
-			theta_ = 0;
-		if (phi_ < 360) {
-			phi_ = phi_ + (stepSize * dy);
-		} else
-			phi_ = 0;
-		float thetaRad = theta_ * M_PI / 180;
-		float phiRad = phi_ * M_PI / 180;
+	QVector3D delta;
 
-		eye_.setX(zoomRad_ * (sin(thetaRad) * cos(phiRad))); //- sin(dx)*cos(dy)));
-		eye_.setY(zoomRad_ * (sin(thetaRad) * sin(phiRad))); //+ sin(dx)*cos (dy)));
-		eye_.setZ(zoomRad_ * (cos(thetaRad))); //*cos(dy)));
+	if (event->buttons() == Qt::LeftButton) {
+		m_theta = dx*M_PI;
+		m_phi = dy*M_PI;
+
+		m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
+		// Recalc forward
+		forward =m_center - m_camera;
+		forward.normalize();
+		forward *= m_zoomRad;
+
+		m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
+		updateGL();
+	} else if (event->buttons() == Qt::RightButton) {
+		// Movement forward, backwards
+		delta = forward * dy + right * dx;
+		m_camera += delta;
+		m_center += delta;
+		updateGL();
+	} else if (event->buttons() == Qt::MiddleButton ) {
+		delta = m_up * dy;
+		m_center += delta;
+		m_camera += delta;
 		updateGL();
 	}
-
-	mousePos_ = event->pos();
+	m_mousePos = event->pos();
 
 }
 void GlViewport3D::mousePressEvent(QMouseEvent *event) {
-	if (event->buttons() == Qt::LeftButton) {
-		// do something
-	} else if (event->buttons() == Qt::RightButton) {
-		mousePos_ = event->pos();
-	}
+	m_mousePos = event->pos();
 }
 
 void GlViewport3D::wheelEvent(QWheelEvent *event) {
 	float degrees = event->delta() / 8;
 	float steps = degrees / 15;
 
-	zoomRad_ = zoomRad_ - steps;
-	eye_.setZ(zoomRad_);
+	m_zoomRad = m_zoomRad - steps;
+	m_camera.setZ(m_zoomRad);
 	updateGL();
 
 }
@@ -126,33 +145,21 @@ void GlViewport3D::wheelEvent(QWheelEvent *event) {
 
 //TODO: Adapt to new achitecture
 void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
-        float x = (float) event->pos().x();
-        float y = (float) event->pos().y();
-        float width = (float) this->width();
-        float height = (float) this->height();
+	float x = (float) event->pos().x();
+	float y = (float) event->pos().y();
+	float width = (float) this->width();
+	float height = (float) this->height();
 
-  // Create 2World Matrix
-
-        QMatrix4x4 VP = projectionMatrix_*viewMatrix_;
-  float VPFloats[16];
-  const qreal* VPQreals = VP.constData();
-
-  for (int i = 0; i < 16; ++i) {
-
-      VPFloats[i] = VPQreals[i];
-      cout << VPFloats[i] << " ";
-    }
-  glm::mat4 toWorld = glm::make_mat4(VPFloats);
-  // toWorld = glm::inverse(toWorld);
-
-  Picker* picker = new Picker();
-  bool hit = picker->select(x,y,
-                           width,height,
-                           &toWorld, m_sceneManager);
-
+	// Create 2World Matrix
+	QMatrix4x4 VP = m_projectionMatrix * m_viewMatrix;
+	float VPFloats[16];
+	const qreal* VPQreals = VP.constData();
+	glm::mat4 toWorld = glm::make_mat4(VPFloats);
+	Picker* picker = new Picker();
+	bool hit = picker->select(x, y, width, height, &toWorld, m_sceneManager);
 
 }
 
 void GlViewport3D::keyPressEvent(QKeyEvent *event) {
-	cout << "Key: " << event->key() << endl;
+	// Do something
 }

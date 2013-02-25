@@ -23,25 +23,26 @@ private:
 	GLuint m_program;
 	GLuint m_vertexShader;
 
-	GLint m_phong;     // some weird bug that messed with uniforms .. naming shininess randomly solved it
-	GLint m_eyeLocation;
-	GLint m_modelMatrixLocation;
-	GLint m_MVPLocation;
-	GLint m_normalMatLocation;
-	GLint m_normalLocation;
-	GLint m_vertexLocation;
-	GLint m_vertexColor;
-
 	GLuint m_coloredVertexArrayObject;
 	GLuint m_vertexDataBuffer;
 	GLuint m_colorDataBuffer;
 
-	GLint m_shininessLocation;
-	GLint m_diffuseColorLocation;
-	GLint m_ambientColorLocation;
-	GLint m_specularColorLocation;
+	//attribute locations
+	GLint m_vertexLocation;
+	GLint m_normalLocation;
+	GLint m_colorLocation;
 
-	GLint m_hasVertexColorLocation; // Whether the color buffer is used (1) or not (0)
+	//uniform locations
+	GLint m_MMatrixLocation;     	//model matrix
+	GLint m_MVPMatrixLocation;		//model view projection matrix
+	GLint m_NMatrixLocation;		//normal matrix
+	GLint m_kaLocation;				// MATERIAL ambient part
+	GLint m_kdLocation;				// MATERIAL diffuse part
+	GLint m_ksLocation;				// MATERIAL specular part
+	GLint m_phongLocation;			// MATERIAL phong exponent
+	GLint m_cameraPositionLocation; // camera position
+
+
 };
 
 #endif // DRAWMANAGER_H

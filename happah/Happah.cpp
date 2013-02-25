@@ -6,6 +6,7 @@ Happah::Happah(int & argc, char ** argv) :
 	m_window.show();
 }
 
+
 Happah::~Happah() {
 }
 

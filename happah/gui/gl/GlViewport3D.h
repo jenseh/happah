@@ -41,20 +41,19 @@ private:
 	bool initShaderPrograms();
 	void setZoom(float zoom);
 
-	QTimer *timer_;
-	MainWindow* mainWindow_;
+	QTimer *m_timer;
+	MainWindow* m_mainWindow;
 	SceneManager* m_sceneManager;
 	DrawManager* m_drawManager;
 
 	uint m_lastSceneState;
-	QMatrix4x4 viewMatrix_;
-	QMatrix4x4 projectionMatrix_;
-	QVector3D eye_, center_, up_;
-	QGLBuffer vertexBuffer_, coordVBO_, triangleVBO_;
-	glm::vec4 triangleVP_[3];
-	QPoint mousePos_;
-	int pointCount_;
-	float zoomRad_, theta_, phi_; //is zoomRad german?
+	QMatrix4x4 m_viewMatrix;
+	QMatrix4x4 m_projectionMatrix;
+	QVector3D m_camera, m_center, m_up;
+	QGLBuffer m_vertexBuffer, m_coordVBO, m_triangleVBO;
+	glm::vec4 m_triangleVP[3];
+	QPoint m_mousePos;
+	float m_zoomRad, m_theta, m_phi; //is zoomRad german?
 
 	const static int WAIT_TIME = 40;
 };

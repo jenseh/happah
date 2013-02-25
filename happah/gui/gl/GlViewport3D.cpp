@@ -43,24 +43,17 @@ void GlViewport3D::initializeGL() {
 	{
 	  /* Problem: glewInit failed, something is seriously wrong. */
 	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-
 	}
-	// Initialize shaders
-	if (!m_drawManager->initShaderPrograms()) {
+
+	if (!m_drawManager->initGL()) {
 		return;
 	}
-
-	// Finalize vertex buffer
-	//vector<Drawable*>* drawables = m_sceneManager->getDrawables();
-	//m_drawManager->createBufferFor(drawables);
-	m_drawManager->sceneChanged();
 
 	// Setup and start a timer
 	timer_ = new QTimer(this);
 	connect(timer_, SIGNAL(timeout()), this, SLOT(updateGL()));
 	timer_->start(WAIT_TIME);
 
-	m_sceneManager->buildScene();
 }
 
 void GlViewport3D::resizeGL(int width, int height) {

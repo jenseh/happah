@@ -89,7 +89,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 	} else cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::sceneChanged() {
+void DrawManager::createBuffers() {
 	glEnable(GL_DEPTH_TEST);
 	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
@@ -217,4 +217,17 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		offset += vertexDataSize;
 	}
 	glBindVertexArray(0);
+}
+
+void DrawManager::sceneChanged(){
+	createBuffers();
+}
+
+bool DrawManager::initGL(){
+	glEnable(GL_DEPTH_TEST);
+	if(!initShaderPrograms())
+		return false;
+	if(!createBuffers())
+		return false;
+	return true;
 }

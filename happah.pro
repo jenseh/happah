@@ -3,6 +3,8 @@ TARGET = happah
 QT += core \
 	gui \
 	opengl
+	
+QMAKE_LFLAGS_RELEASE += /DEBUG
 
 #KEEP HEADERS SORTED!!!
 HEADERS += \
@@ -174,8 +176,9 @@ unix {
 	INCLUDEPATH += /usr/include $$system(pwd)
 }
 
-release: DESTDIR = build/release
 debug:   DESTDIR = build/debug
+release: DESTDIR = build/release
+
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc

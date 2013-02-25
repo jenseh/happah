@@ -4,151 +4,160 @@ QT += core \
 	gui \
 	opengl
 
+#KEEP HEADERS SORTED!!!
 HEADERS += \
-	src/main/gui/qt/BSplineTool.h \
-	src/main/gui/qt/InvoluteSpurGearTool.h \
-	src/main/gui/qt/SimpleGearTool.h \
-	src/main/gui/RenderItem3D.h \
-	src/main/gui/qt/GearSlider.h \
-	src/main/gui/qt/ComponentList.h \
-	src/main/gui/qt/EditorScene.h \
-	src/main/gui/qt/EditorSceneItem.h \
-	src/main/gui/qt/EditorSceneManager.h \
-	src/main/gui/qt/SceneManager3D.h \
-	src/main/gui/qt/Painter2DQt.h \
-	src/main/gui/Painter2D.h \
-	src/main/gui/Drawable2D.h \
-	src/main/core/geometries/BSplineCurve.h \
-	src/main/core/geometries/BSplineGearCurve.h \
-	src/main/core/geometries/GeometryObject.h \
-	src/main/core/geometries/Gear.h \
-	src/main/core/geometries/SimpleGear.h \
-	src/main/core/geometries/InvoluteSpurGear.h \
-	src/main/core/geometries/Sphere.h \
-	src/main/core/geometries/StandardProfile.h \
-	src/main/Happah.h \
-	src/main/HappahTypes.h \
-	src/main/gui/qt/MainWindow.h \
-	src/main/gui/qt/SplineTool.h \
-	src/main/gui/qt/Tool.h \
-	src/main/gui/qt/ToolSelector.h \
-	src/main/core/geometries/Grid.h \
-	src/main/core/SceneManager.h \
-	src/main/gui/gl/GlViewport3D.h \
-	src/main/core/models/QuadMesh.h \
-	src/main/core/geometries/BasicRack.h \
-	src/main/core/models/Drawable.h \
-	src/main/core/geometries/NonDrawable.h \
-	src/main/core/models/TriangleMesh.h \
-	src/main/gui/gl/DrawManager.h \
-	src/main/gui/SceneListener.h \
-	src/main/core/kdtree/TriangleKDTreeNode.h \
-	src/main/core/kdtree/TriangleKDTree.h \
-	src/main/core/kdtree/TriangleBox.h \
-	src/main/core/primitives/Triangle.h \
-	src/main/core/primitives/Ray.h \
-	src/main/core/primitives/Color.h \
-	src/main/core/kdtree/IntersectInfo.h \
-	src/main/core/simulations/DiscGearGrind.h \
-	src/main/core/geometries/Disc.h \
-	src/main/core/kdtree/Box.h \
-	src/main/core/simulations/WormGearGrind.h \
-	src/main/core/models/RayCloud.h \
-	src/main/core/models/CircleCloud.h \
-	src/main/core/simulations/Simulation.h \
-	src/main/core/primitives/Circle.h \
-	src/main/core/primitives/Color.h \
-	src/main/core/models/ZCircleCloud.h \
-	src/main/core/simulations/Kinematic.h \
-	src/main/core/kdtree/ImplicitKDTree.h \
-	src/main/core/kdtree/BBox.h \
-	src/main/core/kdtree/BSphere.h \
-	src/main/test/CircleTriangleIntersectionBenchmark.h \
-	src/main/core/kdtree/ExplicitKDTree.h \
-	src/main/core/kdtree/ExplicitKDTreeNode.h \
-	src/main/core/kdtree/ExplicitKDTreeLeaf.h \
-	src/main/core/kdtree/ExplicitKDTreeInnerNode.h \
-	src/main/test/CircleTriangleIntersectionTest.h \
-	src/main/core/simulations/CircularSimulationResult.h \
-	src/main/test/WormGearGrindTest.h \
-	src/main/test/DiscGearGrindTest.h \
-	src/main/test/KinematicTest.h \
-	src/main/gui/Picker.h \
-	src/main/core/models/Material.h \
-	src/main/core/geometries/TriPatch.h \
-	src/main/core/models/PointCloud.h \
-	src/main/core/geometries/ControlNet2.h \
-	src/main/gui/qt/DiscGearGrindTool.h \
-	src/main/core/geometries/SpherePatch.h \
-	src/main/core/models/GeometryMesh.h
+	happah/Happah.h \
+	happah/HappahTypes.h \
+\
+	happah/geometries/BasicRack.h \
+	happah/geometries/BSplineCurve.h \
+	happah/geometries/BSplineGearCurve.h \
+	happah/geometries/ControlNet2.h \
+	happah/geometries/Disc.h \
+	happah/geometries/Gear.h \
+	happah/geometries/GeometryObject.h \
+	happah/geometries/Grid.h \
+	happah/geometries/InvoluteSpurGear.h \
+	happah/geometries/NonDrawable.h \
+	happah/geometries/SimpleGear.h \
+	happah/geometries/Sphere.h \
+	happah/geometries/SpherePatch.h \
+	happah/geometries/StandardProfile.h \
+	happah/geometries/TriPatch.h \
+\
+	happah/gui/Drawable2D.h \
+	happah/gui/Painter2D.h \
+	happah/gui/Picker.h \
+	happah/gui/RenderItem3D.h \
+	happah/gui/SceneListener.h \
+\
+	happah/gui/gl/DrawManager.h \
+	happah/gui/gl/GlViewport3D.h \
+\
+	happah/gui/qt/BSplineTool.h \
+	happah/gui/qt/ComponentList.h \
+	happah/gui/qt/DiscGearGrindTool.h \
+	happah/gui/qt/EditorScene.h \
+	happah/gui/qt/EditorSceneItem.h \
+	happah/gui/qt/EditorSceneManager.h \
+	happah/gui/qt/GearSlider.h \
+	happah/gui/qt/InvoluteSpurGearTool.h \
+	happah/gui/qt/MainWindow.h \
+	happah/gui/qt/Painter2DQt.h \
+	happah/gui/qt/SceneManager3D.h \
+	happah/gui/qt/SimpleGearTool.h \
+	happah/gui/qt/SplineTool.h \
+	happah/gui/qt/Tool.h \
+	happah/gui/qt/ToolSelector.h \
+\
+	happah/kdtree/BBox.h \
+	happah/kdtree/Box.h \
+	happah/kdtree/BSphere.h \
+	happah/kdtree/ExplicitKDTree.h \
+	happah/kdtree/ExplicitKDTreeInnerNode.h \
+	happah/kdtree/ExplicitKDTreeLeaf.h \
+	happah/kdtree/ExplicitKDTreeNode.h \
+	happah/kdtree/ImplicitKDTree.h \
+	happah/kdtree/IntersectInfo.h \
+	happah/kdtree/TriangleBox.h \
+	happah/kdtree/TriangleKDTree.h \
+	happah/kdtree/TriangleKDTreeNode.h \
+\
+	happah/models/CircleCloud.h \
+	happah/models/Drawable.h \
+	happah/models/GeometryMesh.h \
+	happah/models/Material.h \
+	happah/models/PointCloud.h \
+	happah/models/QuadMesh.h \
+	happah/models/RayCloud.h \
+	happah/models/TriangleMesh.h \
+	happah/models/ZCircleCloud.h \
+\
+	happah/primitives/Circle.h \
+	happah/primitives/Color.h \
+	happah/primitives/Ray.h \
+	happah/primitives/Triangle.h \
+\
+	happah/scene/SceneManager.h \
+\
+	happah/simulations/DiscGearGrind.h \
+	happah/simulations/CircularSimulationResult.h \
+	happah/simulations/Kinematic.h \
+	happah/simulations/Simulation.h \
+	happah/simulations/WormGearGrind.h
 
-SOURCES += src/main/main.cpp \
-	src/main/gui/qt/BSplineTool.cpp \
-	src/main/gui/qt/InvoluteSpurGearTool.cpp \
-	src/main/gui/qt/SimpleGearTool.cpp \
-	src/main/gui/RenderItem3D.cpp \
-	src/main/gui/qt/GearSlider.cpp \
-	src/main/gui/qt/ComponentList.cpp \
-	src/main/gui/qt/EditorScene.cpp \
-	src/main/gui/qt/EditorSceneItem.cpp \
-	src/main/gui/qt/EditorSceneManager.cpp \
-	src/main/gui/qt/SceneManager3D.cpp \
-	src/main/gui/qt/Painter2DQt.cpp \
-	src/main/gui/Painter2D.cpp \
-	src/main/gui/Drawable2D.cpp \
-	src/main/core/geometries/BSplineCurve.cpp \
-	src/main/core/geometries/BSplineGearCurve.cpp \
-	src/main/core/geometries/GeometryObject.cpp \
-	src/main/core/geometries/Gear.cpp \
-	src/main/core/geometries/SimpleGear.cpp \
-	src/main/core/geometries/InvoluteSpurGear.cpp \
-	src/main/core/geometries/Sphere.cpp \
-	src/main/core/geometries/StandardProfile.cpp \
-	src/main/Happah.cpp \
-	src/main/gui/qt/MainWindow.cpp \
-	src/main/gui/qt/SplineTool.cpp \
-	src/main/gui/qt/Tool.cpp \
-	src/main/gui/qt/ToolSelector.cpp \
-	src/main/core/geometries/Grid.cpp \
-	src/main/core/SceneManager.cpp \
-	src/main/gui/gl/GlViewport3D.cpp \
-	src/main/core/models/QuadMesh.cpp \
-	src/main/core/geometries/BasicRack.cpp \
-	src/main/core/models/Drawable.cpp \
-	src/main/core/geometries/NonDrawable.cpp \
-	src/main/core/models/TriangleMesh.cpp \
-	src/main/gui/gl/DrawManager.cpp \
-	src/main/core/kdtree/TriangleKDTree.cpp \
-	src/main/core/simulations/DiscGearGrind.cpp \
-	src/main/core/geometries/Disc.cpp \
-	src/main/core/kdtree/Box.cpp \
-	src/main/core/simulations/WormGearGrind.cpp \
-	src/main/core/models/RayCloud.cpp \
-	src/main/core/models/CircleCloud.cpp \
-	src/main/core/simulations/Simulation.cpp \
-	src/main/core/models/ZCircleCloud.cpp \
-	src/main/core/simulations/Kinematic.cpp \
-	src/main/core/kdtree/ImplicitKDTree.cpp \
-	src/main/core/kdtree/BBox.cpp \
-	src/main/core/kdtree/BSphere.cpp \
-	src/main/test/CircleTriangleIntersectionBenchmark.cpp \
-	src/main/test/WormGearGrindTest.cpp \
-	src/main/core/kdtree/ExplicitKDTree.cpp \
-	src/main/core/kdtree/ExplicitKDTreeNode.cpp \
-	src/main/core/kdtree/ExplicitKDTreeLeaf.cpp \
-	src/main/core/kdtree/ExplicitKDTreeInnerNode.cpp \
-	src/main/test/CircleTriangleIntersectionTest.cpp \
-	src/main/test/DiscGearGrindTest.cpp \
-	src/main/test/KinematicTest.cpp \
-	src/main/core/simulations/CircularSimulationResult.cpp \
-	src/main/gui/Picker.cpp \
-	src/main/core/models/Material.cpp \
-	src/main/core/geometries/TriPatch.cpp \
-	src/main/core/models/PointCloud.cpp \
-	src/main/core/geometries/ControlNet2.cpp \
-	src/main/gui/qt/DiscGearGrindTool.cpp \
-	src/main/core/geometries/SpherePatch.cpp \
-	src/main/core/models/GeometryMesh.cpp
+#KEEP SOURCES SORTED!!!
+SOURCES += \
+	happah/main.cpp \
+	happah/Happah.cpp \
+\
+	happah/geometries/BasicRack.cpp \
+	happah/geometries/BSplineCurve.cpp \
+	happah/geometries/BSplineGearCurve.cpp \
+	happah/geometries/ControlNet2.cpp \
+	happah/geometries/Disc.cpp \
+	happah/geometries/Gear.cpp \
+	happah/geometries/GeometryObject.cpp \
+	happah/geometries/Grid.cpp \
+	happah/geometries/InvoluteSpurGear.cpp \
+	happah/geometries/NonDrawable.cpp \
+	happah/geometries/SimpleGear.cpp \
+	happah/geometries/Sphere.cpp \
+	happah/geometries/SpherePatch.cpp \
+	happah/geometries/StandardProfile.cpp \
+	happah/geometries/TriPatch.cpp \
+\
+	happah/gui/Drawable2D.cpp \
+	happah/gui/Painter2D.cpp \
+	happah/gui/Picker.cpp \
+	happah/gui/RenderItem3D.cpp \
+\
+	happah/gui/gl/DrawManager.cpp \
+	happah/gui/gl/GlViewport3D.cpp \
+\
+	happah/gui/qt/BSplineTool.cpp \
+	happah/gui/qt/ComponentList.cpp \
+	happah/gui/qt/DiscGearGrindTool.cpp \
+	happah/gui/qt/EditorScene.cpp \
+	happah/gui/qt/EditorSceneItem.cpp \
+	happah/gui/qt/EditorSceneManager.cpp \
+	happah/gui/qt/GearSlider.cpp \
+	happah/gui/qt/InvoluteSpurGearTool.cpp \
+	happah/gui/qt/MainWindow.cpp \
+	happah/gui/qt/Painter2DQt.cpp \
+	happah/gui/qt/SceneManager3D.cpp \
+	happah/gui/qt/SimpleGearTool.cpp \
+	happah/gui/qt/SplineTool.cpp \
+	happah/gui/qt/Tool.cpp \
+	happah/gui/qt/ToolSelector.cpp \
+\
+	happah/kdtree/BBox.cpp \
+	happah/kdtree/Box.cpp \
+	happah/kdtree/BSphere.cpp \
+	happah/kdtree/ExplicitKDTree.cpp \
+	happah/kdtree/ExplicitKDTreeInnerNode.cpp \
+	happah/kdtree/ExplicitKDTreeLeaf.cpp \
+	happah/kdtree/ExplicitKDTreeNode.cpp \
+	happah/kdtree/ImplicitKDTree.cpp \
+	happah/kdtree/TriangleKDTree.cpp \
+\
+	happah/models/CircleCloud.cpp \
+	happah/models/Drawable.cpp \
+	happah/models/GeometryMesh.cpp \
+	happah/models/Material.cpp \
+	happah/models/PointCloud.cpp \
+	happah/models/QuadMesh.cpp \
+	happah/models/RayCloud.cpp \
+	happah/models/TriangleMesh.cpp \
+	happah/models/ZCircleCloud.cpp \
+\
+	happah/scene/SceneManager.cpp \
+\
+	happah/simulations/CircularSimulationResult.cpp \
+	happah/simulations/DiscGearGrind.cpp \
+	happah/simulations/Kinematic.cpp \
+	happah/simulations/Simulation.cpp \
+	happah/simulations/WormGearGrind.cpp
 
 FORMS += 
 RESOURCES += 
@@ -162,7 +171,7 @@ win32 {
 
 unix {
 	LIBS += -lGLEW
-	INCLUDEPATH += /usr/include .
+	INCLUDEPATH += /usr/include $$system(pwd)
 }
 
 release: DESTDIR = build/release

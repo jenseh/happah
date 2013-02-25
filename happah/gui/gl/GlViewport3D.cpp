@@ -36,17 +36,12 @@ void GlViewport3D::initializeGL() {
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
 	GLenum err = glewInit();
-<<<<<<< HEAD
-	if (GLEW_OK != err) {
-		/* Problem: glewInit failed, something is seriously wrong. */
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 
-=======
+
 	if (GLEW_OK != err)
 	{
 	  /* Problem: glewInit failed, something is seriously wrong. */
 	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
->>>>>>> 457b183a60a0ee169c1b64f714e14d110986e350
 	}
 
 	if (!m_drawManager->initGL()) {
@@ -58,10 +53,6 @@ void GlViewport3D::initializeGL() {
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
 	m_timer->start(WAIT_TIME);
 
-<<<<<<< HEAD
-	//m_sceneManager->buildScene();
-=======
->>>>>>> 457b183a60a0ee169c1b64f714e14d110986e350
 }
 
 void GlViewport3D::resizeGL(int width, int height) {

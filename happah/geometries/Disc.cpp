@@ -5,7 +5,7 @@
  *      Author: julian
  */
 
-#include "Disc.h"
+#include "happah/geometries/Disc.h"
 
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.

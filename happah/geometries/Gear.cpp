@@ -1,4 +1,4 @@
-#include "Gear.h"
+#include "happah/geometries/Gear.h"
 #include "glm/gtx/rotate_vector.hpp"
 
 Gear::Gear(std::string name) : NonDrawable(name) {}

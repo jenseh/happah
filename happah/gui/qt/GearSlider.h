@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QWidget>
 
-#include "../../HappahTypes.h"
+#include "happah/HappahTypes.h"
 
 class GearSlider: public QGroupBox {
     Q_OBJECT

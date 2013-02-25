@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "GlViewport3D.h"
+#include "happah/gui/gl/GlViewport3D.h"
 
 
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,

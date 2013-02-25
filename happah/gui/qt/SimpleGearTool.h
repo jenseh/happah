@@ -1,11 +1,11 @@
 #ifndef SIMPLEGEARTOOL_H
 #define SIMPLEGEARTOOL_H
 
-#include "Tool.h"
-#include "GearSlider.h"
-#include "../../HappahTypes.h"
-#include "../../core/geometries/SimpleGear.h"
-#include "../../core/models/TriangleMesh.h"
+#include "happah/gui/qt/Tool.h"
+#include "happah/gui/qt/GearSlider.h"
+#include "happah/HappahTypes.h"
+#include "happah/geometries/SimpleGear.h"
+#include "happah/models/TriangleMesh.h"
 
 class SimpleGearTool : public Tool {
 Q_OBJECT

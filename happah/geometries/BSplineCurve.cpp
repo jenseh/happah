@@ -1,4 +1,4 @@
-#include "BSplineCurve.h"
+#include "happah/geometries/BSplineCurve.h"
 
 #include <iostream>
 

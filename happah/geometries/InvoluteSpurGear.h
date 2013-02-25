@@ -7,13 +7,13 @@
 #include <vector>
 #include <cstring>
 #include <sstream>
-#include "../../HappahTypes.h"
-#include "Gear.h"
-#include "SimpleGear.h"
-#include "BSplineGearCurve.h"
+#include "happah/HappahTypes.h"
+#include "happah/geometries/Gear.h"
+#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/BSplineGearCurve.h"
 //#include "../models/TriangleMesh.h"
 //#include "../models/QuadMesh.h"
-#include "../models/ZCircleCloud.h"
+#include "happah/models/ZCircleCloud.h"
 
 /** @class InvoluteSpurGear
  * @brief Involute gear without a helix angle and with the right-hand flank
@@ -54,12 +54,12 @@ public:
     hpreal getModule();
     hpreal getFacewidth(); //Zahnradbreite
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
-    hpreal getBottomClearance(); //Kopfspielhöhe
-    hpreal getFilletRadius(); //Fußrundungsradius
-    hpreal getHelixAngle(); //Schrägungswinkel beta
+    hpreal getBottomClearance(); //Kopfspielhï¿½he
+    hpreal getFilletRadius(); //Fuï¿½rundungsradius
+    hpreal getHelixAngle(); //Schrï¿½gungswinkel beta
     hpreal getReferenceRadius(); //Teilkreisradius
     hpreal getTipRadius(); //Kopfkreisradius
-    hpreal getRootRadius(); //Fußkreisradius
+    hpreal getRootRadius(); //Fuï¿½kreisradius
     hpreal getBaseRadius(); //Grundkreisradius
     hpreal getAngularPitch(); //Teilungswinkel
 
@@ -104,10 +104,10 @@ private:
 
     template <class T> T *getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize);
 
-    bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern überhaupt erstellbar ist
-    hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Größe Zahnlücke = Größe Zahnbreite
-    hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fußrundung endet/in Evolvente übergeht
-    hpreal getStartFilletAngle(); //Winkel, an dem Fußrundung startet
+    bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern ï¿½berhaupt erstellbar ist
+    hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Grï¿½ï¿½e Zahnlï¿½cke = Grï¿½ï¿½e Zahnbreite
+    hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fuï¿½rundung endet/in Evolvente ï¿½bergeht
+    hpreal getStartFilletAngle(); //Winkel, an dem Fuï¿½rundung startet
     hpreal involuteToCircleAngle(const hpreal &involuteAngle); //calculates the normal angle, one would expect in a cirle, out of the involute angle, which is used to construct the involute
     hpreal involuteAngleOfIntersectionWithCircle(const hpreal &radius);
     hpvec2 mirrorPoint(const hpvec2 &point, const hpvec2 &axis);

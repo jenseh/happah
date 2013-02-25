@@ -1,9 +1,9 @@
 #ifndef NONDRAWABLE_H
 #define NONDRAWABLE_H
 
-#include "GeometryObject.h"
-#include "../models/QuadMesh.h"
-#include "../models/TriangleMesh.h"
+#include "happah/geometries/GeometryObject.h"
+#include "happah/models/QuadMesh.h"
+#include "happah/models/TriangleMesh.h"
 
 class NonDrawable : public GeometryObject
 {

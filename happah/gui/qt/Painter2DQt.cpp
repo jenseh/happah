@@ -1,4 +1,4 @@
-#include "Painter2DQt.h"
+#include "happah/gui/qt/Painter2DQt.h"
 
 Painter2DQt::Painter2DQt( QPainter* painter ) 
 		: m_painter(painter)

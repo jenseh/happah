@@ -1,9 +1,8 @@
-#include "InvoluteSpurGearTool.h"
+#include "happah/gui/qt/InvoluteSpurGearTool.h"
 
 #include <QGroupBox>
 #include <iostream>
-#include "../../test/DiscGearGrindTest.h"
-#include "../RenderItem3D.h"
+#include "happah/gui/RenderItem3D.h"
 
 InvoluteSpurGearTool::InvoluteSpurGearTool() {
 	m_mode = this->IDLEMODE;
@@ -69,8 +68,7 @@ void InvoluteSpurGearTool::createGear() {
 	m_gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
 	m_toSimpleGearButton->setEnabled(true);
 	emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
-	//DiscGearGrindTest test;
-	//emit emitComponent(test.runSimulation());
+
 }
 
 void InvoluteSpurGearTool::setBack() {

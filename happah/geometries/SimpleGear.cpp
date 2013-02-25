@@ -1,4 +1,4 @@
-#include "SimpleGear.h"
+#include "happah/geometries/SimpleGear.h"
 #include "glm/gtx/rotate_vector.hpp"
 
 SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :

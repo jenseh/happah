@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "../../gui/Drawable2D.h"
-#include "../../HappahTypes.h"
+#include "happah/gui/Drawable2D.h"
+#include "happah/HappahTypes.h"
 
 class BSplineCurve : public Drawable2D {
 protected:

@@ -1,4 +1,4 @@
-#include "TriPatch.h"
+#include "happah/geometries/TriPatch.h"
 #include <glm/glm.hpp>
 #include <iostream>
 

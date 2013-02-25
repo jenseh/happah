@@ -1,8 +1,8 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "NonDrawable.h"
-#include "../models/QuadMesh.h"
+#include "happah/geometries/NonDrawable.h"
+#include "happah/models/QuadMesh.h"
 
 class Grid : public NonDrawable
 {

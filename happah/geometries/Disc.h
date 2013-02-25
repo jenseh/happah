@@ -11,8 +11,8 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "NonDrawable.h"
-#include "StandardProfile.h"
+#include "happah/geometries/NonDrawable.h"
+#include "happah/geometries/StandardProfile.h"
 
 using namespace std;
 

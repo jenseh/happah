@@ -6,12 +6,12 @@
 #include <QPushButton>
 #include <QSlider>
 
-#include "../../HappahTypes.h"
-#include "Tool.h"
-#include "GearSlider.h"
-#include "../../core/geometries/InvoluteSpurGear.h"
-#include "../../core/geometries/SimpleGear.h"
-#include "../../core/models/TriangleMesh.h"
+#include "happah/HappahTypes.h"
+#include "happah/gui/qt/Tool.h"
+#include "happah/gui/qt/GearSlider.h"
+#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/SimpleGear.h"
+#include "happah/models/TriangleMesh.h"
 
 class InvoluteSpurGearTool: public Tool {
 Q_OBJECT

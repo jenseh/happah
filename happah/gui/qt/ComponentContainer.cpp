@@ -1,4 +1,4 @@
-#include "ComponentContainer.h"
+#include "happah/gui/qt/ComponentContainer.h"
 #include <iostream>
 
 ComponentContainer::ComponentContainer(QGraphicsScene* scene, QWidget* parent) :

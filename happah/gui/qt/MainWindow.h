@@ -6,12 +6,12 @@
 #include <QMenu>
 #include <QListWidget>
 
-#include "ToolSelector.h"
-#include "ComponentList.h"
-#include "EditorScene.h"
-#include "EditorSceneManager.h"
-#include "SceneManager3D.h"
-#include "../../HappahTypes.h"
+#include "happah/gui/qt/ToolSelector.h"
+#include "happah/gui/qt/ComponentList.h"
+#include "happah/gui/qt/EditorScene.h"
+#include "happah/gui/qt/EditorSceneManager.h"
+#include "happah/gui/qt/SceneManager3D.h"
+#include "happah/HappahTypes.h"
 
 class MainWindow: public QMainWindow {
 Q_OBJECT

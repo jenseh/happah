@@ -5,7 +5,7 @@
  *      Author: matthias
  */
 
-#include "Sphere.h"
+#include "happah/geometries/Sphere.h"
 #include <iostream>
 #include <glm/glm.hpp>
 

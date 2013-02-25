@@ -5,7 +5,7 @@
 #include <QRect>
 #include <QPainter>
 
-#include "Component.h"
+#include "happah/gui/qt/Component.h"
 
 class BSplineComponent: public Component {
 

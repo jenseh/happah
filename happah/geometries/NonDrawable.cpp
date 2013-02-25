@@ -1,4 +1,4 @@
-#include "NonDrawable.h"
+#include "happah/geometries/NonDrawable.h"
 
 NonDrawable::NonDrawable(std::string name) : GeometryObject(name) {}
 

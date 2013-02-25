@@ -1,8 +1,8 @@
 #ifndef SIMPLEGEAR_H
 #define SIMPLEGEAR_H
 
-#include "Gear.h"
-#include "BSplineGearCurve.h"
+#include "happah/geometries/Gear.h"
+#include "happah/geometries/BSplineGearCurve.h"
 
 class SimpleGear : public Gear {
 

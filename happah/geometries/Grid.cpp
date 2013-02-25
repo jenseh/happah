@@ -1,4 +1,4 @@
-#include "Grid.h"
+#include "happah/geometries/Grid.h"
 
 Grid::Grid(std::string name) : NonDrawable(name) {
 }

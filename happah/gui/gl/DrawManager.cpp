@@ -1,8 +1,8 @@
 #define GLEW_STATIC //Very important for Windows users
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include "../../core/models/Material.h"
-#include "DrawManager.h"
+#include "happah/models/Material.h"
+#include "happah/gui/gl/DrawManager.h"
 
 #include <fstream>
 #include <sstream>

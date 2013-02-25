@@ -1,4 +1,4 @@
-#include "EditorSceneManager.h"
+#include "happah/gui/qt/EditorSceneManager.h"
 
 EditorSceneManager::EditorSceneManager( EditorScene* scene, ComponentList* list )
 		: m_scene(scene), m_componentList(list)

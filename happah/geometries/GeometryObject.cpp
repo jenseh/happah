@@ -5,7 +5,7 @@
  *      Author: matthias
  */
 
-#include "GeometryObject.h"
+#include "happah/geometries/GeometryObject.h"
 int GeometryObject::m_objectIdCounter = 0;
 
 GeometryObject::GeometryObject(const std::string name) {

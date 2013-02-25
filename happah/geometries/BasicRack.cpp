@@ -1,4 +1,4 @@
-#include "BasicRack.h"
+#include "happah/geometries/BasicRack.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 BasicRack::BasicRack(hpreal length, hpreal depth, hpreal height, int toothCount, std::string name) : NonDrawable(name) {

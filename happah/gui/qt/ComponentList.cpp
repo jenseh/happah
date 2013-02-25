@@ -1,4 +1,4 @@
-#include "ComponentList.h"
+#include "happah/gui/qt/ComponentList.h"
 
 ComponentList::ComponentList( QWidget* parent ) :
 		QListWidget(parent), m_uniqueIDCounter(0) {

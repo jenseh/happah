@@ -1,4 +1,4 @@
-#include "Component.h"
+#include "happah/gui/qt/Component.h"
 
 Component::Component(const QString *name) :
 		QListWidgetItem() {

@@ -1,10 +1,10 @@
-#include "BSplineTool.h"
+#include "happah/gui/qt/BSplineTool.h"
 
 #include <QGroupBox>
-#include "../../core/geometries/BSplineGearCurve.h"
-#include "../../core/geometries/SimpleGear.h"
-#include "../../core/models/TriangleMesh.h"
-#include "../RenderItem3D.h"
+#include "happah/geometries/BSplineGearCurve.h"
+#include "happah/geometries/SimpleGear.h"
+#include "happah/models/TriangleMesh.h"
+#include "happah/gui/RenderItem3D.h"
 
 BSplineTool::BSplineTool() {
 	m_mode = this->IDLEMODE;

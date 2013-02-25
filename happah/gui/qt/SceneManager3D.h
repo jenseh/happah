@@ -2,9 +2,9 @@
 #define SCENEMANAGER3D_H
 
 #include <list>
-#include "ComponentList.h"
-#include "../RenderItem3D.h"
-#include "../../core/SceneManager.h"
+#include "happah/gui/qt/ComponentList.h"
+#include "happah/gui/RenderItem3D.h"
+#include "happah/scene/SceneManager.h"
 
 class SceneManager3D : public QObject {
 Q_OBJECT

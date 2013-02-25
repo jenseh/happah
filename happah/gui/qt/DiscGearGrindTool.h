@@ -7,13 +7,13 @@
 #include <QSlider>
 #include <QComboBox>
 
-#include "../../HappahTypes.h"
-#include "Tool.h"
-#include "../../core/geometries/InvoluteSpurGear.h"
-#include "../../core/geometries/Disc.h"
-#include "../../core/simulations/DiscGearGrind.h"
-#include "GearSlider.h"
-#include "SceneManager3D.h"
+#include "happah/HappahTypes.h"
+#include "happah/gui/qt/Tool.h"
+#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/Disc.h"
+#include "happah/simulations/DiscGearGrind.h"
+#include "happah/gui/qt/GearSlider.h"
+#include "happah/gui/qt/SceneManager3D.h"
 
 
 class DiscGearGrindTool : public Tool,public SceneListener {

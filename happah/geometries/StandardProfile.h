@@ -6,7 +6,7 @@
 #include <vector>
 #include <iostream>
 
-#include "../../HappahTypes.h"
+#include "happah/HappahTypes.h"
 
 class StandardProfile {
 public:

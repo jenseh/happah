@@ -1,4 +1,4 @@
-#include "ControlNet2.h"
+#include "happah/geometries/ControlNet2.h"
 
 ControlNet2::ControlNet2(glm::vec3 p200,glm::vec3 p110,glm::vec3 p101,glm::vec3 p020,glm::vec3 p011,glm::vec3 p002, std::string name):NonDrawable(name)
 {

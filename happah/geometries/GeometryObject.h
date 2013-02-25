@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <QMatrix4x4>
-#include "../primitives/Color.h"
+#include "happah/primitives/Color.h"
 
 class GeometryObject{
 

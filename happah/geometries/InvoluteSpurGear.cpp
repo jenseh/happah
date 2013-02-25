@@ -1,4 +1,4 @@
-#include "InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteSpurGear.h"
 #include <exception> //TODO: delete this or put it in header!
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.

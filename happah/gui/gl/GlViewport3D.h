@@ -14,10 +14,10 @@
 #include <cmath>
 #include <iostream>
 
-#include "../qt/MainWindow.h"
-#include "../../core/SceneManager.h"
-#include "DrawManager.h"
-#include "../Picker.h"
+#include "happah/gui/qt/MainWindow.h"
+#include "happah/scene/SceneManager.h"
+#include "happah/gui/gl/DrawManager.h"
+#include "happah/gui/Picker.h"
 
 using namespace std;
 

@@ -2,8 +2,8 @@
 #define BSPLINEGEARCURVE_H
 
 #include <iostream>
-#include "../../HappahTypes.h"
-#include "BSplineCurve.h"
+#include "happah/HappahTypes.h"
+#include "happah/geometries/BSplineCurve.h"
 
 class BSplineGearCurve : public BSplineCurve {
 public:

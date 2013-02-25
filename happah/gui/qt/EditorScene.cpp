@@ -1,4 +1,4 @@
-#include "EditorScene.h"
+#include "happah/gui/qt/EditorScene.h"
 
 EditorScene::EditorScene(QObject* parent) :
 		QGraphicsScene(parent) {

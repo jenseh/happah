@@ -3,9 +3,9 @@
 
 #include <GL/glew.h>
 #include <vector>
-#include "../../core/models/Drawable.h"
-#include "../../core/SceneManager.h"
-#include "../SceneListener.h"
+#include "happah/models/Drawable.h"
+#include "happah/scene/SceneManager.h"
+#include "happah/gui/SceneListener.h"
 
 class DrawManager : public SceneListener {
 public:

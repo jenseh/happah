@@ -1,4 +1,4 @@
-#include "GearSlider.h"
+#include "happah/gui/qt/GearSlider.h"
 #include <iostream>
 #include <sstream>
 #include <iostream>

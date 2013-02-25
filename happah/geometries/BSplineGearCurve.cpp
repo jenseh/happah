@@ -1,4 +1,4 @@
-#include "BSplineGearCurve.h"
+#include "happah/geometries/BSplineGearCurve.h"
 #include "glm/gtx/rotate_vector.hpp"
 
 BSplineGearCurve::BSplineGearCurve() {}

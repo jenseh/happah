@@ -3,8 +3,8 @@
 
 #include <math.h>
 #include <glm/glm.hpp>
-#include "NonDrawable.h"
-#include "../models/TriangleMesh.h"
+#include "happah/geometries/NonDrawable.h"
+#include "happah/models/TriangleMesh.h"
 
 class TriPatch: public NonDrawable {
 

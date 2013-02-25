@@ -1,12 +1,12 @@
-#include "SimpleGearTool.h"
+#include "happah/gui/qt/SimpleGearTool.h"
 
 #include <QGroupBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <iostream>
-#include "../RenderItem3D.h"
-#include "../../core/geometries/InvoluteSpurGear.h"
-#include "../../core/geometries/BSplineGearCurve.h"
+#include "happah/gui/RenderItem3D.h"
+#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/BSplineGearCurve.h"
 
 SimpleGearTool::SimpleGearTool() {
 	m_mode = this->IDLEMODE;

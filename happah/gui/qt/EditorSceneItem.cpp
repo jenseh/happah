@@ -1,6 +1,6 @@
-#include "EditorSceneItem.h"
+#include "happah/gui/qt/EditorSceneItem.h"
 
-#include "Painter2DQt.h"
+#include "happah/gui/qt/Painter2DQt.h"
 
 EditorSceneItem::EditorSceneItem(Drawable2D* myDrawable)
 		: m_drawable(myDrawable)

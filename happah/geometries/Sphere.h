@@ -10,8 +10,8 @@
 
 #include <math.h>
 #include <glm/glm.hpp>
-#include "NonDrawable.h"
-#include "../models/QuadMesh.h"
+#include "happah/geometries/NonDrawable.h"
+#include "happah/models/QuadMesh.h"
 
 using namespace std;
 

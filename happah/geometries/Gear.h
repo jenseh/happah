@@ -3,10 +3,10 @@
 
 #include <glm/glm.hpp>
 #include <vector>
-#include "NonDrawable.h"
-#include "../../HappahTypes.h"
-#include "../models/TriangleMesh.h"
-#include "../models/QuadMesh.h"
+#include "happah/geometries/NonDrawable.h"
+#include "happah/HappahTypes.h"
+#include "happah/models/TriangleMesh.h"
+#include "happah/models/QuadMesh.h"
 
 /** @class Gear
  * @brief Simplest Gear class

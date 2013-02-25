@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-#include "gui/qt/MainWindow.h"
+#include "happah/gui/qt/MainWindow.h"
 
 class Happah: public QApplication {
 Q_OBJECT

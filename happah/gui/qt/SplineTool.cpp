@@ -1,7 +1,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include "SplineTool.h"
+#include "happah/gui/qt/SplineTool.h"
 
 SplineTool::SplineTool() {
 	getToolButton()->setText("S");

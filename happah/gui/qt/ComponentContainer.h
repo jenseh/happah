@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 #include <string>
 
-#include "Component.h"
+#include "happah/gui/qt/Component.h"
 
 class ComponentContainer: public QListWidget {
 Q_OBJECT

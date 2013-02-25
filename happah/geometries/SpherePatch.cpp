@@ -1,4 +1,4 @@
-#include "SpherePatch.h"
+#include "happah/geometries/SpherePatch.h"
 #include <glm/gtx/intersect.hpp>
 
 SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name) : NonDrawable(name)

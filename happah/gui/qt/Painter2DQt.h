@@ -3,7 +3,7 @@
 
 #include <QPainter>
 
-#include "../Painter2D.h"
+#include "happah/gui/Painter2D.h"
 
 class Painter2DQt : public Painter2D {
 

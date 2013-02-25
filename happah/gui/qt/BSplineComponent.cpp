@@ -1,4 +1,4 @@
-#include "BSplineComponent.h"
+#include "happah/gui/qt/BSplineComponent.h"
 
 BSplineComponent::BSplineComponent() :
 		Component() {

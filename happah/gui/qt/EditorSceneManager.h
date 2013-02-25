@@ -3,10 +3,10 @@
 
 #include <list>
 
-#include "EditorScene.h"
-#include "EditorSceneItem.h"
-#include "ComponentList.h"
-#include "../Drawable2D.h"
+#include "happah/gui/qt/EditorScene.h"
+#include "happah/gui/qt/EditorSceneItem.h"
+#include "happah/gui/qt/ComponentList.h"
+#include "happah/gui/Drawable2D.h"
 
 class EditorSceneManager : public QObject {
 Q_OBJECT

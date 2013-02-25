@@ -8,10 +8,10 @@
 #include <QCheckBox>
 
 //#include "BSplineComponent.h"
-#include "../../core/geometries/BSplineCurve.h"
-#include "../Drawable2D.h"
+#include "happah/geometries/BSplineCurve.h"
+#include "happah/guiDrawable2D.h"
 //#include "ToolSelector.h"
-#include "Tool.h"
+#include "happah/gui/qt/Tool.h"
 
 class BSplineTool: public Tool {
 Q_OBJECT

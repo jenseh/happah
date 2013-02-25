@@ -6,14 +6,14 @@
 #include <QGraphicsView>
 #include <string>
 
-#include "MainWindow.h"
-#include "SplineTool.h"
-#include "BSplineTool.h"
-#include "InvoluteSpurGearTool.h"
-#include "SimpleGearTool.h"
-#include "DiscGearGrindTool.h"
-#include "../../core/SceneManager.h"
-#include "../gl/GlViewport3D.h"
+#include "happah/gui/qt/MainWindow.h"
+#include "happah/gui/qt/SplineTool.h"
+#include "happah/gui/qt/BSplineTool.h"
+#include "happah/gui/qt/InvoluteSpurGearTool.h"
+#include "happah/gui/qt/SimpleGearTool.h"
+#include "happah/gui/qt/DiscGearGrindTool.h"
+#include "happah/scene/SceneManager.h"
+#include "happah/gui/gl/GlViewport3D.h"
 #include "../RenderItem3D.h"
 
 MainWindow::MainWindow() {

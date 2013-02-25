@@ -1,4 +1,4 @@
-#include "SceneManager3D.h"
+#include "happah/gui/qt/SceneManager3D.h"
 
 SceneManager3D::SceneManager3D(SceneManager* sceneManager, ComponentList* list)
 		: m_sceneManager(sceneManager), m_componentList(list)

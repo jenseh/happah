@@ -1,20 +1,20 @@
 #include <QApplication>
-#include <QMenuBar>
 #include <QDockWidget>
+#include <QGraphicsView>
+#include <QMenuBar>
 #include <QTabWidget>
 #include <QWidget>
-#include <QGraphicsView>
 #include <string>
 
-#include "happah/gui/qt/MainWindow.h"
-#include "happah/gui/qt/SplineTool.h"
-#include "happah/gui/qt/BSplineTool.h"
-#include "happah/gui/qt/InvoluteSpurGearTool.h"
-#include "happah/gui/qt/SimpleGearTool.h"
-#include "happah/gui/qt/DiscGearGrindTool.h"
-#include "happah/scene/SceneManager.h"
+#include "happah/gui/RenderItem3D.h"
 #include "happah/gui/gl/GlViewport3D.h"
-#include "../RenderItem3D.h"
+#include "happah/gui/qt/BSplineTool.h"
+#include "happah/gui/qt/DiscGearGrindTool.h"
+#include "happah/gui/qt/InvoluteSpurGearTool.h"
+#include "happah/gui/qt/MainWindow.h"
+#include "happah/gui/qt/SimpleGearTool.h"
+#include "happah/gui/qt/SplineTool.h"
+#include "happah/scene/SceneManager.h"
 
 MainWindow::MainWindow() {
 	resize(DEFAULT_WIDTH + 470, DEFAULT_HEIGHT + 70);
@@ -92,10 +92,9 @@ MainWindow::MainWindow() {
 	//	m_toolSelector, SLOT( finalise( std::string ) )); I don't think we need that, as by deleting the toolselector already calls finalise
 	connect( m_toolSelector, SIGNAL( deleteCurrentComponent() ),
 		m_componentList, SLOT( deleteCurrentComponent() ));
-
-
-//createDockWindows();
 }
+
+MainWindow::~MainWindow() {}
 
 void MainWindow::createTools() {
 
@@ -154,9 +153,6 @@ void MainWindow::createContainer() {
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	addDockWidget(Qt::RightDockWidgetArea, dock);
 	m_viewMenu->addAction(dock->toggleViewAction());
-}
-
-MainWindow::~MainWindow() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {

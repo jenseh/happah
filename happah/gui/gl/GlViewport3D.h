@@ -24,8 +24,7 @@ using namespace std;
 class GlViewport3D: public QGLWidget {
 
 public:
-    GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget* parent = 0,
-            MainWindow* mainWindow = 0);
+    GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget* parent = 0, MainWindow* mainWindow = 0);
 
 protected:
 	void initializeGL();

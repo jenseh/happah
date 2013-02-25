@@ -38,9 +38,9 @@ BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane() {
 	hpvec3 stop = glm::normalize(m_toothProfile->getValueAt(1.0f));
 	hpvec3 start = glm::normalize(m_toothProfile->getValueAt(0.0f));
 	hpvec3 facesTo = glm::normalize(glm::cross(stop, start));
-	hp3x3 toothPMatrix = hp3x3(glm::normalize(glm::cross(start, facesTo)), start, facesTo);
-	hp3x3 goalMatrix = hp3x3(hpvec3(1, 0, 0), hpvec3(0, 1, 0), hpvec3(0, 0, 1));
-	hp3x3 transformation = goalMatrix * glm::inverse(toothPMatrix);
+	hpmat3x3 toothPMatrix = hpmat3x3(glm::normalize(glm::cross(start, facesTo)), start, facesTo);
+	hpmat3x3 goalMatrix = hpmat3x3(hpvec3(1, 0, 0), hpvec3(0, 1, 0), hpvec3(0, 0, 1));
+	hpmat3x3 transformation = goalMatrix * glm::inverse(toothPMatrix);
 
 		for (uint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
 			hpvec3 turnedPoint = transformation * m_toothProfile->getControlPoint(i);

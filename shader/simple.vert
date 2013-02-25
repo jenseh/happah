@@ -13,14 +13,14 @@ out vec4 vNormal; // vertex normal world space
 out vec4 vColor; // vertex color
 
 void main() {
-    vVertex = modelMatrix * vertex;      
+	vVertex = modelMatrix * vertex;      
 
-    vec4 normalizedNormal = normalize(normal);
-    vec3 normalizedNormal3D =  normalizedNormal.xyz;
-    vec3 transformedNormal3D = normalMatrix*normalizedNormal3D;
-    vNormal = vec4(transformedNormal3D,1.0f);  
+	vec4 normalizedNormal = normalize(normal);
+	vec3 normalizedNormal3D =  normalizedNormal.xyz;
+	vec3 transformedNormal3D = normalMatrix * normalizedNormal3D;
+	vNormal = vec4(transformedNormal3D, 1.0f);  
    
 	vColor = color;	   
    
-    gl_Position = modelViewProjectionMatrix * vertex;
+	gl_Position = modelViewProjectionMatrix * vertex;
 }

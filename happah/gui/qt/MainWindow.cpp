@@ -8,78 +8,53 @@
 
 #include "happah/gui/RenderItem3D.h"
 #include "happah/gui/gl/GlViewport3D.h"
-#include "happah/gui/qt/BSplineTool.h"
-#include "happah/gui/qt/DiscGearGrindTool.h"
-#include "happah/gui/qt/InvoluteSpurGearTool.h"
 #include "happah/gui/qt/MainWindow.h"
-#include "happah/gui/qt/SimpleGearTool.h"
-#include "happah/gui/qt/SplineTool.h"
+#include "happah/gui/qt/tools/BSplineTool.h"
+#include "happah/gui/qt/tools/DiscGearGrindTool.h"
+#include "happah/gui/qt/tools/InvoluteSpurGearTool.h"
+#include "happah/gui/qt/tools/SimpleGearTool.h"
+#include "happah/gui/qt/tools/SplineTool.h"
 
 MainWindow::MainWindow(SceneManager& sceneManager, DrawManager& drawManager)
 	: m_sceneManager(sceneManager) {
-	resize(DEFAULT_WIDTH + 470, DEFAULT_HEIGHT + 70);
+	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 
+	QMenu* file = menuBar()->addMenu("&File");
 	QAction* quitAction = new QAction("&Quit", this);
 	quitAction->setShortcut(tr("CTRL+Q"));
-	QMenu* file = menuBar()->addMenu("&File");
-	file->addAction(quitAction);
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+	file->addAction(quitAction);
 	m_viewMenu = menuBar()->addMenu("&View");
 
-    m_tabs = new QTabWidget(this);
-
-    // Setting up logic
-    //m_sceneManager = new SceneManager();
-
-	// Setting up OpenGl 3D-viewport
-    GlViewport3D* viewport3D = new GlViewport3D(drawManager, this);
-	//viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    m_tabs->addTab(viewport3D, "3D-View");
-
-	// Setting up 2D Editor
+	m_tabs = new QTabWidget(this);
+	GlViewport3D* viewport3D = new GlViewport3D(drawManager, this);
+	m_tabs->addTab(viewport3D, "3D-View");
 	m_scene = new EditorScene(this);
-	//m_scene->setSceneRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	m_scene->setSceneRect(-2, -2, 4, 4);
 	m_view2D = new QGraphicsView(m_scene);
-    m_tabs->addTab(m_view2D, "2D-View");
+	m_tabs->addTab(m_view2D, "2D-View");
 
-    setCentralWidget(m_tabs);
-    createContainer();
+	setCentralWidget(m_tabs);
+	createContainer();
 
-    m_sceneManager3D = new SceneManager3D(&m_sceneManager, m_componentList);
-    createTools();
+	m_sceneManager3D = new SceneManager3D(&m_sceneManager, m_componentList);
+	createTools();
 
-    m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
-	//3D scene
-	connect( m_toolSelector, SIGNAL( emitDrawable( RenderItem3D* )),
-	        m_sceneManager3D, SLOT( addDrawable( RenderItem3D* )));
-	connect( m_toolSelector, SIGNAL( changed() ),
-			m_sceneManager3D, SLOT( update() ));
-	connect( m_componentList, SIGNAL( deleteCurrent( std::string )),
-	        m_sceneManager3D, SLOT( deleteCurrentDrawable( std::string ) ));
-	connect(m_sceneManager3D, SIGNAL( updateTool( RenderItem3D* )),
-			m_toolSelector, SLOT( activateTool( RenderItem3D* )));
-	//editor scene
-	connect( m_scene, SIGNAL( rightClickedAt( QPointF )),
-		m_toolSelector, SLOT( rightClickAt( QPointF )) );
-	connect( m_scene, SIGNAL( leftClickedAt( QPointF )),
-		m_toolSelector, SLOT( leftClickAt( QPointF )) );
-	connect( m_scene, SIGNAL( scaleScene( int )), this, SLOT( scaleView2D( int ) ));
-	connect( m_toolSelector, SIGNAL( changeViewTo( hpvec2, hpvec2 )),
-		this, SLOT( changeView2DTo( hpvec2, hpvec2 ) ));
-	connect( m_toolSelector, SIGNAL( emitDrawable( Drawable2D* )),
-		 m_editorSceneManager, SLOT(addDrawable( Drawable2D* )) );
-	connect( m_toolSelector, SIGNAL( changed()), m_scene, SLOT( update() ));
-	connect( m_componentList, SIGNAL( deleteCurrent( std::string )),
-	        m_editorSceneManager, SLOT( deleteCurrentDrawable( std::string )) );
-	connect(m_editorSceneManager, SIGNAL( updateTool( Drawable2D* )),
-			m_toolSelector, SLOT( activateTool( Drawable2D* )));
-	//everything
-	//connect( m_componentList, SIGNAL( deleteCurrent( std::string ) ),
-	//	m_toolSelector, SLOT( finalise( std::string ) )); I don't think we need that, as by deleting the toolselector already calls finalise
-	connect( m_toolSelector, SIGNAL( deleteCurrentComponent() ),
-		m_componentList, SLOT( deleteCurrentComponent() ));
+	m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
+	connect(m_toolSelector, SIGNAL(emitDrawable(RenderItem3D*)), m_sceneManager3D, SLOT(addDrawable(RenderItem3D*)));
+	connect(m_toolSelector, SIGNAL(changed()), m_sceneManager3D, SLOT(update()));
+	connect(m_componentList, SIGNAL(deleteCurrent(std::string)), m_sceneManager3D, SLOT(deleteCurrentDrawable(std::string)));
+	connect(m_sceneManager3D, SIGNAL(updateTool(RenderItem3D*)), m_toolSelector, SLOT(activateTool(RenderItem3D*)));
+	connect(m_scene, SIGNAL(rightClickedAt(QPointF)), m_toolSelector, SLOT(rightClickAt(QPointF)));
+	connect(m_scene, SIGNAL(leftClickedAt(QPointF)), m_toolSelector, SLOT(leftClickAt(QPointF)));
+	connect(m_scene, SIGNAL(scaleScene(int)), this, SLOT(scaleView2D(int)));
+	connect(m_toolSelector, SIGNAL(changeViewTo(hpvec2, hpvec2)), this, SLOT(changeView2DTo(hpvec2, hpvec2)));
+	connect(m_toolSelector, SIGNAL(emitDrawable(Drawable2D*)), m_editorSceneManager, SLOT(addDrawable(Drawable2D*)));
+	connect(m_toolSelector, SIGNAL(changed()), m_scene, SLOT(update()));
+	connect(m_componentList, SIGNAL(deleteCurrent(std::string)), m_editorSceneManager, SLOT(deleteCurrentDrawable(std::string)));
+	connect(m_editorSceneManager, SIGNAL(updateTool(Drawable2D*)), m_toolSelector, SLOT(activateTool(Drawable2D*)));
+	connect(m_toolSelector, SIGNAL(deleteCurrentComponent()), m_componentList, SLOT(deleteCurrentComponent()));
 }
 
 MainWindow::~MainWindow() {}
@@ -149,10 +124,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     }
     QApplication::sendEvent(m_tabs->currentWidget(), event);
     QMainWindow::keyPressEvent(event);
-}
-
-ComponentList* MainWindow::getComponentList() {
-	return m_componentList;
 }
 
 void MainWindow::scaleView2D( int factor ) {

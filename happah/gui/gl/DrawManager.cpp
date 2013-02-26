@@ -224,6 +224,7 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		if (mode == -1) {
 		    std::cerr << "Error: Invalid tupleSize in DrawManager!" << std::endl;
 		}
+
 		glDrawArrays(mode, offset, vertexDataSize);
 
 		offset += vertexDataSize;

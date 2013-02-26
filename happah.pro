@@ -35,21 +35,22 @@ HEADERS += \
 	happah/gui/gl/DrawManager.h \
 	happah/gui/gl/GlViewport3D.h \
 \
-	happah/gui/qt/BSplineTool.h \
 	happah/gui/qt/ComponentList.h \
-	happah/gui/qt/DiscGearGrindTool.h \
 	happah/gui/qt/EditorScene.h \
 	happah/gui/qt/EditorSceneItem.h \
 	happah/gui/qt/EditorSceneManager.h \
 	happah/gui/qt/GearSlider.h \
-	happah/gui/qt/InvoluteSpurGearTool.h \
 	happah/gui/qt/MainWindow.h \
 	happah/gui/qt/Painter2DQt.h \
 	happah/gui/qt/SceneManager3D.h \
-	happah/gui/qt/SimpleGearTool.h \
-	happah/gui/qt/SplineTool.h \
-	happah/gui/qt/Tool.h \
 	happah/gui/qt/ToolSelector.h \
+\
+	happah/gui/qt/tools/BSplineTool.h \
+	happah/gui/qt/tools/DiscGearGrindTool.h \
+	happah/gui/qt/tools/InvoluteSpurGearTool.h \
+	happah/gui/qt/tools/SimpleGearTool.h \
+	happah/gui/qt/tools/SplineTool.h \
+	happah/gui/qt/tools/Tool.h \
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/Box.h \
@@ -116,21 +117,22 @@ SOURCES += \
 	happah/gui/gl/DrawManager.cpp \
 	happah/gui/gl/GlViewport3D.cpp \
 \
-	happah/gui/qt/BSplineTool.cpp \
 	happah/gui/qt/ComponentList.cpp \
-	happah/gui/qt/DiscGearGrindTool.cpp \
 	happah/gui/qt/EditorScene.cpp \
 	happah/gui/qt/EditorSceneItem.cpp \
 	happah/gui/qt/EditorSceneManager.cpp \
 	happah/gui/qt/GearSlider.cpp \
-	happah/gui/qt/InvoluteSpurGearTool.cpp \
 	happah/gui/qt/MainWindow.cpp \
 	happah/gui/qt/Painter2DQt.cpp \
 	happah/gui/qt/SceneManager3D.cpp \
-	happah/gui/qt/SimpleGearTool.cpp \
-	happah/gui/qt/SplineTool.cpp \
-	happah/gui/qt/Tool.cpp \
 	happah/gui/qt/ToolSelector.cpp \
+\
+	happah/gui/qt/tools/BSplineTool.cpp \
+	happah/gui/qt/tools/DiscGearGrindTool.cpp \
+	happah/gui/qt/tools/InvoluteSpurGearTool.cpp \
+	happah/gui/qt/tools/SimpleGearTool.cpp \
+	happah/gui/qt/tools/SplineTool.cpp \
+	happah/gui/qt/tools/Tool.cpp \
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/Box.cpp \

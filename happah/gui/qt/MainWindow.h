@@ -22,12 +22,12 @@ public:
 	MainWindow(SceneManager& sceneManager, DrawManager& drawManager);
 	virtual ~MainWindow();
 
-	ComponentList* getComponentList();
+protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
-	static const int DEFAULT_HEIGHT = 768;
-	static const int DEFAULT_WIDTH = 1024;
+	static const int DEFAULT_WINDOW_HEIGHT = 800;
+	static const int DEFAULT_WINDOW_WIDTH = 1200;
 
 	void createContainer();
 	void createTools();

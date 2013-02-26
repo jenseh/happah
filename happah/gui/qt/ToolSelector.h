@@ -12,7 +12,7 @@
 #include "happah/gui/Drawable2D.h"
 #include "happah/gui/RenderItem3D.h"
 #include "happah/gui/qt/Component.h"
-#include "happah/gui/qt/Tool.h"
+#include "happah/gui/qt/tools/Tool.h"
 
 /** @brief This class manages the tool-selection process of Happah
  * 

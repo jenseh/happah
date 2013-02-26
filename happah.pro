@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = happah
-CONFIG += debug
+CONFIG -= release
 QT += core \
 	gui \
 	opengl
@@ -175,7 +175,13 @@ unix {
 	INCLUDEPATH += /usr/include $$system(pwd)
 }
 
-debug:   DESTDIR = build/debug
+CONFIG(debug) {
+	DESTDIR = build/debug
+}
+
+CONFIG(release) {
+	DESTDIR = build/release
+}
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc

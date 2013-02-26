@@ -43,11 +43,9 @@ MainWindow::MainWindow() {
     m_sceneManager = new SceneManager();
 
 	// Setting up OpenGl 3D-viewport
-	QWidget* viewportWidget = new QWidget();
-    GlViewport3D* viewport3D = new GlViewport3D(m_sceneManager, glFormat, viewportWidget,
-			this);
+    GlViewport3D* viewport3D = new GlViewport3D(m_sceneManager, glFormat, this);
 	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    m_tabs->addTab(viewportWidget, "3D-View");
+    m_tabs->addTab(viewport3D, "3D-View");
 
 	// Setting up 2D Editor
 	m_scene = new EditorScene(this);

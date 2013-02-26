@@ -14,17 +14,17 @@
 #include <cmath>
 #include <iostream>
 
+#include "happah/gui/Picker.h"
+#include "happah/gui/gl/DrawManager.h"
 #include "happah/gui/qt/MainWindow.h"
 #include "happah/scene/SceneManager.h"
-#include "happah/gui/gl/DrawManager.h"
-#include "happah/gui/Picker.h"
 
 using namespace std;
 
 class GlViewport3D: public QGLWidget {
 
 public:
-    GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget* parent = 0, MainWindow* mainWindow = 0);
+    GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget* parent = 0);
 
 protected:
 	void initializeGL();
@@ -42,7 +42,6 @@ private:
 	void setZoom(float zoom);
 
 	QTimer *m_timer;
-	MainWindow* m_mainWindow;
 	SceneManager* m_sceneManager;
 	DrawManager* m_drawManager;
 

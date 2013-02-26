@@ -4,13 +4,12 @@
 #include "happah/gui/gl/GlViewport3D.h"
 
 GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
-		QWidget *parent, MainWindow* mainWindow) :
+		QWidget *parent) :
 		QGLWidget(format, parent), m_vertexBuffer(QGLBuffer::VertexBuffer), m_coordVBO(
 				QGLBuffer::VertexBuffer), m_triangleVBO(QGLBuffer::VertexBuffer) {
 
 	setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
 
-	m_mainWindow = mainWindow;
 	m_sceneManager = sceneManager;
 	m_drawManager = new DrawManager(m_sceneManager);
 

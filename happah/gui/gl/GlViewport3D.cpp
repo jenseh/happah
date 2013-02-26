@@ -36,6 +36,7 @@ void GlViewport3D::initializeGL() {
 void GlViewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
+	m_projectionMatrix.setToIdentity();
 	m_projectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
 }
 
@@ -81,6 +82,11 @@ void GlViewport3D::mouseMoveEvent(QMouseEvent *event) {
 		forward *= m_zoomRad;
 
 		m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
+		// recalc up
+		m_up = QVector3D::crossProduct(forward, right);
+		m_up.normalize();
+		m_up *= m_zoomRad;
+
 		updateGL();
 	} else if (event->buttons() == Qt::RightButton) {
 		// Movement forward, backwards

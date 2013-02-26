@@ -101,36 +101,26 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 }
 
 bool DrawManager::createBuffers() {
-	glEnable(GL_DEPTH_TEST);
+
+	//Vertex Buffer
 	std::vector<Drawable*> *drawables = m_sceneManager.getDrawables();
+	int nBytes = 0;
+
+		for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
+			nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
+		}
+
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
 
-        // Vertex Data
-        //GLuint m_vertexDataBuffer;
 	glGenBuffers(1, &m_vertexDataBuffer);
-
-	int nBytes = 0;
-	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-		nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
-	}
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexDataBuffer);
 	glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
 	
 	int offset = 0;
 	for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
 	    vector<glm::vec4>* vertexData = (*i)->getVertexData();
-	    	//TODO: remove debug part
-//		{
-//		  printf("Size: %d", vertexData->size());
-//		  std::cout << (*i)->getName() << std::endl;
-//		  for (vector<glm::vec4>::iterator it = vertexData->begin(), endit = vertexData->end(); it != endit; ++i) {
-//		    glm::vec4 vec  = *it;
-//		    printf("%4.2f\t%4.2f\t%4.2f\t%4.2f\n", vec.x, vec.y, vec.z, vec.w);
-//		  }
-//		}
-		//TODO: until here
+
 	    int vertexDataSize = vertexData->size() * sizeof(glm::vec4);
 	    glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
 	    offset += vertexDataSize;
@@ -138,24 +128,37 @@ bool DrawManager::createBuffers() {
 	glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
 	glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
     
-        glEnableVertexAttribArray(m_vertexLocation);
-        glEnableVertexAttribArray(m_normalLocation);
+    glEnableVertexAttribArray(m_vertexLocation);
+    glEnableVertexAttribArray(m_normalLocation);
+
+
+    //INDEX BUFFER
+    nBytes= 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
+    			nBytes += (*i)->getVertexData()->size() * sizeof(unsigned int);
+    		}
+    glGenBuffers(1,&m_indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,nBytes,NULL,GL_STATIC_DRAW);
+
+
     
     
-    // Color Data
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+    // COLOR BUFFER
     nBytes = 0;
     for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
       nBytes += (*i)->getColorData()->size() * sizeof(Color);
     }
     if (nBytes > 0) {
-        glGenBuffers(2, &m_colorDataBuffer);
+        glGenBuffers(1, &m_colorDataBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, m_colorDataBuffer);
         glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
         
-        offset = 0;
-        for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
-            vector<Color>* colorData = (*i)->getColorData();
-            if( !colorData->empty() ){
+    offset = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
+          vector<Color>* colorData = (*i)->getColorData();
+          if( !colorData->empty() ){
                 int colorDataSize = colorData->size()*sizeof(Color);
                 std::cout << "size of Color: " << sizeof(Color) << endl;
                 std::cout << " ColorDataSize for buffer: " << colorDataSize << endl;
@@ -163,11 +166,10 @@ bool DrawManager::createBuffers() {
                 offset += colorDataSize;
             }
         }
-        glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(m_colorLocation);
+    glBindVertexArray(0);
     
-        glEnableVertexAttribArray(m_colorLocation);
-    
-        glBindVertexArray(0);
     }
    return true;
 }

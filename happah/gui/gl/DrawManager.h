@@ -37,6 +37,7 @@ private:
 
 	GLuint m_vertexArrayObject;
 	GLuint m_vertexDataBuffer;
+	GLuint m_indexBuffer;
 	GLuint m_colorDataBuffer;
 	GLuint m_coloredVertexArrayObject;
 

@@ -140,10 +140,19 @@ bool DrawManager::createBuffers() {
     glGenBuffers(1,&m_indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,nBytes,NULL,GL_STATIC_DRAW);
-
-
     
-    
+    //Fill index Buffer :
+    unsigned int indexOffset = 0;
+    for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
+    	std::vector<unsigned int> indices;
+    	for (unsigned int j=0; j < (*i)->getVertexData()->size();j++){
+    		indices.push_back(indexOffset+j);
+
+    	}
+    	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,indexOffset*sizeof(unsigned int),indices.size()*sizeof(unsigned int),&indices[0]);
+    	indexOffset += (*i)->getVertexData()->size();
+    	std::cout << "IndexOffset = " << indexOffset << std::endl;
+    }
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
     // COLOR BUFFER
     nBytes = 0;
@@ -226,8 +235,11 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		if (mode == -1) {
 		    std::cerr << "Error: Invalid tupleSize in DrawManager!" << std::endl;
 		}
-
-		glDrawArrays(mode, offset, vertexDataSize);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+		int size;
+		glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER,GL_BUFFER_SIZE,&size);
+		glDrawElements(mode,size/sizeof(unsigned int),GL_UNSIGNED_INT,0);
+		//glDrawArrays(mode, offset, vertexDataSize);
 
 		offset += vertexDataSize;
 	}

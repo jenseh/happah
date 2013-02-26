@@ -1,4 +1,4 @@
-#include "happah/gui/qt/DiscGearGrindTool.h"
+#include "happah/gui/qt/tools/DiscGearGrindTool.h"
 
 DiscGearGrindTool::DiscGearGrindTool(SceneManager3D* sceneManager):m_sceneManager(sceneManager)
 {

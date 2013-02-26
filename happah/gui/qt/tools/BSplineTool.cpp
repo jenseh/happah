@@ -1,4 +1,4 @@
-#include "happah/gui/qt/BSplineTool.h"
+#include "happah/gui/qt/tools/BSplineTool.h"
 
 #include <QGroupBox>
 #include "happah/geometries/BSplineGearCurve.h"

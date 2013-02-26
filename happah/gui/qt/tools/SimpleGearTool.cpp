@@ -1,4 +1,4 @@
-#include "happah/gui/qt/SimpleGearTool.h"
+#include "happah/gui/qt/tools/SimpleGearTool.h"
 
 #include <QGroupBox>
 #include <QPushButton>

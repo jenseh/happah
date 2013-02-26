@@ -1,4 +1,4 @@
-#include "happah/gui/qt/InvoluteSpurGearTool.h"
+#include "happah/gui/qt/tools/InvoluteSpurGearTool.h"
 
 #include <QGroupBox>
 #include <iostream>

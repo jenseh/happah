@@ -60,8 +60,6 @@ MainWindow::MainWindow(SceneManager& sceneManager, DrawManager& drawManager)
 MainWindow::~MainWindow() {}
 
 void MainWindow::createTools() {
-
-// Tool selector
 	QDockWidget* dock = new QDockWidget(tr("Tools"), this);
 
 	m_toolSelector = new ToolSelector(dock);
@@ -78,9 +76,9 @@ void MainWindow::createTools() {
 	SimpleGearTool* simpleGearTool = new SimpleGearTool();
 	m_toolSelector->addTool(simpleGearTool);
 
-    DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool(m_sceneManager3D);
+	DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool(m_sceneManager3D);
 	m_toolSelector->addTool(discGearGrindTool);
-    m_sceneManager.registerListener(discGearGrindTool);
+	m_sceneManager.registerListener(discGearGrindTool);
 
 	dock->setWidget(m_toolSelector);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

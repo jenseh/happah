@@ -3,6 +3,8 @@
 
 #include <QApplication>
 
+#include "happah/scene/SceneManager.h"
+#include "happah/gui/gl/DrawManager.h"
 #include "happah/gui/qt/MainWindow.h"
 
 class Happah: public QApplication {
@@ -13,7 +15,9 @@ public:
 	virtual ~Happah();
 
 private:
-	MainWindow m_window;
+	SceneManager m_sceneManager;
+	DrawManager m_drawManager;
+	MainWindow m_mainWindow;
 
 };
 

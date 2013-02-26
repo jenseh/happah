@@ -7,17 +7,19 @@
 #include <QMenu>
 
 #include "happah/HappahTypes.h"
+#include "happah/gui/gl/DrawManager.h"
 #include "happah/gui/qt/ComponentList.h"
 #include "happah/gui/qt/EditorScene.h"
 #include "happah/gui/qt/EditorSceneManager.h"
 #include "happah/gui/qt/SceneManager3D.h"
 #include "happah/gui/qt/ToolSelector.h"
+#include "happah/scene/SceneManager.h"
 
 class MainWindow: public QMainWindow {
 Q_OBJECT
 
 public:
-	MainWindow();
+	MainWindow(SceneManager& sceneManager, DrawManager& drawManager);
 	virtual ~MainWindow();
 
 	ComponentList* getComponentList();
@@ -32,7 +34,7 @@ private:
 
 	ComponentList* m_componentList;
 	QTabWidget* m_tabs;
-	SceneManager* m_sceneManager;
+	SceneManager& m_sceneManager;
 	ToolSelector* m_toolSelector;
 	QMenu* m_viewMenu;
 

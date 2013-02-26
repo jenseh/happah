@@ -3,15 +3,10 @@
 
 #include "happah/gui/gl/GlViewport3D.h"
 
-GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
-		QWidget *parent) :
-		QGLWidget(format, parent), m_vertexBuffer(QGLBuffer::VertexBuffer), m_coordVBO(
-				QGLBuffer::VertexBuffer), m_triangleVBO(QGLBuffer::VertexBuffer) {
+GlViewport3D::GlViewport3D(DrawManager& drawManager, QWidget* parent)
+	: QGLWidget(&(drawManager.getGlContext()), parent), m_drawManager(drawManager) {
 
-	setFocusPolicy(Qt::ClickFocus); // for keyPresEvent
-
-	m_sceneManager = sceneManager;
-	m_drawManager = new DrawManager(m_sceneManager);
+	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
 
 	m_projectionMatrix.setToIdentity();
 	m_viewMatrix.setToIdentity();
@@ -31,22 +26,6 @@ GlViewport3D::GlViewport3D(SceneManager* sceneManager, const QGLFormat& format,
 }
 
 void GlViewport3D::initializeGL() {
-	QGLFormat glFormat = QGLWidget::format();
-	if (!glFormat.sampleBuffers())
-		qWarning() << "Could not enable sample buffers";
-	GLenum err = glewInit();
-
-
-	if (GLEW_OK != err)
-	{
-	  /* Problem: glewInit failed, something is seriously wrong. */
-	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-	}
-
-	if (!m_drawManager->initGL()) {
-		return;
-	}
-
 	// Setup and start a timer
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -62,7 +41,7 @@ void GlViewport3D::resizeGL(int width, int height) {
 
 void GlViewport3D::paintGL() {
 	updateView();
-	m_drawManager->draw(&m_projectionMatrix, &m_viewMatrix, &m_camera);
+	m_drawManager.draw(&m_projectionMatrix, &m_viewMatrix, &m_camera);
 }
 
 void GlViewport3D::updateView() {
@@ -135,7 +114,7 @@ void GlViewport3D::wheelEvent(QWheelEvent *event) {
 
 //TODO: Adapt to new achitecture
 void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
-	float x = (float) event->pos().x();
+	/*float x = (float) event->pos().x();
 	float y = (float) event->pos().y();
 	float width = (float) this->width();
 	float height = (float) this->height();
@@ -146,10 +125,9 @@ void GlViewport3D::mouseDoubleClickEvent(QMouseEvent *event) {
 	const qreal* VPQreals = VP.constData();
 	glm::mat4 toWorld = glm::make_mat4(VPFloats);
 	Picker* picker = new Picker();
-	bool hit = picker->select(x, y, width, height, &toWorld, m_sceneManager);
+	bool hit = picker->select(x, y, width, height, &toWorld, m_sceneManager);*/
 
 }
 
-void GlViewport3D::keyPressEvent(QKeyEvent *event) {
-	// Do something
-}
+void GlViewport3D::keyPressEvent(QKeyEvent* event) {}
+

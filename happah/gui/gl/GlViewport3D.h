@@ -24,7 +24,7 @@ using namespace std;
 class GlViewport3D: public QGLWidget {
 
 public:
-    GlViewport3D(SceneManager* sceneManager, const QGLFormat& format, QWidget* parent = 0);
+    GlViewport3D(DrawManager& drawManager, QWidget* parent = 0);
 
 protected:
 	void initializeGL();
@@ -38,23 +38,20 @@ protected:
 
 private:
 	void updateView();
-	bool initShaderPrograms();
 	void setZoom(float zoom);
 
 	QTimer *m_timer;
-	SceneManager* m_sceneManager;
-	DrawManager* m_drawManager;
+	DrawManager& m_drawManager;
 
 	uint m_lastSceneState;
 	QMatrix4x4 m_viewMatrix;
 	QMatrix4x4 m_projectionMatrix;
 	QVector3D m_camera, m_center, m_up;
-	QGLBuffer m_vertexBuffer, m_coordVBO, m_triangleVBO;
-	glm::vec4 m_triangleVP[3];
 	QPoint m_mousePos;
 	float m_zoomRad, m_theta, m_phi; //is zoomRad german?
 
 	const static int WAIT_TIME = 40;
 };
+
 
 #endif

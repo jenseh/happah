@@ -14,37 +14,27 @@
 #include "happah/gui/qt/MainWindow.h"
 #include "happah/gui/qt/SimpleGearTool.h"
 #include "happah/gui/qt/SplineTool.h"
-#include "happah/scene/SceneManager.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow(SceneManager& sceneManager, DrawManager& drawManager)
+	: m_sceneManager(sceneManager) {
 	resize(DEFAULT_WIDTH + 470, DEFAULT_HEIGHT + 70);
 	setWindowTitle("Happah");
 
-	QAction *quitAction = new QAction("&Quit", this);
+	QAction* quitAction = new QAction("&Quit", this);
 	quitAction->setShortcut(tr("CTRL+Q"));
-
-	QMenu *file;
-	file = menuBar()->addMenu("&File");
+	QMenu* file = menuBar()->addMenu("&File");
 	file->addAction(quitAction);
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-
 	m_viewMenu = menuBar()->addMenu("&View");
-
-	QGLFormat glFormat;
-	glFormat.setVersion(3, 3);
-	glFormat.setProfile(QGLFormat::CompatibilityProfile);
-	glFormat.setSampleBuffers(true);
-	glFormat.setDoubleBuffer(true);
-	glFormat.setDepth(true);
 
     m_tabs = new QTabWidget(this);
 
     // Setting up logic
-    m_sceneManager = new SceneManager();
+    //m_sceneManager = new SceneManager();
 
 	// Setting up OpenGl 3D-viewport
-    GlViewport3D* viewport3D = new GlViewport3D(m_sceneManager, glFormat, this);
-	viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    GlViewport3D* viewport3D = new GlViewport3D(drawManager, this);
+	//viewport3D->setGeometry(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     m_tabs->addTab(viewport3D, "3D-View");
 
 	// Setting up 2D Editor
@@ -57,7 +47,7 @@ MainWindow::MainWindow() {
     setCentralWidget(m_tabs);
     createContainer();
 
-    m_sceneManager3D = new SceneManager3D(m_sceneManager, m_componentList);
+    m_sceneManager3D = new SceneManager3D(&m_sceneManager, m_componentList);
     createTools();
 
     m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
@@ -115,7 +105,7 @@ void MainWindow::createTools() {
 
     DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool(m_sceneManager3D);
 	m_toolSelector->addTool(discGearGrindTool);
-    m_sceneManager->registerListener(discGearGrindTool);
+    m_sceneManager.registerListener(discGearGrindTool);
 
 	dock->setWidget(m_toolSelector);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

@@ -9,9 +9,23 @@
 #include <string>
 #include <iostream>
 
-DrawManager::DrawManager(SceneManager* sceneManager) : m_sceneManager(sceneManager) {
+HappahGlFormat::HappahGlFormat() {
+	setVersion(3, 3);
+	setProfile(QGLFormat::CompatibilityProfile);
+	setSampleBuffers(true);
+	setDoubleBuffer(true);
+	setDepth(true);
+}
 
-	m_sceneManager->registerListener(this);
+const HappahGlFormat DrawManager::GL_FORMAT;
+
+DrawManager::DrawManager(SceneManager& sceneManager) 
+	: m_sceneManager(sceneManager), m_glContext(GL_FORMAT) {
+	m_sceneManager.registerListener(this);
+}
+
+QGLContext& DrawManager::getGlContext() {
+	return m_glContext;
 }
 
 bool DrawManager::initShaderPrograms() {
@@ -65,7 +79,7 @@ bool DrawManager::initShaderPrograms() {
 
 void DrawManager::compileShader(GLuint shader, const char* filePath) {
 	ifstream sourceFile(filePath);
-	//if(sourceFile) {
+	if(sourceFile) {
 		stringstream temp;
 		temp << sourceFile.rdbuf();
 		sourceFile.close();
@@ -83,12 +97,12 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		    printf(" Infolog: %s\n", log);
 		}
 		else cout << "Compilation was successful." << endl;
-	//} else cerr << "Failed to open source file." << endl;
+	} else cerr << "Failed to open source file." << endl;
 }
 
 bool DrawManager::createBuffers() {
 	glEnable(GL_DEPTH_TEST);
-	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
+	std::vector<Drawable*> *drawables = m_sceneManager.getDrawables();
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
 
@@ -164,7 +178,7 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 	glUseProgram(m_program);
 	glBindVertexArray(m_coloredVertexArrayObject);
 	int offset = 0;
-	std::vector<Drawable*> *drawables = m_sceneManager->getDrawables();
+	std::vector<Drawable*> *drawables = m_sceneManager.getDrawables();
 	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
 		QMatrix4x4 modelMatrix = *((*i)->getModelMatrix());
 		QMatrix4x4 MVP = *projectionMatrix * *viewMatrix * modelMatrix;
@@ -222,6 +236,19 @@ void DrawManager::sceneChanged(){
 }
 
 bool DrawManager::initGL(){
+	m_glContext.create();
+	m_glContext.makeCurrent();
+
+	GLenum errorCode = glewInit();
+	if (GLEW_OK != errorCode) {
+		fprintf(stderr, "Glew initialization failed: %s\n", glewGetErrorString(errorCode));
+		return false;
+	}
+
+	QGLFormat glFormat = m_glContext.format();
+	if (!glFormat.sampleBuffers())
+		qWarning() << "Could not enable sample buffers";
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClearDepth(1.0f);
 	glEnable (GL_DEPTH_TEST);

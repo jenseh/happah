@@ -24,7 +24,6 @@ public:
     void addNonDrawable(NonDrawable *nonDrawable);
     vector<NonDrawable*>* getNonDrawables();
 
-    void buildScene();
     void registerListener(SceneListener* sceneListener);
 
 private:

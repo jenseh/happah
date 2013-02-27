@@ -33,7 +33,7 @@ private:
   ZCircleCloud* m_worm;
   TriangleMesh* m_gear;
 
-  const static float MAX_DIST = 1.0f;
+  constexpr static float MAX_DIST = 1.0f;
 };
 
 #endif // WORMGEARGRIND_H

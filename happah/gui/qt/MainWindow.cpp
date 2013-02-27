@@ -70,7 +70,7 @@ void MainWindow::createTools() {
 	BSplineTool* bSplineTool = new BSplineTool();
 	m_toolSelector->addTool(bSplineTool);
 
-	InvoluteSpurGearTool* invGearTool = new InvoluteSpurGearTool();
+	InvoluteSpurGearTool* invGearTool = new InvoluteSpurGearTool(m_sceneManager);
 	m_toolSelector->addTool(invGearTool);
 
 	SimpleGearTool* simpleGearTool = new SimpleGearTool();

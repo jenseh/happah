@@ -4,7 +4,8 @@
 #include <iostream>
 #include "happah/gui/RenderItem3D.h"
 
-InvoluteSpurGearTool::InvoluteSpurGearTool() {
+InvoluteSpurGearTool::InvoluteSpurGearTool(SceneManager& sceneManager) 
+	: m_sceneManager(sceneManager) {
 	m_mode = this->IDLEMODE;
 
 	getToolButton()->setText("IG");
@@ -68,7 +69,9 @@ void InvoluteSpurGearTool::createGear() {
 	m_gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
 	m_toSimpleGearButton->setEnabled(true);
 	emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
-
+	
+	InvoluteSpurGear_ptr involuteSpurGearPtr(m_gear);
+	m_sceneManager.add(involuteSpurGearPtr, m_gearMesh);
 }
 
 void InvoluteSpurGearTool::setBack() {

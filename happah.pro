@@ -80,13 +80,19 @@ HEADERS += \
 	happah/primitives/Ray.h \
 	happah/primitives/Triangle.h \
 \
+	happah/scene/InvoluteSpurGearNode.h \
+	happah/scene/Node.h\
 	happah/scene/SceneManager.h \
+	happah/scene/SceneVisitor.h \
+	happah/scene/SimpleGeometryNode.h \
 \
 	happah/simulations/CircularSimulationResult.h \
 	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
 	happah/simulations/Simulation.h \
-	happah/simulations/WormGearGrind.h
+	happah/simulations/WormGearGrind.h \
+\
+	happah/transformations/RigidAffineTransformation.h
 
 #KEEP SOURCES SORTED!!!
 SOURCES += \
@@ -154,13 +160,17 @@ SOURCES += \
 	happah/models/TriangleMesh.cpp \
 	happah/models/ZCircleCloud.cpp \
 \
+	happah/scene/InvoluteSpurGearNode.cpp \
+	happah/scene/Node.cpp \
 	happah/scene/SceneManager.cpp \
 \
 	happah/simulations/CircularSimulationResult.cpp \
 	happah/simulations/DiscGearGrind.cpp \
 	happah/simulations/Kinematic.cpp \
 	happah/simulations/Simulation.cpp \
-	happah/simulations/WormGearGrind.cpp
+	happah/simulations/WormGearGrind.cpp \
+\
+	happah/transformations/RigidAffineTransformation.cpp
 
 FORMS += 
 RESOURCES += 
@@ -173,6 +183,7 @@ win32 {
 }
 
 unix {
+	QMAKE_CXXFLAGS += -std=c++0x
 	LIBS += -lGLEW
 	INCLUDEPATH += /usr/include $$system(pwd)
 }

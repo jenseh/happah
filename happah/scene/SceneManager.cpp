@@ -5,6 +5,7 @@
 #include "happah/geometries/Sphere.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/TriPatch.h"
+#include "happah/scene/InvoluteSpurGearNode.h"
 #include "happah/scene/SceneManager.h"
 
 SceneManager::SceneManager() : m_iDCounter(0) {
@@ -16,6 +17,17 @@ SceneManager::SceneManager() : m_iDCounter(0) {
 }
 
 SceneManager::~SceneManager() {}
+
+void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh) {
+	InvoluteSpurGearNode_ptr involuteSpurGearNodePtr(new InvoluteSpurGearNode(involuteSpurGear));
+	addChild(involuteSpurGearNodePtr);
+
+	//TODO: add triangle mesh
+}
+
+void SceneManager::visit(InvoluteSpurGearNode& involuteSpurGearNode) {
+	//m_vectorDrawables->push_back(&(*(involuteSpurGearNode.getGeometry())));
+}
 
 //first idDrawable gets id 0, m_idCounter is has number of produced idDrawables
 uint SceneManager::addDrawable(Drawable *drawable) {
@@ -40,12 +52,16 @@ void SceneManager::removeDrawable(uint id) {
 }
 
 vector<Drawable*>* SceneManager::getDrawables() {
-    std::vector<Drawable*> *drawables = new std::vector<Drawable*>;
+	m_vectorDrawables = new vector<Drawable*>();
 
-    for(std::list<IdDrawable>::iterator it = m_drawables.begin(); it != m_drawables.end(); ++it) {
+	accept(*this);
+	
+	return m_vectorDrawables;
+
+    /*for(std::list<IdDrawable>::iterator it = m_drawables.begin(); it != m_drawables.end(); ++it) {
         drawables->push_back(it->drawable);
     }
-    return drawables;
+    return drawables;*/
 }
 
 

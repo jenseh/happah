@@ -4,16 +4,23 @@
 #include <list>
 #include <vector>
 
+#include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/geometries/NonDrawable.h"
 #include "happah/gui/SceneListener.h"
 #include "happah/models/Drawable.h"
+#include "happah/scene/Node.h"
+#include "happah/scene/SceneVisitor.h"
 
 using namespace std;
 
-class SceneManager {
+class SceneManager : public Node, public SceneVisitor {
+
 public:
-    SceneManager();
-    ~SceneManager();
+	SceneManager();
+	~SceneManager();
+
+	void add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
+	void visit(InvoluteSpurGearNode& involuteSpurGearNode);
 
     vector<Drawable*>* getDrawables();
 
@@ -27,6 +34,8 @@ public:
     void registerListener(SceneListener* sceneListener);
 
 private:
+	vector<Drawable*>* m_vectorDrawables;
+
     struct IdDrawable
     {
         unsigned int id;

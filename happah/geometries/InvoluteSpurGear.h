@@ -1,12 +1,14 @@
 #ifndef INVOLUTESPURGEAR_H
 #define INVOLUTESPURGEAR_H
 
+#include <cmath>
+#include <cstring>
 #include <glm/glm.hpp>
 #include <iostream>
-#include <cmath>
-#include <vector>
-#include <cstring>
+#include <memory>
 #include <sstream>
+#include <vector>
+
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Gear.h"
 #include "happah/geometries/SimpleGear.h"
@@ -32,6 +34,12 @@
  * to use other getToothProfile() and getGearProfile() methods, as both use
  * the reflection property.
  */
+
+using namespace std;
+
+class InvoluteSpurGear;
+
+typedef shared_ptr<InvoluteSpurGear> InvoluteSpurGear_ptr;
 
 class InvoluteSpurGear : public Gear {
 public:

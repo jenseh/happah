@@ -12,11 +12,13 @@
 #include "happah/gui/qt/GearSlider.h"
 #include "happah/gui/qt/tools/Tool.h"
 #include "happah/models/TriangleMesh.h"
+#include "happah/scene/SceneManager.h"
 
 class InvoluteSpurGearTool: public Tool {
 Q_OBJECT
 
 private:
+	SceneManager& m_sceneManager;
 	int m_mode;
 	static const int IDLEMODE = 0;
 	static const int EDITMODE = 1;
@@ -37,7 +39,7 @@ private:
     void setNewGearValues();
 
 public:
-	InvoluteSpurGearTool();
+	InvoluteSpurGearTool(SceneManager& sceneManager);
 	~InvoluteSpurGearTool();
 
 	bool knowsItem(RenderItem3D* renderItem);

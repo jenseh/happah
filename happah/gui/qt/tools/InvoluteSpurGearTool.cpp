@@ -57,14 +57,16 @@ void InvoluteSpurGearTool::createGear() {
 	m_mode = this->EDITMODE;
 	m_gearMesh = TriangleMesh_ptr(m_gear->toTriangleMesh());
 	m_gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
-	m_sceneManager.add(m_gear, m_gearMesh);
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	m_sceneManager.add(m_gear, m_gearMesh, color);
 }
 
 void InvoluteSpurGearTool::updateGear() {
 	if (m_gearMesh) {
 		m_sceneManager.remove(m_gear, m_gearMesh);
 		m_gearMesh = TriangleMesh_ptr(m_gear->toTriangleMesh());
-		m_sceneManager.add(m_gear, m_gearMesh);
+		hpcolor color(1.0, 0.0, 0.0, 1.0);
+		m_sceneManager.add(m_gear, m_gearMesh, color);
 	}
 }
 

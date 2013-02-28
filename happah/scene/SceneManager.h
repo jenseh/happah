@@ -28,11 +28,12 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void add(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh);
+	void add(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh);
 	void visit(InvoluteGearNode& involuteGearNode);
 	void visit(TriangleMeshNode& triangleMeshNode);
 	void visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
+
     vector<Drawable*>* getDrawables();
 
     uint addDrawable(Drawable *drawable);

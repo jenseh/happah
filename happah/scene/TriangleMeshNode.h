@@ -21,6 +21,10 @@ public:
 
 	virtual void accept(SceneVisitor& sceneVisitor);
 	void addChild(TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode);
+	TriangleMeshRenderStateNode_ptr getTriangleMeshRenderStateNode();
+
+private:
+	TriangleMeshRenderStateNode_ptr m_triangleMeshRenderStateNode;
 };
 
 #endif // TRIANGLE_MESH_NODE_H

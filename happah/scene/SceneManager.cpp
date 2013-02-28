@@ -2,36 +2,47 @@
 #include <iostream>
 
 #include "happah/scene/SceneManager.h"
+#include "happah/scene/TriangleMeshRenderStateNode.h"
 
 SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
 
-void SceneManager::add(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh) {
-	Node_ptr nodePtr = find(involuteGear);
+void SceneManager::add(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	Node_ptr node = find(involuteGear);
 
-	InvoluteGearNode_ptr involuteGearNodePtr;
-	if(nodePtr)
-		involuteGearNodePtr = dynamic_pointer_cast<InvoluteGearNode>(nodePtr);
-	else {
-		involuteGearNodePtr = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
-		addChild(involuteGearNodePtr);
+	InvoluteGearNode_ptr involuteGearNode;
+	if(node) {
+		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
+		node = involuteGearNode->find(triangleMesh);
+		if(node) {
+			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
+			triangleMeshRenderStateNode->setColor(color);
+			return;
+		}
+	} else {
+		involuteGearNode = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
+		addChild(involuteGearNode);
 	}
 
-	TriangleMeshNode_ptr triangleMeshNodePtr(new TriangleMeshNode(triangleMesh));
-	involuteGearNodePtr->addChild(triangleMeshNodePtr);
+	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
+	involuteGearNode->addChild(triangleMeshNode);
+
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+	triangleMeshNode->addChild(triangleMeshRenderStateNode);
 
 	notifyListeners();
 }
 
 void SceneManager::remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh) {
-	Node_ptr nodePtr = find(involuteGear);
+	Node_ptr node = find(involuteGear);
 
-	if(nodePtr) {
-		InvoluteGearNode_ptr involuteGearNodePtr = dynamic_pointer_cast<InvoluteGearNode>(nodePtr);
-		nodePtr = involuteGearNodePtr->find(triangleMesh);
-		if(nodePtr)
-			involuteGearNodePtr->removeChild(dynamic_pointer_cast<TriangleMeshNode>(nodePtr));
+	if(node) {
+		InvoluteGearNode_ptr involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
+		node = involuteGearNode->find(triangleMesh);
+		if(node)
+			involuteGearNode->removeChild(dynamic_pointer_cast<TriangleMeshNode>(node));
 	}
 
 	notifyListeners();

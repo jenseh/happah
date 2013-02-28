@@ -21,12 +21,13 @@ public:
 	Node_ptr const find(shared_ptr<void> data);
 
 protected:
+	set<Node_ptr> m_children;
+
 	void addChild(Node_ptr child);
 	void removeChild(Node_ptr child);
 
 private:
 	const static Node_ptr NULL_NODE;
-	set<Node_ptr> m_children;
 
 };
 

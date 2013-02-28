@@ -38,8 +38,7 @@
 using namespace std;
 
 class InvoluteSpurGear;
-
-typedef shared_ptr<InvoluteSpurGear> InvoluteSpurGear_ptr;
+typedef shared_ptr<InvoluteSpurGear> InvoluteGear_ptr;
 
 class InvoluteSpurGear : public Gear {
 public:

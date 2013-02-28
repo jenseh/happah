@@ -10,7 +10,7 @@
 #include "happah/gui/SceneListener.h"
 #include "happah/models/Drawable.h"
 #include "happah/scene/Node.h"
-#include "happah/scene/InvoluteSpurGearNode.h"
+#include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"
@@ -25,9 +25,9 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh);
-	void remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh);
-	void visit(InvoluteSpurGearNode& involuteSpurGearNode);
+	void add(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh);
+	void remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh);
+	void visit(InvoluteGearNode& involuteGearNode);
 	void visit(TriangleMeshNode& triangleMeshNode);
 	void visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
     vector<Drawable*>* getDrawables();

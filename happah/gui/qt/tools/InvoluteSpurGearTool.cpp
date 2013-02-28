@@ -46,7 +46,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool(SceneManager& sceneManager)
 	connect(m_filletRadiusSlider,    SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
 	connect(m_helixAngleSlider,      SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 
-	m_gear = InvoluteSpurGear_ptr(new InvoluteSpurGear());
+	m_gear = InvoluteGear_ptr(new InvoluteSpurGear());
 	updateRanges();
 }
 

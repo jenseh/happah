@@ -79,7 +79,7 @@ HEADERS += \
 	happah/primitives/Ray.h \
 	happah/primitives/Triangle.h \
 \
-	happah/scene/InvoluteSpurGearNode.h \
+	happah/scene/InvoluteGearNode.h \
 	happah/scene/Node.h\
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
@@ -160,7 +160,7 @@ SOURCES += \
 	happah/models/TriangleMesh.cpp \
 	happah/models/ZCircleCloud.cpp \
 \
-	happah/scene/InvoluteSpurGearNode.cpp \
+	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/Node.cpp \
 	happah/scene/SceneManager.cpp \
 	happah/scene/TriangleMeshNode.cpp \

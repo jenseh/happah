@@ -9,28 +9,32 @@ SceneManager::SceneManager() : m_iDCounter(0) {
 
 SceneManager::~SceneManager() {}
 
-void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh) {
-	Node_ptr nodePtr = find(involuteSpurGear);
+void SceneManager::add(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh) {
+	Node_ptr nodePtr = find(involuteGear);
 
-	InvoluteSpurGearNode_ptr involuteSpurGearNodePtr;
+	InvoluteGearNode_ptr involuteGearNodePtr;
 	if(nodePtr)
-		involuteSpurGearNodePtr = dynamic_pointer_cast<InvoluteSpurGearNode>(nodePtr);
+		involuteGearNodePtr = dynamic_pointer_cast<InvoluteGearNode>(nodePtr);
 	else {
-		involuteSpurGearNodePtr = InvoluteSpurGearNode_ptr(new InvoluteSpurGearNode(involuteSpurGear));
-		addChild(involuteSpurGearNodePtr);
+		involuteGearNodePtr = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
+		addChild(involuteGearNodePtr);
 	}
 
 	TriangleMeshNode_ptr triangleMeshNodePtr(new TriangleMeshNode(triangleMesh));
-	involuteSpurGearNodePtr->addChild(triangleMeshNodePtr);
+	involuteGearNodePtr->addChild(triangleMeshNodePtr);
 
 	notifyListeners();
 }
 
-void SceneManager::remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh) {
+void SceneManager::remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh) {
+	Node_ptr nodePtr = find(involuteGear);
 
+	if(nodePtr) {
+		InvoluteGearNode_ptr involuteGearNodePtr = dynamic_pointer_cast<InvoluteGearNode>(nodePtr);
+	}
 }
 
-void SceneManager::visit(InvoluteSpurGearNode& involuteSpurGearNode) {}
+void SceneManager::visit(InvoluteGearNode& involuteGearNode) {}
 
 void SceneManager::visit(TriangleMeshNode& triangleMeshNode) {
 	m_vectorDrawables->push_back(triangleMeshNode.getGeometry().get());

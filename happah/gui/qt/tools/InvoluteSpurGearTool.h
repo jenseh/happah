@@ -31,7 +31,7 @@ private:
     GearSlider* m_filletRadiusSlider;
     GearSlider* m_helixAngleSlider;
 
-    InvoluteSpurGear_ptr m_gear;
+    InvoluteGear_ptr m_gear;
     TriangleMesh_ptr m_gearMesh;
 
     void updateGear();

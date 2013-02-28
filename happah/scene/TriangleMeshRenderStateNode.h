@@ -33,9 +33,9 @@ public:
 private:
 	hpcolor m_color;
 	GLuint m_indexBufferID;
+	TriangleMesh_ptr m_triangleMesh;
 	GLuint m_vertexArrayObjectID;
 	GLuint m_vertexBufferID;
-	TriangleMesh_ptr triangleMesh_ptr;
 };
 
 #endif /* TRIANGLE_MESH_RENDER_STATE_NODE_H_ */

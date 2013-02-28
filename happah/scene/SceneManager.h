@@ -2,6 +2,7 @@
 #define SCENEMANAGER_H
 
 #include <list>
+#include <memory>
 #include <vector>
 
 #include "happah/geometries/InvoluteSpurGear.h"
@@ -22,6 +23,7 @@ public:
 	~SceneManager();
 
 	void add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
+	void remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
 	void visit(InvoluteSpurGearNode& involuteSpurGearNode);
 	void visit(TriangleMeshNode& triangleMeshNode);
 

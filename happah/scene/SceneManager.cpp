@@ -1,18 +1,9 @@
 #include <ctime>
 #include <iostream>
 
-#include "happah/geometries/ControlNet2.h"
-#include "happah/geometries/Sphere.h"
-#include "happah/geometries/SpherePatch.h"
-#include "happah/geometries/TriPatch.h"
-#include "happah/scene/InvoluteSpurGearNode.h"
 #include "happah/scene/SceneManager.h"
 
 SceneManager::SceneManager() : m_iDCounter(0) {
-//    new WormGearGrindTest(this);
-//    buildScene();
-    //KinematicTest test;
-    //test.runLinearTest();
    m_iDNCounter = 0;
 }
 
@@ -20,14 +11,25 @@ SceneManager::~SceneManager() {}
 
 //TODO: change to TriangleMesh_ptr
 void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh) {
-	InvoluteSpurGearNode_ptr involuteSpurGearNodePtr(new InvoluteSpurGearNode(involuteSpurGear));
-	addChild(involuteSpurGearNodePtr);
+	Node_ptr nodePtr = find(involuteSpurGear);
+
+	InvoluteSpurGearNode_ptr involuteSpurGearNodePtr;
+	if(nodePtr)
+		involuteSpurGearNodePtr = dynamic_pointer_cast<InvoluteSpurGearNode>(nodePtr);
+	else {
+		involuteSpurGearNodePtr = InvoluteSpurGearNode_ptr(new InvoluteSpurGearNode(involuteSpurGear));
+		addChild(involuteSpurGearNodePtr);
+	}
 
 	TriangleMesh_ptr triangleMeshPtr(triangleMesh);
 	TriangleMeshNode_ptr triangleMeshNodePtr(new TriangleMeshNode(triangleMeshPtr));
 	involuteSpurGearNodePtr->addChild(triangleMeshNodePtr);
 
 	notifyListeners();
+}
+
+void SceneManager::remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh) {
+
 }
 
 void SceneManager::visit(InvoluteSpurGearNode& involuteSpurGearNode) {}
@@ -64,12 +66,6 @@ vector<Drawable*>* SceneManager::getDrawables() {
 	accept(*this);
 	
 	return m_vectorDrawables;
-
-	/*vector<Drawable*>* drawables = new vector<Drawable*>();
-	for(std::list<IdDrawable>::iterator it = m_drawables.begin(); it != m_drawables.end(); ++it) {
-        drawables->push_back(it->drawable);
-    }
-    return drawables;*/
 }
 
 

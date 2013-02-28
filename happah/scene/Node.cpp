@@ -1,5 +1,7 @@
 #include "happah/scene/Node.h"
 
+const Node_ptr Node::NULL_NODE;
+
 Node::Node() {}
 
 Node::~Node() {}
@@ -10,13 +12,32 @@ void Node::accept(SceneVisitor& sceneVisitor) {
 }
 
 void Node::addChild(Node_ptr child) {
-	m_children.insert(child);
-	child->setParent(shared_ptr<Node>(this));
+	if(child) {
+		m_children.insert(child);
+		child->setParent(shared_ptr<Node>(this));
+	}
+}
+
+bool Node::contains(shared_ptr<void> data) {
+	return false;
+}
+
+Node_ptr Node::find(shared_ptr<void> data) {
+	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
+		Node_ptr child = *i;
+		if(child->contains(data)) return child;
+		Node_ptr node = child->find(data);
+		if(node) return node;
+	}
+
+	return NULL_NODE;
 }
 
 void Node::removeChild(Node_ptr child) {
-	m_children.erase(child);
-	child->setParent(0);
+	if(child) {
+		m_children.erase(child);
+		child->setParent(0);
+	}
 }
 
 void Node::setParent(Node_ptr parent) {

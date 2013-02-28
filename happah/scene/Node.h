@@ -23,9 +23,12 @@ protected:
 	Node_ptr m_parent;
 
 	void addChild(Node_ptr child);
+	virtual bool contains(shared_ptr<void> data);
+	virtual Node_ptr find(shared_ptr<void> data);
 	void removeChild(Node_ptr child);
 
 private:
+	const static Node_ptr NULL_NODE;
 	void setParent(Node_ptr parent);
 
 };

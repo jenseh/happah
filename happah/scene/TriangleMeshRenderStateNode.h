@@ -28,12 +28,14 @@ public:
 	GLuint getIndexBufferID();
 	GLuint getVertexArrayObjectID();
 	GLuint getVertexBufferID();
+	TriangleMesh_ptr getTriangleMesh();
 	void setColor(hpcolor color);
 	void setColorVector(std::vector<hpcolor>* colorVector);
 	void setIndexBufferID(GLuint id);
 	void setVertexArrayObjectID(GLuint id);
 	void setVertexBufferID(GLuint id);
-
+	GLuint getColorBufferID(void); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	void   setColorBufferID(GLuint id); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
 private:
 	hpcolor m_color;
 	std::vector<hpcolor>* m_colorVector;
@@ -41,6 +43,7 @@ private:
 	TriangleMesh_ptr m_triangleMesh;
 	GLuint m_vertexArrayObjectID;
 	GLuint m_vertexBufferID;
+	GLuint m_colorBufferID; // TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
 };
 
 #endif /* TRIANGLE_MESH_RENDER_STATE_NODE_H_ */

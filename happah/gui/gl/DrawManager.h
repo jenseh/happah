@@ -36,6 +36,7 @@ private:
 	void compileShader(GLuint shader, const char* filePath);
 	bool createBuffers();
 	bool initShaderPrograms();
+
 	SceneManager& m_sceneManager;
 	QGLContext m_glContext;
 

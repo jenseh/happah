@@ -55,6 +55,10 @@ hpcolor TriangleMeshRenderStateNode::getColor(){
 
 }
 
+TriangleMesh_ptr TriangleMeshRenderStateNode::getTriangleMesh(){
+	return m_triangleMesh;
+}
+
 void TriangleMeshRenderStateNode::setColorVector(std::vector<hpcolor>* colorVector){
 	if (m_triangleMesh->getVertexData()->size() != colorVector->size())
 			throw; // TODO: Find Proper Exception !
@@ -64,3 +68,16 @@ void TriangleMeshRenderStateNode::setColorVector(std::vector<hpcolor>* colorVect
 std::vector<hpcolor>* TriangleMeshRenderStateNode::getColorVector(){
 	return m_colorVector;
 }
+//TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+GLuint TriangleMeshRenderStateNode::getColorBufferID(){
+	return m_colorBufferID;
+}
+
+void TriangleMeshRenderStateNode::setColorBufferID(GLuint id){
+	m_colorBufferID = id;
+}
+
+
+
+
+

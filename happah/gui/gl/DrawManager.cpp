@@ -256,6 +256,46 @@ void DrawManager::visit(InvoluteGearNode& involuteGearNode){}
 void DrawManager::visit(TriangleMeshNode& triangleMeshNode){}
 
 void DrawManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+	// If no Buffer has been assigned, assign one, and write Data into it
+	if (triangleMeshRenderStateNode.getVertexBufferID() == 0){    //TODO : Create is initialized function
+		glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
+		GLuint bufferID;
+		GLint size = (triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size());
+		// VERTEX BUFFER OBJECT
+		glGenBuffers(1, &bufferID);
+		triangleMeshRenderStateNode.setVertexBufferID(bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
+		glBufferData(GL_ARRAY_BUFFER, size*sizeof(glm::vec4), triangleMeshRenderStateNode.getTriangleMesh()->getVertexData(), GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+		glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
+
+	    glEnableVertexAttribArray(m_vertexLocation);
+	    glEnableVertexAttribArray(m_normalLocation);
+
+	    //INDEX BUFFER OBJECT
+	    std::vector<GLuint> indices;
+		for (unsigned int j=0; j < triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size();j++){
+		    		indices.push_back(j);
+					}
+	    glGenBuffers(1,&bufferID);
+	    triangleMeshRenderStateNode.setIndexBufferID(bufferID);
+	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
+	    glBufferData(GL_ELEMENT_ARRAY_BUFFER,size,&indices[0],GL_DYNAMIC_DRAW);
+	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+
+	    //COLOR //TODO: WILL BE IN interleaved buffer .. as soon as done ,remove this part
+	    if(triangleMeshRenderStateNode.getVertexArrayObjectID() == 1){
+	        glGenBuffers(1, &bufferID);
+	        triangleMeshRenderStateNode.setColorBufferID(bufferID);
+	        glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorBufferID());
+	       glBufferData(GL_ARRAY_BUFFER,triangleMeshRenderStateNode.getColorVector()->size()*sizeof(glm::vec4), triangleMeshRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+	       glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	       glEnableVertexAttribArray(m_colorLocation);
+
+	    }
+	    glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
+	}
 
 
 

@@ -2,14 +2,20 @@
 #include <exception>
 
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor color){
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor &color)
+														:m_vertexBufferID(0),
+														 m_indexBufferID(0),
+														 m_vertexArrayObjectID(2){
 	m_triangleMesh = triangleMesh;
 	m_color = color;
 }
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector){
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector)
+														:m_vertexBufferID(0),
+														 m_indexBufferID(0),
+														 m_vertexArrayObjectID(1) {
 	if (triangleMesh->getVertexData()->size() != colorVector->size())
-			throw;
+			throw; // TODO: Find Proper Exception !
 	m_triangleMesh = triangleMesh;
 	m_colorVector = colorVector;
 }
@@ -50,6 +56,8 @@ hpcolor TriangleMeshRenderStateNode::getColor(){
 }
 
 void TriangleMeshRenderStateNode::setColorVector(std::vector<hpcolor>* colorVector){
+	if (m_triangleMesh->getVertexData()->size() != colorVector->size())
+			throw; // TODO: Find Proper Exception !
 	m_colorVector = colorVector;
 }
 

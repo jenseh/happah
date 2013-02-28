@@ -67,7 +67,6 @@ HEADERS += \
 \
 	happah/models/CircleCloud.h \
 	happah/models/Drawable.h \
-	happah/models/GeometryMesh.h \
 	happah/models/Material.h \
 	happah/models/PointCloud.h \
 	happah/models/QuadMesh.h \
@@ -153,7 +152,6 @@ SOURCES += \
 \
 	happah/models/CircleCloud.cpp \
 	happah/models/Drawable.cpp \
-	happah/models/GeometryMesh.cpp \
 	happah/models/Material.cpp \
 	happah/models/PointCloud.cpp \
 	happah/models/QuadMesh.cpp \

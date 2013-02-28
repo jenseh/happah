@@ -7,7 +7,7 @@
 using namespace std;
 
 class TriangleMeshRenderStateNode;
-typedef shared_ptr<TriangleMeshRenderStateNode> TriangleRenderStateMeshNode_ptr;
+typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 
 #include "happah/HappahTypes.h"
 #include "happah/scene/Node.h"
@@ -35,6 +35,7 @@ private:
 	GLuint m_indexBufferID;
 	GLuint m_vertexArrayObjectID;
 	GLuint m_vertexBufferID;
+	TriangleMesh_ptr triangleMesh_ptr;
 };
 
 #endif /* TRIANGLE_MESH_RENDER_STATE_NODE_H_ */

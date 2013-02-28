@@ -3,23 +3,26 @@
 
 #include <memory>
 
-#include "happah/models/TriangleMesh.h"
-#include "happah/scene/Node.h"
-#include "happah/scene/SceneVisitor.h"
-
 using namespace std;
+
+class TriangleMeshNode;
+typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
+
+#include "happah/models/TriangleMesh.h"
+#include "happah/scene/SceneVisitor.h"
+#include "happah/scene/SimpleGeometryNode.h"
 
 //TODO: move following typedef to TriangleMesh.h after cleanup
 typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
-class TriangleMeshNode : public Node {
+class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
 
 public:
 	TriangleMeshNode(TriangleMesh_ptr triangleMesh);
 	virtual ~TriangleMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
+
 };
-typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
 
 #endif // TRIANGLE_MESH_NODE_H

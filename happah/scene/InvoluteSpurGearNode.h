@@ -3,11 +3,15 @@
 
 #include <memory>
 
+using namespace std;
+
+class InvoluteSpurGearNode;
+typedef shared_ptr<InvoluteSpurGearNode> InvoluteSpurGearNode_ptr;
+
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGeometryNode.h"
-
-using namespace std;
+#include "happah/scene/TriangleMeshNode.h"
 
 class InvoluteSpurGearNode : public SimpleGeometryNode<InvoluteSpurGear> {
 
@@ -16,7 +20,7 @@ public:
 	virtual ~InvoluteSpurGearNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
+	void addChild(TriangleMeshNode_ptr triangleMeshNode);
 };
-typedef shared_ptr<InvoluteSpurGearNode> InvoluteSpurGearNode_ptr;
 
 #endif // INVOLUTE_SPUR_GEAR_NODE_H

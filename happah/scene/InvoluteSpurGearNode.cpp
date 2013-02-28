@@ -9,3 +9,7 @@ void InvoluteSpurGearNode::accept(SceneVisitor& sceneVisitor) {
 	sceneVisitor.visit(*this);
 	Node::accept(sceneVisitor);
 }
+
+void InvoluteSpurGearNode::addChild(TriangleMeshNode_ptr triangleMeshNode) {
+	Node::addChild(triangleMeshNode);
+}

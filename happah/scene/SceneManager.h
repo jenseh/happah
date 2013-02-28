@@ -9,7 +9,9 @@
 #include "happah/gui/SceneListener.h"
 #include "happah/models/Drawable.h"
 #include "happah/scene/Node.h"
+#include "happah/scene/InvoluteSpurGearNode.h"
 #include "happah/scene/SceneVisitor.h"
+#include "happah/scene/TriangleMeshNode.h"
 
 using namespace std;
 
@@ -21,6 +23,7 @@ public:
 
 	void add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
 	void visit(InvoluteSpurGearNode& involuteSpurGearNode);
+	void visit(TriangleMeshNode& triangleMeshNode);
 
     vector<Drawable*>* getDrawables();
 

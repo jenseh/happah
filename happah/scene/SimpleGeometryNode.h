@@ -3,14 +3,14 @@
 
 #include <memory>
 
-#include "happah/scene/Node.h"
-#include "happah/transformations/RigidAffineTransformation.h"
-
 using namespace std;
 
 //TODO: upgrade to gcc-4.7 and define:
 //template<class G>
 //using SimpleGeometryNode_ptr = shared_ptr<SimpleGeometryNode<G> >;
+
+#include "happah/scene/Node.h"
+#include "happah/transformations/RigidAffineTransformation.h"
 
 template<class G>//extends Geometry
 class SimpleGeometryNode : public Node {

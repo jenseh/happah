@@ -68,7 +68,7 @@ void InvoluteSpurGearTool::createGear() {
 	m_gearMesh = m_gear->toTriangleMesh();
 	m_gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
 	m_toSimpleGearButton->setEnabled(true);
-	emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
+	//emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
 	
 	InvoluteSpurGear_ptr involuteSpurGearPtr(m_gear);
 	m_sceneManager.add(involuteSpurGearPtr, m_gearMesh);
@@ -82,12 +82,12 @@ void InvoluteSpurGearTool::setBack() {
 }
 
 void InvoluteSpurGearTool::updateGear() {
-	if (m_gearMesh != NULL) {
+	/*if (m_gearMesh != NULL) {
 		TriangleMesh *mesh = m_gear->toTriangleMesh();
 		*m_gearMesh = *mesh;
 		delete mesh;
 		emit changed();
-	}
+	}*/
 }
 
 void InvoluteSpurGearTool::updateRanges() {

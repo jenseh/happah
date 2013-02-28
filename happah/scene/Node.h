@@ -7,7 +7,6 @@
 using namespace std;
 
 class Node;
-
 typedef shared_ptr<Node> Node_ptr;
 
 class SceneVisitor;

@@ -85,6 +85,7 @@ HEADERS += \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGeometryNode.h \
+	happah/scene/TriangleMeshNode.h \
 \
 	happah/simulations/CircularSimulationResult.h \
 	happah/simulations/DiscGearGrind.h \
@@ -163,6 +164,7 @@ SOURCES += \
 	happah/scene/InvoluteSpurGearNode.cpp \
 	happah/scene/Node.cpp \
 	happah/scene/SceneManager.cpp \
+	happah/scene/TriangleMeshNode.cpp \
 \
 	happah/simulations/CircularSimulationResult.cpp \
 	happah/simulations/DiscGearGrind.cpp \

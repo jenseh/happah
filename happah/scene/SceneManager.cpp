@@ -18,15 +18,22 @@ SceneManager::SceneManager() : m_iDCounter(0) {
 
 SceneManager::~SceneManager() {}
 
+//TODO: change to TriangleMesh_ptr
 void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh) {
 	InvoluteSpurGearNode_ptr involuteSpurGearNodePtr(new InvoluteSpurGearNode(involuteSpurGear));
 	addChild(involuteSpurGearNodePtr);
 
-	//TODO: add triangle mesh
+	TriangleMesh_ptr triangleMeshPtr(triangleMesh);
+	TriangleMeshNode_ptr triangleMeshNodePtr(new TriangleMeshNode(triangleMeshPtr));
+	involuteSpurGearNodePtr->addChild(triangleMeshNodePtr);
+
+	notifyListeners();
 }
 
-void SceneManager::visit(InvoluteSpurGearNode& involuteSpurGearNode) {
-	//m_vectorDrawables->push_back(&(*(involuteSpurGearNode.getGeometry())));
+void SceneManager::visit(InvoluteSpurGearNode& involuteSpurGearNode) {}
+
+void SceneManager::visit(TriangleMeshNode& triangleMeshNode) {
+	m_vectorDrawables->push_back(triangleMeshNode.getGeometry().get());
 }
 
 //first idDrawable gets id 0, m_idCounter is has number of produced idDrawables
@@ -58,7 +65,8 @@ vector<Drawable*>* SceneManager::getDrawables() {
 	
 	return m_vectorDrawables;
 
-    /*for(std::list<IdDrawable>::iterator it = m_drawables.begin(); it != m_drawables.end(); ++it) {
+	/*vector<Drawable*>* drawables = new vector<Drawable*>();
+	for(std::list<IdDrawable>::iterator it = m_drawables.begin(); it != m_drawables.end(); ++it) {
         drawables->push_back(it->drawable);
     }
     return drawables;*/

@@ -4,6 +4,7 @@
 #include "happah/models/Material.h"
 #include "happah/gui/gl/DrawManager.h"
 
+
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -248,6 +249,16 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 
 void DrawManager::sceneChanged(){
 	createBuffers();
+}
+
+void DrawManager::visit(InvoluteGearNode& involuteGearNode){}
+
+void DrawManager::visit(TriangleMeshNode& triangleMeshNode){}
+
+void DrawManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+
+
+
 }
 
 bool DrawManager::initGL(){

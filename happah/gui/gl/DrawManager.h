@@ -9,13 +9,14 @@
 #include "happah/gui/SceneListener.h"
 #include "happah/models/Drawable.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/scene/SceneVisitor.h"
 
 class HappahGlFormat : public QGLFormat {
 public:
 	HappahGlFormat();
 };
 
-class DrawManager : public SceneListener {
+class DrawManager : public SceneListener, public SceneVisitor {
 public:
 	DrawManager(SceneManager& sceneManager);
 
@@ -23,7 +24,14 @@ public:
 	QGLContext& getGlContext();
 	bool initGL();
 	void sceneChanged();
+
+	void visit(InvoluteGearNode& involuteGearNode);
+	void visit(TriangleMeshNode& triangleMeshNode);
+	void visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
+
+
 private:
+
 
 	void compileShader(GLuint shader, const char* filePath);
 	bool createBuffers();

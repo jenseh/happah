@@ -4,6 +4,7 @@
 #include <memory>
 #include <GL/glew.h>
 
+
 using namespace std;
 
 class TriangleMeshRenderStateNode;
@@ -16,22 +17,26 @@ typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 class TriangleMeshRenderStateNode : public Node {
 
 public:
-	TriangleMeshRenderStateNode();
+	TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor color);
+	TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector);
 	virtual ~TriangleMeshRenderStateNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
 
 	hpcolor getColor();
+	std::vector<hpcolor>* getColorVector();
 	GLuint getIndexBufferID();
 	GLuint getVertexArrayObjectID();
 	GLuint getVertexBufferID();
 	void setColor(hpcolor color);
+	void setColorVector(std::vector<hpcolor>* colorVector);
 	void setIndexBufferID(GLuint id);
 	void setVertexArrayObjectID(GLuint id);
 	void setVertexBufferID(GLuint id);
 
 private:
 	hpcolor m_color;
+	std::vector<hpcolor>* m_colorVector;
 	GLuint m_indexBufferID;
 	TriangleMesh_ptr m_triangleMesh;
 	GLuint m_vertexArrayObjectID;

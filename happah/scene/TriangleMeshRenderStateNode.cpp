@@ -1,15 +1,17 @@
-/*
- * TriangleMeshRenderStateNode.cpp
- *
- *  Created on: 28.02.2013
- *      Author: msauer
- */
-
 #include "happah/scene/TriangleMeshRenderStateNode.h"
+#include <exception>
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode() {
 
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor color){
+	m_triangleMesh = triangleMesh;
+	m_color = color;
+}
 
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector){
+	if (triangleMesh->getVertexData()->size() != colorVector->size())
+			throw;
+	m_triangleMesh = triangleMesh;
+	m_colorVector = colorVector;
 }
 
 TriangleMeshRenderStateNode::~TriangleMeshRenderStateNode() {
@@ -45,4 +47,12 @@ void TriangleMeshRenderStateNode::setColor(hpcolor color){
 }
 hpcolor TriangleMeshRenderStateNode::getColor(){
 
+}
+
+void TriangleMeshRenderStateNode::setColorVector(std::vector<hpcolor>* colorVector){
+	m_colorVector = colorVector;
+}
+
+std::vector<hpcolor>* TriangleMeshRenderStateNode::getColorVector(){
+	return m_colorVector;
 }

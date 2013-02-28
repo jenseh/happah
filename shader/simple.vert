@@ -19,7 +19,9 @@ void main() {
 	vec3 normalizedNormal3D =  normalizedNormal.xyz;
 	vec3 transformedNormal3D = normalMatrix * normalizedNormal3D;
 	vNormal = vec4(transformedNormal3D, 1.0f);  
-   
+   	
+   	
+   	// TODO: check if color attribute is disabled , if so, set vColor to a color given by a uniform
 	vColor = color;	   
    
 	gl_Position = modelViewProjectionMatrix * vertex;

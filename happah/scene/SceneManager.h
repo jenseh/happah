@@ -13,8 +13,11 @@
 #include "happah/scene/InvoluteSpurGearNode.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/TriangleMeshNode.h"
+#include "happah/scene/TriangleMeshRenderStateNode.h"
 
 using namespace std;
+
+
 
 class SceneManager : public Node, public SceneVisitor {
 
@@ -26,7 +29,7 @@ public:
 	void remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
 	void visit(InvoluteSpurGearNode& involuteSpurGearNode);
 	void visit(TriangleMeshNode& triangleMeshNode);
-
+	void visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
     vector<Drawable*>* getDrawables();
 
     uint addDrawable(Drawable *drawable);

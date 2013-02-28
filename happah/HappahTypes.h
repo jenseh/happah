@@ -13,6 +13,9 @@ typedef glm::mediump_float hpreal;
 typedef glm::vec2 hpvec2;
 typedef glm::vec3 hpvec3;
 typedef glm::vec4 hpvec4;
+typedef glm::vec4 hpcolor;
+
+
 
 //TODO: What other types should we use?
 //Maybe the following for ints?

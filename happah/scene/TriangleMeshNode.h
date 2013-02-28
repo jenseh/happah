@@ -11,6 +11,7 @@ typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
 #include "happah/models/TriangleMesh.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGeometryNode.h"
+#include "happah/scene/TriangleMeshRenderStateNode.h"
 
 //TODO: move following typedef to TriangleMesh.h after cleanup
 typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
@@ -22,7 +23,7 @@ public:
 	virtual ~TriangleMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
-
+	void addChild(TriangleRenderStateMeshNode_ptr triangleMeshRenderStateNode);
 };
 
 #endif // TRIANGLE_MESH_NODE_H

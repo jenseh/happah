@@ -37,6 +37,9 @@ void SceneManager::visit(InvoluteSpurGearNode& involuteSpurGearNode) {}
 void SceneManager::visit(TriangleMeshNode& triangleMeshNode) {
 	m_vectorDrawables->push_back(triangleMeshNode.getGeometry().get());
 }
+void SceneManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+
+}
 
 //first idDrawable gets id 0, m_idCounter is has number of produced idDrawables
 uint SceneManager::addDrawable(Drawable *drawable) {

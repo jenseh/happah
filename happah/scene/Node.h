@@ -17,19 +17,16 @@ public:
 	virtual ~Node();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
+	virtual bool const contains(shared_ptr<void> data);
+	Node_ptr const find(shared_ptr<void> data);
 
 protected:
-	set<Node_ptr> m_children;
-	Node_ptr m_parent;
-
 	void addChild(Node_ptr child);
-	virtual bool contains(shared_ptr<void> data);
-	virtual Node_ptr find(shared_ptr<void> data);
 	void removeChild(Node_ptr child);
 
 private:
 	const static Node_ptr NULL_NODE;
-	void setParent(Node_ptr parent);
+	set<Node_ptr> m_children;
 
 };
 

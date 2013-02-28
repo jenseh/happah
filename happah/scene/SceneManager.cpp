@@ -3,9 +3,7 @@
 
 #include "happah/scene/SceneManager.h"
 
-SceneManager::SceneManager() : m_iDCounter(0) {
-   m_iDNCounter = 0;
-}
+SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
 
@@ -31,7 +29,12 @@ void SceneManager::remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 
 	if(nodePtr) {
 		InvoluteGearNode_ptr involuteGearNodePtr = dynamic_pointer_cast<InvoluteGearNode>(nodePtr);
+		nodePtr = involuteGearNodePtr->find(triangleMesh);
+		if(nodePtr)
+			involuteGearNodePtr->removeChild(dynamic_pointer_cast<TriangleMeshNode>(nodePtr));
 	}
+
+	notifyListeners();
 }
 
 void SceneManager::visit(InvoluteGearNode& involuteGearNode) {}
@@ -39,9 +42,8 @@ void SceneManager::visit(InvoluteGearNode& involuteGearNode) {}
 void SceneManager::visit(TriangleMeshNode& triangleMeshNode) {
 	m_vectorDrawables->push_back(triangleMeshNode.getGeometry().get());
 }
-void SceneManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
 
-}
+void SceneManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode) {}
 
 //first idDrawable gets id 0, m_idCounter is has number of produced idDrawables
 uint SceneManager::addDrawable(Drawable *drawable) {
@@ -69,7 +71,7 @@ vector<Drawable*>* SceneManager::getDrawables() {
 	m_vectorDrawables = new vector<Drawable*>();
 
 	accept(*this);
-	
+
 	return m_vectorDrawables;
 }
 

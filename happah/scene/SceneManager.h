@@ -5,6 +5,11 @@
 #include <memory>
 #include <vector>
 
+using namespace std;
+
+class SceneManager;
+typedef shared_ptr<SceneManager> SceneManager_ptr;
+
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/geometries/NonDrawable.h"
 #include "happah/gui/SceneListener.h"
@@ -14,8 +19,6 @@
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"
-
-using namespace std;
 
 
 

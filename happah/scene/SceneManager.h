@@ -25,8 +25,8 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
-	void remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh);
+	void add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh);
+	void remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh);
 	void visit(InvoluteSpurGearNode& involuteSpurGearNode);
 	void visit(TriangleMeshNode& triangleMeshNode);
 	void visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);

@@ -2,7 +2,13 @@
 #define TRIANGLEMESH_H
 
 #include <glm/glm.hpp>
+#include <memory>
 #include <vector>
+
+using namespace std;
+
+class TriangleMesh;
+typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
 #include "happah/models/Drawable.h"
 #include "happah/models/RayCloud.h"

@@ -13,9 +13,6 @@ typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"
 
-//TODO: move following typedef to TriangleMesh.h after cleanup
-typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
-
 class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
 
 public:

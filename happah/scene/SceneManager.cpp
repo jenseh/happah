@@ -9,8 +9,7 @@ SceneManager::SceneManager() : m_iDCounter(0) {
 
 SceneManager::~SceneManager() {}
 
-//TODO: change to TriangleMesh_ptr
-void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh) {
+void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh) {
 	Node_ptr nodePtr = find(involuteSpurGear);
 
 	InvoluteSpurGearNode_ptr involuteSpurGearNodePtr;
@@ -21,14 +20,13 @@ void SceneManager::add(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* tria
 		addChild(involuteSpurGearNodePtr);
 	}
 
-	TriangleMesh_ptr triangleMeshPtr(triangleMesh);
-	TriangleMeshNode_ptr triangleMeshNodePtr(new TriangleMeshNode(triangleMeshPtr));
+	TriangleMeshNode_ptr triangleMeshNodePtr(new TriangleMeshNode(triangleMesh));
 	involuteSpurGearNodePtr->addChild(triangleMeshNodePtr);
 
 	notifyListeners();
 }
 
-void SceneManager::remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh* triangleMesh) {
+void SceneManager::remove(InvoluteSpurGear_ptr involuteSpurGear, TriangleMesh_ptr triangleMesh) {
 
 }
 

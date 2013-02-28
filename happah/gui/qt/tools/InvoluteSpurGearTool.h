@@ -30,10 +30,9 @@ private:
     GearSlider* m_bottomClearanceSlider;
     GearSlider* m_filletRadiusSlider;
     GearSlider* m_helixAngleSlider;
-    QPushButton* m_toSimpleGearButton;
 
-    InvoluteSpurGear* m_gear;
-    TriangleMesh* m_gearMesh;
+    InvoluteSpurGear_ptr m_gear;
+    TriangleMesh_ptr m_gearMesh;
 
     void updateGear();
     void setNewGearValues();
@@ -42,12 +41,8 @@ public:
 	InvoluteSpurGearTool(SceneManager& sceneManager);
 	~InvoluteSpurGearTool();
 
-	bool knowsItem(RenderItem3D* renderItem);
-	void reactivate(RenderItem3D* renderItem);
-
 private slots:
 	void createGear();
-	void setBack();
 	void updateRanges();
 	void changeToothCount(hpreal toothCount);
 	void changeModule(hpreal module);
@@ -56,10 +51,7 @@ private slots:
 	void changeBottomClearance(hpreal bottomClearance);
 	void changeFilletRadius(hpreal radius);
 	void changeHelixAngle(hpreal angle);
-	void toSimpleGear();
 
-public slots:
-    void finalise();
 };
 
 #endif //INVOLUTESPURGEARTOOL_H

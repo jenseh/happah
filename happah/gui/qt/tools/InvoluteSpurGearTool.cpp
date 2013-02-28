@@ -23,10 +23,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool(SceneManager& sceneManager)
 	m_filletRadiusSlider    = new GearSlider(tr("fillet radius"));
 	m_helixAngleSlider      = new GearSlider(tr("helix angle"));
 
-	QPushButton* setBackButton = new QPushButton("set back values"); //good if they are out of visible range
 	QPushButton* createButton  = new QPushButton("create gear");
-	m_toSimpleGearButton       = new QPushButton("reduce values to simple gear");
-	m_toSimpleGearButton->setEnabled(false);
 
 	vbox = new QVBoxLayout();
 	vbox->addWidget(m_toothCountSlider);
@@ -36,15 +33,11 @@ InvoluteSpurGearTool::InvoluteSpurGearTool(SceneManager& sceneManager)
 	vbox->addWidget(m_bottomClearanceSlider);
 	vbox->addWidget(m_filletRadiusSlider);
 	vbox->addWidget(m_helixAngleSlider);
-	vbox->addWidget(setBackButton);
 	vbox->addWidget(createButton);
-	vbox->addWidget(m_toSimpleGearButton);
 
 	gbox->setLayout(vbox);
 
 	connect(createButton,       SIGNAL(clicked()), this, SLOT(createGear()));
-	connect(setBackButton,      SIGNAL(clicked()), this, SLOT(setBack()));
-	connect(m_toSimpleGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
 	connect(m_toothCountSlider,      SIGNAL(valueChanged(hpreal)), this, SLOT(changeToothCount(hpreal)));
 	connect(m_moduleSlider,          SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
 	connect(m_facewidthSlider,       SIGNAL(valueChanged(hpreal)), this, SLOT(changeFacewidth(hpreal)));
@@ -53,8 +46,7 @@ InvoluteSpurGearTool::InvoluteSpurGearTool(SceneManager& sceneManager)
 	connect(m_filletRadiusSlider,    SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
 	connect(m_helixAngleSlider,      SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 
-	m_gear = new InvoluteSpurGear();
-	m_gearMesh = NULL;
+	m_gear = InvoluteSpurGear_ptr(new InvoluteSpurGear());
 	updateRanges();
 }
 
@@ -63,31 +55,17 @@ InvoluteSpurGearTool::~InvoluteSpurGearTool() {
 
 void InvoluteSpurGearTool::createGear() {
 	m_mode = this->EDITMODE;
-	if (m_gearMesh != NULL)
-		m_gear = new InvoluteSpurGear(*m_gear);
-	m_gearMesh = m_gear->toTriangleMesh();
+	m_gearMesh = TriangleMesh_ptr(m_gear->toTriangleMesh());
 	m_gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
-	m_toSimpleGearButton->setEnabled(true);
-	//emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
-	
-	InvoluteSpurGear_ptr involuteSpurGearPtr(m_gear);
-	m_sceneManager.add(involuteSpurGearPtr, m_gearMesh);
-}
-
-void InvoluteSpurGearTool::setBack() {
-	InvoluteSpurGear *gear = new InvoluteSpurGear();
-	*m_gear = *gear;
-	updateRanges();
-	updateGear();
+	m_sceneManager.add(m_gear, m_gearMesh);
 }
 
 void InvoluteSpurGearTool::updateGear() {
-	/*if (m_gearMesh != NULL) {
-		TriangleMesh *mesh = m_gear->toTriangleMesh();
-		*m_gearMesh = *mesh;
-		delete mesh;
-		emit changed();
-	}*/
+	if (m_gearMesh) {
+		m_sceneManager.remove(m_gear, m_gearMesh);
+		m_gearMesh = TriangleMesh_ptr(m_gear->toTriangleMesh());
+		m_sceneManager.add(m_gear, m_gearMesh);
+	}
 }
 
 void InvoluteSpurGearTool::updateRanges() {
@@ -146,42 +124,6 @@ void InvoluteSpurGearTool::changeHelixAngle(hpreal angle) {
 	if (m_gear->setHelixAngle(angle)) {
 		updateRanges();
 		updateGear();
-	}
-}
-
-void InvoluteSpurGearTool::finalise() {
-	if(m_mode == this->EDITMODE) {
-		m_mode = this->IDLEMODE;
-		if(m_gearMesh != NULL)
-			m_gear = new InvoluteSpurGear();
-		m_gearMesh = NULL;
-		updateRanges();
-		m_toSimpleGearButton->setEnabled(false);
-		emit changed();
-	}
-}
-
-//TODO: We should find something else here. Dynamic casts are bad!!!
-bool InvoluteSpurGearTool::knowsItem(RenderItem3D* renderItem) {
-	return (dynamic_cast<InvoluteSpurGear*>(renderItem->getNonDrawable()) != NULL);
-}
-void InvoluteSpurGearTool::reactivate(RenderItem3D* renderItem) {
-	m_mode = this->EDITMODE;
-	if(m_gearMesh == NULL)
-		delete m_gear;
-	m_gear = dynamic_cast<InvoluteSpurGear*>(renderItem->getNonDrawable());
-	m_gearMesh = dynamic_cast<TriangleMesh*>(renderItem->getDrawable());
-	m_toSimpleGearButton->setEnabled(true);
-	updateRanges();
-}
-
-void InvoluteSpurGearTool::toSimpleGear() {
-	if(m_mode == this->EDITMODE && m_gearMesh != NULL) {
-		SimpleGear* gear = m_gear->toSimpleGear();
-		TriangleMesh* mesh = gear->toTriangleMesh();
-		mesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f);
-		emit deleteCurrentAndEmitNew(new RenderItem3D(gear, mesh, mesh->getName()));
-		finalise();
 	}
 }
 

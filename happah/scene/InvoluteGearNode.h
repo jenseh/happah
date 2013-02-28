@@ -21,6 +21,7 @@ public:
 
 	virtual void accept(SceneVisitor& sceneVisitor);
 	void addChild(TriangleMeshNode_ptr triangleMeshNode);
+	void removeChild(TriangleMeshNode_ptr triangleMeshNode);
 };
 
 #endif // INVOLUTE_GEAR_NODE_H

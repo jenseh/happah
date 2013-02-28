@@ -20,7 +20,7 @@ public:
 		: m_geometry(geometry) {}
 	virtual ~SimpleGeometryNode() {}
 
-	virtual bool contains(shared_ptr<void> data) {
+	virtual bool const contains(shared_ptr<void> data) {
 		return m_geometry == data;
 	}
 

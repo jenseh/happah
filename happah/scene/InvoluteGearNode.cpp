@@ -13,3 +13,7 @@ void InvoluteGearNode::accept(SceneVisitor& sceneVisitor) {
 void InvoluteGearNode::addChild(TriangleMeshNode_ptr triangleMeshNode) {
 	Node::addChild(triangleMeshNode);
 }
+
+void InvoluteGearNode::removeChild(TriangleMeshNode_ptr triangleMeshNode) {
+	Node::removeChild(triangleMeshNode);
+}

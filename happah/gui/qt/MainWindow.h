@@ -11,7 +11,6 @@
 #include "happah/gui/qt/ComponentList.h"
 #include "happah/gui/qt/EditorScene.h"
 #include "happah/gui/qt/EditorSceneManager.h"
-#include "happah/gui/qt/SceneManager3D.h"
 #include "happah/gui/qt/ToolSelector.h"
 #include "happah/scene/SceneManager.h"
 
@@ -42,8 +41,6 @@ private:
 	QGraphicsView* m_view2D;
 	EditorScene* m_scene;
 	EditorSceneManager* m_editorSceneManager;
-	//3D components:
-	SceneManager3D* m_sceneManager3D;
 
 private slots:
 	void scaleView2D(int);

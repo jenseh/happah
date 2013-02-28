@@ -42,11 +42,9 @@ HEADERS += \
 	happah/gui/qt/GearSlider.h \
 	happah/gui/qt/MainWindow.h \
 	happah/gui/qt/Painter2DQt.h \
-	happah/gui/qt/SceneManager3D.h \
 	happah/gui/qt/ToolSelector.h \
 \
 	happah/gui/qt/tools/BSplineTool.h \
-	happah/gui/qt/tools/DiscGearGrindTool.h \
 	happah/gui/qt/tools/InvoluteSpurGearTool.h \
 	happah/gui/qt/tools/SimpleGearTool.h \
 	happah/gui/qt/tools/SplineTool.h \
@@ -131,11 +129,9 @@ SOURCES += \
 	happah/gui/qt/GearSlider.cpp \
 	happah/gui/qt/MainWindow.cpp \
 	happah/gui/qt/Painter2DQt.cpp \
-	happah/gui/qt/SceneManager3D.cpp \
 	happah/gui/qt/ToolSelector.cpp \
 \
 	happah/gui/qt/tools/BSplineTool.cpp \
-	happah/gui/qt/tools/DiscGearGrindTool.cpp \
 	happah/gui/qt/tools/InvoluteSpurGearTool.cpp \
 	happah/gui/qt/tools/SimpleGearTool.cpp \
 	happah/gui/qt/tools/SplineTool.cpp \

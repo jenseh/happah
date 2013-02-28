@@ -10,7 +10,6 @@
 #include "happah/gui/gl/GlViewport3D.h"
 #include "happah/gui/qt/MainWindow.h"
 #include "happah/gui/qt/tools/BSplineTool.h"
-#include "happah/gui/qt/tools/DiscGearGrindTool.h"
 #include "happah/gui/qt/tools/InvoluteSpurGearTool.h"
 #include "happah/gui/qt/tools/SimpleGearTool.h"
 #include "happah/gui/qt/tools/SplineTool.h"
@@ -38,14 +37,9 @@ MainWindow::MainWindow(SceneManager& sceneManager, DrawManager& drawManager)
 	setCentralWidget(m_tabs);
 	createContainer();
 
-	m_sceneManager3D = new SceneManager3D(&m_sceneManager, m_componentList);
 	createTools();
 
 	m_editorSceneManager = new EditorSceneManager( m_scene, m_componentList );
-	connect(m_toolSelector, SIGNAL(emitDrawable(RenderItem3D*)), m_sceneManager3D, SLOT(addDrawable(RenderItem3D*)));
-	connect(m_toolSelector, SIGNAL(changed()), m_sceneManager3D, SLOT(update()));
-	connect(m_componentList, SIGNAL(deleteCurrent(std::string)), m_sceneManager3D, SLOT(deleteCurrentDrawable(std::string)));
-	connect(m_sceneManager3D, SIGNAL(updateTool(RenderItem3D*)), m_toolSelector, SLOT(activateTool(RenderItem3D*)));
 	connect(m_scene, SIGNAL(rightClickedAt(QPointF)), m_toolSelector, SLOT(rightClickAt(QPointF)));
 	connect(m_scene, SIGNAL(leftClickedAt(QPointF)), m_toolSelector, SLOT(leftClickAt(QPointF)));
 	connect(m_scene, SIGNAL(scaleScene(int)), this, SLOT(scaleView2D(int)));
@@ -75,10 +69,6 @@ void MainWindow::createTools() {
 
 	SimpleGearTool* simpleGearTool = new SimpleGearTool();
 	m_toolSelector->addTool(simpleGearTool);
-
-	DiscGearGrindTool* discGearGrindTool = new DiscGearGrindTool(m_sceneManager3D);
-	m_toolSelector->addTool(discGearGrindTool);
-	m_sceneManager.registerListener(discGearGrindTool);
 
 	dock->setWidget(m_toolSelector);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

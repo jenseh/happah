@@ -2,16 +2,9 @@
 #define MAINWINDOW_H_
 
 #include <QKeyEvent>
-#include <QListWidget>
 #include <QMainWindow>
-#include <QMenu>
 
-#include "happah/HappahTypes.h"
 #include "happah/gui/gl/DrawManager.h"
-#include "happah/gui/qt/ComponentList.h"
-#include "happah/gui/qt/EditorScene.h"
-#include "happah/gui/qt/EditorSceneManager.h"
-#include "happah/gui/qt/ToolSelector.h"
 #include "happah/scene/SceneManager.h"
 
 class MainWindow: public QMainWindow {
@@ -22,29 +15,11 @@ public:
 	virtual ~MainWindow();
 
 protected:
-	void keyPressEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent* event);
 
 private:
 	static const int DEFAULT_WINDOW_HEIGHT = 800;
 	static const int DEFAULT_WINDOW_WIDTH = 1200;
-
-	void createContainer();
-	void createTools();
-
-	ComponentList* m_componentList;
-	QTabWidget* m_tabs;
-	SceneManager& m_sceneManager;
-	ToolSelector* m_toolSelector;
-	QMenu* m_viewMenu;
-
-	//2D components:
-	QGraphicsView* m_view2D;
-	EditorScene* m_scene;
-	EditorSceneManager* m_editorSceneManager;
-
-private slots:
-	void scaleView2D(int);
-	void changeView2DTo(hpvec2 min, hpvec2 max);
 
 };
 

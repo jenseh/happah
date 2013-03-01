@@ -35,13 +35,12 @@ HEADERS += \
 	happah/gui/gl/GlViewport3D.h \
 \
 	happah/gui/qt/ComponentList.h \
-	happah/gui/qt/EditorScene.h \
-	happah/gui/qt/EditorSceneItem.h \
-	happah/gui/qt/EditorSceneManager.h \
 	happah/gui/qt/GearSlider.h \
 	happah/gui/qt/MainWindow.h \
-	happah/gui/qt/Painter2DQt.h \
-	happah/gui/qt/ToolSelector.h \
+	happah/gui/qt/SceneGraphExplorerPanel.h \
+	happah/gui/qt/ToolPanel.h \
+\
+	happah/gui/qt/forms/InvoluteGearForm.h \
 \
 	happah/gui/qt/tools/BSplineTool.h \
 	happah/gui/qt/tools/InvoluteSpurGearTool.h \
@@ -121,13 +120,12 @@ SOURCES += \
 	happah/gui/gl/GlViewport3D.cpp \
 \
 	happah/gui/qt/ComponentList.cpp \
-	happah/gui/qt/EditorScene.cpp \
-	happah/gui/qt/EditorSceneItem.cpp \
-	happah/gui/qt/EditorSceneManager.cpp \
 	happah/gui/qt/GearSlider.cpp \
 	happah/gui/qt/MainWindow.cpp \
-	happah/gui/qt/Painter2DQt.cpp \
-	happah/gui/qt/ToolSelector.cpp \
+	happah/gui/qt/SceneGraphExplorerPanel.cpp \
+	happah/gui/qt/ToolPanel.cpp \
+\
+	happah/gui/qt/forms/InvoluteGearForm.cpp \
 \
 	happah/gui/qt/tools/BSplineTool.cpp \
 	happah/gui/qt/tools/InvoluteSpurGearTool.cpp \

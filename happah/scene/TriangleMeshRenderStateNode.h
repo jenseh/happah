@@ -21,32 +21,39 @@ public:
 
 	virtual void accept(SceneVisitor& sceneVisitor);
 
-	hpcolor getColor();
-	std::vector<hpcolor>* getColorVector();
-	GLuint getIndexBufferID();
-	GLuint getVertexArrayObjectID();
-	GLuint getVertexBufferID();
-	TriangleMesh_ptr getTriangleMesh();
-	void setColor(hpcolor color);
-	void setColorVector(std::vector<hpcolor>* colorVector);
-	void setIndexBufferID(GLuint id);
-	void setVertexArrayObjectID(GLuint id);
-	void setVertexBufferID(GLuint id);
-	GLuint getColorBufferID(void); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
-	void   setColorBufferID(GLuint id); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	void 	setIndexBufferID(GLuint id);
+	void 	setVertexArrayObjectID(GLuint id);
+	void 	setVertexBufferID(GLuint id);
+	void 	setColorBufferID(GLuint id); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	void 	setColor(hpcolor color);
+	void 	setColorVector(std::vector<hpcolor>* colorVector);
+	void 	setMaterial(Material& material);
+	void 	setInitialized(bool isInitialized);
+
+	GLuint 					getIndexBufferID();
+	GLuint 					getVertexArrayObjectID();
+	GLuint 					getVertexBufferID();
+	GLuint					getColorBufferID(void); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	hpcolor 				getColor();
+	std::vector<hpcolor>* 	getColorVector();
+	TriangleMesh_ptr 		getTriangleMesh();
+	Material 				getMaterial();
+
 	bool isInitialized();
-	void switchInitialized();
 	bool hasColorVector();
+
+
 private:
-	hpcolor m_color;
-	std::vector<hpcolor>* m_colorVector;
-	GLuint m_indexBufferID;
-	TriangleMesh_ptr m_triangleMesh;
-	GLuint m_vertexArrayObjectID;
-	GLuint m_vertexBufferID;
-	GLuint m_colorBufferID; // TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
-	bool m_initialized;
-	bool m_hasColorVector;
+	GLuint 					m_indexBufferID;
+	GLuint 					m_vertexArrayObjectID;
+	GLuint					m_vertexBufferID;
+	GLuint 					m_colorBufferID; // TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	hpcolor 				m_color;
+	std::vector<hpcolor>* 	m_colorVector;
+	TriangleMesh_ptr 		m_triangleMesh;
+	Material 				m_material;
+	bool 					m_initialized;
+	bool 					m_hasColorVector;
 };
 
 

@@ -247,7 +247,7 @@ void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStat
    glBindVertexArray(0);
    glBindBuffer(GL_ARRAY_BUFFER,0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-   triangleMeshRenderStateNode.switchInitialized();
+   triangleMeshRenderStateNode.setInitialized(true);
 }
 
 void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
@@ -261,10 +261,10 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
 			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
 			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
-			glUniform1f(m_ambientFactorLocation,1.3f);
-			glUniform1f(m_diffuseFactorLocation,1.7f);
-			glUniform1f(m_specularFactorLocation,1.5f);
-			glUniform1f(m_phongExponentLocation,5.0f);
+			glUniform1f(m_ambientFactorLocation,triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
+			glUniform1f(m_diffuseFactorLocation,triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
+			glUniform1f(m_specularFactorLocation,triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
+			glUniform1f(m_phongExponentLocation,triangleMeshRenderStateNode.getMaterial().getPhongExponent);
 			glUniform3f(m_cameraPositionLocation,m_cameraPosition.x,m_cameraPosition.y,m_cameraPosition.z );
 			glUniform4f(m_colorComponentLocation,1.0f,0.0f,0.0f,0.0f); // TODO : REMOVE OR SET TO ZERO
 			glUniform1i(m_isColoredLocation,1);
@@ -285,10 +285,10 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
 			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
 			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
-			glUniform1f(m_ambientFactorLocation,1.3f);
-			glUniform1f(m_diffuseFactorLocation,1.7f);
-			glUniform1f(m_specularFactorLocation,1.5f);
-			glUniform1f(m_phongExponentLocation,5.0f);
+			glUniform1f(m_ambientFactorLocation,triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
+			glUniform1f(m_diffuseFactorLocation,triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
+			glUniform1f(m_specularFactorLocation,triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
+			glUniform1f(m_phongExponentLocation,triangleMeshRenderStateNode.getMaterial().getPhongExponent);
 			glUniform3f(m_cameraPositionLocation,m_cameraPosition.x,m_cameraPosition.y,m_cameraPosition.z );
 			glUniform4f(m_colorComponentLocation,color.x,color.y,color.z,color.w);
 			glUniform1i(m_isColoredLocation,0);

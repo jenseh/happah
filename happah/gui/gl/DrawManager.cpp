@@ -9,7 +9,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-
+#include <glm/gtc/type_ptr.hpp>
 HappahGlFormat::HappahGlFormat() {
 	setVersion(3, 3);
 	setProfile(QGLFormat::CompatibilityProfile);
@@ -70,10 +70,14 @@ bool DrawManager::initShaderPrograms() {
 	if(m_specularFactorLocation < 0) cerr << "Failed to find specularFactorLocation." << endl;
 	m_phongExponentLocation = glGetUniformLocation(m_program, "phongExponent");
 	if(m_phongExponentLocation < 0) cerr << "Failed to find phongLocation." << endl;
-
+	m_colorComponentLocation = glGetUniformLocation(m_program, "colorComponent");
+	if(m_colorComponentLocation < 0) cerr << "Failed to find color Component." << endl;
+	m_isColoredLocation = glGetUniformLocation(m_program, "isColored");
+	if(m_isColoredLocation < 0) cerr << "Failed to find isColored." << endl;
 	//Camera and Light uniforms
 	m_cameraPositionLocation = glGetUniformLocation(m_program, "cameraPosition");
 	if(m_cameraPositionLocation < 0) cerr << "Failed to find cameraPositionLocation." << endl;
+
 
 	return true;
 }
@@ -103,84 +107,12 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 
 bool DrawManager::createBuffers() {
 
-	//Vertex Buffer
-	std::vector<Drawable*> *drawables = m_sceneManager.getDrawables();
-	int nBytes = 0;
-
-		for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-			nBytes += (*i)->getVertexData()->size() * sizeof(glm::vec4);
-		}
-
 	glGenVertexArrays(1, &m_coloredVertexArrayObject);
 	glBindVertexArray(m_coloredVertexArrayObject);
-
-	glGenBuffers(1, &m_vertexDataBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexDataBuffer);
-	glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
-	
-	int offset = 0;
-	for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
-	    vector<glm::vec4>* vertexData = (*i)->getVertexData();
-
-	    int vertexDataSize = vertexData->size() * sizeof(glm::vec4);
-	    glBufferSubData(GL_ARRAY_BUFFER, offset, vertexDataSize, &(vertexData->at(0)));
-	    offset += vertexDataSize;
-	}
-	glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
-	glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
-    
-    glEnableVertexAttribArray(m_vertexLocation);
-    glEnableVertexAttribArray(m_normalLocation);
-
-
-    //INDEX BUFFER
-    nBytes= 0;
-    for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-    			nBytes += (*i)->getVertexData()->size() * sizeof(unsigned int);
-    		}
-    glGenBuffers(1,&m_indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,nBytes,NULL,GL_STATIC_DRAW);
-    
-    //Fill index Buffer :
-    unsigned int indexOffset = 0;
-    for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
-    	std::vector<unsigned int> indices;
-    	for (unsigned int j=0; j < (*i)->getVertexData()->size();j++){
-    		indices.push_back(indexOffset+j);
-
-    	}
-    	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,indexOffset*sizeof(unsigned int),indices.size()*sizeof(unsigned int),&indices[0]);
-    	indexOffset += (*i)->getVertexData()->size();
-    	std::cout << "IndexOffset = " << indexOffset << std::endl;
-    }
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-    // COLOR BUFFER
-    nBytes = 0;
-    for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-      nBytes += (*i)->getColorData()->size() * sizeof(Color);
-    }
-    if (nBytes > 0) {
-        glGenBuffers(1, &m_colorDataBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, m_colorDataBuffer);
-        glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
-        
-    offset = 0;
-    for (vector<Drawable*>::iterator i = drawables->begin(), endi = drawables->end(); i != endi; ++i) {
-          vector<Color>* colorData = (*i)->getColorData();
-          if( !colorData->empty() ){
-                int colorDataSize = colorData->size()*sizeof(Color);
-                std::cout << "size of Color: " << sizeof(Color) << endl;
-                std::cout << " ColorDataSize for buffer: " << colorDataSize << endl;
-                glBufferSubData(GL_ARRAY_BUFFER, offset, colorDataSize, &(colorData->at(0)));
-                offset += colorDataSize;
-            }
-        }
-    glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(m_colorLocation);
+    glGenVertexArrays(1, &m_unColoredVertexArrayObject);
+    glBindVertexArray(m_unColoredVertexArrayObject);
     glBindVertexArray(0);
-    
-    }
+
    return true;
 }
 
@@ -188,11 +120,9 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(m_program);
-	glBindVertexArray(m_coloredVertexArrayObject);
-	int offset = 0;
-	std::vector<Drawable*> *drawables = m_sceneManager.getDrawables();
-	for (vector<Drawable*>::iterator i = drawables->begin(), end = drawables->end(); i != end; ++i) {
-		QMatrix4x4 modelMatrix = *((*i)->getModelMatrix());
+
+		QMatrix4x4 modelMatrix ;
+		modelMatrix.setToIdentity();
 		QMatrix4x4 MVP = *projectionMatrix * *viewMatrix * modelMatrix;
 		QMatrix3x3 normalMatrix = modelMatrix.normalMatrix(); //Do not change this to "inverted" again!
 		GLfloat modelMatrixFloats[16];
@@ -215,40 +145,20 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		    normalMatrixFloats[j] = normalMatrixQreals[j];
 
 		}
+		m_modelMatrix = glm::mat4(1.0f);
+		m_modelViewProjectionMatrix = glm::make_mat4(MVPFloats);
+		m_normalMatrix = glm::make_mat3(normalMatrixFloats);
+		m_cameraPosition.x = cameraPosition->x();
+		m_cameraPosition.y =cameraPosition->y();
+		m_cameraPosition.z =cameraPosition->z();
+
+		m_sceneManager.accept(*this);
 
 
-
-		Material material = (*i)->getMaterial();
-
-		glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, modelMatrixFloats);
-		glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, MVPFloats);
-		glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, normalMatrixFloats);
-		glUniform1f(m_ambientFactorLocation,material.getKa());
-		glUniform1f(m_diffuseFactorLocation,material.getKd());
-		glUniform1f(m_specularFactorLocation,material.getKs());
-		glUniform1f(m_phongExponentLocation,material.getShininess());
-		glUniform3f(m_cameraPositionLocation, cameraPosition->x(), cameraPosition->y(), cameraPosition->z());
-
-		int vertexDataSize = (*i)->getVertexData()->size();
-
-		int tupleSize = (*i)->getTupleSize();
-		int mode = tupleSize == 4 ? GL_QUADS : tupleSize == 3 ? GL_TRIANGLES : -1;
-		if (mode == -1) {
-		    std::cerr << "Error: Invalid tupleSize in DrawManager!" << std::endl;
-		}
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-		int size;
-		glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER,GL_BUFFER_SIZE,&size);
-		glDrawElements(mode,size/sizeof(unsigned int),GL_UNSIGNED_INT,0);
-		//glDrawArrays(mode, offset, vertexDataSize);
-
-		offset += vertexDataSize;
-	}
-	glBindVertexArray(0);
 }
 
 void DrawManager::sceneChanged(){
-	createBuffers();
+//	createBuffers();
 }
 
 void DrawManager::visit(InvoluteGearNode& involuteGearNode){}
@@ -257,48 +167,9 @@ void DrawManager::visit(TriangleMeshNode& triangleMeshNode){}
 
 void DrawManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
 	// If no Buffer has been assigned, assign one, and write Data into it
-	if (triangleMeshRenderStateNode.getVertexBufferID() == 0){    //TODO : Create is initialized function
-		glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
-		GLuint bufferID;
-		GLint size = (triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size());
-		// VERTEX BUFFER OBJECT
-		glGenBuffers(1, &bufferID);
-		triangleMeshRenderStateNode.setVertexBufferID(bufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
-		glBufferData(GL_ARRAY_BUFFER, size*sizeof(glm::vec4), triangleMeshRenderStateNode.getTriangleMesh()->getVertexData(), GL_DYNAMIC_DRAW);
-
-		glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
-		glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
-
-	    glEnableVertexAttribArray(m_vertexLocation);
-	    glEnableVertexAttribArray(m_normalLocation);
-
-	    //INDEX BUFFER OBJECT
-	    std::vector<GLuint> indices;
-		for (unsigned int j=0; j < triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size();j++){
-		    		indices.push_back(j);
-					}
-	    glGenBuffers(1,&bufferID);
-	    triangleMeshRenderStateNode.setIndexBufferID(bufferID);
-	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
-	    glBufferData(GL_ELEMENT_ARRAY_BUFFER,size,&indices[0],GL_DYNAMIC_DRAW);
-	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-
-	    //COLOR //TODO: WILL BE IN interleaved buffer .. as soon as done ,remove this part
-	    if(triangleMeshRenderStateNode.getVertexArrayObjectID() == 1){
-	        glGenBuffers(1, &bufferID);
-	        triangleMeshRenderStateNode.setColorBufferID(bufferID);
-	        glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorBufferID());
-	       glBufferData(GL_ARRAY_BUFFER,triangleMeshRenderStateNode.getColorVector()->size()*sizeof(glm::vec4), triangleMeshRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-	       glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	       glEnableVertexAttribArray(m_colorLocation);
-
-	    }
-	    glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
-	}
-
-
-
+	if (!triangleMeshRenderStateNode.isInitialized())
+		initialize(triangleMeshRenderStateNode);
+	drawObject(triangleMeshRenderStateNode);
 }
 
 bool DrawManager::initGL(){
@@ -324,3 +195,116 @@ bool DrawManager::initGL(){
 		return false;
 	return true;
 }
+
+
+
+void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+	// Bind Proper  VERTEX ARRAY OBJECT therefore
+	//Check if Color Vector exists
+	if(triangleMeshRenderStateNode.hasColorVector()){
+		// exists!
+		triangleMeshRenderStateNode.setVertexArrayObjectID(m_coloredVertexArrayObject);
+		glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
+	}
+	else {
+		triangleMeshRenderStateNode.setVertexArrayObjectID(m_unColoredVertexArrayObject);
+		glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
+	}
+
+	// Create New Vertex Buffer Object
+	GLuint bufferID;
+	GLint size = (triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size());
+	glGenBuffers(1, &bufferID);
+	triangleMeshRenderStateNode.setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size*sizeof(glm::vec4), &(triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+	glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
+    glEnableVertexAttribArray(m_vertexLocation);
+    glEnableVertexAttribArray(m_normalLocation);
+
+    // Create New Color Buffer Object
+    if(triangleMeshRenderStateNode.getVertexArrayObjectID() == m_coloredVertexArrayObject){
+        glGenBuffers(1, &bufferID);
+        triangleMeshRenderStateNode.setColorBufferID(bufferID);
+        glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorBufferID());
+       glBufferData(GL_ARRAY_BUFFER,triangleMeshRenderStateNode.getColorVector()->size()*sizeof(glm::vec4), triangleMeshRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+       glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+       glEnableVertexAttribArray(m_colorLocation);
+
+    }
+    // CREATE NEW INDEX BUFFER OBJECT
+    // TODO : GET INDICES FROM RENDERSTATE OBJECT
+    // TODO : THEN REMOVE THIS
+    std::vector<unsigned int> indices;
+    for(int j=0 ;j < triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size() ; j++)
+    	indices.push_back(j);
+    // TODO : UNTIL HERE
+    glGenBuffers(1,&bufferID);
+    triangleMeshRenderStateNode.setIndexBufferID(bufferID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,triangleMeshRenderStateNode.getIndexBufferID());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,size*sizeof(GLuint),&indices[0],GL_DYNAMIC_DRAW);
+   glBindVertexArray(0);
+   glBindBuffer(GL_ARRAY_BUFFER,0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+   triangleMeshRenderStateNode.switchInitialized();
+}
+
+void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+	GLuint colorState = triangleMeshRenderStateNode.getVertexArrayObjectID();
+		if (colorState == m_coloredVertexArrayObject){
+			// DRAW WITH COLOR BUFFER
+			glBindVertexArray(colorState);
+			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
+			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorBufferID());
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
+			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
+			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
+			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
+			glUniform1f(m_ambientFactorLocation,1.3f);
+			glUniform1f(m_diffuseFactorLocation,1.7f);
+			glUniform1f(m_specularFactorLocation,1.5f);
+			glUniform1f(m_phongExponentLocation,5.0f);
+			glUniform3f(m_cameraPositionLocation,m_cameraPosition.x,m_cameraPosition.y,m_cameraPosition.z );
+			glUniform4f(m_colorComponentLocation,1.0f,0.0f,0.0f,0.0f); // TODO : REMOVE OR SET TO ZERO
+			glUniform1i(m_isColoredLocation,1);
+			int size;
+			glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER,GL_BUFFER_SIZE,&size);
+			glDrawElements(GL_TRIANGLES,size/sizeof(unsigned int),GL_UNSIGNED_INT,0);
+			//std::cout << "Object drawn" << std::endl;
+			glBindVertexArray(0);
+		}
+		if (colorState == m_unColoredVertexArrayObject){
+			// DRAW WITH SINGLE COLOR
+			glBindVertexArray(colorState);
+			hpcolor color = triangleMeshRenderStateNode.getColor();
+			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
+			GLuint vbId;
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
+			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
+			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
+			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
+			glUniform1f(m_ambientFactorLocation,1.3f);
+			glUniform1f(m_diffuseFactorLocation,1.7f);
+			glUniform1f(m_specularFactorLocation,1.5f);
+			glUniform1f(m_phongExponentLocation,5.0f);
+			glUniform3f(m_cameraPositionLocation,m_cameraPosition.x,m_cameraPosition.y,m_cameraPosition.z );
+			glUniform4f(m_colorComponentLocation,color.x,color.y,color.z,color.w);
+			glUniform1i(m_isColoredLocation,0);
+			int size;
+
+			glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER,GL_BUFFER_SIZE,&size);
+			glDrawElements(GL_TRIANGLES,size/sizeof(unsigned int),GL_UNSIGNED_INT,0);
+			//std::cout << "Object drawn" << std::endl;
+
+			glBindVertexArray(0);
+		}
+		if (colorState != m_coloredVertexArrayObject && colorState != m_unColoredVertexArrayObject)
+		{
+			// DRAW NOTHING YET
+			//std::cout << "Nothing to Draw" << endl;
+		}
+
+}
+

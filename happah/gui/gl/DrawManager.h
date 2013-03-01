@@ -36,7 +36,8 @@ private:
 	void compileShader(GLuint shader, const char* filePath);
 	bool createBuffers();
 	bool initShaderPrograms();
-
+	void initialize(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
+	void drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
 	SceneManager& m_sceneManager;
 	QGLContext m_glContext;
 
@@ -44,7 +45,7 @@ private:
 	GLuint m_program;
 	GLuint m_vertexShader;
 
-	GLuint m_vertexArrayObject;
+	GLuint m_unColoredVertexArrayObject;
 	GLuint m_vertexDataBuffer;
 	GLuint m_indexBuffer;
 	GLuint m_colorDataBuffer;
@@ -62,10 +63,19 @@ private:
 	GLint m_ambientFactorLocation;
 	GLint m_diffuseFactorLocation;
 	GLint m_specularFactorLocation;
+	GLint m_colorComponentLocation;
+	GLint m_isColoredLocation;
 	GLint m_phongExponentLocation;
 	GLint m_cameraPositionLocation;
 
 	const static HappahGlFormat GL_FORMAT;
+	//TODO: Change these matrices to Projection Matrix , viewMatrix as soon as QMatrices are removed
+	hpmat4x4 m_modelMatrix;
+	hpmat4x4 m_modelViewProjectionMatrix;
+	hpmat3x3 m_normalMatrix;
+	glm::vec3   m_cameraPosition;
+
+
 };
 
 #endif // DRAWMANAGER_H

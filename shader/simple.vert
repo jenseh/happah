@@ -6,7 +6,9 @@ in vec4 color;
 
 uniform mat4 modelMatrix;				
 uniform mat4 modelViewProjectionMatrix;				
-uniform mat3 normalMatrix;					 					
+uniform mat3 normalMatrix;
+uniform int  isColored;	
+uniform vec4 colorComponent;				 					
 
 out vec4 vVertex; // vertex position world space				
 out vec4 vNormal; // vertex normal world space
@@ -22,7 +24,12 @@ void main() {
    	
    	
    	// TODO: check if color attribute is disabled , if so, set vColor to a color given by a uniform
-	vColor = color;	   
+   	if (isColored == 1){
+	vColor = color;	
+	}
+	else {
+	vColor = colorComponent;
+	}   
    
 	gl_Position = modelViewProjectionMatrix * vertex;
 }

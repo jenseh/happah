@@ -5,7 +5,10 @@
 TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor &color)
 														:m_vertexBufferID(0),
 														 m_indexBufferID(0),
-														 m_vertexArrayObjectID(2){
+														 m_vertexArrayObjectID(0),
+														 m_colorBufferID(0),
+														 m_initialized(false),
+														 m_hasColorVector(false){
 	m_triangleMesh = triangleMesh;
 	m_color = color;
 }
@@ -13,7 +16,10 @@ TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triang
 TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector)
 														:m_vertexBufferID(0),
 														 m_indexBufferID(0),
-														 m_vertexArrayObjectID(1) {
+														 m_vertexArrayObjectID(0),
+														 m_colorBufferID(0),
+														 m_initialized(false),
+														 m_hasColorVector(true){
 	if (triangleMesh->getVertexData()->size() != colorVector->size())
 			throw; // TODO: Find Proper Exception !
 	m_triangleMesh = triangleMesh;
@@ -34,7 +40,7 @@ void TriangleMeshRenderStateNode::setVertexBufferID(GLuint id){
 	m_vertexBufferID = id;
 }
 GLuint TriangleMeshRenderStateNode::getVertexBufferID(){
-	return m_indexBufferID;
+	return m_vertexBufferID;
 }
 void TriangleMeshRenderStateNode::setIndexBufferID(GLuint id){
    m_indexBufferID = id;
@@ -77,6 +83,17 @@ void TriangleMeshRenderStateNode::setColorBufferID(GLuint id){
 	m_colorBufferID = id;
 }
 
+bool TriangleMeshRenderStateNode::isInitialized(){
+	return m_initialized;
+}
+
+void TriangleMeshRenderStateNode::switchInitialized(){
+	m_initialized = !m_initialized;
+}
+
+bool TriangleMeshRenderStateNode::hasColorVector(){
+	return m_hasColorVector;
+}
 
 
 

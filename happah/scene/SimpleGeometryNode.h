@@ -3,14 +3,10 @@
 
 #include <memory>
 
-using namespace std;
-
-//TODO: upgrade to gcc-4.7 and define:
-//template<class G>
-//using SimpleGeometryNode_ptr = shared_ptr<SimpleGeometryNode<G> >;
-
 #include "happah/scene/Node.h"
 #include "happah/transformations/RigidAffineTransformation.h"
+
+using namespace std;
 
 template<class G>//extends Geometry
 class SimpleGeometryNode : public Node {
@@ -24,6 +20,12 @@ public:
 		return m_geometry == data;
 	}
 
+	virtual void draw(DrawManager& drawManager, RigidAffineTransformation& rigidAffineTransformation) {
+		RigidAffineTransformation composedRigidAffineTransformation;
+		rigidAffineTransformation.compose(m_rigidAffineTransformation, composedRigidAffineTransformation);
+		Node::draw(drawManager, composedRigidAffineTransformation);
+	}
+
 	shared_ptr<G> getGeometry() {
 		return m_geometry;
 	}
@@ -33,5 +35,8 @@ protected:
 	RigidAffineTransformation_ptr m_rigidAffineTransformation;
 
 };
+//TODO: upgrade to gcc-4.7 and define:
+//template<class G>
+//using SimpleGeometryNode_ptr = shared_ptr<SimpleGeometryNode<G> >;
 
 #endif // SIMPLE_GEOMETRY_NODE_H

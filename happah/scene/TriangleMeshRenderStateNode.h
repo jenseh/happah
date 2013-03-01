@@ -1,18 +1,16 @@
 #ifndef TRIANGLE_MESH_RENDER_STATE_NODE_H_
 #define TRIANGLE_MESH_RENDER_STATE_NODE_H_
 
-#include <memory>
 #include <GL/glew.h>
-
+#include <memory>
 
 using namespace std;
 
 class TriangleMeshRenderStateNode;
 typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 
-#include "happah/HappahTypes.h"
 #include "happah/scene/Node.h"
-#include "happah/scene/SceneVisitor.h"
+#include "happah/scene/TriangleMeshNode.h"
 
 class TriangleMeshRenderStateNode : public Node {
 
@@ -46,4 +44,6 @@ private:
 	GLuint m_colorBufferID; // TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
 };
 
+
 #endif /* TRIANGLE_MESH_RENDER_STATE_NODE_H_ */
+

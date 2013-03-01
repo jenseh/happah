@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "happah/scene/SceneManager.h"
-#include "happah/scene/TriangleMeshRenderStateNode.h"
 
 SceneManager::SceneManager() {}
 

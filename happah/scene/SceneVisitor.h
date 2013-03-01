@@ -1,10 +1,6 @@
 #ifndef SCENE_VISITOR_H
 #define SCENE_VISITOR_H
 
-#include "happah/scene/InvoluteGearNode.h"
-#include "happah/scene/TriangleMeshNode.h"
-#include "happah/scene/TriangleMeshRenderStateNode.h"
-
 class InvoluteGearNode;
 class TriangleMeshNode;
 class TriangleMeshRenderStateNode;

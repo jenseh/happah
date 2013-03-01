@@ -3,15 +3,11 @@
 
 #include <memory>
 
-using namespace std;
-
-class TriangleMeshNode;
-typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
-
 #include "happah/models/TriangleMesh.h"
-#include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"
+
+using namespace std;
 
 class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
 
@@ -26,5 +22,7 @@ public:
 private:
 	TriangleMeshRenderStateNode_ptr m_triangleMeshRenderStateNode;
 };
+typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
+
 
 #endif // TRIANGLE_MESH_NODE_H

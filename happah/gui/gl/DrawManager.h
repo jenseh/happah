@@ -35,7 +35,7 @@ private:
 	bool createBuffers();
 	bool initShaderPrograms();
 	void initialize(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
-	void drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
+	void drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,RigidAffineTransformation& rigidAffineTransformation);
 	SceneManager& m_sceneManager;
 	QGLContext m_glContext;
 

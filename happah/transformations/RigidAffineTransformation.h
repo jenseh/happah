@@ -23,6 +23,7 @@ public:
 	hpvec3 getTranslation() const;
 	void setMatrix(const hpmat3x3& matrix);
 	void setTranslation(const hpvec3& translation);
+	hpmat4x4 toMatrix4x4() const;
 
 protected:
 	hpmat3x3 m_matrix;

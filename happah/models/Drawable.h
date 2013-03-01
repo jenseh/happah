@@ -5,7 +5,7 @@
 
 #include "happah/HappahTypes.h"
 #include "happah/geometries/GeometryObject.h"
-#include "happah/models/Material.h"
+#include "happah/scene/Material.h"
 
 class Drawable : public GeometryObject{
 

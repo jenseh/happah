@@ -2,30 +2,43 @@
 #include <exception>
 
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor& color,Material& material):
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor& color):
 																									 m_vertexBufferID(0),
 																									 m_indexBufferID(0),
 																									 m_vertexArrayObjectID(0),
 																									 m_colorBufferID(0),
 																									 m_initialized(false),
 																									 m_hasColorVector(false){
+
 	m_triangleMesh = triangleMesh;
 	m_color = color;
+	//TODO : Remove Standard Values
+	Material material;
+	material.setAmbientFactor(1.7f);
+	material.setDiffuseFactor(1.4f);
+	material.setSpecularFactor(1.9f);
+	material.setPhongExponent(5.0f);
 	m_material = material;
 }
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector,Material& material):
-																															m_vertexBufferID(0),
-																															m_indexBufferID(0),
-																															m_vertexArrayObjectID(0),
-																															m_colorBufferID(0),
-																															m_initialized(false),
-																															m_hasColorVector(true){
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector):
+																									m_vertexBufferID(0),
+																									m_indexBufferID(0),
+																									m_vertexArrayObjectID(0),
+																									m_colorBufferID(0),
+																									m_initialized(false),
+																									m_hasColorVector(true){
 	if (triangleMesh->getVertexData()->size() != colorVector->size())
 			throw; // TODO: Find Proper Exception !
 
 	m_triangleMesh = triangleMesh;
 	m_colorVector = colorVector;
+	//TODO : Remove Standard Values
+	Material material;
+	material.setAmbientFactor(1.7f);
+	material.setDiffuseFactor(1.4f);
+	material.setSpecularFactor(1.9f);
+	material.setPhongExponent(5.0f);
 	m_material = material;
 }
 

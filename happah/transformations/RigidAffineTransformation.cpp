@@ -30,3 +30,7 @@ void RigidAffineTransformation::setMatrix(const hpmat3x3& matrix) {
 void RigidAffineTransformation::setTranslation(const hpvec3& translation) {
 	m_translation = translation;
 }
+
+hpmat4x4 RigidAffineTransformation::toMatrix4x4() const{
+	return glm::mat4(1.0f);
+}

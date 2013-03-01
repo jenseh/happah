@@ -1,7 +1,7 @@
 #define GLEW_STATIC //Very important for Windows users
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include "happah/models/Material.h"
+#include "happah/scene/Material.h"
 #include "happah/gui/gl/DrawManager.h"
 
 
@@ -159,14 +159,14 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 }
 
 void DrawManager::sceneChanged(){
-//	createBuffers();
+
 }
 
 void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!triangleMeshRenderStateNode.isInitialized())
 		initialize(triangleMeshRenderStateNode);
-	drawObject(triangleMeshRenderStateNode);
+	drawObject(triangleMeshRenderStateNode,rigidAffineTransformation);
 }
 
 bool DrawManager::initGL(){
@@ -247,21 +247,25 @@ void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStat
    triangleMeshRenderStateNode.setInitialized(true);
 }
 
-void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,RigidAffineTransformation& rigidAffineTransformation){
 	GLuint colorState = triangleMeshRenderStateNode.getVertexArrayObjectID();
+	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 		if (colorState == m_coloredVertexArrayObject){
 			// DRAW WITH COLOR BUFFER
 			glBindVertexArray(colorState);
 			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
 			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorBufferID());
+			glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+			glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
+		    glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
 			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
 			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
 			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
-			glUniform1f(m_ambientFactorLocation,triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
-			glUniform1f(m_diffuseFactorLocation,triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
-			glUniform1f(m_specularFactorLocation,triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
-			glUniform1f(m_phongExponentLocation,triangleMeshRenderStateNode.getMaterial().getPhongExponent);
+			glUniform1f(m_ambientFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
+			glUniform1f(m_diffuseFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
+			glUniform1f(m_specularFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
+			glUniform1f(m_phongExponentLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getPhongExponent());
 			glUniform3f(m_cameraPositionLocation,m_cameraPosition.x,m_cameraPosition.y,m_cameraPosition.z );
 			glUniform4f(m_colorComponentLocation,1.0f,0.0f,0.0f,0.0f); // TODO : REMOVE OR SET TO ZERO
 			glUniform1i(m_isColoredLocation,1);
@@ -284,10 +288,10 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
 			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
 			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
-			glUniform1f(m_ambientFactorLocation,triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
-			glUniform1f(m_diffuseFactorLocation,triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
-			glUniform1f(m_specularFactorLocation,triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
-			glUniform1f(m_phongExponentLocation,triangleMeshRenderStateNode.getMaterial().getPhongExponent);
+			glUniform1f(m_ambientFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
+			glUniform1f(m_diffuseFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
+			glUniform1f(m_specularFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
+			glUniform1f(m_phongExponentLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getPhongExponent());
 			glUniform3f(m_cameraPositionLocation,m_cameraPosition.x,m_cameraPosition.y,m_cameraPosition.z );
 			glUniform4f(m_colorComponentLocation,color.x,color.y,color.z,color.w);
 			glUniform1i(m_isColoredLocation,0);
@@ -301,7 +305,7 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 		if (colorState != m_coloredVertexArrayObject && colorState != m_unColoredVertexArrayObject)
 		{
 			// DRAW NOTHING YET
-			//std::cout << "Nothing to Draw" << endl;
+			std::cout << "Nothing to Draw" << endl;
 		}
 
 }

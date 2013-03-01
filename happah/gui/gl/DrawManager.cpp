@@ -152,7 +152,8 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		m_cameraPosition.y =cameraPosition->y();
 		m_cameraPosition.z =cameraPosition->z();
 
-		m_sceneManager.accept(*this);
+		RigidAffineTransformation identityTransformation;
+		m_sceneManager.draw(*this, identityTransformation);
 
 
 }
@@ -161,11 +162,7 @@ void DrawManager::sceneChanged(){
 //	createBuffers();
 }
 
-void DrawManager::visit(InvoluteGearNode& involuteGearNode){}
-
-void DrawManager::visit(TriangleMeshNode& triangleMeshNode){}
-
-void DrawManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!triangleMeshRenderStateNode.isInitialized())
 		initialize(triangleMeshRenderStateNode);
@@ -279,6 +276,8 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 			glBindVertexArray(colorState);
 			hpcolor color = triangleMeshRenderStateNode.getColor();
 			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
+			glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
+			glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
 			GLuint vbId;
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
@@ -296,7 +295,6 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 
 			glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER,GL_BUFFER_SIZE,&size);
 			glDrawElements(GL_TRIANGLES,size/sizeof(unsigned int),GL_UNSIGNED_INT,0);
-			//std::cout << "Object drawn" << std::endl;
 
 			glBindVertexArray(0);
 		}

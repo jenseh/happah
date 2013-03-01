@@ -79,17 +79,8 @@ void ToolSelector::toolSelected(int toolID) {
 //	out << "Button " << toolID << endl;
 }
 
-//void ToolSelector::newComponent(Component* component) {
-//	std::string name = component->text().toStdString();
-//	emit emitDrawable( drawable );
-//}
-
 void ToolSelector::newComponent(Drawable2D* drawable) {
 	emit emitDrawable( drawable );
-}
-
-void ToolSelector::newComponent(RenderItem3D* renderItem) {
-	emit emitDrawable( renderItem );
 }
 
 void ToolSelector::update() {
@@ -100,22 +91,9 @@ void ToolSelector::deleteCurrentAndEmitNew(Drawable2D* drawable) {
 	emit deleteCurrentComponent();
 	newComponent(drawable);
 }
-void ToolSelector::deleteCurrentAndEmitNew(RenderItem3D* renderItem) {
-	emit deleteCurrentComponent();
-	newComponent(renderItem);
-}
 
 void ToolSelector::finalise( std::string name ) {
 	m_toolList[m_currToolID]->finalise();
-}
-
-void ToolSelector::activateTool ( RenderItem3D* renderItem) {
-	for (unsigned int i = 0; i < m_toolList.size(); ++i) {
-		if (m_toolList[i]->knowsItem(renderItem)) {
-			toolSelected(i);
-			m_toolList[i]->reactivate(renderItem);
-		}
-	}
 }
 
 void ToolSelector::activateTool ( Drawable2D* drawable) {

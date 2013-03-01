@@ -10,7 +10,6 @@
 
 #include "happah/HappahTypes.h"
 #include "happah/gui/Drawable2D.h"
-#include "happah/gui/RenderItem3D.h"
 #include "happah/gui/qt/Component.h"
 #include "happah/gui/qt/tools/Tool.h"
 
@@ -56,24 +55,19 @@ private:
 
 private slots:
 	void toolSelected(int toolID);
-//	void newComponent(Component* component);
 	void newComponent(Drawable2D* drawable);
-	void newComponent(RenderItem3D* renderItem);
 	void update();
 	void deleteCurrentAndEmitNew(Drawable2D* drawable);
-	void deleteCurrentAndEmitNew(RenderItem3D* renderItem);
 
 public slots:
 	void leftClickAt( QPointF point );
 	void rightClickAt( QPointF point );
 	void finalise( std::string name );
-	void activateTool( RenderItem3D* );
 	void activateTool( Drawable2D* );
 
 signals:
 //	void emitComponent(std::string name);
 	void emitDrawable(Drawable2D* drawable);
-	void emitDrawable(RenderItem3D* renderItem);
 	void changeViewTo(hpvec2, hpvec2);
 	void changed();
 	void deleteCurrentComponent();

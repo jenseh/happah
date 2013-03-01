@@ -8,10 +8,10 @@ RigidAffineTransformation::RigidAffineTransformation(const hpmat3x3& matrix, con
 
 RigidAffineTransformation::~RigidAffineTransformation() {}
 
-void RigidAffineTransformation::compose(RigidAffineTransformation_ptr rigidAffineTransformation, RigidAffineTransformation& out) {
-	hpmat3x3 matrix = rigidAffineTransformation->getMatrix();
+void RigidAffineTransformation::compose(RigidAffineTransformation& rigidAffineTransformation, RigidAffineTransformation& out) {
+	hpmat3x3 matrix = rigidAffineTransformation.getMatrix();
 	out.setMatrix(m_matrix * matrix);
-	hpvec3 translation = rigidAffineTransformation->getTranslation();
+	hpvec3 translation = rigidAffineTransformation.getTranslation();
 	out.setTranslation(m_matrix * translation + m_translation);
 }
 

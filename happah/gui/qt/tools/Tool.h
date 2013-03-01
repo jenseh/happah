@@ -5,7 +5,6 @@
 #include <QWidget>
 
 #include "happah/gui/Drawable2D.h"
-#include "happah/gui/RenderItem3D.h"
 
 class Tool: public QObject {
 Q_OBJECT
@@ -16,16 +15,12 @@ public:
 
 	QPushButton* getToolButton();
 	QWidget* getToolSettings();
-	virtual bool knowsItem( RenderItem3D* renderItem );
 	virtual bool knowsItem( Drawable2D* drawable );
-	virtual void reactivate( RenderItem3D* renderItem );
 	virtual void reactivate( Drawable2D* drawable );
 
 signals:
 	void emitComponent(Drawable2D* drawable);
-	void emitComponent(RenderItem3D* renderItem);
 	void deleteCurrentAndEmitNew(Drawable2D* drawable);
-	void deleteCurrentAndEmitNew(RenderItem3D* renderItem);
 	void changed();
 
 private:

@@ -20,6 +20,7 @@ public:
 	virtual ~TriangleMeshRenderStateNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
+	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
 
 	void 	setIndexBufferID(GLuint id);
 	void 	setVertexArrayObjectID(GLuint id);

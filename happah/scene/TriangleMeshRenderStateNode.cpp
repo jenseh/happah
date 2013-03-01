@@ -38,6 +38,11 @@ void TriangleMeshRenderStateNode::accept(SceneVisitor& sceneVisitor){
 	Node::accept(sceneVisitor);
 }
 
+void TriangleMeshRenderStateNode::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
+	drawVisitor.draw(*this, rigidAffineTransformation);
+}
+
+
 
 void TriangleMeshRenderStateNode::setVertexBufferID(GLuint id){
 	m_vertexBufferID = id;

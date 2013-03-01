@@ -20,10 +20,10 @@ public:
 		return m_geometry == data;
 	}
 
-	virtual void draw(DrawManager& drawManager, RigidAffineTransformation& rigidAffineTransformation) {
+	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
 		RigidAffineTransformation composedRigidAffineTransformation;
 		rigidAffineTransformation.compose(m_rigidAffineTransformation, composedRigidAffineTransformation);
-		Node::draw(drawManager, composedRigidAffineTransformation);
+		Node::draw(drawVisitor, composedRigidAffineTransformation);
 	}
 
 	shared_ptr<G> getGeometry() {
@@ -32,7 +32,7 @@ public:
 
 protected:
 	shared_ptr<G> m_geometry;
-	RigidAffineTransformation_ptr m_rigidAffineTransformation;
+	RigidAffineTransformation m_rigidAffineTransformation;
 
 };
 //TODO: upgrade to gcc-4.7 and define:

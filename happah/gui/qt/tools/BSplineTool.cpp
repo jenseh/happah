@@ -4,7 +4,6 @@
 #include "happah/geometries/BSplineGearCurve.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/models/TriangleMesh.h"
-#include "happah/gui/RenderItem3D.h"
 
 BSplineTool::BSplineTool() {
 	m_mode = this->IDLEMODE;
@@ -149,8 +148,6 @@ void BSplineTool::toSimpleGear() {
 	SimpleGear* gear = new SimpleGear(new BSplineGearCurve(*m_currentCurve), 0.0f, 0.2f);
 	TriangleMesh* gearMesh = gear->toTriangleMesh();
 	gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
-	RenderItem3D* item3d = new RenderItem3D(gear, gearMesh, m_currentCurve->getName());
-	deleteCurrentAndEmitNew(item3d);
 }
 
 void BSplineTool::deleteOptions() {

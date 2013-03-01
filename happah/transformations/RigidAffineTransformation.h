@@ -18,6 +18,9 @@ public:
 	RigidAffineTransformation(const hpmat3x3& matrix, const hpvec3& translation);
 	~RigidAffineTransformation();
 
+	void compose(RigidAffineTransformation_ptr rigidAffineTransformation, RigidAffineTransformation& out);
+	hpmat3x3 getMatrix() const;
+	hpvec3 getTranslation() const;
 	void setMatrix(const hpmat3x3& matrix);
 	void setTranslation(const hpvec3& translation);
 

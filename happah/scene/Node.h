@@ -6,10 +6,15 @@
 
 using namespace std;
 
+class DrawManager;
+
+//#include "happah/gui/gl/DrawManager.h"
+#include "happah/scene/SceneVisitor.h"
+#include "happah/transformations/RigidAffineTransformation.h"
+
 class Node;
 typedef shared_ptr<Node> Node_ptr;
 
-class SceneVisitor;
 class Node {
 
 public:
@@ -18,6 +23,7 @@ public:
 
 	virtual void accept(SceneVisitor& sceneVisitor);
 	virtual bool const contains(shared_ptr<void> data);
+	virtual void draw(DrawManager& drawManager, RigidAffineTransformation& rigidAffineTransformation);
 	Node_ptr const find(shared_ptr<void> data);
 
 protected:
@@ -31,6 +37,5 @@ private:
 
 };
 
-#include "happah/scene/SceneVisitor.h"
 
 #endif // NODE_H

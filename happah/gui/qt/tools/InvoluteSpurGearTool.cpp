@@ -2,7 +2,6 @@
 
 #include <QGroupBox>
 #include <iostream>
-#include "happah/gui/RenderItem3D.h"
 
 InvoluteSpurGearTool::InvoluteSpurGearTool(SceneManager& sceneManager) 
 	: m_sceneManager(sceneManager) {

@@ -29,7 +29,6 @@ HEADERS += \
 	happah/gui/Drawable2D.h \
 	happah/gui/Painter2D.h \
 	happah/gui/Picker.h \
-	happah/gui/RenderItem3D.h \
 	happah/gui/SceneListener.h \
 \
 	happah/gui/gl/DrawManager.h \
@@ -117,7 +116,6 @@ SOURCES += \
 	happah/gui/Drawable2D.cpp \
 	happah/gui/Painter2D.cpp \
 	happah/gui/Picker.cpp \
-	happah/gui/RenderItem3D.cpp \
 \
 	happah/gui/gl/DrawManager.cpp \
 	happah/gui/gl/GlViewport3D.cpp \

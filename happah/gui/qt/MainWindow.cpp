@@ -6,7 +6,6 @@
 #include <QWidget>
 #include <string>
 
-#include "happah/gui/RenderItem3D.h"
 #include "happah/gui/gl/GlViewport3D.h"
 #include "happah/gui/qt/MainWindow.h"
 #include "happah/gui/qt/tools/BSplineTool.h"

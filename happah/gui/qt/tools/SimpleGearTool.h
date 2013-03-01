@@ -30,9 +30,6 @@ public:
 	SimpleGearTool();
 	~SimpleGearTool();
 
-	bool knowsItem(RenderItem3D* renderItem);
-	void reactivate(RenderItem3D* renderItem);
-
 private slots:
 	void createGear();
 	void changeHelixAngle(hpreal);

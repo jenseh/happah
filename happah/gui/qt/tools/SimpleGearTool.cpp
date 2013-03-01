@@ -4,7 +4,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <iostream>
-#include "happah/gui/RenderItem3D.h"
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/geometries/BSplineGearCurve.h"
 
@@ -62,7 +61,6 @@ void SimpleGearTool::createGear() {
 	m_gearMesh = m_gear->toTriangleMesh();
 	m_gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
 	m_changeOutlineButton->setEnabled(true);
-	emit emitComponent(new RenderItem3D(m_gear, m_gearMesh, m_gearMesh->getName()));
 }
 
 void SimpleGearTool::updateGear() {
@@ -110,20 +108,6 @@ void SimpleGearTool::finalise() {
 		m_changeOutlineButton->setEnabled(false);
 		emit changed();
 	}
-}
-
-//TODO: We should find something else here. Dynamic casts are bad!!!
-bool SimpleGearTool::knowsItem(RenderItem3D* renderItem) {
-	return (dynamic_cast<SimpleGear*>(renderItem->getNonDrawable()) != NULL);
-}
-void SimpleGearTool::reactivate(RenderItem3D* renderItem) {
-	m_mode = this->EDITMODE;
-	if(m_gearMesh == NULL)
-		delete m_gear;
-	m_gear = dynamic_cast<SimpleGear*>(renderItem->getNonDrawable());
-	m_gearMesh = dynamic_cast<TriangleMesh*>(renderItem->getDrawable());
-	m_changeOutlineButton->setEnabled(true);
-	updateRanges();
 }
 
 void SimpleGearTool::toBSpline() {

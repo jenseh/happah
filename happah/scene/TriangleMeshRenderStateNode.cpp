@@ -35,6 +35,11 @@ void TriangleMeshRenderStateNode::accept(SceneVisitor& sceneVisitor){
 	Node::accept(sceneVisitor);
 }
 
+void TriangleMeshRenderStateNode::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
+	drawVisitor.draw(*this, rigidAffineTransformation);
+}
+
+
 
 void TriangleMeshRenderStateNode::setVertexBufferID(GLuint id){
 	m_vertexBufferID = id;
@@ -58,7 +63,7 @@ void TriangleMeshRenderStateNode::setColor(hpcolor color){
 	m_color = color;
 }
 hpcolor TriangleMeshRenderStateNode::getColor(){
-
+	return m_color;
 }
 
 TriangleMesh_ptr TriangleMeshRenderStateNode::getTriangleMesh(){

@@ -152,7 +152,8 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 		m_cameraPosition.y =cameraPosition->y();
 		m_cameraPosition.z =cameraPosition->z();
 
-		m_sceneManager.accept(*this);
+		RigidAffineTransformation identityTransformation;
+		m_sceneManager.draw(*this, identityTransformation);
 
 
 }
@@ -161,11 +162,7 @@ void DrawManager::sceneChanged(){
 //	createBuffers();
 }
 
-void DrawManager::visit(InvoluteGearNode& involuteGearNode){}
-
-void DrawManager::visit(TriangleMeshNode& triangleMeshNode){}
-
-void DrawManager::visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode){
+void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!triangleMeshRenderStateNode.isInitialized())
 		initialize(triangleMeshRenderStateNode);

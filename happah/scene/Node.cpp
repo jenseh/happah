@@ -20,9 +20,9 @@ bool const Node::contains(shared_ptr<void> data) {
 	return false;
 }
 
-void Node::draw(DrawManager& drawManager, RigidAffineTransformation& rigidAffineTransformation) {
+void Node::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i)
-		(*i)->draw(drawManager, rigidAffineTransformation);
+		(*i)->draw(drawVisitor, rigidAffineTransformation);
 }
 
 Node_ptr const Node::find(shared_ptr<void> data) {

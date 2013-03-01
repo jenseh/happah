@@ -7,16 +7,16 @@
 #include <vector>
 
 #include "happah/gui/SceneListener.h"
+#include "happah/gui/gl/DrawVisitor.h"
 #include "happah/models/Drawable.h"
 #include "happah/scene/SceneManager.h"
-#include "happah/scene/SceneVisitor.h"
 
 class HappahGlFormat : public QGLFormat {
 public:
 	HappahGlFormat();
 };
 
-class DrawManager : public SceneListener, public SceneVisitor {
+class DrawManager : public SceneListener, public DrawVisitor {
 public:
 	DrawManager(SceneManager& sceneManager);
 
@@ -25,9 +25,7 @@ public:
 	bool initGL();
 	void sceneChanged();
 
-	void visit(InvoluteGearNode& involuteGearNode);
-	void visit(TriangleMeshNode& triangleMeshNode);
-	void visit(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
+	void draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 
 
 private:

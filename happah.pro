@@ -64,7 +64,6 @@ HEADERS += \
 \
 	happah/models/CircleCloud.h \
 	happah/models/Drawable.h \
-	happah/models/Material.h \
 	happah/models/PointCloud.h \
 	happah/models/QuadMesh.h \
 	happah/models/RayCloud.h \
@@ -77,6 +76,7 @@ HEADERS += \
 	happah/primitives/Triangle.h \
 \
 	happah/scene/InvoluteGearNode.h \
+	happah/scene/Material.h \
 	happah/scene/Node.h\
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
@@ -147,7 +147,6 @@ SOURCES += \
 \
 	happah/models/CircleCloud.cpp \
 	happah/models/Drawable.cpp \
-	happah/models/Material.cpp \
 	happah/models/PointCloud.cpp \
 	happah/models/QuadMesh.cpp \
 	happah/models/RayCloud.cpp \
@@ -155,6 +154,7 @@ SOURCES += \
 	happah/models/ZCircleCloud.cpp \
 \
 	happah/scene/InvoluteGearNode.cpp \
+	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
 	happah/scene/SceneManager.cpp \
 	happah/scene/TriangleMeshNode.cpp \

@@ -10,6 +10,8 @@ using namespace std;
 class TriangleMesh;
 typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
+#include "happah/HappahTypes.h"
+
 class TriangleMesh {
 public:
     TriangleMesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);

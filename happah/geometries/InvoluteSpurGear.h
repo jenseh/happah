@@ -15,7 +15,7 @@
 #include "happah/geometries/BSplineGearCurve.h"
 //#include "../models/TriangleMesh.h"
 //#include "../models/QuadMesh.h"
-#include "happah/geometries/ZCircleCloud.h"
+//#include "happah/geometries/ZCircleCloud.h"
 
 /** @class InvoluteSpurGear
  * @brief Involute gear without a helix angle and with the right-hand flank
@@ -48,8 +48,7 @@ public:
 			hpreal pressureAngle = M_PI / 6.0f,
 			hpreal bottomClearance = 0.0f,
 			hpreal filletRadius = 0.0f,
-			hpreal helixAngle = 0.0f,
-			std::string name = "InvoluteSpurGear");
+			hpreal helixAngle = 0.0f);
 
 	InvoluteSpurGear(const InvoluteSpurGear& other);
 
@@ -95,7 +94,7 @@ public:
     std::vector<hpvec2>* getToothProfile();
 //    std::vector<hpvec2>* getGearProfile(hpreal depth);
 
-    ZCircleCloud* toZCircleCloud();
+//    ZCircleCloud* toZCircleCloud();
     SimpleGear* toSimpleGear();
 
     std::string toString();

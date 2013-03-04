@@ -6,7 +6,6 @@
 #include <QGLFormat>
 #include <vector>
 
-#include "happah/geometries/Drawable.h"
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneManager.h"
 

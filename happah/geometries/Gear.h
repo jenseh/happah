@@ -3,10 +3,9 @@
 
 #include <glm/glm.hpp>
 #include <vector>
-#include "happah/geometries/NonDrawable.h"
+#include "happah/geometries/GeometryObject.h"
 #include "happah/HappahTypes.h"
 #include "happah/geometries/TriangleMesh.h"
-#include "happah/geometries/QuadMesh.h"
 
 /** @class Gear
  * @brief Simplest Gear class
@@ -26,10 +25,10 @@
  * Besides that it implements the toTriangleMesh() and toQuadMesh() methods,
  * as these will be the same for most Gears.
  */
-class Gear: public NonDrawable {
+class Gear: public GeometryObject {
 
 public:
-	Gear(std::string name = "Gear");
+	Gear();
 	~Gear();
 	/** @brief Get a 2D representation of the transverse profile (Stirnprofil)
 	 *
@@ -56,17 +55,10 @@ public:
 	//needed for first and last point of the tooth profile.
 	virtual std::vector<hpvec2>* getGearProfile(hpreal depth);
 	TriangleMesh* toTriangleMesh(); //from NonDrawable
-	QuadMesh* toQuadMesh(); //from NonDrawable
 
 protected:
 	const static uint TOOTH_SAMPLE_SIZE = 100;
 	const static uint WIDTH_SAMPLE_SIZE = 10;
-
-private:
-	std::vector<hpvec4>* toMesh(void (Gear::*putTogetherAs)(const hpvec4(&)[4], std::vector<hpvec4>*&));
-	void putTogetherAsTriangles(const hpvec4 (&points)[4], std::vector<hpvec4> *&vertexData);
-	void putTogetherAsQuads(const hpvec4 (&points)[4], std::vector<hpvec4> *&vertexData);
-	void smoothTriangleMeshNormals(std::vector<hpvec4> *&vertexData);
 
 public:
 void printVec4(hpvec4 vec) {

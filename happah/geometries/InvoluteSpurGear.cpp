@@ -3,7 +3,7 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
-                   hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle, std::string name) : Gear(name),
+                   hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : Gear(),
                    m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
                    m_pressureAngle(pressureAngle),
                    m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), m_helixAngle(helixAngle) {
@@ -11,7 +11,7 @@ InvoluteSpurGear::InvoluteSpurGear(uint toothCount, hpreal module, hpreal facewi
 	//std::cout << toString() << std::endl;
 }
 
-InvoluteSpurGear::InvoluteSpurGear(const InvoluteSpurGear& other) : Gear(other.m_name),
+InvoluteSpurGear::InvoluteSpurGear(const InvoluteSpurGear& other) : Gear(),
 				m_toothCount(other.m_toothCount), m_module(other.m_module), m_facewidth(other.m_facewidth),
 				m_pressureAngle(other.m_pressureAngle), m_bottomClearance(other.m_bottomClearance),
 				m_filletRadius(other.m_filletRadius), m_helixAngle(other.m_helixAngle) {
@@ -392,7 +392,7 @@ std::vector<hpvec2>* InvoluteSpurGear::getGearProfile(hpreal depth) {
 	}
 
 	return profile;
-}*/
+}
 
 ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	// Create the profile given the current gear settings
@@ -417,7 +417,7 @@ ZCircleCloud* InvoluteSpurGear::toZCircleCloud() {
 	ZCircleCloud* result = new ZCircleCloud(points, posZ, resolutionXY, resolutionZ, referenceDir);
 	result->setModelMatrix(m_modelMatrix);
 	return result;
-}
+}*/
 
 SimpleGear* InvoluteSpurGear::toSimpleGear() {
 	BSplineGearCurve *toothProfile = new BSplineGearCurve();

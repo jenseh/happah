@@ -16,7 +16,7 @@ bool GUIManager::init() {
 
 void GUIManager::insert(InvoluteGear_ptr involuteGear) {
 	TriangleMesh_ptr involuteGearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh());
-	involuteGearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f);
+	//involuteGearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f);
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	m_sceneManager.insert(involuteGear, involuteGearMesh, color);
 	m_lastInvoluteGearMesh = involuteGearMesh;
@@ -25,7 +25,7 @@ void GUIManager::insert(InvoluteGear_ptr involuteGear) {
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	m_sceneManager.remove(involuteGear, m_lastInvoluteGearMesh);
 	TriangleMesh_ptr involuteGearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh());
-	involuteGearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f);
+	//involuteGearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f);
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	m_sceneManager.insert(involuteGear, involuteGearMesh, color);
 	m_lastInvoluteGearMesh = involuteGearMesh;

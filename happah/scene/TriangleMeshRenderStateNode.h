@@ -9,6 +9,7 @@ using namespace std;
 class TriangleMeshRenderStateNode;
 typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 
+#include "happah/scene/Material.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/TriangleMeshNode.h"
 

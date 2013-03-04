@@ -4,7 +4,7 @@
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/SceneManager.h"
 #include "happah/scene/TriangleMeshNode.h"
-#include "happah/scene/TriangleMeshRenderStateNode.h"
+#include "happah/scene/RenderStateNode.h"
 
 SceneManager::SceneManager() {}
 

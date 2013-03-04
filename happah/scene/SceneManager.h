@@ -6,12 +6,12 @@
 
 using namespace std;
 
+#include "happah/geometries/Drawable.h"
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/geometries/NonDrawable.h"
-#include "happah/gui/SceneListener.h"
-#include "happah/models/Drawable.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/InvoluteGearNode.h"
+#include "happah/scene/SceneListener.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"

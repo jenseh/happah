@@ -163,44 +163,6 @@ bool BSplineCurve::getClamped() const {
 	return m_interpolateEnds;
 }
 
-void BSplineCurve::draw( Painter2D* painter ) {
-	if( m_controlPoints.size() > 0 ) {
-		painter->drawPoint( m_controlPoints[0] );
-		for( unsigned int i = 1; i < m_controlPoints.size(); i++ ) {
-			// TODO: Use iterator
-			painter->drawPoint( m_controlPoints[i] );
-			painter->drawDashedLine( m_controlPoints[i-1], m_controlPoints[i] );
-//			std::cout << "Drawn point at " << m_controlPoints[i].x << " " << m_controlPoints[i].y << std::endl;
-		}
-		if( m_cyclic && m_controlPoints.size() > 2 ) {
-			painter->drawDashedLine( m_controlPoints.back(), m_controlPoints[0] );
-		}
-
-		if( m_controlPoints.size() >= m_degree ) {
-			float dt = 0.001f;
-			glm::vec3 oldPt = getValueAt(m_drawKnots[m_degree]);
-			glm::vec3 newPt;
-			for( float t = m_drawKnots[m_degree];
-			           t <=  m_drawKnots[ m_drawKnots.size() - m_degree - 1 ];
-			           t += dt )
-			{
-				newPt = getValueAt(t);
-				painter->drawLine( oldPt, newPt );
-				oldPt = newPt;
-//				std::cout << "Drawn at " << newPt.x << " " << newPt.y << std::endl;
-			}
-		}
-				
-/*		if( m_cyclic ) {}
-
-		std::vector<float> drawingKnots;
-		std::vector<glm::vec3> drawingControlPoints;
-		int drawingNumPoints;
-		if( m_controlPoints.size() > ... ) {
-*/
-	}
-}
-
 void BSplineCurve::getBounds( glm::vec2* min, glm::vec2* max ) const {
 	if( m_controlPoints.size() > 0 ) {
 		// TODO: Use iterator

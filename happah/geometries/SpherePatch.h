@@ -5,7 +5,7 @@
 #include <math.h>
 #include <glm/glm.hpp>
 #include "happah/geometries/NonDrawable.h"
-#include "happah/models/TriangleMesh.h"
+#include "happah/geometries/TriangleMesh.h"
 
 class SpherePatch: public NonDrawable
 {

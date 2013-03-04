@@ -13,40 +13,35 @@ HEADERS += \
 	happah/geometries/BasicRack.h \
 	happah/geometries/BSplineCurve.h \
 	happah/geometries/BSplineGearCurve.h \
+	happah/geometries/CircleCloud.h \
 	happah/geometries/ControlNet2.h \
 	happah/geometries/Disc.h \
+	happah/geometries/Drawable.h \
 	happah/geometries/Gear.h \
 	happah/geometries/GeometryObject.h \
 	happah/geometries/Grid.h \
 	happah/geometries/InvoluteSpurGear.h \
 	happah/geometries/NonDrawable.h \
+	happah/geometries/PointCloud.h \
+	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
+	happah/geometries/TriangleMesh.h \
 	happah/geometries/TriPatch.h \
+	happah/geometries/QuadMesh.h \
+	happah/geometries/ZCircleCloud.h \
 \
-	happah/gui/Drawable2D.h \
-	happah/gui/Painter2D.h \
-	happah/gui/Picker.h \
-	happah/gui/SceneListener.h \
+	happah/gui/ComponentList.h \
+	happah/gui/DrawManager.h \
+	happah/gui/GearSlider.h \
+	happah/gui/MainWindow.h \
+	happah/gui/SceneGraphExplorerPanel.h \
+	happah/gui/ToolPanel.h \
+	happah/gui/Viewport3D.h \
 \
-	happah/gui/gl/DrawManager.h \
-	happah/gui/gl/GlViewport3D.h \
-\
-	happah/gui/qt/ComponentList.h \
-	happah/gui/qt/GearSlider.h \
-	happah/gui/qt/MainWindow.h \
-	happah/gui/qt/SceneGraphExplorerPanel.h \
-	happah/gui/qt/ToolPanel.h \
-\
-	happah/gui/qt/forms/InvoluteGearForm.h \
-\
-	happah/gui/qt/tools/BSplineTool.h \
-	happah/gui/qt/tools/InvoluteSpurGearTool.h \
-	happah/gui/qt/tools/SimpleGearTool.h \
-	happah/gui/qt/tools/SplineTool.h \
-	happah/gui/qt/tools/Tool.h \
+	happah/gui/forms/InvoluteGearForm.h \
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/Box.h \
@@ -61,22 +56,16 @@ HEADERS += \
 	happah/kdtree/TriangleKDTree.h \
 	happah/kdtree/TriangleKDTreeNode.h \
 \
-	happah/models/CircleCloud.h \
-	happah/models/Drawable.h \
-	happah/models/PointCloud.h \
-	happah/models/QuadMesh.h \
-	happah/models/RayCloud.h \
-	happah/models/TriangleMesh.h \
-	happah/models/ZCircleCloud.h \
-\
 	happah/primitives/Circle.h \
 	happah/primitives/Color.h \
 	happah/primitives/Ray.h \
 	happah/primitives/Triangle.h \
 \
 	happah/scene/InvoluteGearNode.h \
+	happah/scene/DrawVisitor.h \
 	happah/scene/Material.h \
 	happah/scene/Node.h\
+	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGeometryNode.h \
@@ -99,39 +88,35 @@ SOURCES += \
 	happah/geometries/BasicRack.cpp \
 	happah/geometries/BSplineCurve.cpp \
 	happah/geometries/BSplineGearCurve.cpp \
+	happah/geometries/CircleCloud.cpp \
 	happah/geometries/ControlNet2.cpp \
 	happah/geometries/Disc.cpp \
+	happah/geometries/Drawable.cpp \
 	happah/geometries/Gear.cpp \
 	happah/geometries/GeometryObject.cpp \
 	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteSpurGear.cpp \
 	happah/geometries/NonDrawable.cpp \
+	happah/geometries/PointCloud.cpp \
+	happah/geometries/QuadMesh.cpp \
+	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
 	happah/geometries/StandardProfile.cpp \
+	happah/geometries/TriangleMesh.cpp \
 	happah/geometries/TriPatch.cpp \
+	happah/geometries/ZCircleCloud.cpp \
 \
-	happah/gui/Drawable2D.cpp \
-	happah/gui/Painter2D.cpp \
-	happah/gui/Picker.cpp \
+	happah/gui/ComponentList.cpp \
+	happah/gui/DrawManager.cpp \
+	happah/gui/GearSlider.cpp \
+	happah/gui/MainWindow.cpp \
+	happah/gui/SceneGraphExplorerPanel.cpp \
+	happah/gui/ToolPanel.cpp \
+	happah/gui/Viewport3D.cpp \
 \
-	happah/gui/gl/DrawManager.cpp \
-	happah/gui/gl/GlViewport3D.cpp \
-\
-	happah/gui/qt/ComponentList.cpp \
-	happah/gui/qt/GearSlider.cpp \
-	happah/gui/qt/MainWindow.cpp \
-	happah/gui/qt/SceneGraphExplorerPanel.cpp \
-	happah/gui/qt/ToolPanel.cpp \
-\
-	happah/gui/qt/forms/InvoluteGearForm.cpp \
-\
-	happah/gui/qt/tools/BSplineTool.cpp \
-	happah/gui/qt/tools/InvoluteSpurGearTool.cpp \
-	happah/gui/qt/tools/SimpleGearTool.cpp \
-	happah/gui/qt/tools/SplineTool.cpp \
-	happah/gui/qt/tools/Tool.cpp \
+	happah/gui/forms/InvoluteGearForm.cpp \
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/Box.cpp \
@@ -142,14 +127,6 @@ SOURCES += \
 	happah/kdtree/ExplicitKDTreeNode.cpp \
 	happah/kdtree/ImplicitKDTree.cpp \
 	happah/kdtree/TriangleKDTree.cpp \
-\
-	happah/models/CircleCloud.cpp \
-	happah/models/Drawable.cpp \
-	happah/models/PointCloud.cpp \
-	happah/models/QuadMesh.cpp \
-	happah/models/RayCloud.cpp \
-	happah/models/TriangleMesh.cpp \
-	happah/models/ZCircleCloud.cpp \
 \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/Material.cpp \

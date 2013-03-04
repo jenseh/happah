@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "happah/models/TriangleMesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"
 

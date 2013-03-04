@@ -15,7 +15,7 @@
 #include "happah/geometries/BSplineGearCurve.h"
 //#include "../models/TriangleMesh.h"
 //#include "../models/QuadMesh.h"
-#include "happah/models/ZCircleCloud.h"
+#include "happah/geometries/ZCircleCloud.h"
 
 /** @class InvoluteSpurGear
  * @brief Involute gear without a helix angle and with the right-hand flank

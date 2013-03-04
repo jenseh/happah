@@ -1,7 +1,5 @@
 #include "happah/scene/Node.h"
 
-const Node_ptr Node::NULL_NODE;
-
 Node::Node() {}
 
 Node::~Node() {}
@@ -33,7 +31,7 @@ Node_ptr const Node::find(shared_ptr<void> data) {
 		if(node) return node;
 	}
 
-	return NULL_NODE;
+	return Node_ptr();
 }
 
 void Node::removeChild(Node_ptr child) {

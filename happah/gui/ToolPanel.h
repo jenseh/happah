@@ -4,12 +4,12 @@
 #include <QStackedWidget>
 #include <QWidget>
 
-#include "happah/scene/SceneManager.h"
+#include "happah/gui/GUIManager.h"
 
 class ToolPanel : public QWidget {
 
 public:
-	ToolPanel(SceneManager& sceneManager, QWidget* parent = 0);
+	ToolPanel(GUIManager& guiManager, QWidget* parent = 0);
 	~ToolPanel();
 
 private:

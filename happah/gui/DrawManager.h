@@ -9,28 +9,26 @@
 #include "happah/geometries/Drawable.h"
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneManager.h"
-#include "happah/scene/SceneListener.h"
 
 class HappahGlFormat : public QGLFormat {
 public:
 	HappahGlFormat();
 };
 
-class DrawManager : public SceneListener, public DrawVisitor {
+class DrawManager : public DrawVisitor {
 public:
 	DrawManager(SceneManager& sceneManager);
-	virtual ~DrawManager();
+	~DrawManager();
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
-	QGLContext& getGlContext();
-	bool initGL();
-	void sceneChanged();
 	void draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+	QGLContext& getGlContext();
+	bool init();
 
 private:
 	void compileShader(GLuint shader, const char* filePath);
-	bool initShaderPrograms();
+	void drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 	void initialize(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
-	void drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,RigidAffineTransformation& rigidAffineTransformation);
+	bool initShaderPrograms();
 
 	SceneManager& m_sceneManager;
 	QGLContext m_glContext;

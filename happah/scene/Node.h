@@ -30,9 +30,6 @@ protected:
 	void addChild(Node_ptr child);
 	void removeChild(Node_ptr child);
 
-private:
-	const static Node_ptr NULL_NODE;
-
 };
 
 

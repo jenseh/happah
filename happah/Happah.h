@@ -4,20 +4,20 @@
 #include <QApplication>
 
 #include "happah/scene/SceneManager.h"
-#include "happah/gui/DrawManager.h"
-#include "happah/gui/MainWindow.h"
+#include "happah/gui/GUIManager.h"
 
-class Happah: public QApplication {
+class Happah : public QApplication {
 Q_OBJECT
 
 public:
 	Happah(int& argc, char** argv);
-	virtual ~Happah();
+	~Happah();
+
+	int exec();
 
 private:
 	SceneManager m_sceneManager;
-	DrawManager m_drawManager;
-	MainWindow m_mainWindow;
+	GUIManager m_guiManager;
 
 };
 

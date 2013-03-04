@@ -23,9 +23,7 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager& sceneManager) 
-	: m_sceneManager(sceneManager), m_glContext(GL_FORMAT) {
-	m_sceneManager.registerListener(this);
-}
+	: m_sceneManager(sceneManager), m_glContext(GL_FORMAT) {}
 
 DrawManager::~DrawManager() {}
 
@@ -137,9 +135,7 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 	GLfloat projectionMatrixFloats[16];
 	const qreal* viewMatrixQreals = vMatrix.constData();
 	const qreal* projectionMatrixQreals = pMatrix.constData();
-	for (int j = 0;
-			j < 16;
-			++j) {
+	for (int j = 0; j < 16; ++j) {
 		viewMatrixFloats[j] = viewMatrixQreals[j];
 		projectionMatrixFloats[j] = projectionMatrixQreals[j];
 	}
@@ -155,8 +151,6 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 	m_sceneManager.draw(*this, identityTransformation);
 }
 
-void DrawManager::sceneChanged() {}
-
 void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!triangleMeshRenderStateNode.isInitialized())
@@ -164,7 +158,7 @@ void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,
 	drawObject(triangleMeshRenderStateNode, rigidAffineTransformation);
 }
 
-bool DrawManager::initGL() {
+bool DrawManager::init() {
 	m_glContext.create();
 	m_glContext.makeCurrent();
 

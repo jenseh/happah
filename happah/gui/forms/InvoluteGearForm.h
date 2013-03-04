@@ -5,28 +5,26 @@
 
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/gui/GearSlider.h"
-#include "happah/scene/SceneManager.h"
+#include "happah/gui/GUIManager.h"
 
 class InvoluteGearForm : public QWidget {
 Q_OBJECT
 
 public:
-	InvoluteGearForm(SceneManager& sceneManager, QWidget* parent = 0);
+	InvoluteGearForm(GUIManager& sceneManager, QWidget* parent = 0);
 	~InvoluteGearForm();
 
 private:
-	SceneManager& m_sceneManager;
-
-	GearSlider* m_toothCountSlider;
-	GearSlider* m_moduleSlider;
-	GearSlider* m_facewidthSlider;
-	GearSlider* m_pressureAngleSlider;
 	GearSlider* m_bottomClearanceSlider;
+	GearSlider* m_faceWidthSlider;
 	GearSlider* m_filletRadiusSlider;
-	GearSlider* m_helixAngleSlider;
-
 	InvoluteGear_ptr m_gear;
-	TriangleMesh_ptr m_gearMesh;
+	bool m_gearInScene;
+	GUIManager& m_guiManager;
+	GearSlider* m_helixAngleSlider;
+	GearSlider* m_moduleSlider;
+	GearSlider* m_pressureAngleSlider;
+	GearSlider* m_toothCountSlider;
 
 	void updateGear();
 	void setNewGearValues();

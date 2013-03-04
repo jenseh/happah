@@ -8,7 +8,7 @@
 #include "happah/gui/ToolPanel.h"
 #include "happah/gui/Viewport3D.h"
 
-MainWindow::MainWindow(SceneManager& sceneManager, DrawManager& drawManager) {
+MainWindow::MainWindow(GUIManager& guiManager, DrawManager& drawManager) {
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 
@@ -21,7 +21,7 @@ MainWindow::MainWindow(SceneManager& sceneManager, DrawManager& drawManager) {
 	QWidget* centralWidget = new QWidget(this);
 	QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
 	centralWidget->setLayout(centralWidgetLayout);
-	centralWidgetLayout->addWidget(new ToolPanel(sceneManager, this));
+	centralWidgetLayout->addWidget(new ToolPanel(guiManager, this));
 	centralWidgetLayout->addWidget(new Viewport3D(drawManager, this), 1);
 	centralWidgetLayout->addWidget(new SceneGraphExplorerPanel(this));
 

@@ -5,13 +5,13 @@
 #include <QMainWindow>
 
 #include "happah/gui/DrawManager.h"
-#include "happah/scene/SceneManager.h"
 
+class GUIManager;
 class MainWindow: public QMainWindow {
 Q_OBJECT
 
 public:
-	MainWindow(SceneManager& sceneManager, DrawManager& drawManager);
+	MainWindow(GUIManager& guiManager, DrawManager& drawManager);
 	virtual ~MainWindow();
 
 protected:
@@ -22,5 +22,7 @@ private:
 	static const int DEFAULT_WINDOW_WIDTH = 1200;
 
 };
+
+#include "happah/gui/GUIManager.h"
 
 #endif

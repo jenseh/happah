@@ -121,33 +121,31 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 
 	glUseProgram(m_program);
 
-		QMatrix4x4 modelMatrix ;
-		modelMatrix.setToIdentity();
-		QMatrix4x4 MVP = *projectionMatrix * *viewMatrix * modelMatrix;
-		QMatrix3x3 normalMatrix = modelMatrix.normalMatrix(); //Do not change this to "inverted" again!
-		GLfloat modelMatrixFloats[16];
-		GLfloat MVPFloats[16];
-		GLfloat normalMatrixFloats[9];
 
 
-		const qreal* modelMatrixQreals = modelMatrix.constData();
-		const qreal* MVPQreals = MVP.constData();
-		const qreal* normalMatrixQreals = normalMatrix.constData();
+
+		QMatrix4x4 vMatrix = *viewMatrix;
+		QMatrix4x4 pMatrix = *projectionMatrix;
+		GLfloat viewMatrixFloats[16];
+		GLfloat projectionMatrixFloats[16];
+
+
+
+		const qreal* viewMatrixQreals = vMatrix.constData();
+		const qreal* projectionMatrixQreals = pMatrix.constData();
+
 
 
 		for (int j = 0; j < 16; ++j) {
-	            modelMatrixFloats[j] = modelMatrixQreals[j];
-	            MVPFloats[j] = MVPQreals[j];
+	            viewMatrixFloats[j] = viewMatrixQreals[j];
+	            projectionMatrixFloats[j] = projectionMatrixQreals[j];
 
 		}
 		
-		for (int j = 0; j < 9; ++j) {
-		    normalMatrixFloats[j] = normalMatrixQreals[j];
 
-		}
 		m_modelMatrix = glm::mat4(1.0f);
-		m_modelViewProjectionMatrix = glm::make_mat4(MVPFloats);
-		m_normalMatrix = glm::make_mat3(normalMatrixFloats);
+		m_viewMatrix = glm::make_mat4(viewMatrixFloats);
+		m_projectionMatrix = glm::make_mat4(projectionMatrixFloats);
 		m_cameraPosition.x = cameraPosition->x();
 		m_cameraPosition.y =cameraPosition->y();
 		m_cameraPosition.z =cameraPosition->z();
@@ -251,6 +249,8 @@ void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStat
 void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,RigidAffineTransformation& rigidAffineTransformation){
 	GLuint colorState = triangleMeshRenderStateNode.getVertexArrayObjectID();
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
+	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
+	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
 		if (colorState == m_coloredVertexArrayObject){
 			// DRAW WITH COLOR BUFFER
 			glBindVertexArray(colorState);
@@ -261,7 +261,7 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
 		    glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
 			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
-			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
+			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&modelViewProjectionMatrix);
 			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
 			glUniform1f(m_ambientFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
 			glUniform1f(m_diffuseFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
@@ -283,11 +283,9 @@ void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStat
 			glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
 			glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
 			glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*)sizeof(glm::vec4));
-			GLuint vbId;
-
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
 			glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelMatrix);
-			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&m_modelViewProjectionMatrix);
+			glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*)&modelViewProjectionMatrix);
 			glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE,(GLfloat*) &m_normalMatrix);
 			glUniform1f(m_ambientFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
 			glUniform1f(m_diffuseFactorLocation,(GLfloat)triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());

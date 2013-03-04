@@ -32,12 +32,12 @@ void RigidAffineTransformation::setTranslation(const hpvec3& translation) {
 }
 
 hpmat4x4 RigidAffineTransformation::toMatrix4x4() const{
-	/*
-	hpmat4x4 result = hpmat4x4(m_matrix[0],m_matrix[1],m_matrix[2],0.0f,
-						m_matrix[4],m_matrix[4],m_matrix[5],0.0f,
-						m_matrix[6],m_matrix[7],m_matrix[8],0.0f,
+
+	hpmat4x4 result = hpmat4x4(m_matrix[0][0],m_matrix[0][1],m_matrix[0][2],0.0f,
+						m_matrix[1][0],m_matrix[1][1],m_matrix[1][2],0.0f,
+						m_matrix[2][0],m_matrix[2][1],m_matrix[2][2],0.0f,
 						m_translation.x,m_translation.y,m_translation.z,1.0f);
-	*/
-	hpmat4x4 result = hpmat4x4(1.0f);
+
+//	hpmat4x4 result = hpmat4x4(1.0f);
 	return result;
 }

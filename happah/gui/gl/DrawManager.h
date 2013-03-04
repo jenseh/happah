@@ -69,7 +69,8 @@ private:
 	const static HappahGlFormat GL_FORMAT;
 	//TODO: Change these matrices to Projection Matrix , viewMatrix as soon as QMatrices are removed
 	hpmat4x4 m_modelMatrix;
-	hpmat4x4 m_modelViewProjectionMatrix;
+	hpmat4x4 m_viewMatrix;
+	hpmat4x4 m_projectionMatrix;
 	hpmat3x3 m_normalMatrix;
 	glm::vec3   m_cameraPosition;
 

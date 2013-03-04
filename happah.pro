@@ -16,12 +16,10 @@ HEADERS += \
 	happah/geometries/CircleCloud.h \
 	happah/geometries/ControlNet2.h \
 	happah/geometries/Disc.h \
-	happah/geometries/Drawable.h \
 	happah/geometries/Gear.h \
 	happah/geometries/GeometryObject.h \
 	happah/geometries/Grid.h \
 	happah/geometries/InvoluteSpurGear.h \
-	happah/geometries/NonDrawable.h \
 	happah/geometries/PointCloud.h \
 	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
@@ -30,7 +28,6 @@ HEADERS += \
 	happah/geometries/StandardProfile.h \
 	happah/geometries/TriangleMesh.h \
 	happah/geometries/TriPatch.h \
-	happah/geometries/QuadMesh.h \
 	happah/geometries/ZCircleCloud.h \
 \
 	happah/gui/ComponentList.h \
@@ -92,14 +89,11 @@ SOURCES += \
 	happah/geometries/CircleCloud.cpp \
 	happah/geometries/ControlNet2.cpp \
 	happah/geometries/Disc.cpp \
-	happah/geometries/Drawable.cpp \
 	happah/geometries/Gear.cpp \
 	happah/geometries/GeometryObject.cpp \
 	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteSpurGear.cpp \
-	happah/geometries/NonDrawable.cpp \
 	happah/geometries/PointCloud.cpp \
-	happah/geometries/QuadMesh.cpp \
 	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 	happah/geometries/Sphere.cpp \

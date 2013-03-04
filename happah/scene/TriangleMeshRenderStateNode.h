@@ -25,7 +25,7 @@ public:
 	void 	setIndexBufferID(GLuint id);
 	void 	setVertexArrayObjectID(GLuint id);
 	void 	setVertexBufferID(GLuint id);
-	void 	setColorBufferID(GLuint id); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	void 	setColorBufferID(GLuint id);
 	void 	setColor(hpcolor color);
 	void 	setColorVector(std::vector<hpcolor>* colorVector);
 	void 	setMaterial(Material& material);
@@ -34,7 +34,7 @@ public:
 	GLuint 					getIndexBufferID();
 	GLuint 					getVertexArrayObjectID();
 	GLuint 					getVertexBufferID();
-	GLuint					getColorBufferID(void); //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
+	GLuint					getColorBufferID(void);
 	hpcolor 				getColor();
 	std::vector<hpcolor>* 	getColorVector();
 	TriangleMesh_ptr 		getTriangleMesh();

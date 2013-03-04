@@ -32,9 +32,9 @@ TriangleMesh* ControlNet2::toTriangleMesh(){
       triangles->push_back(glm::vec4(cp,0.0f));
 
     }
+  std::vector<hpuint>* indices;
 
+  TriangleMesh* result = new TriangleMesh(triangles, indices);
 
-  TriangleMesh* result = new TriangleMesh(triangles, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-  result->setModelMatrix(m_modelMatrix);
   return result;
 }

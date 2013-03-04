@@ -10,34 +10,30 @@ SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
 
-void SceneManager::insert(InvoluteGear_ptr involuteGear, GUIState_ptr guiState) {
-	Node_ptr node = find(involuteGear);
+void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
+	Node_ptr node = findChild(involuteGear);
 
 	InvoluteGearNode_ptr involuteGearNode;
 	if(node) {
 		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		node = involuteGearNode->find(guiState);
-		if(node) {
-			//TODO
-			return;
-		}
+		if(involuteGearNode->hasChild(involuteGearGUIStateNode)) return;
 	} else {
 		involuteGearNode = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
 		addChild(involuteGearNode);
 	}
 
-	//TODO
+	involuteGearNode->addChild(involuteGearGUIStateNode);
 
 	notifyListeners();
 }
 
 void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = find(involuteGear);
+	Node_ptr node = findChild(involuteGear);
 
 	InvoluteGearNode_ptr involuteGearNode;
 	if(node) {
 		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		node = involuteGearNode->find(triangleMesh);
+		node = involuteGearNode->findChild(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -59,16 +55,14 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 }
 
 void SceneManager::remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh) {
-	Node_ptr node = find(involuteGear);
+	Node_ptr node = findChild(involuteGear);
 
 	if(node) {
 		InvoluteGearNode_ptr involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		node = involuteGearNode->find(triangleMesh);
-		if(node)
-			involuteGearNode->removeChild(dynamic_pointer_cast<TriangleMeshNode>(node));
+		involuteGearNode->removeChild(triangleMesh);
+		notifyListeners();
 	}
 
-	notifyListeners();
 }
 
 void SceneManager::registerListener(SceneListener* sceneListener) {

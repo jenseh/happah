@@ -34,7 +34,6 @@ HEADERS += \
 	happah/gui/DrawManager.h \
 	happah/gui/GearSlider.h \
 	happah/gui/GUIManager.h \
-	happah/gui/GUIState.h \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerPanel.h \
 	happah/gui/ToolPanel.h \
@@ -109,7 +108,6 @@ SOURCES += \
 	happah/gui/DrawManager.cpp \
 	happah/gui/GearSlider.cpp \
 	happah/gui/GUIManager.cpp \
-	happah/gui/GUIState.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
 	happah/gui/ToolPanel.cpp \

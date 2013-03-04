@@ -1,13 +1,12 @@
 #ifndef INVOLUTE_GEAR_FORM_H
 #define INVOLUTE_GEAR_FORM_H
 
-#include <QWidget>
-
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/gui/GearSlider.h"
 #include "happah/gui/GUIManager.h"
+#include "happah/gui/forms/Form.h"
 
-class InvoluteGearForm : public QWidget {
+class InvoluteGearForm : public Form {
 Q_OBJECT
 
 public:

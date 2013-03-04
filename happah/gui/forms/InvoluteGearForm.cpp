@@ -4,7 +4,7 @@
 #include "happah/gui/forms/InvoluteGearForm.h"
 
 InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
-	: QWidget(parent), 
+	: Form(parent), 
 		m_bottomClearanceSlider(new GearSlider(tr("bottom clearance"))),
 		m_faceWidthSlider(new GearSlider(tr("facewidth"))),
 		m_filletRadiusSlider(new GearSlider(tr("fillet radius"))),
@@ -98,6 +98,8 @@ void InvoluteGearForm::createInvoluteGear() {
 void InvoluteGearForm::setInvoluteGear(InvoluteGear_ptr involuteGear) {
 	m_involuteGear = involuteGear;
 	m_involuteGearInScene = true;
+
+	//TODO: set slider values
 }
 
 void InvoluteGearForm::updateInvoluteGear() {

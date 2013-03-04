@@ -6,8 +6,10 @@
 
 using namespace std;
 
+class SceneManager;
+
 #include "happah/geometries/InvoluteSpurGear.h"
-#include "happah/gui/GUIState.h"
+#include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
 
@@ -16,7 +18,7 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void insert(InvoluteGear_ptr involuteGear, GUIState_ptr guiState);
+	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void registerListener(SceneListener* sceneListener);
 	void remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh);

@@ -167,6 +167,7 @@ void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!triangleMeshRenderStateNode.isInitialized())
 		initialize(triangleMeshRenderStateNode);
+
 	drawObject(triangleMeshRenderStateNode,rigidAffineTransformation);
 }
 

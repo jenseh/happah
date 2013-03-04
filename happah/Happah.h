@@ -4,8 +4,8 @@
 #include <QApplication>
 
 #include "happah/scene/SceneManager.h"
-#include "happah/gui/gl/DrawManager.h"
-#include "happah/gui/qt/MainWindow.h"
+#include "happah/gui/DrawManager.h"
+#include "happah/gui/MainWindow.h"
 
 class Happah: public QApplication {
 Q_OBJECT

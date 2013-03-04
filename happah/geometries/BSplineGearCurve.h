@@ -18,7 +18,6 @@ public:
 	hpreal getMinLength() const;
 	hpreal getMaxLength() const;
 	void scale(hpreal scaleFactor);
-	void draw(Painter2D* painter);
 	void getBounds(hpvec2* min, hpvec2* max) const;
 
 };

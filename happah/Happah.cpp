@@ -3,7 +3,7 @@
 #include <QGLFormat>
 
 #include "happah/Happah.h"
-#include "happah/gui/qt/MainWindow.h"
+#include "happah/gui/MainWindow.h"
 
 Happah::Happah(int& argc, char** argv) 
 	: QApplication(argc, argv), m_drawManager(m_sceneManager), m_mainWindow(m_sceneManager, m_drawManager) {

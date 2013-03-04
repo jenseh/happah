@@ -2,7 +2,7 @@
 #define GRID_H
 
 #include "happah/geometries/NonDrawable.h"
-#include "happah/models/QuadMesh.h"
+#include "happah/geometries/QuadMesh.h"
 
 class Grid : public NonDrawable
 {

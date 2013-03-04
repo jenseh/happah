@@ -5,8 +5,8 @@
 #include <vector>
 #include "happah/geometries/NonDrawable.h"
 #include "happah/HappahTypes.h"
-#include "happah/models/TriangleMesh.h"
-#include "happah/models/QuadMesh.h"
+#include "happah/geometries/TriangleMesh.h"
+#include "happah/geometries/QuadMesh.h"
 
 /** @class Gear
  * @brief Simplest Gear class

@@ -7,7 +7,7 @@
 #include "happah/geometries/NonDrawable.h"
 #include "happah/geometries/BasicRack.h"
 #include "happah/geometries/StandardProfile.h"
-#include "happah/models/QuadMesh.h"
+#include "happah/geometries/QuadMesh.h"
 
 using namespace std;
 

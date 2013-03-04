@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#include "happah/gui/gl/DrawVisitor.h"
+#include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/transformations/RigidAffineTransformation.h"
 

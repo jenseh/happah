@@ -1,17 +1,10 @@
-/*
- * Sphere.h
- *
- *  Created on: Nov 28, 2012
- *      Author: matthias
- */
-
 #ifndef SPHERE_H_
 #define SPHERE_H_
 
 #include <math.h>
 #include <glm/glm.hpp>
 #include "happah/geometries/NonDrawable.h"
-#include "happah/models/QuadMesh.h"
+#include "happah/geometries/QuadMesh.h"
 
 using namespace std;
 

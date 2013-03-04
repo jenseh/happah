@@ -49,9 +49,6 @@ void BSplineGearCurve::scale(hpreal scaleFactor) {
 	}
 }
 
-void BSplineGearCurve::draw(Painter2D* painter) {
-	getEntireGear()->draw(painter);
-}
 void BSplineGearCurve::getBounds(hpvec2* min, hpvec2* max) const {
 	getEntireGear()->getBounds(min, max);
 }

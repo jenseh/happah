@@ -13,7 +13,7 @@
 #include "happah/kdtree/Box.h"
 #include "happah/kdtree/IntersectInfo.h"
 #include "happah/kdtree/TriangleKDTreeNode.h"
-#include "happah/models/TriangleMesh.h"
+#include "happah/geometries/TriangleMesh.h"
 
 
 /**

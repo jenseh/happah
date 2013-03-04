@@ -4,10 +4,9 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "happah/gui/Drawable2D.h"
 #include "happah/HappahTypes.h"
 
-class BSplineCurve : public Drawable2D {
+class BSplineCurve {
 protected:
 	int m_degree;
 	std::vector<glm::vec3> m_controlPoints;
@@ -46,7 +45,6 @@ public:
 
 	glm::vec3 getValueAt( float t ) const;
 
-	virtual void draw( Painter2D* painter );
 	virtual void getBounds( glm::vec2* min, glm::vec2* max ) const;
 
 	private:

@@ -10,5 +10,6 @@ typedef glm::vec2 hpvec2;
 typedef glm::vec3 hpvec3;
 typedef glm::vec4 hpvec4;
 typedef glm::vec4 hpcolor;
+typedef unsigned int hpuint;
 
 #endif // HAPPAH_TYPES_H

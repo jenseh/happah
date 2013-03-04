@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-TriPatch::TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name) : NonDrawable(name)
+TriPatch::TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name)
 {
   m_degree = degree;
   m_a = a;
@@ -117,9 +117,9 @@ TriangleMesh* TriPatch::toTriangleMesh(){
     triangles->push_back(m_vertexData.at(a*2));
         }
     }
+  std::vector<hpuint> indices;
+  TriangleMesh* result = new TriangleMesh(triangles,indices);
 
-  TriangleMesh* result = new TriangleMesh(triangles, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-  result->setModelMatrix(m_modelMatrix);
   std::cout << "TriPatchVertices" << m_vertexData.size() << endl;
   return result;
 }

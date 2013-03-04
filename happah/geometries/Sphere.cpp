@@ -9,7 +9,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 
-Sphere::Sphere(float radius, glm::vec4 center, std::string name) : NonDrawable(name) {
+Sphere::Sphere(float radius, glm::vec4 center){
     m_radius = radius;
     m_center = center;
 }
@@ -20,7 +20,7 @@ Sphere::~Sphere() {
 float Sphere::getRadius() {
     return m_radius;
 }
-
+/*
 QuadMesh* Sphere::toQuadMesh() {
     int dtheta = 1;
     int dphi = 1;
@@ -72,11 +72,11 @@ QuadMesh* Sphere::toQuadMesh() {
     }
 
     QuadMesh* result = new QuadMesh(m_vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-    result->setModelMatrix(m_modelMatrix);
     std::cout << "Kreis Vertices" << m_vertexData.size()<<endl;
     return result;
 }
 
+*/
 TriangleMesh* Sphere::toTriangleMesh() {
   //TODO: Implement this function
   return 0;

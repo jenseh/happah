@@ -4,13 +4,12 @@
 
 #include <math.h>
 #include <glm/glm.hpp>
-#include "happah/geometries/NonDrawable.h"
 #include "happah/geometries/TriangleMesh.h"
 
 class SpherePatch: public NonDrawable
 {
 public:
-  SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name);
+  SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c);
   TriangleMesh* toTriangleMesh();
   //void setControlPoint(int index,glm::vec3 value);
   //void update();

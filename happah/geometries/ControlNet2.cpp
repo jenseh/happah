@@ -1,7 +1,6 @@
 #include "happah/geometries/ControlNet2.h"
 
-ControlNet2::ControlNet2(glm::vec3 p200,glm::vec3 p110,glm::vec3 p101,glm::vec3 p020,glm::vec3 p011,glm::vec3 p002, std::string name):NonDrawable(name)
-{
+ControlNet2::ControlNet2(glm::vec3 p200,glm::vec3 p110,glm::vec3 p101,glm::vec3 p020,glm::vec3 p011,glm::vec3 p002){
   m_controlPoints[0]= p200;
   m_controlPoints[1]= p110;
   m_controlPoints[2]= p101;

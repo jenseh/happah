@@ -3,14 +3,13 @@
 
 #include <math.h>
 #include <glm/glm.hpp>
-#include "happah/geometries/NonDrawable.h"
 #include "happah/geometries/TriangleMesh.h"
 
-class TriPatch: public NonDrawable {
+class TriPatch{
 
 public:
   // TODO : Add normals
-  TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name);
+  TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c);
 
   ~TriPatch();
   TriangleMesh* toTriangleMesh();

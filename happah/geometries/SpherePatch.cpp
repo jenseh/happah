@@ -1,8 +1,7 @@
 #include "happah/geometries/SpherePatch.h"
 #include <glm/gtx/intersect.hpp>
 
-SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name) : NonDrawable(name)
-{
+SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name) {
   m_degree = degree;
   m_a = a;
   m_b = b;
@@ -140,8 +139,8 @@ TriangleMesh* SpherePatch::toTriangleMesh(){
         }
     }
 }
-  TriangleMesh* result = new TriangleMesh(triangles, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-  result->setModelMatrix(m_modelMatrix);
+  std::vector<hpuint> indices;
+  TriangleMesh* result = new TriangleMesh(triangles, indices);
 //  std::cout << "TriPatchVertices" << m_vertexData.size() << std::endl;
   return result;
 }

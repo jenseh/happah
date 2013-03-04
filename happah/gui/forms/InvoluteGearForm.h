@@ -14,20 +14,21 @@ public:
 	InvoluteGearForm(GUIManager& sceneManager, QWidget* parent = 0);
 	~InvoluteGearForm();
 
+	void setInvoluteGear(InvoluteGear_ptr involuteGear);
+
 private:
 	GearSlider* m_bottomClearanceSlider;
 	GearSlider* m_faceWidthSlider;
 	GearSlider* m_filletRadiusSlider;
-	InvoluteGear_ptr m_gear;
-	bool m_gearInScene;
+	InvoluteGear_ptr m_involuteGear;
+	bool m_involuteGearInScene;
 	GUIManager& m_guiManager;
 	GearSlider* m_helixAngleSlider;
 	GearSlider* m_moduleSlider;
 	GearSlider* m_pressureAngleSlider;
 	GearSlider* m_toothCountSlider;
 
-	void updateGear();
-	void setNewGearValues();
+	void updateInvoluteGear();
 
 private slots:
 	void changeBottomClearance(hpreal bottomClearance);
@@ -37,7 +38,7 @@ private slots:
 	void changeModule(hpreal module);
 	void changePressureAngle(hpreal angle);
 	void changeToothCount(hpreal toothCount);
-	void createGear();
+	void createInvoluteGear();
 	void updateRanges();
 
 };

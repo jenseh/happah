@@ -151,11 +151,11 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 	m_sceneManager.draw(*this, identityTransformation);
 }
 
-void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
-	if (!triangleMeshRenderStateNode.isInitialized())
-		initialize(triangleMeshRenderStateNode);
-	drawObject(triangleMeshRenderStateNode, rigidAffineTransformation);
+	if (!renderStateNode.isInitialized())
+		initialize(renderStateNode);
+	drawObject(renderStateNode, rigidAffineTransformation);
 }
 
 bool DrawManager::init() {
@@ -180,66 +180,66 @@ bool DrawManager::init() {
 	return true;
 }
 
-void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStateNode) {
+void DrawManager::initialize(RenderStateNode& renderStateNode) {
 	GLuint bufferID;
-	GLint size = (triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size());
+	GLint size = (renderStateNode.getVertexData()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
-	triangleMeshRenderStateNode.setVertexArrayObjectID(bufferID);
-	glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
+	renderStateNode.setVertexArrayObjectID(bufferID);
+	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
 
 	// Create New Vertex Buffer Object
 	glGenBuffers(1, &bufferID);
-	triangleMeshRenderStateNode.setVertexBufferID(bufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	renderStateNode.setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(renderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
 	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
 	glEnableVertexAttribArray(m_vertexLocation);
 	glEnableVertexAttribArray(m_normalLocation);
 
 	// Create New Color Buffer Object
-	if (triangleMeshRenderStateNode.hasColorVector()) {
+	if (renderStateNode.hasColorVector()) {
 		glGenBuffers(1, &bufferID);
-		triangleMeshRenderStateNode.setColorBufferID(bufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), triangleMeshRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		renderStateNode.setColorBufferID(bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getColorBufferID());
+		glBufferData(GL_ARRAY_BUFFER, renderStateNode.getColorVector()->size() * sizeof(glm::vec4), renderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(m_colorLocation);
 
 	}
 	// Create IndexBuffer;
-	size= triangleMeshRenderStateNode.getTriangleMesh()->getIndices()->size();
+	size= renderStateNode.getIndices()->size();
 	glGenBuffers(1, &bufferID);
-	triangleMeshRenderStateNode.setIndexBufferID(bufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(triangleMeshRenderStateNode.getTriangleMesh()->getIndices()->at(0)), GL_DYNAMIC_DRAW);
+	renderStateNode.setIndexBufferID(bufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderStateNode.getIndexBufferID());
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(renderStateNode.getIndices()->at(0)), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	triangleMeshRenderStateNode.setInitialized(true);
+	renderStateNode.setInitialized(true);
 }
 
-void DrawManager::drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::drawObject(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
 
-	glBindVertexArray(triangleMeshRenderStateNode.getVertexArrayObjectID());
+	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
 	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
 	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
 	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
-	glUniform1f(m_ambientFactorLocation, (GLfloat) triangleMeshRenderStateNode.getMaterial().getAmbientFactor());
-	glUniform1f(m_diffuseFactorLocation, (GLfloat) triangleMeshRenderStateNode.getMaterial().getDiffuseFactor());
-	glUniform1f(m_specularFactorLocation, (GLfloat) triangleMeshRenderStateNode.getMaterial().getSpecularFactor());
-	glUniform1f(m_phongExponentLocation, (GLfloat) triangleMeshRenderStateNode.getMaterial().getPhongExponent());
+	glUniform1f(m_ambientFactorLocation, (GLfloat) renderStateNode.getMaterial().getAmbientFactor());
+	glUniform1f(m_diffuseFactorLocation, (GLfloat) renderStateNode.getMaterial().getDiffuseFactor());
+	glUniform1f(m_specularFactorLocation, (GLfloat) renderStateNode.getMaterial().getSpecularFactor());
+	glUniform1f(m_phongExponentLocation, (GLfloat) renderStateNode.getMaterial().getPhongExponent());
 	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	if (triangleMeshRenderStateNode.hasColorVector()) {
+	if (renderStateNode.hasColorVector()) {
 		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
 		glUniform1i(m_isColoredLocation, 1);
 	} else {
-		hpcolor color = triangleMeshRenderStateNode.getColor();
+		hpcolor color = renderStateNode.getColor();
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_isColoredLocation, 0);
 	}

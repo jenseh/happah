@@ -1,14 +1,8 @@
 #include "happah/scene/TriangleMeshRenderStateNode.h"
 #include <exception>
 
-
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor& color):
-																									 m_vertexBufferID(0),
-																									 m_indexBufferID(0),
-																									 m_vertexArrayObjectID(0),
-																									 m_colorBufferID(0),
-																									 m_initialized(false),
-																									 m_hasColorVector(false){
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, hpcolor& color)
+	: m_vertexBufferID(0), m_indexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
 
 	m_triangleMesh = triangleMesh;
 	m_color = color;
@@ -21,16 +15,11 @@ TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triang
 	m_material = material;
 }
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector):
-																									m_vertexBufferID(0),
-																									m_indexBufferID(0),
-																									m_vertexArrayObjectID(0),
-																									m_colorBufferID(0),
-																									m_initialized(false),
-																									m_hasColorVector(true){
-	if (triangleMesh->getVertexData()->size() != colorVector->size())
-			throw; // TODO: Find Proper Exception !
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, std::vector<hpcolor>* colorVector) :
+		m_vertexBufferID(0), m_indexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
 
+	if (triangleMesh->getVertexData()->size() != colorVector->size())
+		throw; // TODO: Find Proper Exception !
 	m_triangleMesh = triangleMesh;
 	m_colorVector = colorVector;
 	//TODO : Remove Standard Values
@@ -46,7 +35,7 @@ TriangleMeshRenderStateNode::~TriangleMeshRenderStateNode() {
 	// TODO Auto-generated destructor stub
 }
 
-void TriangleMeshRenderStateNode::accept(SceneVisitor& sceneVisitor){
+void TriangleMeshRenderStateNode::accept(SceneVisitor& sceneVisitor) {
 	sceneVisitor.visit(*this);
 	Node::accept(sceneVisitor);
 }
@@ -55,73 +44,69 @@ void TriangleMeshRenderStateNode::draw(DrawVisitor& drawVisitor, RigidAffineTran
 	drawVisitor.draw(*this, rigidAffineTransformation);
 }
 
-
-
-void TriangleMeshRenderStateNode::setVertexBufferID(GLuint id){
+void TriangleMeshRenderStateNode::setVertexBufferID(GLuint id) {
 	m_vertexBufferID = id;
 }
-GLuint TriangleMeshRenderStateNode::getVertexBufferID(){
+GLuint TriangleMeshRenderStateNode::getVertexBufferID() {
 	return m_vertexBufferID;
 }
-void TriangleMeshRenderStateNode::setIndexBufferID(GLuint id){
+void TriangleMeshRenderStateNode::setIndexBufferID(GLuint id) {
 	m_indexBufferID = id;
 }
-GLuint TriangleMeshRenderStateNode::getIndexBufferID(){
+GLuint TriangleMeshRenderStateNode::getIndexBufferID() {
 	return m_indexBufferID;
 }
-void TriangleMeshRenderStateNode::setVertexArrayObjectID(GLuint id){
+void TriangleMeshRenderStateNode::setVertexArrayObjectID(GLuint id) {
 	m_vertexArrayObjectID = id;
 }
-GLuint TriangleMeshRenderStateNode::getVertexArrayObjectID(){
+GLuint TriangleMeshRenderStateNode::getVertexArrayObjectID() {
 	return m_vertexArrayObjectID;
 }
-void TriangleMeshRenderStateNode::setColor(hpcolor color){
+void TriangleMeshRenderStateNode::setColor(hpcolor color) {
 	m_color = color;
 }
-hpcolor TriangleMeshRenderStateNode::getColor(){
+hpcolor TriangleMeshRenderStateNode::getColor() {
 	return m_color;
 }
 
-TriangleMesh_ptr TriangleMeshRenderStateNode::getTriangleMesh(){
+TriangleMesh_ptr TriangleMeshRenderStateNode::getTriangleMesh() {
 	return m_triangleMesh;
 }
 
-void TriangleMeshRenderStateNode::setColorVector(std::vector<hpcolor>* colorVector){
+void TriangleMeshRenderStateNode::setColorVector(std::vector<hpcolor>* colorVector) {
 	if (m_triangleMesh->getVertexData()->size() != colorVector->size())
-			throw; // TODO: Find Proper Exception !
+		throw; // TODO: Find Proper Exception !
 	m_colorVector = colorVector;
 }
 
-std::vector<hpcolor>* TriangleMeshRenderStateNode::getColorVector(){
+std::vector<hpcolor>* TriangleMeshRenderStateNode::getColorVector() {
 	return m_colorVector;
 }
 //TODO: REMOVE AS SOON AS USING NEW TRIANGLE MESH !!!
-GLuint TriangleMeshRenderStateNode::getColorBufferID(){
+GLuint TriangleMeshRenderStateNode::getColorBufferID() {
 	return m_colorBufferID;
 }
 
-void TriangleMeshRenderStateNode::setColorBufferID(GLuint id){
+void TriangleMeshRenderStateNode::setColorBufferID(GLuint id) {
 	m_colorBufferID = id;
 }
 
-bool TriangleMeshRenderStateNode::isInitialized(){
+bool TriangleMeshRenderStateNode::isInitialized() {
 	return m_initialized;
 }
 
-void TriangleMeshRenderStateNode::setInitialized(bool isInitialized){
+void TriangleMeshRenderStateNode::setInitialized(bool isInitialized) {
 	m_initialized = isInitialized;
 }
 
-bool TriangleMeshRenderStateNode::hasColorVector(){
+bool TriangleMeshRenderStateNode::hasColorVector() {
 	return m_hasColorVector;
 }
 
-void TriangleMeshRenderStateNode::setMaterial(Material& material){
+void TriangleMeshRenderStateNode::setMaterial(Material& material) {
 	m_material = material;
 }
-Material TriangleMeshRenderStateNode::getMaterial(){
+Material TriangleMeshRenderStateNode::getMaterial() {
 	return m_material;
 }
-
-
 

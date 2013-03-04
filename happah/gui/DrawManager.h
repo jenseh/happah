@@ -19,23 +19,19 @@ public:
 class DrawManager : public SceneListener, public DrawVisitor {
 public:
 	DrawManager(SceneManager& sceneManager);
-
+	virtual ~DrawManager();
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	QGLContext& getGlContext();
 	bool initGL();
 	void sceneChanged();
-
 	void draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 
-
 private:
-
-
 	void compileShader(GLuint shader, const char* filePath);
-	bool createBuffers();
 	bool initShaderPrograms();
 	void initialize(TriangleMeshRenderStateNode& triangleMeshRenderStateNode);
 	void drawObject(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,RigidAffineTransformation& rigidAffineTransformation);
+
 	SceneManager& m_sceneManager;
 	QGLContext m_glContext;
 
@@ -43,18 +39,10 @@ private:
 	GLuint m_program;
 	GLuint m_vertexShader;
 
-	GLuint m_unColoredVertexArrayObject;
-	GLuint m_vertexDataBuffer;
-	GLuint m_indexBuffer;
-	GLuint m_colorDataBuffer;
-	GLuint m_coloredVertexArrayObject;
-
-	//attribute locations
 	GLint m_vertexLocation;
 	GLint m_normalLocation;
 	GLint m_colorLocation;
 
-	//uniform locations
 	GLint m_modelMatrixLocation;
 	GLint m_modelViewProjectionMatrixLocation;
 	GLint m_normalMatrixLocation;
@@ -67,12 +55,12 @@ private:
 	GLint m_cameraPositionLocation;
 
 	const static HappahGlFormat GL_FORMAT;
-	//TODO: Change these matrices to Projection Matrix , viewMatrix as soon as QMatrices are removed
+
 	hpmat4x4 m_modelMatrix;
 	hpmat4x4 m_viewMatrix;
 	hpmat4x4 m_projectionMatrix;
 	hpmat3x3 m_normalMatrix;
-	glm::vec3   m_cameraPosition;
+	hpvec3   m_cameraPosition;
 
 
 };

@@ -192,9 +192,9 @@ void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStat
 	glGenBuffers(1, &bufferID);
 	triangleMeshRenderStateNode.setVertexBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, triangleMeshRenderStateNode.getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(glm::vec4), &(triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(m_vertexLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), 0);
-	glVertexAttribPointer(m_normalLocation, 4, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec4), (void*) sizeof(glm::vec4));
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
+	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
 	glEnableVertexAttribArray(m_vertexLocation);
 	glEnableVertexAttribArray(m_normalLocation);
 
@@ -208,17 +208,13 @@ void DrawManager::initialize(TriangleMeshRenderStateNode& triangleMeshRenderStat
 		glEnableVertexAttribArray(m_colorLocation);
 
 	}
-	// CREATE NEW INDEX BUFFER OBJECT
-	// TODO : GET INDICES FROM RENDERSTATE OBJECT
-	// TODO : THEN REMOVE THIS
-	vector<unsigned int> indices;
-	for (int j = 0;j < triangleMeshRenderStateNode.getTriangleMesh()->getVertexData()->size();j++)
-		indices.push_back(j);
-	// TODO : UNTIL HERE
+	// Create IndexBuffer;
+	size= triangleMeshRenderStateNode.getTriangleMesh()->getIndices()->size();
 	glGenBuffers(1, &bufferID);
 	triangleMeshRenderStateNode.setIndexBufferID(bufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangleMeshRenderStateNode.getIndexBufferID());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &indices[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(triangleMeshRenderStateNode.getTriangleMesh()->getIndices()->at(0)), GL_DYNAMIC_DRAW);
+
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

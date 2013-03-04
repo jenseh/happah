@@ -64,6 +64,7 @@ HEADERS += \
 	happah/scene/DrawVisitor.h \
 	happah/scene/Material.h \
 	happah/scene/Node.h\
+	happah/scene/RenderStateNode.h\
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
@@ -129,6 +130,7 @@ SOURCES += \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
+	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
 	happah/scene/TriangleMeshNode.cpp \
 	happah/scene/TriangleMeshRenderStateNode.cpp \

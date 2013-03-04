@@ -24,4 +24,5 @@ private:
 
 };
 
+
 #endif // GUI_MANAGER_H

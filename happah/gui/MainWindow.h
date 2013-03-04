@@ -4,9 +4,8 @@
 #include <QKeyEvent>
 #include <QMainWindow>
 
-#include "happah/gui/DrawManager.h"
+#include "happah/gui/GUIManager.h"
 
-class GUIManager;
 class MainWindow: public QMainWindow {
 Q_OBJECT
 
@@ -22,7 +21,5 @@ private:
 	static const int DEFAULT_WINDOW_WIDTH = 1200;
 
 };
-
-#include "happah/gui/GUIManager.h"
 
 #endif

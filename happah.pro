@@ -34,6 +34,7 @@ HEADERS += \
 	happah/gui/DrawManager.h \
 	happah/gui/GearSlider.h \
 	happah/gui/GUIManager.h \
+	happah/gui/GUIState.h \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerPanel.h \
 	happah/gui/ToolPanel.h \
@@ -59,6 +60,7 @@ HEADERS += \
 	happah/primitives/Ray.h \
 	happah/primitives/Triangle.h \
 \
+	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \
 	happah/scene/DrawVisitor.h \
 	happah/scene/Material.h \
@@ -107,6 +109,7 @@ SOURCES += \
 	happah/gui/DrawManager.cpp \
 	happah/gui/GearSlider.cpp \
 	happah/gui/GUIManager.cpp \
+	happah/gui/GUIState.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
 	happah/gui/ToolPanel.cpp \
@@ -124,6 +127,7 @@ SOURCES += \
 #	happah/kdtree/ImplicitKDTree.cpp \
 #	happah/kdtree/TriangleKDTree.cpp \
 \
+	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \

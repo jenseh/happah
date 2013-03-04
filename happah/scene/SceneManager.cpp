@@ -1,11 +1,35 @@
 #include <ctime>
 #include <iostream>
 
+#include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/scene/TriangleMeshNode.h"
+#include "happah/scene/TriangleMeshRenderStateNode.h"
 
 SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
+
+void SceneManager::insert(InvoluteGear_ptr involuteGear, GUIState_ptr guiState) {
+	Node_ptr node = find(involuteGear);
+
+	InvoluteGearNode_ptr involuteGearNode;
+	if(node) {
+		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
+		node = involuteGearNode->find(guiState);
+		if(node) {
+			//TODO
+			return;
+		}
+	} else {
+		involuteGearNode = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
+		addChild(involuteGearNode);
+	}
+
+	//TODO
+
+	notifyListeners();
+}
 
 void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
 	Node_ptr node = find(involuteGear);

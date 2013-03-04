@@ -1,12 +1,8 @@
 #ifndef SIMPLE_GEOMETRY_NODE_H
 #define SIMPLE_GEOMETRY_NODE_H
 
-#include <memory>
-
 #include "happah/scene/Node.h"
 #include "happah/transformations/RigidAffineTransformation.h"
-
-using namespace std;
 
 template<class G>//extends Geometry
 class SimpleGeometryNode : public Node {

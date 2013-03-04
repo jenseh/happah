@@ -1,13 +1,9 @@
 #ifndef TRIANGLE_MESH_NODE_H
 #define TRIANGLE_MESH_NODE_H
 
-#include <memory>
-
 #include "happah/geometries/TriangleMesh.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshRenderStateNode.h"
-
-using namespace std;
 
 class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
 

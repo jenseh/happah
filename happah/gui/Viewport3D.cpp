@@ -4,7 +4,7 @@
 #include "happah/gui/Viewport3D.h"
 
 Viewport3D::Viewport3D(DrawManager& drawManager, QWidget* parent)
-	: QGLWidget(&(drawManager.getGlContext()), parent), m_drawManager(drawManager) {
+	: QGLWidget(drawManager.getGlContext(), parent), m_drawManager(drawManager) {
 
 	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
 

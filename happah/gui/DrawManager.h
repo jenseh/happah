@@ -8,6 +8,7 @@
 
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/scene/TriangleMeshRenderStateNode.h"
 
 class HappahGlFormat : public QGLFormat {
 public:
@@ -20,7 +21,7 @@ public:
 	~DrawManager();
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	void draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-	QGLContext& getGlContext();
+	QGLContext* getGlContext();
 	bool init();
 
 private:
@@ -30,7 +31,7 @@ private:
 	bool initShaderPrograms();
 
 	SceneManager& m_sceneManager;
-	QGLContext m_glContext;
+	QGLContext* m_glContext;
 
 	GLuint m_fragmentShader;
 	GLuint m_program;

@@ -23,11 +23,11 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager& sceneManager) 
-	: m_sceneManager(sceneManager), m_glContext(GL_FORMAT) {}
+	: m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {}
 
 DrawManager::~DrawManager() {}
 
-QGLContext& DrawManager::getGlContext() {
+QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
 }
 
@@ -159,8 +159,8 @@ void DrawManager::draw(TriangleMeshRenderStateNode& triangleMeshRenderStateNode,
 }
 
 bool DrawManager::init() {
-	m_glContext.create();
-	m_glContext.makeCurrent();
+	m_glContext->create();
+	m_glContext->makeCurrent();
 
 	GLenum errorCode = glewInit();
 	if (GLEW_OK != errorCode) {
@@ -168,7 +168,7 @@ bool DrawManager::init() {
 		return false;
 	}
 
-	QGLFormat glFormat = m_glContext.format();
+	QGLFormat glFormat = m_glContext->format();
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
 

@@ -47,13 +47,13 @@ TriangleMesh* Gear::toTriangleMesh() {
 			if(i != WIDTH_SAMPLE_SIZE) {
 				hpuint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
 
-				indices->push_back(2 * (i * profile->size() + jNext));		//0
-				indices->push_back(2 * (i * profile->size() + j));			//1
-				indices->push_back(2 * ((i + 1) * profile->size() + j));	//2
+				indices->push_back(i * profile->size() + jNext);		//0
+				indices->push_back(i * profile->size() + j);			//1
+				indices->push_back((i + 1) * profile->size() + j);	//2
 				
-				indices->push_back(2 * (i * profile->size() + jNext));		//0
-				indices->push_back(2 * ((i + 1) * profile->size() + j));	//2
-				indices->push_back(2 * ((i + 1) * profile->size() + jNext));//3
+				indices->push_back(i * profile->size() + jNext);		//0
+				indices->push_back((i + 1) * profile->size() + j);	//2
+				indices->push_back((i + 1) * profile->size() + jNext);//3
 			}
 		}
 		delete profile;
@@ -65,8 +65,6 @@ TriangleMesh* Gear::toTriangleMesh() {
 	uint indicesInRow = indices->size() / WIDTH_SAMPLE_SIZE;
 	uint trianglePairsInRow  = indicesInRow / 6;
 
-	std::cerr << "indicesInRow: " << indicesInRow << ", profilesize: " << getGearProfile(0)->size() << std::endl;
-	std::cerr << "trianglePairsInRow:  " << trianglePairsInRow <<  ", indices size: " << indices->size() << std::endl;
 	//array steps is necessary to walk in the vertexData array to the right places
 	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
 
@@ -94,8 +92,8 @@ TriangleMesh* Gear::toTriangleMesh() {
 					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
 				if (n >= 0 && n < indices->size()) {
-					hpvec3 a = vertexData->at(indices->at(n + da)) - vertexData->at(indices->at(n));
-					hpvec3 b = vertexData->at(indices->at(n + db)) - vertexData->at(indices->at(n));
+					hpvec3 a = vertexData->at(2 * indices->at(n + da)) - vertexData->at(2 * indices->at(n));
+					hpvec3 b = vertexData->at(2 * indices->at(n + db)) - vertexData->at(2 * indices->at(n));
 					normal = normal + (hpvec3(glm::cross(a, b)));
 				}
 			}
@@ -106,33 +104,9 @@ TriangleMesh* Gear::toTriangleMesh() {
 					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
 				if (n >= 0 && n < indices->size())
-					vertexData->at(indices->at(n) + 1) = glm::normalize(normal); //insert the normal in the cell after the vertex
+					vertexData->at(2 * indices->at(n) + 1) = glm::normalize(normal); //insert the normal in the cell after the vertex
 			}
 		}
 	}
-
-	for (uint i = 0; i < vertexData->size() / 2; ++i) {
-		if(i % trianglePairsInRow == 0)
-			std::cerr << std::endl;
-		printVec3(vertexData->at(2 * i));
-		std::cerr << "		";
-		printVec3(vertexData->at(2 * i + 1));
-		std::cerr << std::endl;
-	}
-	std::cerr << "\nindices" << std::endl;
-	for (uint i = 0; i < indices->size(); ++i) {
-		if(i % indicesInRow == 0)
-			std::cerr << std::endl;
-		std::cerr << "|" << (indices->at(i));
-	}
-
-	std::cerr << "\nindices point to:" << std::endl;
-	for(uint i = 0; i < indices->size(); ++i) {
-		if(i % 3 == 0)
-			std::cerr << std::endl;
-		printVec3(vertexData->at(indices->at(i)));
-		std::cerr << "		";
-	}
-
 	return new TriangleMesh(vertexData, indices);
 }

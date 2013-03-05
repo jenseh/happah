@@ -2,7 +2,7 @@
 #define GUI_MANAGER_H
 
 #include "happah/geometries/InvoluteGear.h"
-#include "happah/geometries/TriangleMesh.h"
+#include "happah/geometries/Mesh.h"
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/scene/SceneManager.h"

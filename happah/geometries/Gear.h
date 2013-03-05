@@ -5,7 +5,7 @@
 #include <vector>
 #include "happah/geometries/GeometryObject.h"
 #include "happah/HappahTypes.h"
-#include "happah/geometries/TriangleMesh.h"
+#include "happah/geometries/Mesh.h"
 
 /** @class Gear
  * @brief Simplest Gear class

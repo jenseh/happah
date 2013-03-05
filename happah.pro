@@ -20,13 +20,13 @@ HEADERS += \
 	happah/geometries/GeometryObject.h \
 #	happah/geometries/Grid.h \
 	happah/geometries/InvoluteGear.h \
+	happah/geometries/Mesh.h\
 #	happah/geometries/PointCloud.h \
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
 #	happah/geometries/SpherePatch.h \
 #	happah/geometries/StandardProfile.h \
-	happah/geometries/TriangleMesh.h \
 #	happah/geometries/TriPatch.h \
 #	happah/geometries/ZCircleCloud.h \
 \
@@ -95,13 +95,13 @@ SOURCES += \
 	happah/geometries/GeometryObject.cpp \
 #	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteGear.cpp \
+	happah/geometries/Mesh.cpp\
 #	happah/geometries/PointCloud.cpp \
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
 #	happah/geometries/SpherePatch.cpp \
 #	happah/geometries/StandardProfile.cpp \
-	happah/geometries/TriangleMesh.cpp \
 #	happah/geometries/TriPatch.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \

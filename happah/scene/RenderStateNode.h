@@ -84,4 +84,21 @@ public:
 
 };
 
+
+
+class LineMeshRenderStateNode;
+typedef shared_ptr<LineMeshRenderStateNode> LineMeshRenderStateNode_ptr;
+
+#include "happah/scene/Material.h"
+#include "happah/scene/RenderStateNode.h"
+#include "happah/scene/LineMeshNode.h"
+
+class LineMeshRenderStateNode : public RenderStateNode {
+
+public:
+	LineMeshRenderStateNode(LineMesh_ptr lineMesh,hpcolor& color);
+	LineMeshRenderStateNode(LineMesh_ptr lineMesh,std::vector<hpcolor>* colorVector);
+	virtual ~LineMeshRenderStateNode();
+
+};
 #endif /* RENDER_STATE_NODE_H_ */

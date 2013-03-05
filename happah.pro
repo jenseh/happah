@@ -63,6 +63,7 @@ HEADERS += \
 	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \
 	happah/scene/DrawVisitor.h \
+	happah/scene/LineMeshNode.h\
 	happah/scene/Material.h \
 	happah/scene/Node.h\
 	happah/scene/RenderStateNode.h\
@@ -129,6 +130,7 @@ SOURCES += \
 \
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
+	happah/scene/LineMeshNode.cpp\
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
 	happah/scene/RenderStateNode.cpp\

@@ -13,12 +13,14 @@ using namespace std;
 class Node;
 typedef shared_ptr<Node> Node_ptr;
 
+class GUIVisitor;
 class Node {
 
 public:
 	Node();
 	virtual ~Node();
 
+	virtual void accept(GUIVisitor& guiVisitor);
 	virtual void accept(SceneVisitor& sceneVisitor);
 	virtual bool contains(shared_ptr<void> data) const;
 	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
@@ -35,5 +37,6 @@ protected:
 
 };
 
+#include "happah/scene/GUIVisitor.h"
 
 #endif // NODE_H

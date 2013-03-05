@@ -4,14 +4,22 @@
 #include <QListWidget>
 #include <QWidget>
 
-class SceneGraphExplorerPanel : public QWidget {
+#include "happah/scene/GUIVisitor.h"
+#include "happah/scene/SceneListener.h"
+#include "happah/scene/SceneManager.h"
+
+class SceneGraphExplorerPanel : public QWidget, public GUIVisitor, public SceneListener {
 
 public:
-	SceneGraphExplorerPanel(QWidget* parent = 0);
+	SceneGraphExplorerPanel(SceneManager& m_sceneManager, QWidget* parent = 0);
 	~SceneGraphExplorerPanel();
+
+	void sceneChanged();
+	void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 
 private:
 	QListWidget* m_listWidget;
+	SceneManager& m_sceneManager;
 
 };
 

@@ -18,7 +18,16 @@ InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear
 
 InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {}
 
+void InvoluteGearGUIStateNode::accept(GUIVisitor& guiVisitor) {
+	guiVisitor.visit(getptr());
+	Node::accept(guiVisitor);
+}
+
 Form* InvoluteGearGUIStateNode::getForm() {
 	m_involuteGearForm->setInvoluteGear(m_involuteGear);
 	return m_involuteGearForm;
+}
+
+InvoluteGearGUIStateNode_ptr InvoluteGearGUIStateNode::getptr() {
+	return shared_from_this();
 }

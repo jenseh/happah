@@ -4,6 +4,11 @@ Node::Node() {}
 
 Node::~Node() {}
 
+void Node::accept(GUIVisitor& guiVisitor) {
+	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i)
+		(*i)->accept(guiVisitor);
+}
+
 void Node::accept(SceneVisitor& sceneVisitor) {
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i)
 		(*i)->accept(sceneVisitor);

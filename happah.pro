@@ -39,6 +39,7 @@ HEADERS += \
 \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
+	happah/gui/forms/InvoluteGearListener.h \
 \
 #	happah/kdtree/BBox.h \
 #	happah/kdtree/Box.h \

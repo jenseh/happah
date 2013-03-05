@@ -29,7 +29,6 @@ HEADERS += \
 #	happah/geometries/TriPatch.h \
 #	happah/geometries/ZCircleCloud.h \
 \
-	happah/gui/ComponentList.h \
 	happah/gui/DrawManager.h \
 	happah/gui/GearSlider.h \
 	happah/gui/GUIManager.h \
@@ -105,7 +104,6 @@ SOURCES += \
 #	happah/geometries/TriPatch.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \
-	happah/gui/ComponentList.cpp \
 	happah/gui/DrawManager.cpp \
 	happah/gui/GearSlider.cpp \
 	happah/gui/GUIManager.cpp \

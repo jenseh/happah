@@ -47,13 +47,13 @@ TriangleMesh* Gear::toTriangleMesh() {
 			if(i != WIDTH_SAMPLE_SIZE) {
 				hpuint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
 
-				indices->push_back(2 * (i * profile->size() + jNext));		//0
-				indices->push_back(2 * (i * profile->size() + j));			//1
-				indices->push_back(2 * ((i + 1) * profile->size() + j));	//2
+				indices->push_back(i * profile->size() + jNext);		//0
+				indices->push_back(i * profile->size() + j);			//1
+				indices->push_back((i + 1) * profile->size() + j);	//2
 				
-				indices->push_back(2 * (i * profile->size() + jNext));		//0
-				indices->push_back(2 * ((i + 1) * profile->size() + j));	//2
-				indices->push_back(2 * ((i + 1) * profile->size() + jNext));//3
+				indices->push_back(i * profile->size() + jNext);		//0
+				indices->push_back((i + 1) * profile->size() + j);	//2
+				indices->push_back((i + 1) * profile->size() + jNext);//3
 			}
 		}
 		delete profile;
@@ -62,19 +62,20 @@ TriangleMesh* Gear::toTriangleMesh() {
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
-	uint pointsInRow = indices->size() / WIDTH_SAMPLE_SIZE;
-	uint quadsInRow  = pointsInRow / 6;
+	uint indicesInRow = indices->size() / WIDTH_SAMPLE_SIZE;
+	uint trianglePairsInRow  = indicesInRow / 6;
+
 	//array steps is necessary to walk in the vertexData array to the right places
-	int steps[] = {0, 3, 4, -(pointsInRow - 3), -2, -3};
+	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
 
 	// go one step further in width direction to reach all points
 	for(uint i = 0; i <= WIDTH_SAMPLE_SIZE; ++i) {
-		for (uint j = 0; j < quadsInRow; ++j) {
+		for (uint j = 0; j < trianglePairsInRow; ++j) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
 			//for every point of the gear profile
 			hpvec3 normal = hpvec3(0.0f);
-			int n = i * pointsInRow + j * 12;
+			int n = i * indicesInRow + j * 6;
 			for (uint k = 0; k < 6; ++k) {
 				int da, db; //distances in vertexData array to other two triangle points
 				if(k < 2) {
@@ -87,26 +88,25 @@ TriangleMesh* Gear::toTriangleMesh() {
 
 				//TODO: n ist int und wird mit uint verglichen! => static_cast???
 				n += steps[k];
-				if (k == 2 && j == quadsInRow - 1)
-					n-= pointsInRow;
+				if (k == 2 && j == trianglePairsInRow - 1)
+					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
 				if (n >= 0 && n < indices->size()) {
-					hpvec3 a = vertexData->at(indices->at(n + da)) - vertexData->at(indices->at(n));
-					hpvec3 b = vertexData->at(indices->at(n + db)) - vertexData->at(indices->at(n));
+					hpvec3 a = vertexData->at(2 * indices->at(n + da)) - vertexData->at(2 * indices->at(n));
+					hpvec3 b = vertexData->at(2 * indices->at(n + db)) - vertexData->at(2 * indices->at(n));
 					normal = normal + (hpvec3(glm::cross(a, b)));
 				}
 			}
-			n = i * pointsInRow + j * 6;
+			n = i * indicesInRow + j * 6;
 			for (uint k = 0; k < 6; ++k) {
 				n += steps[k];
-				if (k == 2 && j == quadsInRow - 1)
-					n -= pointsInRow;
+				if (k == 2 && j == trianglePairsInRow - 1)
+					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
 				if (n >= 0 && n < indices->size())
-					vertexData->at(indices->at(n) + 1) = glm::normalize(normal); //insert the normal in the cell after the vertex
+					vertexData->at(2 * indices->at(n) + 1) = glm::normalize(normal); //insert the normal in the cell after the vertex
 			}
 		}
 	}
-
 	return new TriangleMesh(vertexData, indices);
 }

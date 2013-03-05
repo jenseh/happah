@@ -19,7 +19,6 @@ public:
 	    vector<hpvec3>* m_vertexData;
 	    vector<hpuint>* m_indices;
 };
-
 typedef shared_ptr<Mesh> Mesh_ptr;
 
 class TriangleMesh : public Mesh {
@@ -27,7 +26,6 @@ public:
     TriangleMesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
     ~TriangleMesh();
 };
-
 typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
 class LineMesh : public Mesh {
@@ -35,7 +33,13 @@ public:
     LineMesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
     ~LineMesh();
 };
-
 typedef shared_ptr<LineMesh> LineMesh_ptr;
+
+class PointCloud : public Mesh{
+public:
+	PointCloud(vector<hpvec3>* vertexData, vector<hpuint>* indices);
+	~PointCloud();
+};
+typedef shared_ptr<PointCloud> PointCloud_ptr;
 
 #endif /* MESH_H_ */

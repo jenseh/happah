@@ -101,4 +101,21 @@ public:
 	virtual ~LineMeshRenderStateNode();
 
 };
+
+class PointCloudRenderStateNode;
+typedef shared_ptr<PointCloudRenderStateNode> PointCloudRenderStateNode_ptr;
+
+#include "happah/scene/Material.h"
+#include "happah/scene/RenderStateNode.h"
+#include "happah/scene/PointCloudNode.h"
+
+class PointCloudRenderStateNode : public RenderStateNode {
+
+public:
+	PointCloudRenderStateNode(PointCloud_ptr pointCloud,hpcolor& color);
+	PointCloudRenderStateNode(PointCloud_ptr pointCloud,std::vector<hpcolor>* colorVector);
+	virtual ~PointCloudRenderStateNode();
+
+};
+
 #endif /* RENDER_STATE_NODE_H_ */

@@ -139,5 +139,16 @@ LineMeshRenderStateNode::~LineMeshRenderStateNode() {
 	// TODO Auto-generated destructor stub
 }
 
+PointCloudRenderStateNode::PointCloudRenderStateNode(PointCloud_ptr pointCloud, hpcolor& color)
+	: RenderStateNode(GL_POINTS,pointCloud->getVertexData(),pointCloud->getIndices(),color){}
+
+PointCloudRenderStateNode::PointCloudRenderStateNode(PointCloud_ptr pointCloud, std::vector<hpcolor>* colorVector)
+	: RenderStateNode(GL_POINTS,pointCloud->getVertexData(),pointCloud->getIndices(),colorVector) {}
+
+PointCloudRenderStateNode::~PointCloudRenderStateNode() {
+	// TODO Auto-generated destructor stub
+}
+
+//TODO : color buffer
 
 

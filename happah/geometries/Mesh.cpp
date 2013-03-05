@@ -17,9 +17,13 @@ vector<hpuint>* Mesh::getIndices() {
 }
 
 TriangleMesh::TriangleMesh(vector<hpvec3>* vertexData,vector<hpuint>* indices)
-		:Mesh(vertexData,indices) {}
+		: Mesh(vertexData,indices) {}
 TriangleMesh::~TriangleMesh() {}
 
 LineMesh::LineMesh(vector<hpvec3>* vertexData,vector<hpuint>* indices)
-		:Mesh(vertexData,indices) {}
+		: Mesh(vertexData,indices) {}
 LineMesh::~LineMesh() {}
+
+PointCloud::PointCloud(vector<hpvec3>* vertexData, vector<hpuint>* indices)
+		: Mesh(vertexData, indices) {}
+PointCloud::~PointCloud() {}

@@ -21,7 +21,6 @@ HEADERS += \
 #	happah/geometries/Grid.h \
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
-#	happah/geometries/PointCloud.h \
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
@@ -66,6 +65,7 @@ HEADERS += \
 	happah/scene/LineMeshNode.h\
 	happah/scene/Material.h \
 	happah/scene/Node.h\
+	happah/scene/PointCloudNode.h\
 	happah/scene/RenderStateNode.h\
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
@@ -97,7 +97,6 @@ SOURCES += \
 #	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
-#	happah/geometries/PointCloud.cpp \
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
@@ -133,6 +132,7 @@ SOURCES += \
 	happah/scene/LineMeshNode.cpp\
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
+	happah/scene/PointCloudNode.cpp\
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
 	happah/scene/TriangleMeshNode.cpp \

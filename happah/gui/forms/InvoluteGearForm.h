@@ -1,6 +1,8 @@
 #ifndef INVOLUTE_GEAR_FORM_H
 #define INVOLUTE_GEAR_FORM_H
 
+class GUIManager;
+
 #include "happah/geometries/InvoluteSpurGear.h"
 #include "happah/gui/GearSlider.h"
 #include "happah/gui/GUIManager.h"

@@ -21,8 +21,8 @@ private:
 };
 typedef shared_ptr<GUIStateNode> GUIStateNode_ptr;
 
+class InvoluteGearForm;
 #include "happah/geometries/InvoluteSpurGear.h"
-#include "happah/gui/forms/InvoluteGearForm.h"
 
 class InvoluteGearGUIStateNode : public GUIStateNode {
 public:
@@ -32,10 +32,12 @@ public:
 	Form* getForm();
 
 private:
-	InvoluteGear_ptr involuteGear;
-	InvoluteGearForm* involuteGearForm;
+	InvoluteGear_ptr m_involuteGear;
+	InvoluteGearForm* m_involuteGearForm;
 
 };
 typedef shared_ptr<InvoluteGearGUIStateNode> InvoluteGearGUIStateNode_ptr;
+
+#include "happah/gui/forms/InvoluteGearForm.h"
 
 #endif // GUI_STATE_NODE_H

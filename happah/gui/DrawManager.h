@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "happah/scene/DrawVisitor.h"
-#include "happah/scene/SceneManager.h"
 #include "happah/scene/RenderStateNode.h"
 
 class HappahGlFormat : public QGLFormat {
@@ -15,6 +14,7 @@ public:
 	HappahGlFormat();
 };
 
+class SceneManager;
 class DrawManager : public DrawVisitor {
 public:
 	DrawManager(SceneManager& sceneManager);
@@ -62,5 +62,7 @@ private:
 
 
 };
+
+#include "happah/scene/SceneManager.h"
 
 #endif // DRAWMANAGER_H

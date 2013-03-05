@@ -4,8 +4,8 @@
 #include <QKeyEvent>
 #include <QMainWindow>
 
-#include "happah/gui/GUIManager.h"
-
+class DrawManager;
+class GUIManager;
 class MainWindow: public QMainWindow {
 Q_OBJECT
 

@@ -11,7 +11,7 @@ SceneManager::SceneManager() {}
 SceneManager::~SceneManager() {}
 
 void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	Node_ptr node = findChild(involuteGear);
+	Node_ptr node = findChildContaining(involuteGear);
 
 	InvoluteGearNode_ptr involuteGearNode;
 	if(node) {
@@ -28,12 +28,12 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNod
 }
 
 void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = findChild(involuteGear);
+	Node_ptr node = findChildContaining(involuteGear);
 
 	InvoluteGearNode_ptr involuteGearNode;
 	if(node) {
 		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		node = involuteGearNode->findChild(triangleMesh);
+		node = involuteGearNode->findChildContaining(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -55,11 +55,11 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 }
 
 void SceneManager::remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh) {
-	Node_ptr node = findChild(involuteGear);
+	Node_ptr node = findChildContaining(involuteGear);
 
 	if(node) {
 		InvoluteGearNode_ptr involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		involuteGearNode->removeChild(triangleMesh);
+		involuteGearNode->removeChildContaining(triangleMesh);
 		notifyListeners();
 	}
 

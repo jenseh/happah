@@ -39,6 +39,7 @@ HEADERS += \
 	happah/gui/ToolPanel.h \
 	happah/gui/Viewport3D.h \
 \
+	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 \
 #	happah/kdtree/BBox.h \
@@ -113,6 +114,7 @@ SOURCES += \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/Viewport3D.cpp \
 \
+	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
 \
 #	happah/kdtree/BBox.cpp \

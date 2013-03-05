@@ -26,8 +26,8 @@ void InvoluteGearNode::removeChild(InvoluteGearGUIStateNode_ptr involuteGearGUIS
 	Node::removeChild(involuteGearGUIStateNode);
 }
 
-void InvoluteGearNode::removeChild(TriangleMesh_ptr triangleMesh) {
-	Node::removeChild(triangleMesh);
+void InvoluteGearNode::removeChildContaining(TriangleMesh_ptr triangleMesh) {
+	Node::removeChildContaining(triangleMesh);
 }
 
 void InvoluteGearNode::removeChild(TriangleMeshNode_ptr triangleMeshNode) {

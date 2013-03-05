@@ -22,15 +22,15 @@ public:
 	virtual void accept(SceneVisitor& sceneVisitor);
 	virtual bool contains(shared_ptr<void> data) const;
 	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
-	Node_ptr find(shared_ptr<void> data) const;
-	Node_ptr findChild(shared_ptr<void> data) const;
+	Node_ptr findContaining(shared_ptr<void> data) const;
+	Node_ptr findChildContaining(shared_ptr<void> data) const;
 	bool hasChild(Node_ptr child) const;
 
 protected:
 	set<Node_ptr> m_children;
 
 	void addChild(Node_ptr child);
-	void removeChild(shared_ptr<void> data);
+	void removeChildContaining(shared_ptr<void> data);
 	void removeChild(Node_ptr child);
 
 };

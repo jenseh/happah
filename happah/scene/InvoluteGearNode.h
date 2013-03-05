@@ -17,7 +17,7 @@ public:
 	void addChild(TriangleMeshNode_ptr triangleMeshNode);
 	bool hasChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void removeChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
-	void removeChild(TriangleMesh_ptr triangleMesh);
+	void removeChildContaining(TriangleMesh_ptr triangleMesh);
 	void removeChild(TriangleMeshNode_ptr triangleMeshNode);
 
 };

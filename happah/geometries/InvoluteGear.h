@@ -1,5 +1,5 @@
-#ifndef INVOLUTESPURGEAR_H
-#define INVOLUTESPURGEAR_H
+#ifndef INVOLUTEGEAR_H
+#define INVOLUTEGEAR_H
 
 #include <cmath>
 #include <cstring>
@@ -17,7 +17,7 @@
 //#include "../models/QuadMesh.h"
 //#include "happah/geometries/ZCircleCloud.h"
 
-/** @class InvoluteSpurGear
+/** @class InvoluteGear
  * @brief Involute gear without a helix angle and with the right-hand flank
  * being an reflection of the left-hand flank.
  *
@@ -37,12 +37,12 @@
 
 using namespace std;
 
-class InvoluteSpurGear;
-typedef shared_ptr<InvoluteSpurGear> InvoluteGear_ptr;
+class InvoluteGear;
+typedef shared_ptr<InvoluteGear> InvoluteGear_ptr;
 
-class InvoluteSpurGear : public Gear {
+class InvoluteGear : public Gear {
 public:
-	InvoluteSpurGear(uint toothCount = 15,
+	InvoluteGear(uint toothCount = 15,
 			hpreal module = 0.13,
 			hpreal facewidth = 0.2f,
 			hpreal pressureAngle = M_PI / 6.0f,
@@ -50,11 +50,11 @@ public:
 			hpreal filletRadius = 0.0f,
 			hpreal helixAngle = 0.0f);
 
-	InvoluteSpurGear(const InvoluteSpurGear& other);
+	InvoluteGear(const InvoluteGear& other);
 
-	~InvoluteSpurGear();
+	~InvoluteGear();
 
-	InvoluteSpurGear& operator=(const InvoluteSpurGear& other);
+	InvoluteGear& operator=(const InvoluteGear& other);
 
     uint   getToothCount();
     hpreal getModule();
@@ -129,4 +129,4 @@ private:
                                                     const hpreal &startInvAngle, const hpreal &stopInvAngle);
 };
 
-#endif // INVOLUTESPURGEAR_H
+#endif // INVOLUTEGEAR_H

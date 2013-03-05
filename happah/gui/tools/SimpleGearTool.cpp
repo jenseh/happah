@@ -4,7 +4,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <iostream>
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/BSplineGearCurve.h"
 
 SimpleGearTool::SimpleGearTool() {
@@ -40,7 +40,7 @@ SimpleGearTool::SimpleGearTool() {
 	connect(createButton,          SIGNAL(clicked()), this, SLOT(createGear()));
 	connect(m_changeOutlineButton, SIGNAL(clicked()), this, SLOT(toBSpline()));
 
-	InvoluteSpurGear* invGear = new InvoluteSpurGear();
+	InvoluteGear* invGear = new InvoluteGear();
 	m_gear = invGear->toSimpleGear();
 	delete invGear;
 	m_gearMesh = NULL;
@@ -52,7 +52,7 @@ SimpleGearTool::~SimpleGearTool() {}
 void SimpleGearTool::createGear() {
 	m_mode = this->EDITMODE;
 	if (m_gearMesh != NULL) {
-		InvoluteSpurGear* invGear = new InvoluteSpurGear();
+		InvoluteGear* invGear = new InvoluteGear();
 		invGear->setFacewidth(m_gear->getFacewidth());
 		invGear->setHelixAngle(m_gear->getHelixAngle());
 		m_gear = invGear->toSimpleGear();
@@ -99,7 +99,7 @@ void SimpleGearTool::finalise() {
 	if(m_mode == this->EDITMODE) {
 		m_mode = this->IDLEMODE;
 		if(m_gearMesh != NULL) {
-			InvoluteSpurGear *invGear = new InvoluteSpurGear();
+			InvoluteGear *invGear = new InvoluteGear();
 			m_gear = invGear->toSimpleGear();
 			delete invGear;
 		}

@@ -1,7 +1,7 @@
 #include "happah/scene/InvoluteGearNode.h"
 
 InvoluteGearNode::InvoluteGearNode(InvoluteGear_ptr involuteGear)
-	: SimpleGeometryNode<InvoluteSpurGear>(involuteGear) {}
+	: SimpleGeometryNode<InvoluteGear>(involuteGear) {}
 
 InvoluteGearNode::~InvoluteGearNode() {}
 

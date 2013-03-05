@@ -1,7 +1,7 @@
 #ifndef WORMGEARGRIND_H
 #define WORMGEARGRIND_H
 
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/kdtree/ExplicitKDTree.h"
 #include "happah/primitives/Circle.h"
@@ -11,7 +11,7 @@
 class WormGearGrind
 {
 public:
-  WormGearGrind(InvoluteSpurGear& worm, InvoluteSpurGear& gear);
+  WormGearGrind(InvoluteGear& worm, InvoluteGear& gear);
   ~WormGearGrind();
 
   void runSimulation();

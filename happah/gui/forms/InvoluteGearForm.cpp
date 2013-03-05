@@ -8,7 +8,7 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 		m_bottomClearanceSlider(new GearSlider(tr("bottom clearance"))),
 		m_faceWidthSlider(new GearSlider(tr("facewidth"))),
 		m_filletRadiusSlider(new GearSlider(tr("fillet radius"))),
-		m_involuteGear(new InvoluteSpurGear()), 
+		m_involuteGear(new InvoluteGear()), 
 		m_involuteGearInScene(false), 
 		m_guiManager(guiManager),
 		m_helixAngleSlider(new GearSlider(tr("helix angle"))),

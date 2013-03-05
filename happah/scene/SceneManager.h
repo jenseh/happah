@@ -8,7 +8,7 @@ using namespace std;
 
 class SceneManager;
 
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"

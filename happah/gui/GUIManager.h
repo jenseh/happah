@@ -1,7 +1,7 @@
 #ifndef GUI_MANAGER_H
 #define GUI_MANAGER_H
 
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/TriangleMesh.h"
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"

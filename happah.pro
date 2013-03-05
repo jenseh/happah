@@ -19,7 +19,7 @@ HEADERS += \
 	happah/geometries/Gear.h \
 	happah/geometries/GeometryObject.h \
 #	happah/geometries/Grid.h \
-	happah/geometries/InvoluteSpurGear.h \
+	happah/geometries/InvoluteGear.h \
 #	happah/geometries/PointCloud.h \
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
@@ -94,7 +94,7 @@ SOURCES += \
 	happah/geometries/Gear.cpp \
 	happah/geometries/GeometryObject.cpp \
 #	happah/geometries/Grid.cpp \
-	happah/geometries/InvoluteSpurGear.cpp \
+	happah/geometries/InvoluteGear.cpp \
 #	happah/geometries/PointCloud.cpp \
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \

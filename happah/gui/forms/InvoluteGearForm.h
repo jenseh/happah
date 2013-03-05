@@ -3,7 +3,7 @@
 
 class GUIManager;
 
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/gui/GearSlider.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/forms/Form.h"

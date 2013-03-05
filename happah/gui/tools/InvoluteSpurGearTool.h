@@ -7,7 +7,7 @@
 #include <QSlider>
 
 #include "happah/HappahTypes.h"
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/gui/qt/GearSlider.h"
 #include "happah/gui/qt/tools/Tool.h"

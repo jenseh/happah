@@ -6,8 +6,8 @@ float getRand() {
 }
 
 CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
-    InvoluteSpurGear* gear1 = new InvoluteSpurGear();
-    InvoluteSpurGear* gear2 = new InvoluteSpurGear();
+    InvoluteGear* gear1 = new InvoluteGear();
+    InvoluteGear* gear2 = new InvoluteGear();
 
     // Test cases
     Circle circle0 = Circle(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);

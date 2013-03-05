@@ -22,7 +22,7 @@ private:
 typedef shared_ptr<GUIStateNode> GUIStateNode_ptr;
 
 class InvoluteGearForm;
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 
 class InvoluteGearGUIStateNode : public GUIStateNode {
 public:

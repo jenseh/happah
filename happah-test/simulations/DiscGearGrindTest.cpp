@@ -3,7 +3,7 @@
 DiscGearGrindTest::DiscGearGrindTest()
 {
     m_disc = new Disc;
-    m_gear = new InvoluteSpurGear;
+    m_gear = new InvoluteGear;
     m_simulation = new DiscGearGrind(m_disc, m_gear);
     std::cout<<"Test init done\n";
 }

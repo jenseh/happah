@@ -3,7 +3,7 @@
 
 #include "../core/SceneManager.h"
 #include "../core/simulations/WormGearGrind.h"
-#include "../core/geometries/InvoluteSpurGear.h"
+#include "../core/geometries/InvoluteGear.h"
 
 class WormGearGrindTest
 {

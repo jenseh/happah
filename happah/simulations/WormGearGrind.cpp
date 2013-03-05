@@ -2,7 +2,7 @@
 
 #include "happah/simulations/WormGearGrind.h"
 
-WormGearGrind::WormGearGrind(InvoluteSpurGear& worm, InvoluteSpurGear& gear) {
+WormGearGrind::WormGearGrind(InvoluteGear& worm, InvoluteGear& gear) {
     m_worm = worm.toZCircleCloud();
     m_gear = gear.toTriangleMesh();
 }

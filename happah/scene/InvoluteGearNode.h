@@ -1,12 +1,12 @@
 #ifndef INVOLUTE_GEAR_NODE_H
 #define INVOLUTE_GEAR_NODE_H
 
-#include "happah/geometries/InvoluteSpurGear.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"
 
-class InvoluteGearNode : public SimpleGeometryNode<InvoluteSpurGear> {
+class InvoluteGearNode : public SimpleGeometryNode<InvoluteGear> {
 
 public:
 	InvoluteGearNode(InvoluteGear_ptr involuteGear);

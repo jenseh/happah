@@ -1,8 +1,8 @@
 #include "CircleTriangleIntersectionBenchmark.h"
 
 CircleTriangleIntersectionBenchmark::CircleTriangleIntersectionBenchmark() {
-  InvoluteSpurGear* gear1 = new InvoluteSpurGear();//gears of radius 1 with 20 teeth are ~1.5 units away
-  InvoluteSpurGear* gear2 = new InvoluteSpurGear();
+  InvoluteGear* gear1 = new InvoluteGear();//gears of radius 1 with 20 teeth are ~1.5 units away
+  InvoluteGear* gear2 = new InvoluteGear();
 
   // Test cases
   int maxCount = 1;

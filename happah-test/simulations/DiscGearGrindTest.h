@@ -3,14 +3,14 @@
 
 
 #include "../core/geometries/Disc.h"
-#include "../core/geometries/InvoluteSpurGear.h"
+#include "../core/geometries/InvoluteGear.h"
 #include "../core/simulations/DiscGearGrind.h"
 
 class DiscGearGrindTest
 {
     DiscGearGrind* m_simulation;
     Disc* m_disc;
-    InvoluteSpurGear* m_gear;
+    InvoluteGear* m_gear;
 
 public:
     DiscGearGrindTest();

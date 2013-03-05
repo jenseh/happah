@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "../core/simulations/WormGearGrind.h"
-#include "../core/geometries/InvoluteSpurGear.h"
+#include "../core/geometries/InvoluteGear.h"
 #include "../core/primitives/Circle.h"
 #include "../core/primitives/Triangle.h"
 

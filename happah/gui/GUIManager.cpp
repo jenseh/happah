@@ -46,6 +46,17 @@ void GUIManager::insert(InvoluteGear_ptr involuteGear) {
 	m_sceneManager->insert(involuteGear, involuteGearGUIStateNode);
 }
 
+void GUIManager::insert(SimpleGear_ptr simpleGear) {
+	/*TriangleMesh_ptr simpleGearTriangleMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	m_sceneManager->insert(simpleGear, simpleGearTriangleMesh, color);
+	ostringstream oss;
+	oss << "Simple Gear " << m_counter++;
+	InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode = InvoluteGearGUIStateNode_ptr(new InvoluteGearGUIStateNode(involuteGear, m_toolPanel->getInvoluteGearForm(), oss.str()));
+	involuteGearGUIStateNode->setTriangleMesh(involuteGearTriangleMesh);
+	m_sceneManager->insert(involuteGear, involuteGearGUIStateNode);*/
+}
+
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[involuteGear];
 	if(!guiStateNode) {
@@ -59,6 +70,18 @@ void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	m_sceneManager->insert(involuteGear, involuteGearTriangleMesh, color);
 }
 
+void GUIManager::update(SimpleGear_ptr simpleGear) {
+	/*GUIStateNode_ptr guiStateNode = m_guiStateNodes[simpleGear];
+	if(!guiStateNode) {
+		cerr << "GUI state node for simple gear not found." << endl;
+		return;
+	}
+	m_sceneManager->removeContaining(simpleGear, guiStateNode->getTriangleMesh());
+	TriangleMesh_ptr simpleGearTriangleMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	guiStateNode->setTriangleMesh(simpleGearTriangleMesh);
+	m_sceneManager->insert(simpleGear, simpleGearTriangleMesh, color);*/
+}
 
 void GUIManager::sceneChanged() {
 	m_guiStateNodes.clear();

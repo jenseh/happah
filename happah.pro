@@ -40,6 +40,8 @@ HEADERS += \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/InvoluteGearListener.h \
+	happah/gui/forms/SimpleGearForm.h \
+	happah/gui/forms/SimpleGearListener.h \
 \
 #	happah/kdtree/BBox.h \
 #	happah/kdtree/Box.h \
@@ -115,6 +117,7 @@ SOURCES += \
 \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
+	happah/gui/forms/SimpleGearForm.cpp \
 \
 #	happah/kdtree/BBox.cpp \
 #	happah/kdtree/Box.cpp \

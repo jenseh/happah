@@ -15,9 +15,10 @@ class GUIManager;
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/ToolPanel.h"
 #include "happah/gui/forms/InvoluteGearListener.h"
+#include "happah/gui/forms/SimpleGearListener.h"
 #include "happah/scene/SceneManager.h"
 
-class GUIManager : public GUIVisitor, public SceneListener, public InvoluteGearListener {
+class GUIManager : public GUIVisitor, public SceneListener, public InvoluteGearListener, public SimpleGearListener {
 
 public:
 	GUIManager(SceneManager_ptr sceneManager);
@@ -27,8 +28,10 @@ public:
 	void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 	bool init();
 	void insert(InvoluteGear_ptr involuteGear);
+	void insert(SimpleGear_ptr simpleGear);
 	void sceneChanged();
 	void update(InvoluteGear_ptr involuteGear);
+	void update(SimpleGear_ptr simpleGear);
 	void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 
 private:

@@ -1,6 +1,10 @@
 #ifndef SIMPLEGEAR_H
 #define SIMPLEGEAR_H
 
+#include <memory>
+
+using namespace std;
+
 #include "happah/geometries/Gear.h"
 #include "happah/geometries/BSplineGearCurve.h"
 
@@ -13,6 +17,7 @@ private:
 
 public:
 	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth);
+	SimpleGear(const SimpleGear& other);
 	virtual ~SimpleGear();
 
 	BSplineCurve* toTransverseToothProfileSystem(hpreal depth);
@@ -34,5 +39,6 @@ public:
 	virtual std::vector<hpvec2>* getToothProfile();
 
 };
+typedef shared_ptr<SimpleGear> SimpleGear_ptr;
 
 #endif //SIMPLEGEAR_H

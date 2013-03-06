@@ -55,6 +55,11 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 	notifyListeners();
 }
 
+void SceneManager::notifyListeners() {
+	for(std::list<SceneListener*>::iterator it = m_listeners.begin(), end = m_listeners.end(); it != end; ++it)
+		(*it)->sceneChanged();
+}
+
 void SceneManager::registerListener(SceneListener* sceneListener) {
 	m_listeners.push_back(sceneListener);
 }
@@ -87,7 +92,7 @@ bool SceneManager::removeContaining(shared_ptr<void> parentData, shared_ptr<void
 	return removed;
 }
 
-void SceneManager::notifyListeners() {
-	for(std::list<SceneListener*>::iterator it = m_listeners.begin(), end = m_listeners.end(); it != end; ++it)
-		(*it)->sceneChanged();
+void SceneManager::unregisterListener(SceneListener* sceneListener) {
+	m_listeners.remove(sceneListener);
 }
+

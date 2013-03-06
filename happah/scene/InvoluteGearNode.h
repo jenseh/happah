@@ -15,10 +15,6 @@ public:
 	virtual void accept(SceneVisitor& sceneVisitor);
 	void insertChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
-	bool hasChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
-	void removeChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
-	void removeChildContaining(TriangleMesh_ptr triangleMesh);
-	void removeChild(TriangleMeshNode_ptr triangleMeshNode);
 
 };
 typedef shared_ptr<InvoluteGearNode> InvoluteGearNode_ptr;

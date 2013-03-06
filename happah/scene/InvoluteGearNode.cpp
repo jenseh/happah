@@ -18,18 +18,3 @@ void InvoluteGearNode::insertChild(TriangleMeshNode_ptr triangleMeshNode) {
 	Node::insertChild(triangleMeshNode);
 }
 
-bool InvoluteGearNode::hasChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	return Node::hasChild(involuteGearGUIStateNode);
-}
-
-void InvoluteGearNode::removeChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	Node::removeChild(involuteGearGUIStateNode);
-}
-
-void InvoluteGearNode::removeChildContaining(TriangleMesh_ptr triangleMesh) {
-	Node::removeChildContaining(triangleMesh);
-}
-
-void InvoluteGearNode::removeChild(TriangleMeshNode_ptr triangleMeshNode) {
-	Node::removeChild(triangleMeshNode);
-}

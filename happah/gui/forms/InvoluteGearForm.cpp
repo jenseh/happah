@@ -97,6 +97,17 @@ void InvoluteGearForm::createInvoluteGear() {
 	m_involuteGearInserted = true;
 }
 
+InvoluteGear_ptr InvoluteGearForm::getInvoluteGear() const {
+	return m_involuteGear;
+}
+
+void InvoluteGearForm::reset() {
+	m_involuteGear = InvoluteGear_ptr(new InvoluteGear());
+	m_involuteGearInserted = false;
+
+	updateRanges();
+}
+
 void InvoluteGearForm::setInvoluteGear(InvoluteGear_ptr involuteGear) {
 	m_involuteGear = involuteGear;
 	m_involuteGearInserted = true;

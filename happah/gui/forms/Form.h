@@ -9,6 +9,8 @@ public:
 	Form(QWidget* parent = 0);
 	virtual ~Form();
 
+	virtual void reset() = 0;
+
 };
 
 

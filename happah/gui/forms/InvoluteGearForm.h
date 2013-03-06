@@ -13,6 +13,8 @@ public:
 	InvoluteGearForm(InvoluteGearListener& involuteGearListener, QWidget* parent = 0);
 	~InvoluteGearForm();
 
+	InvoluteGear_ptr getInvoluteGear() const;
+	void reset();
 	void setInvoluteGear(InvoluteGear_ptr involuteGear);
 
 private:

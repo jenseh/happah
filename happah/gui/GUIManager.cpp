@@ -15,7 +15,8 @@ GUIManager::GUIManager(SceneManager_ptr sceneManager)
 GUIManager::~GUIManager() {}
 
 void GUIManager::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
-	vector<Node_ptr> parents(guiStateNodes.size());
+	vector<Node_ptr> parents;
+	parents.reserve(guiStateNodes.size());
 	for(vector<GUIStateNode_ptr>::iterator i = guiStateNodes.begin(), end = guiStateNodes.end(); i != end; ++i)
 		parents.push_back((*i)->getParent());
 	m_sceneManager->remove(parents);
@@ -60,6 +61,7 @@ void GUIManager::update(InvoluteGear_ptr involuteGear) {
 
 
 void GUIManager::sceneChanged() {
+	m_guiStateNodes.clear();
 	m_sceneGraphExplorerPanel->clear();
 	m_sceneManager->accept(*this);
 }

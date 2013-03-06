@@ -24,7 +24,10 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name)
 	: GUIStateNode(name), m_involuteGear(involuteGear), m_involuteGearForm(involuteGearForm) {}
 
-InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {}
+InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
+	if(m_involuteGearForm->getInvoluteGear() == m_involuteGear)
+		m_involuteGearForm->reset();
+}
 
 void InvoluteGearGUIStateNode::accept(GUIVisitor& guiVisitor) {
 	guiVisitor.visit(getptr());

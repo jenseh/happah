@@ -21,6 +21,7 @@ HEADERS += \
 #	happah/geometries/Grid.h \
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
+	happah/geometries/Plane.h \
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
@@ -97,6 +98,7 @@ SOURCES += \
 #	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
+	happah/geometries/Plane.cpp \
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \

@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <QMatrix4x4>
 
 #include "happah/gui/DrawManager.h"
 #include "happah/scene/Material.h"

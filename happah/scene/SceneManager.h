@@ -28,6 +28,7 @@ public:
 	bool remove(vector<Node_ptr>& nodes);
 	bool removeChildContaining(shared_ptr<void> data);
 	bool removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
+	void unregisterListener(SceneListener* sceneListener);
 
 private:
 	list<SceneListener*> m_listeners;

@@ -12,7 +12,13 @@ GUIManager::GUIManager(SceneManager_ptr sceneManager)
 	m_sceneManager->registerListener(this);
 }
 
-GUIManager::~GUIManager() {}
+GUIManager::~GUIManager() {
+	vector<Node_ptr> guiStateNodes;
+	guiStateNodes.reserve(m_guiStateNodes.size());
+	for(auto i = m_guiStateNodes.begin(), end = m_guiStateNodes.end(); i != end; ++i)
+		guiStateNodes.push_back(i->second);
+	m_sceneManager->remove(guiStateNodes);
+}
 
 void GUIManager::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
 	vector<Node_ptr> parents;

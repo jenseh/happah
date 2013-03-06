@@ -17,7 +17,7 @@ HEADERS += \
 #	happah/geometries/ControlNet2.h \
 #	happah/geometries/Disc.h \
 	happah/geometries/Gear.h \
-	happah/geometries/GeometryObject.h \
+	happah/geometries/Geometry.h \
 #	happah/geometries/Grid.h \
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
@@ -98,7 +98,7 @@ SOURCES += \
 #	happah/geometries/ControlNet2.cpp \
 #	happah/geometries/Disc.cpp \
 	happah/geometries/Gear.cpp \
-	happah/geometries/GeometryObject.cpp \
+	happah/geometries/Geometry.cpp \
 #	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\

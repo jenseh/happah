@@ -1,7 +1,7 @@
 #include "happah/geometries/Gear.h"
 #include "glm/gtx/rotate_vector.hpp"
 
-Gear::Gear() : GeometryObject() {}
+Gear::Gear() : Geometry() {}
 Gear::~Gear() {}
 
 std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {

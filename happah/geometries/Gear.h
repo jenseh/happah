@@ -3,7 +3,9 @@
 
 #include <glm/glm.hpp>
 #include <vector>
-#include "happah/geometries/GeometryObject.h"
+//#include <cstdlib>
+#include <iostream>
+#include "happah/geometries/Geometry.h"
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Mesh.h"
 
@@ -25,7 +27,7 @@
  * Besides that it implements the toTriangleMesh() and toQuadMesh() methods,
  * as these will be the same for most Gears.
  */
-class Gear: public GeometryObject {
+class Gear: public Geometry {
 
 public:
 	Gear();

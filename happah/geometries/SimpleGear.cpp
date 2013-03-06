@@ -6,7 +6,7 @@ SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal
 }
 
 SimpleGear::SimpleGear(const SimpleGear& other)
-	: m_toothProfile(other.m_toothProfile), m_helixAngle(other.m_helixAngle), m_facewidth(other.m_facewidth) {}
+	: m_toothProfile(new BSplineGearCurve(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_facewidth(other.m_facewidth) {}
 
 SimpleGear::~SimpleGear(){
 	delete m_toothProfile; //TODO is this correct here?

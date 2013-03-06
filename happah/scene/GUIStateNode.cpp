@@ -41,5 +41,5 @@ InvoluteGear_ptr InvoluteGearGUIStateNode::getInvoluteGear() const {
 }
 
 InvoluteGearGUIStateNode_ptr InvoluteGearGUIStateNode::getptr() {
-	return shared_from_this();
+	return static_pointer_cast<InvoluteGearGUIStateNode>(shared_from_this());
 }

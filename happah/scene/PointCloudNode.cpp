@@ -10,10 +10,10 @@ void PointCloudNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
-void PointCloudNode::addChild(PointCloudRenderStateNode_ptr pointCloudRenderStateNode) {
+void PointCloudNode::insertChild(PointCloudRenderStateNode_ptr pointCloudRenderStateNode) {
 	if(m_pointCloudRenderStateNode)
 		Node::removeChild(m_pointCloudRenderStateNode);
-	Node::addChild(pointCloudRenderStateNode);
+	Node::insertChild(pointCloudRenderStateNode);
 	m_pointCloudRenderStateNode = pointCloudRenderStateNode;
 }
 

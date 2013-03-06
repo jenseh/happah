@@ -12,7 +12,7 @@ public:
 	virtual ~TriangleMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
-	void addChild(TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode);
+	void insertChild(TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode);
 	TriangleMeshRenderStateNode_ptr getTriangleMeshRenderStateNode();
 
 private:

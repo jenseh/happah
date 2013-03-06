@@ -22,7 +22,7 @@ HappahGlFormat::HappahGlFormat() {
 
 const HappahGlFormat DrawManager::GL_FORMAT;
 
-DrawManager::DrawManager(SceneManager& sceneManager) 
+DrawManager::DrawManager(SceneManager_ptr sceneManager) 
 	: m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {}
 
 DrawManager::~DrawManager() {}
@@ -148,7 +148,7 @@ void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVe
 	m_cameraPosition.z = cameraPosition->z();
 
 	RigidAffineTransformation identityTransformation;
-	m_sceneManager.draw(*this, identityTransformation);
+	m_sceneManager->draw(*this, identityTransformation);
 }
 
 void DrawManager::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {

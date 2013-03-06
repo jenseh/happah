@@ -10,12 +10,12 @@ void InvoluteGearNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
-void InvoluteGearNode::addChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	Node::addChild(involuteGearGUIStateNode);
+void InvoluteGearNode::insertChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
+	Node::insertChild(involuteGearGUIStateNode);
 }
 
-void InvoluteGearNode::addChild(TriangleMeshNode_ptr triangleMeshNode) {
-	Node::addChild(triangleMeshNode);
+void InvoluteGearNode::insertChild(TriangleMeshNode_ptr triangleMeshNode) {
+	Node::insertChild(triangleMeshNode);
 }
 
 bool InvoluteGearNode::hasChild(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {

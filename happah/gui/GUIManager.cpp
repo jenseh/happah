@@ -2,20 +2,23 @@
 
 #include "happah/gui/GUIManager.h"
 
-GUIManager::GUIManager(SceneManager& sceneManager)
+GUIManager::GUIManager(SceneManager_ptr sceneManager)
 	:  m_counter(0),
 		m_drawManager(sceneManager), 
-		m_mainWindow(sceneManager, *this, m_drawManager), 
+		m_mainWindow(*this, m_drawManager), 
 		m_sceneGraphExplorerPanel(m_mainWindow.getSceneGraphExplorerPanel()),
 		m_sceneManager(sceneManager),
 		m_toolPanel(m_mainWindow.getToolPanel()) {
-	m_sceneManager.registerListener(this);
+	m_sceneManager->registerListener(this);
 }
 
 GUIManager::~GUIManager() {}
 
 void GUIManager::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
-
+	vector<Node_ptr> parents(guiStateNodes.size());
+	for(vector<GUIStateNode_ptr>::iterator i = guiStateNodes.begin(), end = guiStateNodes.end(); i != end; ++i)
+		parents.push_back((*i)->getParent());
+	m_sceneManager->remove(parents);
 }
 
 void GUIManager::handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode) {
@@ -34,12 +37,12 @@ bool GUIManager::init() {
 void GUIManager::insert(InvoluteGear_ptr involuteGear) {
 	TriangleMesh_ptr involuteGearTriangleMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
-	m_sceneManager.insert(involuteGear, involuteGearTriangleMesh, color);
+	m_sceneManager->insert(involuteGear, involuteGearTriangleMesh, color);
 	ostringstream oss;
 	oss << "Involute Gear " << m_counter++;
 	InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode = InvoluteGearGUIStateNode_ptr(new InvoluteGearGUIStateNode(involuteGear, m_toolPanel->getInvoluteGearForm(), oss.str()));
 	involuteGearGUIStateNode->setTriangleMesh(involuteGearTriangleMesh);
-	m_sceneManager.insert(involuteGear, involuteGearGUIStateNode);
+	m_sceneManager->insert(involuteGear, involuteGearGUIStateNode);
 }
 
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
@@ -48,17 +51,17 @@ void GUIManager::update(InvoluteGear_ptr involuteGear) {
 		cerr << "GUI state node for involute gear not found." << endl;
 		return;
 	}
-	m_sceneManager.remove(involuteGear, guiStateNode->getTriangleMesh());
+	m_sceneManager->removeContaining(involuteGear, guiStateNode->getTriangleMesh());
 	TriangleMesh_ptr involuteGearTriangleMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setTriangleMesh(involuteGearTriangleMesh);
-	m_sceneManager.insert(involuteGear, involuteGearTriangleMesh, color);
+	m_sceneManager->insert(involuteGear, involuteGearTriangleMesh, color);
 }
 
 
 void GUIManager::sceneChanged() {
 	m_sceneGraphExplorerPanel->clear();
-	m_sceneManager.accept(*this);
+	m_sceneManager->accept(*this);
 }
 
 void GUIManager::visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {

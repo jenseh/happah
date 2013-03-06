@@ -14,10 +14,11 @@ public:
 	HappahGlFormat();
 };
 
-class SceneManager;
+#include "happah/scene/SceneManager.h"
+
 class DrawManager : public DrawVisitor {
 public:
-	DrawManager(SceneManager& sceneManager);
+	DrawManager(SceneManager_ptr sceneManager);
 	~DrawManager();
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
@@ -30,7 +31,7 @@ private:
 	void initialize(RenderStateNode& triangleMeshRenderStateNode);
 	bool initShaderPrograms();
 
-	SceneManager& m_sceneManager;
+	SceneManager_ptr m_sceneManager;
 	QGLContext* m_glContext;
 
 	GLuint m_fragmentShader;
@@ -62,7 +63,5 @@ private:
 
 
 };
-
-#include "happah/scene/SceneManager.h"
 
 #endif // DRAWMANAGER_H

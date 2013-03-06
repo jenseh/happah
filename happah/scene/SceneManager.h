@@ -21,7 +21,10 @@ public:
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void registerListener(SceneListener* sceneListener);
-	void remove(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh);
+	bool remove(Node_ptr node);
+	bool remove(vector<Node_ptr>& nodes);
+	bool removeChildContaining(shared_ptr<void> data);
+	bool removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
 
 private:
 	list<SceneListener*> m_listeners;
@@ -29,5 +32,6 @@ private:
 	void notifyListeners();
 
 };
+typedef shared_ptr<SceneManager> SceneManager_ptr;
 
 #endif // SCENEMANAGER_H

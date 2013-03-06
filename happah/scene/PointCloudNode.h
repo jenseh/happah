@@ -11,7 +11,7 @@ public:
 	virtual ~PointCloudNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
-	void addChild(PointCloudRenderStateNode_ptr pointCloudRenderStateNode);
+	void insertChild(PointCloudRenderStateNode_ptr pointCloudRenderStateNode);
 	PointCloudRenderStateNode_ptr getPointCloudRenderStateNode();
 
 private:

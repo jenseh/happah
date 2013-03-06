@@ -14,12 +14,19 @@ void Node::accept(SceneVisitor& sceneVisitor) {
 		(*i)->accept(sceneVisitor);
 }
 
-void Node::addChild(Node_ptr child) {
-	if(child) 
-		m_children.insert(child);
+bool Node::contains(shared_ptr<void> data) const {
+	return false;
 }
 
-bool Node::contains(shared_ptr<void> data) const {
+bool Node::doRemove(Node_ptr node) {
+	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
+		Node_ptr child = *i;
+		if(child == node) {
+			m_children.erase(i);
+			return true;
+		} else if(child->doRemove(node))
+			return true;
+	}
 	return false;
 }
 
@@ -48,24 +55,68 @@ Node_ptr Node::findChildContaining(shared_ptr<void> data) const {
 	return Node_ptr();
 }
 
+Node_ptr Node::getParent() {
+	return m_parent.lock();
+}
+
+Node_ptr Node::getptr() {
+	return shared_from_this();
+}
+
 bool Node::hasChild(Node_ptr child) const {
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i)
 		if(*i == child) return true;
 	return false;
 }
 
-void Node::removeChildContaining(shared_ptr<void> data) {
+void Node::insertChild(Node_ptr child) {
+	if(child) {
+		child->setParent(getptr());
+		m_children.insert(child);
+	}
+}
+
+bool Node::remove(Node_ptr node) {
+	return doRemove(node);
+}
+
+bool Node::remove(vector<Node_ptr>& nodes) {
+	bool removed = false;
+	for(vector<Node_ptr>::iterator i = nodes.begin(), end = nodes.end(); i != end; ++i)
+		removed |= doRemove(*i);
+	return removed;
+}
+
+bool Node::removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData) {
+	Node_ptr node = findContaining(parentData);
+
+	if(node)
+		return node->removeChildContaining(childData);
+
+	return false;
+}
+
+bool Node::removeChildContaining(shared_ptr<void> data) {
 	Node_ptr child;
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		child = *i;
 		if(child->contains(data)) break;
 	}
-	if(child)
-		m_children.erase(child);
+	return removeChild(child);
 }
 
-void Node::removeChild(Node_ptr child) {
-	if(child)
-		m_children.erase(child);
+bool Node::removeChild(Node_ptr child) {
+	if(child) {
+		const set<Node_ptr>::iterator i = m_children.find(child);
+		if(i == m_children.end())
+			return false;
+		m_children.erase(i);
+		return true;
+	}
+	return false;
+}
+
+void Node::setParent(Node_ptr parent) {
+	m_parent = weak_ptr<Node>(parent);
 }
 

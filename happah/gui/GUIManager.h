@@ -20,7 +20,7 @@ class GUIManager;
 class GUIManager : public GUIVisitor, public SceneListener, public InvoluteGearListener {
 
 public:
-	GUIManager(SceneManager& sceneManager);
+	GUIManager(SceneManager_ptr sceneManager);
 	~GUIManager();
 
 	void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
@@ -37,7 +37,7 @@ private:
 	unordered_map<shared_ptr<void>, GUIStateNode_ptr> m_guiStateNodes;
 	MainWindow m_mainWindow;
 	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
-	SceneManager& m_sceneManager;
+	SceneManager_ptr m_sceneManager;
 	ToolPanel* m_toolPanel;
 
 };

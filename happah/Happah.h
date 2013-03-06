@@ -16,7 +16,7 @@ public:
 	int exec();
 
 private:
-	SceneManager m_sceneManager;
+	SceneManager_ptr m_sceneManager;
 	GUIManager m_guiManager;
 
 };

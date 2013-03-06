@@ -13,7 +13,7 @@ public:
 	virtual ~LineMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
-	void addChild(LineMeshRenderStateNode_ptr lineMeshRenderStateNode);
+	void insertChild(LineMeshRenderStateNode_ptr lineMeshRenderStateNode);
 	LineMeshRenderStateNode_ptr getLineMeshRenderStateNode();
 
 private:

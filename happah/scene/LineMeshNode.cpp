@@ -10,10 +10,10 @@ void LineMeshNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
-void LineMeshNode::addChild(LineMeshRenderStateNode_ptr lineMeshRenderStateNode) {
+void LineMeshNode::insertChild(LineMeshRenderStateNode_ptr lineMeshRenderStateNode) {
 	if(m_lineMeshRenderStateNode)
 		Node::removeChild(m_lineMeshRenderStateNode);
-	Node::addChild(lineMeshRenderStateNode);
+	Node::insertChild(lineMeshRenderStateNode);
 	m_lineMeshRenderStateNode = lineMeshRenderStateNode;
 }
 

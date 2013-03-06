@@ -32,7 +32,8 @@ void SceneGraphExplorerPanel::clear() {
 
 void SceneGraphExplorerPanel::handleDeleteButtonClickedEvent() {
 	QList<QListWidgetItem*> selectedItems = m_listWidget->selectedItems();
-	vector<GUIStateNode_ptr> selectedGUIStateNodes(selectedItems.size());
+	vector<GUIStateNode_ptr> selectedGUIStateNodes;
+	selectedGUIStateNodes.reserve(selectedItems.size());
 	foreach(QListWidgetItem* item, selectedItems) {
 		int index = m_listWidget->row(item);
 		selectedGUIStateNodes.push_back(m_guiStateNodes[index]);

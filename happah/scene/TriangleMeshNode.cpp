@@ -10,10 +10,10 @@ void TriangleMeshNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
-void TriangleMeshNode::addChild(TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode) {
+void TriangleMeshNode::insertChild(TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode) {
 	if(m_triangleMeshRenderStateNode)
 		Node::removeChild(m_triangleMeshRenderStateNode);
-	Node::addChild(triangleMeshRenderStateNode);
+	Node::insertChild(triangleMeshRenderStateNode);
 	m_triangleMeshRenderStateNode = triangleMeshRenderStateNode;
 }
 

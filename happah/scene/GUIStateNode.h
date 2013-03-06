@@ -36,7 +36,7 @@ private:
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/gui/forms/InvoluteGearForm.h"
 
-class InvoluteGearGUIStateNode : public GUIStateNode, public enable_shared_from_this<InvoluteGearGUIStateNode> {
+class InvoluteGearGUIStateNode : public GUIStateNode {
 public:
 	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name);
 	~InvoluteGearGUIStateNode();

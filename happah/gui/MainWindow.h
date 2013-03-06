@@ -9,13 +9,12 @@
 class DrawManager;
 class GUIManager;
 class SceneGraphExplorerPanel;
-class SceneManager;
 class ToolPanel;
 class MainWindow: public QMainWindow {
 Q_OBJECT
 
 public:
-	MainWindow(SceneManager& sceneManager, GUIManager& guiManager, DrawManager& drawManager);
+	MainWindow(GUIManager& guiManager, DrawManager& drawManager);
 	virtual ~MainWindow();
 
 	SceneGraphExplorerPanel* getSceneGraphExplorerPanel();

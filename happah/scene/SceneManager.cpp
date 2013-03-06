@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "happah/scene/InvoluteGearNode.h"
+#include "happah/scene/PlaneNode.h"
 #include "happah/scene/SceneManager.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/RenderStateNode.h"
@@ -48,6 +49,51 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 
 	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
 	involuteGearNode->insertChild(triangleMeshNode);
+
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+	triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+
+	notifyListeners();
+}
+
+void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode) {
+	Node_ptr node = findChildContaining(plane);
+
+	PlaneNode_ptr planeNode;
+	if(node) {
+		planeNode = dynamic_pointer_cast<PlaneNode>(node);
+		if(planeNode->hasChild(planeGUIStateNode)) return;
+	} else {
+		planeNode = PlaneNode_ptr( new PlaneNode(plane) );
+		insertChild(planeNode);
+	}
+
+	planeNode->insertChild(planeGUIStateNode);
+
+	notifyListeners();
+}
+
+void SceneManager::insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	Node_ptr node = findChildContaining(plane);
+
+	PlaneNode_ptr planeNode;
+	if(node) {
+		planeNode = dynamic_pointer_cast<PlaneNode>(node);
+		Plane_ptr foundPlane =  dynamic_pointer_cast<Plane>(planeNode->getGeometry());
+		node = planeNode->findChildContaining(triangleMesh);
+		if(node) {
+			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
+			triangleMeshRenderStateNode->setColor(color);
+			return;
+		}
+	} else {
+		planeNode = PlaneNode_ptr(new PlaneNode(plane));
+		insertChild(planeNode);
+	}
+
+	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
+	planeNode->insertChild(triangleMeshNode);
 
 	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
 	triangleMeshNode->insertChild(triangleMeshRenderStateNode);

@@ -57,6 +57,15 @@ void GUIManager::insert(SimpleGear_ptr simpleGear) {
 	m_sceneManager->insert(involuteGear, involuteGearGUIStateNode);*/
 }
 
+void GUIManager::insert( Plane_ptr plane ) {
+	ostringstream oss;
+	oss << "Plane " << m_counter++;
+	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(
+			new PlaneGUIStateNode( plane, m_toolPanel->getPlaneForm(), oss.str() ));
+	m_sceneManager->insert( plane, planeGUIStateNode );
+}
+
+
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[involuteGear];
 	if(!guiStateNode) {
@@ -92,4 +101,9 @@ void GUIManager::sceneChanged() {
 void GUIManager::visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
 	m_guiStateNodes[involuteGearGUIStateNode->getInvoluteGear()] = involuteGearGUIStateNode;
 	m_sceneGraphExplorerPanel->addItem(QString(involuteGearGUIStateNode->getName().c_str()), involuteGearGUIStateNode);
+}
+
+void GUIManager::visit(PlaneGUIStateNode_ptr planeGUIStateNode) {
+	m_guiStateNodes[planeGUIStateNode->getPlane()] = planeGUIStateNode;
+	m_sceneGraphExplorerPanel->addItem(QString(planeGUIStateNode->getName().c_str()), planeGUIStateNode);
 }

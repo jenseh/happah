@@ -10,6 +10,7 @@ class GUIManager;
 
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/Mesh.h"
+#include "happah/geometries/Plane.h"
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
@@ -29,10 +30,12 @@ public:
 	bool init();
 	void insert(InvoluteGear_ptr involuteGear);
 	void insert(SimpleGear_ptr simpleGear);
+	void insert(Plane_ptr plane);
 	void sceneChanged();
 	void update(InvoluteGear_ptr involuteGear);
 	void update(SimpleGear_ptr simpleGear);
 	void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
+	void visit(PlaneGUIStateNode_ptr planeGUIStateNode);
 
 private:
 	int m_counter;

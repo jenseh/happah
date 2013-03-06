@@ -41,6 +41,7 @@ HEADERS += \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/InvoluteGearListener.h \
+	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
 	happah/gui/forms/SimpleGearListener.h \
 \
@@ -68,6 +69,7 @@ HEADERS += \
 	happah/scene/LineMeshNode.h\
 	happah/scene/Material.h \
 	happah/scene/Node.h\
+	happah/scene/PlaneNode.h \
 	happah/scene/PointCloudNode.h\
 	happah/scene/RenderStateNode.h\
 	happah/scene/SceneListener.h \
@@ -119,6 +121,7 @@ SOURCES += \
 \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
+	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
 \
 #	happah/kdtree/BBox.cpp \
@@ -136,6 +139,7 @@ SOURCES += \
 	happah/scene/LineMeshNode.cpp\
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
+	happah/scene/PlaneNode.cpp \
 	happah/scene/PointCloudNode.cpp\
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \

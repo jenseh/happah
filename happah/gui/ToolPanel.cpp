@@ -4,7 +4,8 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	: QWidget(parent), 
 		m_forms(new QStackedWidget(this)), 
 		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
-		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)) {
+		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
+		m_planeForm(new PlaneForm(m_forms)) {
 	QGridLayout* buttonsLayout = new QGridLayout();
 	buttonsLayout->setSpacing(2);
 	QWidget* buttons = new QWidget(this);
@@ -12,6 +13,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 
 	add(buttonsLayout, "IG", m_involuteGearForm, 0, 0);
 	add(buttonsLayout, "SG", m_simpleGearForm, 0, 1);
+	add(buttonsLayout, "P", m_planeForm, 0, 2);
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);
@@ -33,6 +35,10 @@ void ToolPanel::add(QGridLayout* buttonsLayout, const char* text, Form* form, in
 	m_buttonsByForm[form] = button;
 	m_formsByButton[button] = form;
 	connect(button, SIGNAL(clicked()), this, SLOT(handleButtonClickedEvent()));
+}
+
+PlaneForm* ToolPanel::getPlaneForm() {
+	return m_planeForm;
 }
 
 InvoluteGearForm* ToolPanel::getInvoluteGearForm() {

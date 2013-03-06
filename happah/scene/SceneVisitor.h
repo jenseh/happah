@@ -2,6 +2,7 @@
 #define SCENE_VISITOR_H
 
 class InvoluteGearNode;
+class PlaneNode;
 class TriangleMeshNode;
 class LineMeshNode;
 class PointCloudNode;
@@ -11,6 +12,7 @@ class SceneVisitor {
 
 public:
 	virtual void visit(InvoluteGearNode& involuteGearNode) = 0;
+	virtual void visit(PlaneNode& planeNode) = 0;
 	virtual void visit(TriangleMeshNode& triangleMeshNode) = 0;
 	virtual void visit(LineMeshNode& lineMeshNode)=0;
 	virtual void visit(PointCloudNode& pointCloudNode)=0;

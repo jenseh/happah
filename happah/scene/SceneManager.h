@@ -9,6 +9,7 @@ using namespace std;
 class SceneManager;
 
 #include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/Plane.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
@@ -20,6 +21,8 @@ public:
 
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
+	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void registerListener(SceneListener* sceneListener);
 	bool remove(Node_ptr node);
 	bool remove(vector<Node_ptr>& nodes);

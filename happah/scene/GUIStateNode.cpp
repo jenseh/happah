@@ -46,3 +46,31 @@ InvoluteGear_ptr InvoluteGearGUIStateNode::getInvoluteGear() const {
 InvoluteGearGUIStateNode_ptr InvoluteGearGUIStateNode::getptr() {
 	return static_pointer_cast<InvoluteGearGUIStateNode>(shared_from_this());
 }
+
+PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name ) :
+	GUIStateNode(name), m_plane(plane), m_planeForm(planeForm) {
+}
+
+PlaneGUIStateNode::~PlaneGUIStateNode() {
+	if(m_planeForm->getPlane() == m_plane) {
+		m_planeForm->reset();
+	}
+}
+
+void PlaneGUIStateNode::accept(GUIVisitor& guiVisitor) {
+	guiVisitor.visit(getptr());
+	Node::accept(guiVisitor);
+}
+
+Form* PlaneGUIStateNode::getForm() {
+	m_planeForm->setPlane(m_plane);
+	return m_planeForm;
+}
+
+Plane_ptr PlaneGUIStateNode::getPlane() const {
+	return m_plane;
+}
+
+PlaneGUIStateNode_ptr PlaneGUIStateNode::getptr() {
+	return static_pointer_cast<PlaneGUIStateNode>(shared_from_this());
+}

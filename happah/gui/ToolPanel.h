@@ -14,6 +14,7 @@ public:
 	~ToolPanel();
 
 	InvoluteGearForm* getInvoluteGearForm();
+	void setForm(Form* form);	
 
 private:
 	QStackedWidget* m_forms;

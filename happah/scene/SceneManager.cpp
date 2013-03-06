@@ -33,6 +33,7 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 	InvoluteGearNode_ptr involuteGearNode;
 	if(node) {
 		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
+		InvoluteGear_ptr foundInvoluteGear = dynamic_pointer_cast<InvoluteGear>(involuteGearNode->getGeometry());
 		node = involuteGearNode->findChildContaining(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);

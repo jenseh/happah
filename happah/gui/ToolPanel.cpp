@@ -27,3 +27,7 @@ ToolPanel::~ToolPanel() {}
 InvoluteGearForm* ToolPanel::getInvoluteGearForm() {
 	return m_involuteGearForm;
 }
+
+void ToolPanel::setForm(Form* form) {
+	m_forms->setCurrentWidget(form);
+}

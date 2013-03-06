@@ -4,11 +4,10 @@
 #include <QWidget>
 
 #include "happah/gui/MainWindow.h"
-#include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/Viewport3D.h"
 
 MainWindow::MainWindow(SceneManager& sceneManager, GUIManager& guiManager, DrawManager& drawManager)
-	: m_toolPanel(new ToolPanel(guiManager, this)) {
+	: m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(guiManager, this)), m_toolPanel(new ToolPanel(guiManager, this)) {
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 
@@ -23,15 +22,19 @@ MainWindow::MainWindow(SceneManager& sceneManager, GUIManager& guiManager, DrawM
 	centralWidget->setLayout(centralWidgetLayout);
 	centralWidgetLayout->addWidget(m_toolPanel);
 	centralWidgetLayout->addWidget(new Viewport3D(drawManager, this), 1);
-	centralWidgetLayout->addWidget(new SceneGraphExplorerPanel(sceneManager, this));
+	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
 	setCentralWidget(centralWidget);
 }
 
 MainWindow::~MainWindow() {}
 
-InvoluteGearForm* MainWindow::getInvoluteGearForm() {
-	return m_toolPanel->getInvoluteGearForm();
+SceneGraphExplorerPanel* MainWindow::getSceneGraphExplorerPanel() {
+	return m_sceneGraphExplorerPanel;
+}
+
+ToolPanel* MainWindow::getToolPanel() {
+	return m_toolPanel;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

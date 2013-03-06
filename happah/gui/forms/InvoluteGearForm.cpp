@@ -91,6 +91,8 @@ void InvoluteGearForm::changeToothCount(hpreal toothCount) {
 }
 
 void InvoluteGearForm::createInvoluteGear() {
+	if(m_involuteGearInserted)
+		m_involuteGear = InvoluteGear_ptr(new InvoluteGear(*m_involuteGear));
 	m_involuteGearListener.insert(m_involuteGear);
 	m_involuteGearInserted = true;
 }
@@ -98,7 +100,7 @@ void InvoluteGearForm::createInvoluteGear() {
 void InvoluteGearForm::setInvoluteGear(InvoluteGear_ptr involuteGear) {
 	m_involuteGear = involuteGear;
 	m_involuteGearInserted = true;
-
+	
 	updateRanges();
 }
 

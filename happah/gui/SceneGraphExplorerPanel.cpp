@@ -1,25 +1,46 @@
+#include <QList>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <vector>
+
+using namespace std;
 
 #include "happah/gui/SceneGraphExplorerPanel.h"
 
-SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneManager& sceneManager, QWidget* parent)
-	: QWidget(parent), m_listWidget(new QListWidget(this)), m_sceneManager(sceneManager) {
-	m_sceneManager.registerListener(this);
-
+SceneGraphExplorerPanel::SceneGraphExplorerPanel(GUIManager& guiManager, QWidget* parent)
+	: QWidget(parent), m_deleteButton(new QPushButton("Delete", this)), m_listWidget(new QListWidget(this)), m_guiManager(guiManager) {
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(m_listWidget);
-	layout->addWidget(new QPushButton("Delete"));
+	layout->addWidget(m_deleteButton);
 	setLayout(layout);
+
+	connect(m_listWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(handleItemDoubleClickedEvent(QListWidgetItem*)));
+	connect(m_deleteButton, SIGNAL(clicked()), this, SLOT(handleDeleteButtonClickedEvent()));
 }
 
 SceneGraphExplorerPanel::~SceneGraphExplorerPanel() {}
 
-void SceneGraphExplorerPanel::sceneChanged() {
-	m_listWidget->clear();
-	m_sceneManager.accept(*this);
+void SceneGraphExplorerPanel::addItem(const QString& label, GUIStateNode_ptr guiStateNode) {
+	m_guiStateNodes.push_back(guiStateNode);
+	m_listWidget->addItem(label);
 }
 
-void SceneGraphExplorerPanel::visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	m_listWidget->addItem(QString(involuteGearGUIStateNode->getName().c_str()));
+void SceneGraphExplorerPanel::clear() {
+	m_listWidget->clear();
+	m_guiStateNodes.clear();
+}
+
+void SceneGraphExplorerPanel::handleDeleteButtonClickedEvent() {
+	QList<QListWidgetItem*> selectedItems = m_listWidget->selectedItems();
+	vector<GUIStateNode_ptr> selectedGUIStateNodes(selectedItems.size());
+	foreach(QListWidgetItem* item, selectedItems) {
+		int index = m_listWidget->row(item);
+		selectedGUIStateNodes.push_back(m_guiStateNodes[index]);
+	}
+	m_guiManager.handleGUIStateNodesDeletedEvent(selectedGUIStateNodes);
+}
+
+void SceneGraphExplorerPanel::handleItemDoubleClickedEvent(QListWidgetItem* item) {
+	int index = m_listWidget->row(item);
+	m_guiManager.handleGUIStateNodeSelectedEvent(m_guiStateNodes[index]);
 }

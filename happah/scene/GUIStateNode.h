@@ -7,24 +7,29 @@
 using namespace std;
 
 class GUIStateNode;
+typedef shared_ptr<GUIStateNode> GUIStateNode_ptr;
 
 class InvoluteGearGUIStateNode;
 typedef shared_ptr<InvoluteGearGUIStateNode> InvoluteGearGUIStateNode_ptr;
 
+#include "happah/geometries/Mesh.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
 
 class GUIStateNode : public Node {
 public:
-	GUIStateNode(const char* name);
+	GUIStateNode(string name);
 	virtual ~GUIStateNode();
 
 	virtual Form* getForm() = 0;
 	const string& getName() const;
+	TriangleMesh_ptr getTriangleMesh() const;
 	void setName(const char* name);
+	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 
 private:
 	string m_name;
+	TriangleMesh_ptr m_triangleMesh;
 
 };
 
@@ -33,11 +38,12 @@ private:
 
 class InvoluteGearGUIStateNode : public GUIStateNode, public enable_shared_from_this<InvoluteGearGUIStateNode> {
 public:
-	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, const char* name);
+	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name);
 	~InvoluteGearGUIStateNode();
 
 	void accept(GUIVisitor& guiVisitor);
 	Form* getForm();
+	InvoluteGear_ptr getInvoluteGear() const;
 	InvoluteGearGUIStateNode_ptr getptr();
 
 private:

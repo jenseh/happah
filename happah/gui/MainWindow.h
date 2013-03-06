@@ -8,6 +8,7 @@
 
 class DrawManager;
 class GUIManager;
+class SceneGraphExplorerPanel;
 class SceneManager;
 class ToolPanel;
 class MainWindow: public QMainWindow {
@@ -17,7 +18,8 @@ public:
 	MainWindow(SceneManager& sceneManager, GUIManager& guiManager, DrawManager& drawManager);
 	virtual ~MainWindow();
 
-	InvoluteGearForm* getInvoluteGearForm();
+	SceneGraphExplorerPanel* getSceneGraphExplorerPanel();
+	ToolPanel* getToolPanel();
 
 protected:
 	void keyPressEvent(QKeyEvent* event);
@@ -26,6 +28,7 @@ private:
 	static const int DEFAULT_WINDOW_HEIGHT = 800;
 	static const int DEFAULT_WINDOW_WIDTH = 1200;
 
+	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
 	ToolPanel* m_toolPanel;
 
 };

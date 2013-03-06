@@ -2,24 +2,34 @@
 #define SCENE_GRAPH_EXPLORER_PANEL_H
 
 #include <QListWidget>
+#include <QPushButton>
+#include <QString>
 #include <QWidget>
+#include <vector>
 
-#include "happah/scene/GUIVisitor.h"
-#include "happah/scene/SceneListener.h"
-#include "happah/scene/SceneManager.h"
+using namespace std;
 
-class SceneGraphExplorerPanel : public QWidget, public GUIVisitor, public SceneListener {
+#include "happah/gui/GUIManager.h"
+
+class SceneGraphExplorerPanel : public QWidget {
+Q_OBJECT
 
 public:
-	SceneGraphExplorerPanel(SceneManager& m_sceneManager, QWidget* parent = 0);
+	SceneGraphExplorerPanel(GUIManager& guiManager, QWidget* parent = 0);
 	~SceneGraphExplorerPanel();
-
-	void sceneChanged();
-	void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
+	
+	void addItem(const QString& label, GUIStateNode_ptr guiStateNode);
+	void clear();
 
 private:
+	QPushButton* m_deleteButton;
+	GUIManager& m_guiManager;
+	vector<GUIStateNode_ptr> m_guiStateNodes;
 	QListWidget* m_listWidget;
-	SceneManager& m_sceneManager;
+
+private slots:
+	void handleDeleteButtonClickedEvent();
+	void handleItemDoubleClickedEvent(QListWidgetItem* item);
 
 };
 

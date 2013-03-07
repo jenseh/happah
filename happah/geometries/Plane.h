@@ -3,28 +3,30 @@
 
 #include <memory>
 
+using namespace std;
+
 #include "happah/HappahTypes.h"
 
 class Plane {
 public:
-	Plane( hpvec3 normal, hpvec3 basePoint );
-	Plane( const Plane& other );
+	Plane(hpvec3 origin, hpvec3 normal);
+	Plane(const Plane& other);
 	~Plane();
-	Plane& operator=( const Plane& other );
 
-	hpvec3 getNormal();
-	hpvec3 getBasePoint();
-//	hpvec2 getExtent();
+	hpvec3 getNormal() const;
+	hpvec3 getOrigin() const;
+	void setNormal(hpvec3 normal);
+	void setOrigin(hpvec3 origin);
 
-	bool setNormal( hpvec3 normal );
-	bool setBasePoint( hpvec3 basePoint );
-//	bool setExtent( hpvec2 extent );
+	Plane& operator=(const Plane& other);
+
 private:
 	hpvec3 m_normal;
-	hpvec3 m_basePoint;
-//	hpvec2 m_extent;
+	hpvec3 m_origin;
+
+	static hpvec3& check(hpvec3& normal);
 };	
 
-typedef std::shared_ptr<Plane> Plane_ptr;
+typedef shared_ptr<Plane> Plane_ptr;
 
 #endif // PLANE_H

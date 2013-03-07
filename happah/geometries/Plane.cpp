@@ -1,46 +1,44 @@
+#include <exception>
+
+using namespace std;
+
 #include "happah/geometries/Plane.h"
 
-Plane::Plane( hpvec3 normal, hpvec3 basePoint ) :
-	m_normal(normal), m_basePoint(basePoint) {
-}
+Plane::Plane(hpvec3 origin, hpvec3 normal) 
+	: m_normal(check(normal)), m_origin(origin) {}
 
-Plane::Plane( const Plane& other ) :
-	m_normal( other.m_normal ), m_basePoint( other.m_basePoint ) {
-}
+Plane::Plane(const Plane& other)
+	: m_normal(other.m_normal), m_origin(other.m_origin) {}
 
 Plane::~Plane() {}
 
-Plane& Plane::operator=( const Plane& other ) {
-	m_normal = other.m_normal;
-	m_basePoint = other.m_basePoint;
+hpvec3& Plane::check(hpvec3& normal) {
+	if(normal.x == 0.0 && normal.y == 0.0 && normal.z == 0.0) throw;
+	return normal;
 }
 
-
-hpvec3 Plane::getNormal() {
+hpvec3 Plane::getNormal() const {
 	return m_normal;
 }
 
-hpvec3 Plane::getBasePoint() {
-	return m_basePoint;
+hpvec3 Plane::getOrigin() const {
+	return m_origin;
 }
 
-//hpvec2 Plane::getExtent() {
-//	return m_extent;
-//}
+void Plane::setNormal(hpvec3 normal) {
+	check(normal);
+	m_normal = normal;
+}
 
-bool Plane::setNormal( hpvec3 normal ) {
-	if( normal != glm::vec3(0,0,0) ) {
-		m_normal = normal;
-		return true;
+void Plane::setOrigin(hpvec3 origin) {
+	m_origin = origin;
+}
+
+Plane& Plane::operator=(const Plane& other) {
+	if(this != &other) {
+		m_normal = other.m_normal;
+		m_origin = other.m_origin;
 	}
-	return false;
+	return *this;
 }
 
-bool Plane::setBasePoint( hpvec3 basePoint ) {
-	m_basePoint = basePoint;
-	return true;
-}
-
-//bool Plane::setExtent( hpvec2 extent ) {
-//	m_extent = extent;
-//}

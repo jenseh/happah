@@ -4,12 +4,17 @@
 
 GUIManager::GUIManager(SceneManager_ptr sceneManager)
 	:  m_counter(0),
-		m_drawManager(sceneManager), 
-		m_mainWindow(*this, m_drawManager), 
+		m_drawManager(sceneManager),
+		m_sceneGraphExplorerListener(*this),
+		m_mainWindow(*this, m_sceneGraphExplorerListener, m_drawManager),
 		m_sceneGraphExplorerPanel(m_mainWindow.getSceneGraphExplorerPanel()),
+		m_sceneListener(*this),
 		m_sceneManager(sceneManager),
+		m_subtreesInsertedEventHandler(*this),
+		m_subtreesRemovedEventHandler(*this),
+		m_subtreesUpdatedEventHandler(*this),
 		m_toolPanel(m_mainWindow.getToolPanel()) {
-	m_sceneManager->registerSceneListener(this);
+	m_sceneManager->registerSceneListener(&m_sceneListener);
 }
 
 GUIManager::~GUIManager() {
@@ -46,41 +51,6 @@ void GUIManager::doUpdate3D(shared_ptr<G> geometry) {
 	m_sceneManager->insert(geometry, triangleMesh, color);
 }
 
-void GUIManager::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
-	vector<Node_ptr> parents;
-	parents.reserve(guiStateNodes.size());
-	for(vector<GUIStateNode_ptr>::iterator i = guiStateNodes.begin(), end = guiStateNodes.end(); i != end; ++i)
-		parents.push_back((*i)->getParent());
-	m_sceneManager->remove(parents);
-}
-
-void GUIManager::handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode) {
-	m_toolPanel->setForm(guiStateNode->getForm());
-}
-
-void GUIManager::handleSubtreeInsertedEvent(Node_ptr root) {
-	sceneChanged();
-}
-
-void GUIManager::handleSubtreesInsertedEvent(vector<Node_ptr>& roots) {
-	sceneChanged();
-}
-
-void GUIManager::handleSubtreeRemovedEvent(Node_ptr root) {
-	sceneChanged();
-}
-
-void GUIManager::handleSubtreesRemovedEvent(vector<Node_ptr>& roots) {
-	sceneChanged();
-}
-
-void GUIManager::handleSubtreeUpdatedEvent(Node_ptr root) {
-	sceneChanged();
-}
-
-void GUIManager::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {
-	sceneChanged();
-}
 
 bool GUIManager::init() {
 	if (!m_drawManager.init()) {
@@ -114,24 +84,81 @@ void GUIManager::update(SimpleGear_ptr simpleGear) {
 	doUpdate3D<SimpleGear>(simpleGear);
 }
 
-void GUIManager::sceneChanged() {
-	m_guiStateNodes.clear();
-	m_sceneGraphExplorerPanel->clear();
-	m_sceneManager->accept(*this);
+GUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(GUIManager& guiManager)
+	: m_guiManager(guiManager) {}
+
+GUIManager::DefaultSceneGraphExplorerListener::~DefaultSceneGraphExplorerListener() {}
+
+void GUIManager::DefaultSceneGraphExplorerListener::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
+	vector<Node_ptr> parents;
+	parents.reserve(guiStateNodes.size());
+	for(vector<GUIStateNode_ptr>::iterator i = guiStateNodes.begin(), end = guiStateNodes.end(); i != end; ++i)
+		parents.push_back((*i)->getParent());
+	m_guiManager.m_sceneManager->remove(parents);
 }
 
-void GUIManager::visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	m_guiStateNodes[involuteGearGUIStateNode->getInvoluteGear()] = involuteGearGUIStateNode;
-	m_sceneGraphExplorerPanel->addItem(QString(involuteGearGUIStateNode->getName().c_str()), involuteGearGUIStateNode);
+void GUIManager::DefaultSceneGraphExplorerListener::handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode) {
+	m_guiManager.m_toolPanel->setForm(guiStateNode->getForm());
 }
 
-void GUIManager::visit(PlaneGUIStateNode_ptr planeGUIStateNode) {
-	m_guiStateNodes[planeGUIStateNode->getPlane()] = planeGUIStateNode;
-	m_sceneGraphExplorerPanel->addItem(QString(planeGUIStateNode->getName().c_str()), planeGUIStateNode);
+GUIManager::DefaultSceneListener::DefaultSceneListener(GUIManager& guiManager)
+	: m_guiManager(guiManager) {}
+
+GUIManager::DefaultSceneListener::~DefaultSceneListener() {}
+
+void GUIManager::DefaultSceneListener::handleSubtreeInsertedEvent(Node_ptr root) {
+	root->accept(m_guiManager.m_subtreesInsertedEventHandler);
 }
 
-void GUIManager::visit(SimpleGearGUIStateNode_ptr simpleGearGUIStateNode) {
-	m_guiStateNodes[simpleGearGUIStateNode->getSimpleGear()] = simpleGearGUIStateNode;
-	m_sceneGraphExplorerPanel->addItem(QString(simpleGearGUIStateNode->getName().c_str()), simpleGearGUIStateNode);
+void GUIManager::DefaultSceneListener::handleSubtreesInsertedEvent(vector<Node_ptr>& roots) {
+	for(vector<Node_ptr>::iterator i = roots.begin(), end = roots.end(); i != end; ++i)
+		(*i)->accept(m_guiManager.m_subtreesInsertedEventHandler);
+}
+
+void GUIManager::DefaultSceneListener::handleSubtreeRemovedEvent(Node_ptr root) {
+	root->accept(m_guiManager.m_subtreesRemovedEventHandler);
+}
+
+void GUIManager::DefaultSceneListener::handleSubtreesRemovedEvent(vector<Node_ptr>& roots) {
+	for(vector<Node_ptr>::iterator i = roots.begin(), end = roots.end(); i != end; ++i)
+		(*i)->accept(m_guiManager.m_subtreesRemovedEventHandler);
+}
+
+void GUIManager::DefaultSceneListener::handleSubtreeUpdatedEvent(Node_ptr root) {
+	root->accept(m_guiManager.m_subtreesUpdatedEventHandler);
+}
+
+void GUIManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {
+	for(vector<Node_ptr>::iterator i = roots.begin(), end = roots.end(); i != end; ++i)
+		(*i)->accept(m_guiManager.m_subtreesUpdatedEventHandler);
+}
+
+GUIManager::SubtreesInsertedEventHandler::SubtreesInsertedEventHandler(GUIManager& guiManager)
+	: m_guiManager(guiManager) {}
+
+GUIManager::SubtreesInsertedEventHandler::~SubtreesInsertedEventHandler() {}
+
+void GUIManager::SubtreesInsertedEventHandler::visit(GUIStateNode_ptr guiStateNode) {
+	m_guiManager.m_guiStateNodes[guiStateNode->getData()] = guiStateNode;
+	m_guiManager.m_sceneGraphExplorerPanel->insert(guiStateNode);
+}
+
+GUIManager::SubtreesRemovedEventHandler::SubtreesRemovedEventHandler(GUIManager& guiManager)
+	: m_guiManager(guiManager) {}
+
+GUIManager::SubtreesRemovedEventHandler::~SubtreesRemovedEventHandler() {}
+
+void GUIManager::SubtreesRemovedEventHandler::visit(GUIStateNode_ptr guiStateNode) {
+	m_guiManager.m_guiStateNodes.erase(guiStateNode->getData());
+	m_guiManager.m_sceneGraphExplorerPanel->remove(guiStateNode);
+}
+
+GUIManager::SubtreesUpdatedEventHandler::SubtreesUpdatedEventHandler(GUIManager& guiManager)
+	: m_guiManager(guiManager) {}
+
+GUIManager::SubtreesUpdatedEventHandler::~SubtreesUpdatedEventHandler() {}
+
+void GUIManager::SubtreesUpdatedEventHandler::visit(GUIStateNode_ptr guiStateNode) {
+	m_guiManager.m_sceneGraphExplorerPanel->update(guiStateNode);
 }
 

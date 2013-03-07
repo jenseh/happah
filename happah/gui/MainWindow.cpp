@@ -6,8 +6,8 @@
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/Viewport3D.h"
 
-MainWindow::MainWindow(GUIManager& guiManager, DrawManager& drawManager)
-	: m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(guiManager, this)), m_toolPanel(new ToolPanel(guiManager, this)) {
+MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager)
+	: m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)), m_toolPanel(new ToolPanel(guiManager, this)) {
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 

@@ -24,8 +24,8 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager) 
-	: m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
-	m_sceneManager->registerSceneListener(this);
+	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
+	m_sceneManager->registerSceneListener(&m_sceneListener);
 }
 
 DrawManager::~DrawManager() {}
@@ -54,41 +54,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(m_program);
-
-	//TODO: REMOVE THIS AS SOON AS QMatrix4x4 is removed
-	QMatrix4x4 vMatrix = *viewMatrix;
-	QMatrix4x4 pMatrix = *projectionMatrix;
-	GLfloat viewMatrixFloats[16];
-	GLfloat projectionMatrixFloats[16];
-	const qreal* viewMatrixQreals = vMatrix.constData();
-	const qreal* projectionMatrixQreals = pMatrix.constData();
-	for (int j = 0; j < 16; ++j) {
-		viewMatrixFloats[j] = viewMatrixQreals[j];
-		projectionMatrixFloats[j] = projectionMatrixQreals[j];
-	}
-	//TODO: Until here
-	m_modelMatrix = glm::mat4(1.0f);
-	m_viewMatrix = glm::make_mat4(viewMatrixFloats);
-	m_projectionMatrix = glm::make_mat4(projectionMatrixFloats);
-	m_cameraPosition.x = cameraPosition->x();
-	m_cameraPosition.y = cameraPosition->y();
-	m_cameraPosition.z = cameraPosition->z();
-
-	RigidAffineTransformation identityTransformation;
-	m_sceneManager->draw(*this, identityTransformation);
-}
-
-void DrawManager::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
-	// If no Buffer has been assigned, assign one, and write Data into it
-	if (!renderStateNode.isInitialized())
-		initialize(renderStateNode);
-	drawObject(renderStateNode, rigidAffineTransformation);
-}
-
-void DrawManager::drawObject(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::doDraw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
@@ -116,25 +82,36 @@ void DrawManager::drawObject(RenderStateNode& renderStateNode, RigidAffineTransf
 	glBindVertexArray(0);
 }
 
+void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(m_program);
+
+	//TODO: REMOVE THIS AS SOON AS QMatrix4x4 is removed
+	QMatrix4x4 vMatrix = *viewMatrix;
+	QMatrix4x4 pMatrix = *projectionMatrix;
+	GLfloat viewMatrixFloats[16];
+	GLfloat projectionMatrixFloats[16];
+	const qreal* viewMatrixQreals = vMatrix.constData();
+	const qreal* projectionMatrixQreals = pMatrix.constData();
+	for (int j = 0; j < 16; ++j) {
+		viewMatrixFloats[j] = viewMatrixQreals[j];
+		projectionMatrixFloats[j] = projectionMatrixQreals[j];
+	}
+	//TODO: Until here
+	m_modelMatrix = glm::mat4(1.0f);
+	m_viewMatrix = glm::make_mat4(viewMatrixFloats);
+	m_projectionMatrix = glm::make_mat4(projectionMatrixFloats);
+	m_cameraPosition.x = cameraPosition->x();
+	m_cameraPosition.y = cameraPosition->y();
+	m_cameraPosition.z = cameraPosition->z();
+
+	RigidAffineTransformation identityTransformation;
+	m_sceneManager->draw(m_drawVisitor, identityTransformation);
+}
+
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
 }
-
-void DrawManager::handleSubtreeInsertedEvent(Node_ptr root) {}
-
-void DrawManager::handleSubtreesInsertedEvent(vector<Node_ptr>& roots) {}
-
-void DrawManager::handleSubtreeRemovedEvent(Node_ptr root) {
-	//TODO
-}
-
-void DrawManager::handleSubtreesRemovedEvent(vector<Node_ptr>& roots) {
-	//TODO
-}
-
-void DrawManager::handleSubtreeUpdatedEvent(Node_ptr root) {}
-
-void DrawManager::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {}
 
 bool DrawManager::init() {
 	m_glContext->create();
@@ -265,4 +242,37 @@ bool DrawManager::initShaderPrograms() {
 
 	return true;
 }
+
+DrawManager::DefaultDrawVisitor::DefaultDrawVisitor(DrawManager& drawManager)
+	: m_drawManager(drawManager) {}
+
+DrawManager::DefaultDrawVisitor::~DefaultDrawVisitor() {}
+
+void DrawManager::DefaultDrawVisitor::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+	// If no Buffer has been assigned, assign one, and write Data into it
+	if (!renderStateNode.isInitialized())
+		m_drawManager.initialize(renderStateNode);
+	m_drawManager.doDraw(renderStateNode, rigidAffineTransformation);
+}
+
+DrawManager::DefaultSceneListener::DefaultSceneListener(DrawManager& drawManager)
+	: m_drawManager(drawManager) {}
+
+DrawManager::DefaultSceneListener::~DefaultSceneListener() {}
+
+void DrawManager::DefaultSceneListener::handleSubtreeInsertedEvent(Node_ptr root) {}
+
+void DrawManager::DefaultSceneListener::handleSubtreesInsertedEvent(vector<Node_ptr>& roots) {}
+
+void DrawManager::DefaultSceneListener::handleSubtreeRemovedEvent(Node_ptr root) {
+	//TODO
+}
+
+void DrawManager::DefaultSceneListener::handleSubtreesRemovedEvent(vector<Node_ptr>& roots) {
+	//TODO
+}
+
+void DrawManager::DefaultSceneListener::handleSubtreeUpdatedEvent(Node_ptr root) {}
+
+void DrawManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {}
 

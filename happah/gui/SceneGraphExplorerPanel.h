@@ -5,27 +5,30 @@
 #include <QPushButton>
 #include <QString>
 #include <QWidget>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
 
-#include "happah/gui/GUIManager.h"
+#include "happah/gui/SceneGraphExplorerListener.h"
 
 class SceneGraphExplorerPanel : public QWidget {
 Q_OBJECT
 
 public:
-	SceneGraphExplorerPanel(GUIManager& guiManager, QWidget* parent = 0);
+	SceneGraphExplorerPanel(SceneGraphExplorerListener& sceneGraphExplorerListener, QWidget* parent = 0);
 	~SceneGraphExplorerPanel();
 	
-	void addItem(const QString& label, GUIStateNode_ptr guiStateNode);
-	void clear();
+	void insert(GUIStateNode_ptr guiStateNode);
+	void remove(GUIStateNode_ptr guiStateNode);
+	void update(GUIStateNode_ptr guiStateNode);
 
 private:
 	QPushButton* m_deleteButton;
-	GUIManager& m_guiManager;
-	vector<GUIStateNode_ptr> m_guiStateNodes;
+	unordered_map<QListWidgetItem*, GUIStateNode_ptr> m_guiStateNodesByItem;
+	unordered_map<GUIStateNode_ptr, QListWidgetItem*> m_itemsByGUIStateNode;
 	QListWidget* m_listWidget;
+	SceneGraphExplorerListener& m_sceneGraphExplorerListener;
 
 private slots:
 	void handleDeleteButtonClickedEvent();

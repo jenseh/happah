@@ -1,5 +1,5 @@
-#ifndef DRAWMANAGER_H
-#define DRAWMANAGER_H
+#ifndef DRAW_MANAGER_H
+#define DRAW_MANAGER_H
 
 #include <GL/glew.h>
 #include <QGLContext>
@@ -16,27 +16,48 @@ public:
 
 #include "happah/scene/SceneManager.h"
 
-class DrawManager : public DrawVisitor, public SceneListener {
+class DrawManager {
 public:
 	DrawManager(SceneManager_ptr sceneManager);
 	~DrawManager();
+
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
-	void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 	QGLContext* getGlContext();
-	void handleSubtreeInsertedEvent(Node_ptr root);
-	void handleSubtreesInsertedEvent(vector<Node_ptr>& roots);
-	void handleSubtreeRemovedEvent(Node_ptr root);
-	void handleSubtreesRemovedEvent(vector<Node_ptr>& roots);
-	void handleSubtreeUpdatedEvent(Node_ptr root);
-	void handleSubtreesUpdatedEvent(vector<Node_ptr>& roots);
 	bool init();
 
 private:
-	void compileShader(GLuint shader, const char* filePath);
-	void drawObject(RenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-	void initialize(RenderStateNode& triangleMeshRenderStateNode);
-	bool initShaderPrograms();
+	class DefaultDrawVisitor : public DrawVisitor {
+	public:
+		DefaultDrawVisitor(DrawManager& drawManager);
+		~DefaultDrawVisitor();
+		
+		void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		
+	private:
+		DrawManager& m_drawManager;
 
+	};
+
+	class DefaultSceneListener : public SceneListener {
+	public:
+		DefaultSceneListener(DrawManager& drawManager);
+		~DefaultSceneListener();
+
+		void handleSubtreeInsertedEvent(Node_ptr root);
+		void handleSubtreesInsertedEvent(vector<Node_ptr>& roots);
+		void handleSubtreeRemovedEvent(Node_ptr root);
+		void handleSubtreesRemovedEvent(vector<Node_ptr>& roots);
+		void handleSubtreeUpdatedEvent(Node_ptr root);
+		void handleSubtreesUpdatedEvent(vector<Node_ptr>& roots);
+
+	private:
+		DrawManager& m_drawManager;
+	};
+
+	const static HappahGlFormat GL_FORMAT;
+
+	DefaultDrawVisitor m_drawVisitor;
+	DefaultSceneListener m_sceneListener;
 	SceneManager_ptr m_sceneManager;
 	QGLContext* m_glContext;
 
@@ -59,15 +80,18 @@ private:
 	GLint m_phongExponentLocation;
 	GLint m_cameraPositionLocation;
 
-	const static HappahGlFormat GL_FORMAT;
-
 	hpmat4x4 m_modelMatrix;
 	hpmat4x4 m_viewMatrix;
 	hpmat4x4 m_projectionMatrix;
 	hpmat3x3 m_normalMatrix;
 	hpvec3   m_cameraPosition;
 
+	void compileShader(GLuint shader, const char* filePath);
+	void doDraw(RenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+	void initialize(RenderStateNode& triangleMeshRenderStateNode);
+	bool initShaderPrograms();
 
 };
 
-#endif // DRAWMANAGER_H
+#endif // DRAW_MANAGER_H
+

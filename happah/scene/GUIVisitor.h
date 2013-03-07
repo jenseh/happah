@@ -8,9 +8,7 @@ class GUIVisitor;
 class GUIVisitor {
 
 public:
-	virtual void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) = 0;
-	virtual void visit(PlaneGUIStateNode_ptr planeGUIStateNode) = 0;
-	virtual void visit(SimpleGearGUIStateNode_ptr simpleGearGUIStateNode) = 0;
+	virtual void visit(GUIStateNode_ptr guiStateNode) = 0;
 
 };
 

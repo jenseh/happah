@@ -33,6 +33,7 @@ HEADERS += \
 	happah/gui/GearSlider.h \
 	happah/gui/GUIManager.h \
 	happah/gui/MainWindow.h \
+	happah/gui/SceneGraphExplorerListener.h \
 	happah/gui/SceneGraphExplorerPanel.h \
 	happah/gui/ToolPanel.h \
 	happah/gui/Viewport3D.h \

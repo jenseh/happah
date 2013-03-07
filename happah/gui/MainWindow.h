@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 #include <QMainWindow>
 
-#include "happah/gui/forms/InvoluteGearForm.h"
+#include "happah/gui/SceneGraphExplorerListener.h"
 
 class DrawManager;
 class GUIManager;
@@ -14,7 +14,7 @@ class MainWindow: public QMainWindow {
 Q_OBJECT
 
 public:
-	MainWindow(GUIManager& guiManager, DrawManager& drawManager);
+	MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager);
 	virtual ~MainWindow();
 
 	SceneGraphExplorerPanel* getSceneGraphExplorerPanel();

@@ -27,8 +27,11 @@ public:
 	GUIStateNode(string name);
 	virtual ~GUIStateNode();
 
+	void accept(GUIVisitor& guiVisitor);
+	virtual shared_ptr<void> getData() const = 0;
 	virtual Form* getForm() = 0;
 	const string& getName() const;
+	GUIStateNode_ptr getptr();
 	TriangleMesh_ptr getTriangleMesh() const;
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
@@ -47,10 +50,8 @@ public:
 	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name);
 	~InvoluteGearGUIStateNode();
 
-	void accept(GUIVisitor& guiVisitor);
+	shared_ptr<void> getData() const;
 	Form* getForm();
-	InvoluteGear_ptr getInvoluteGear() const;
-	InvoluteGearGUIStateNode_ptr getptr();
 
 private:
 	InvoluteGear_ptr m_involuteGear;
@@ -66,10 +67,8 @@ public:
 	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, string name);
 	~PlaneGUIStateNode();
 
-	void accept(GUIVisitor& guiVisitor);
+	shared_ptr<void> getData() const;
 	Form* getForm();
-	Plane_ptr getPlane() const;
-	PlaneGUIStateNode_ptr getptr();
 
 private:
 	Plane_ptr m_plane;
@@ -84,10 +83,8 @@ public:
 	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name);
 	~SimpleGearGUIStateNode();
 
-	void accept(GUIVisitor& guiVisitor);
+	shared_ptr<void> getData() const;
 	Form* getForm();
-	SimpleGear_ptr getSimpleGear() const;
-	SimpleGearGUIStateNode_ptr getptr();
 
 private:
 	SimpleGear_ptr m_simpleGear;
@@ -96,3 +93,4 @@ private:
 };
 
 #endif // GUI_STATE_NODE_H
+

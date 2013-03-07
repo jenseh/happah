@@ -27,10 +27,11 @@ public:
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void registerListener(SceneListener* sceneListener);
-	bool remove(Node_ptr node);
-	bool remove(vector<Node_ptr>& nodes);
-	bool removeChildContaining(shared_ptr<void> data);
-	bool removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
+	Node_ptr remove(Node_ptr node);
+	void remove(vector<Node_ptr>& nodes);
+	void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
+	Node_ptr removeChildContaining(shared_ptr<void> data);
+	Node_ptr removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
 	void unregisterListener(SceneListener* sceneListener);
 
 private:
@@ -41,7 +42,10 @@ private:
 	template<class G, class N> 
 	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color);
 
-	void notifyListeners();
+	void triggerSubtreeInsertedEvent(Node_ptr node);
+	void triggerSubtreesInsertedEvent(vector<Node_ptr>& nodes);
+	void triggerSubtreeRemovedEvent(Node_ptr node);
+	void triggerSubtreesRemovedEvent(vector<Node_ptr>& nodes);
 
 };
 typedef shared_ptr<SceneManager> SceneManager_ptr;

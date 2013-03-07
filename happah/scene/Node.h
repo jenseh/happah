@@ -30,21 +30,22 @@ public:
 	Node_ptr getParent();
 	Node_ptr getptr();
 	bool hasChild(Node_ptr child) const;
-	virtual bool remove(Node_ptr node);
-	virtual bool remove(vector<Node_ptr>& nodes);
-	virtual bool removeChildContaining(shared_ptr<void> data);
-	virtual bool removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
+	virtual Node_ptr remove(Node_ptr node);
+	virtual void remove(vector<Node_ptr>& nodes);
+	virtual void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
+	virtual Node_ptr removeChildContaining(shared_ptr<void> data);
+	virtual Node_ptr removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
 
 protected:
 	set<Node_ptr> m_children;
 	weak_ptr<Node> m_parent;
 
 	void insertChild(Node_ptr child);
-	bool removeChild(Node_ptr child);
+	Node_ptr removeChild(Node_ptr child);
 	void setParent(Node_ptr parent);
 
 private:
-	bool doRemove(Node_ptr node);
+	Node_ptr doRemove(Node_ptr node);
 
 };
 

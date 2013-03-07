@@ -18,7 +18,6 @@ HEADERS += \
 #	happah/geometries/Disc.h \
 	happah/geometries/Gear.h \
 	happah/geometries/Geometry.h \
-#	happah/geometries/Grid.h \
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
@@ -100,7 +99,6 @@ SOURCES += \
 #	happah/geometries/Disc.cpp \
 	happah/geometries/Gear.cpp \
 	happah/geometries/Geometry.cpp \
-#	happah/geometries/Grid.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \

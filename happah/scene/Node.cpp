@@ -18,16 +18,18 @@ bool Node::contains(shared_ptr<void> data) const {
 	return false;
 }
 
-bool Node::doRemove(Node_ptr node) {
+Node_ptr Node::doRemove(Node_ptr node) {
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		Node_ptr child = *i;
 		if(child == node) {
 			m_children.erase(i);
-			return true;
-		} else if(child->doRemove(node))
-			return true;
+			return child;
+		} else {
+			Node_ptr descendant = child->doRemove(node);
+			if(descendant) return descendant;
+		}
 	}
-	return false;
+	return Node_ptr();
 }
 
 void Node::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
@@ -76,27 +78,29 @@ void Node::insertChild(Node_ptr child) {
 	}
 }
 
-bool Node::remove(Node_ptr node) {
+Node_ptr Node::remove(Node_ptr node) {
 	return doRemove(node);
 }
 
-bool Node::remove(vector<Node_ptr>& nodes) {
-	bool removed = false;
+void Node::remove(vector<Node_ptr>& nodes) {
 	for(vector<Node_ptr>::iterator i = nodes.begin(), end = nodes.end(); i != end; ++i)
-		removed |= doRemove(*i);
-	return removed;
+		doRemove(*i);
 }
 
-bool Node::removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData) {
+void Node::remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes) {
+	for(vector<Node_ptr>::iterator i = nodes.begin(), end = nodes.end(); i != end; ++i) {
+		Node_ptr removedNode = doRemove(*i);
+		if(removedNode) removedNodes.push_back(removedNode);
+	}
+}
+
+Node_ptr Node::removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData) {
 	Node_ptr node = findContaining(parentData);
-
-	if(node)
-		return node->removeChildContaining(childData);
-
-	return false;
+	if(node) return node->removeChildContaining(childData);
+	return Node_ptr();
 }
 
-bool Node::removeChildContaining(shared_ptr<void> data) {
+Node_ptr Node::removeChildContaining(shared_ptr<void> data) {
 	Node_ptr child;
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		child = *i;
@@ -105,15 +109,15 @@ bool Node::removeChildContaining(shared_ptr<void> data) {
 	return removeChild(child);
 }
 
-bool Node::removeChild(Node_ptr child) {
+Node_ptr Node::removeChild(Node_ptr child) {
 	if(child) {
 		const set<Node_ptr>::iterator i = m_children.find(child);
-		if(i == m_children.end())
-			return false;
-		m_children.erase(i);
-		return true;
+		if(i != m_children.end()) {
+			m_children.erase(i);
+			return child;
+		}
 	}
-	return false;
+	return Node_ptr();
 }
 
 void Node::setParent(Node_ptr parent) {

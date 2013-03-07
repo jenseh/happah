@@ -6,99 +6,80 @@
 #include "happah/scene/SceneManager.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/RenderStateNode.h"
+#include "happah/scene/SimpleGearNode.h"
 
 SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
 
-void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
-	Node_ptr node = findChildContaining(involuteGear);
+template<class G, class N, class S>
+void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
+	Node_ptr node = findChildContaining(data);
 
-	InvoluteGearNode_ptr involuteGearNode;
+	shared_ptr<N> dataNode;
 	if(node) {
-		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		if(involuteGearNode->hasChild(involuteGearGUIStateNode)) return;
+		dataNode = dynamic_pointer_cast<N>(node);
+		if(dataNode->hasChild(guiStateNode)) return;
 	} else {
-		involuteGearNode = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
-		insertChild(involuteGearNode);
+		dataNode = shared_ptr<N>(new N(data));
+		insertChild(dataNode);
 	}
 
-	involuteGearNode->insertChild(involuteGearGUIStateNode);
+	dataNode->insertChild(guiStateNode);
 
 	notifyListeners();
+}
+
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	Node_ptr node = findChildContaining(geometry);
+
+	shared_ptr<N> geometryNode;
+	if(node) {
+		geometryNode = static_pointer_cast<N>(node);
+		node = node->findChildContaining(triangleMesh);
+		if(node) {
+			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
+			triangleMeshRenderStateNode->setColor(color);
+			return;
+		}
+	} else {
+		geometryNode = shared_ptr<N>(new N(geometry));
+		insertChild(geometryNode);
+	}
+
+	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
+	geometryNode->insertChild(triangleMeshNode);
+
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+	triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+
+	notifyListeners();
+}
+
+void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
+	doInsert<InvoluteGear, InvoluteGearNode, InvoluteGearGUIStateNode>(involuteGear, involuteGearGUIStateNode);
 }
 
 void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = findChildContaining(involuteGear);
-
-	InvoluteGearNode_ptr involuteGearNode;
-	if(node) {
-		involuteGearNode = dynamic_pointer_cast<InvoluteGearNode>(node);
-		InvoluteGear_ptr foundInvoluteGear = dynamic_pointer_cast<InvoluteGear>(involuteGearNode->getGeometry());
-		node = involuteGearNode->findChildContaining(triangleMesh);
-		if(node) {
-			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
-			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
-			triangleMeshRenderStateNode->setColor(color);
-			return;
-		}
-	} else {
-		involuteGearNode = InvoluteGearNode_ptr(new InvoluteGearNode(involuteGear));
-		insertChild(involuteGearNode);
-	}
-
-	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
-	involuteGearNode->insertChild(triangleMeshNode);
-
-	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
-	triangleMeshNode->insertChild(triangleMeshRenderStateNode);
-
-	notifyListeners();
+	doInsert<InvoluteGear, InvoluteGearNode>(involuteGear, triangleMesh, color);
 }
 
 void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode) {
-	Node_ptr node = findChildContaining(plane);
-
-	PlaneNode_ptr planeNode;
-	if(node) {
-		planeNode = dynamic_pointer_cast<PlaneNode>(node);
-		if(planeNode->hasChild(planeGUIStateNode)) return;
-	} else {
-		planeNode = PlaneNode_ptr(new PlaneNode(plane));
-		insertChild(planeNode);
-	}
-
-	planeNode->insertChild(planeGUIStateNode);
-
-	notifyListeners();
+	doInsert<Plane, PlaneNode, PlaneGUIStateNode>(plane, planeGUIStateNode);
 }
 
 void SceneManager::insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = findChildContaining(plane);
+	doInsert<Plane, PlaneNode>(plane, triangleMesh, color);
+}
 
-	PlaneNode_ptr planeNode;
-	if(node) {
-		planeNode = dynamic_pointer_cast<PlaneNode>(node);
-		Plane_ptr foundPlane =  dynamic_pointer_cast<Plane>(planeNode->getGeometry());
-		node = planeNode->findChildContaining(triangleMesh);
-		if(node) {
-			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
-			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
-			triangleMeshRenderStateNode->setColor(color);
-			return;
-		}
-	} else {
-		planeNode = PlaneNode_ptr(new PlaneNode(plane));
-		insertChild(planeNode);
-	}
+void SceneManager::insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode) {
+	doInsert<SimpleGear, SimpleGearNode, SimpleGearGUIStateNode>(simpleGear, simpleGearGUIStateNode);
+}
 
-	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
-	planeNode->insertChild(triangleMeshNode);
-
-	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
-	triangleMeshNode->insertChild(triangleMeshRenderStateNode);
-
-	notifyListeners();
+void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	doInsert<SimpleGear, SimpleGearNode>(simpleGear, triangleMesh, color);
 }
 
 void SceneManager::notifyListeners() {

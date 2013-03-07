@@ -36,6 +36,7 @@ public:
 	void update(SimpleGear_ptr simpleGear);
 	void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void visit(PlaneGUIStateNode_ptr planeGUIStateNode);
+	void visit(SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 
 private:
 	int m_counter;
@@ -46,6 +47,10 @@ private:
 	SceneManager_ptr m_sceneManager;
 	ToolPanel* m_toolPanel;
 
+	template<class G, class S, class F>
+	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form);
+	template<class G>
+	void doUpdate3D(shared_ptr<G> geometry);
 };
 
 

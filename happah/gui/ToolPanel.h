@@ -23,6 +23,7 @@ public:
 
 	InvoluteGearForm* getInvoluteGearForm();
 	PlaneForm* getPlaneForm();
+	SimpleGearForm* getSimpleGearForm();
 	void setForm(Form* form);	
 
 private:

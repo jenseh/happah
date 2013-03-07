@@ -10,6 +10,7 @@ class SceneManager;
 
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/Plane.h"
+#include "happah/geometries/SimpleGear.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
@@ -23,6 +24,8 @@ public:
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
+	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void registerListener(SceneListener* sceneListener);
 	bool remove(Node_ptr node);
 	bool remove(vector<Node_ptr>& nodes);
@@ -32,6 +35,11 @@ public:
 
 private:
 	list<SceneListener*> m_listeners;
+
+	template<class G, class N, class S> 
+	void doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode);
+	template<class G, class N> 
+	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color);
 
 	void notifyListeners();
 

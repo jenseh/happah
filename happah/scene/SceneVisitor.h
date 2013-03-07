@@ -7,6 +7,7 @@ class TriangleMeshNode;
 class LineMeshNode;
 class PointCloudNode;
 class RenderStateNode;
+class SimpleGearNode;
 
 class SceneVisitor {
 
@@ -14,9 +15,10 @@ public:
 	virtual void visit(InvoluteGearNode& involuteGearNode) = 0;
 	virtual void visit(PlaneNode& planeNode) = 0;
 	virtual void visit(TriangleMeshNode& triangleMeshNode) = 0;
-	virtual void visit(LineMeshNode& lineMeshNode)=0;
-	virtual void visit(PointCloudNode& pointCloudNode)=0;
+	virtual void visit(LineMeshNode& lineMeshNode) = 0;
+	virtual void visit(PointCloudNode& pointCloudNode) = 0;
 	virtual void visit(RenderStateNode& renderStateNode) = 0;
+	virtual void visit(SimpleGearNode& simpleGearNode) = 0;
 
 };
 

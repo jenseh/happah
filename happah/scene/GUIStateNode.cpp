@@ -74,3 +74,30 @@ Plane_ptr PlaneGUIStateNode::getPlane() const {
 PlaneGUIStateNode_ptr PlaneGUIStateNode::getptr() {
 	return static_pointer_cast<PlaneGUIStateNode>(shared_from_this());
 }
+
+SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name)
+	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm) {}
+
+SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
+	if(m_simpleGearForm->getSimpleGear() == m_simpleGear)
+		m_simpleGearForm->reset();
+}
+
+void SimpleGearGUIStateNode::accept(GUIVisitor& guiVisitor) {
+	guiVisitor.visit(getptr());
+	Node::accept(guiVisitor);
+}
+
+Form* SimpleGearGUIStateNode::getForm() {
+	m_simpleGearForm->setSimpleGear(m_simpleGear);
+	return m_simpleGearForm;
+}
+
+SimpleGear_ptr SimpleGearGUIStateNode::getSimpleGear() const {
+	return m_simpleGear;
+}
+
+SimpleGearGUIStateNode_ptr SimpleGearGUIStateNode::getptr() {
+	return static_pointer_cast<SimpleGearGUIStateNode>(shared_from_this());
+}
+

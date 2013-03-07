@@ -75,6 +75,7 @@ HEADERS += \
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
+	happah/scene/SimpleGearNode.h \
 	happah/scene/SimpleGeometryNode.h \
 	happah/scene/TriangleMeshNode.h \
 \
@@ -143,6 +144,7 @@ SOURCES += \
 	happah/scene/PointCloudNode.cpp\
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
+	happah/scene/SimpleGearNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
 \
 #	happah/simulations/CircularSimulationResult.cpp \

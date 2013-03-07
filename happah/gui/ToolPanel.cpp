@@ -37,12 +37,16 @@ void ToolPanel::add(QGridLayout* buttonsLayout, const char* text, Form* form, in
 	connect(button, SIGNAL(clicked()), this, SLOT(handleButtonClickedEvent()));
 }
 
+InvoluteGearForm* ToolPanel::getInvoluteGearForm() {
+	return m_involuteGearForm;
+}
+
 PlaneForm* ToolPanel::getPlaneForm() {
 	return m_planeForm;
 }
 
-InvoluteGearForm* ToolPanel::getInvoluteGearForm() {
-	return m_involuteGearForm;
+SimpleGearForm* ToolPanel::getSimpleGearForm() {
+	return m_simpleGearForm;
 }
 
 void ToolPanel::handleButtonClickedEvent() {

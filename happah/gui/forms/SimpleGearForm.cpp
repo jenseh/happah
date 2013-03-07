@@ -57,12 +57,23 @@ void SimpleGearForm::createSimpleGear() {
 	m_simpleGearInserted = true;
 }
 
+SimpleGear_ptr SimpleGearForm::getSimpleGear() const {
+	return m_simpleGear;
+}
+
 void SimpleGearForm::reset() {
 	InvoluteGear* involuteGear = new InvoluteGear();
 	m_simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
 	delete involuteGear;
 	m_simpleGearInserted = false;
 
+	updateRanges();
+}
+
+void SimpleGearForm::setSimpleGear(SimpleGear_ptr simpleGear) {
+	m_simpleGear = simpleGear;
+	m_simpleGearInserted = true;
+	
 	updateRanges();
 }
 

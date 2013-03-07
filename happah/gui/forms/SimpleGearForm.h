@@ -13,7 +13,9 @@ public:
 	SimpleGearForm(SimpleGearListener& simpleGearListener, QWidget* parent = 0);
 	~SimpleGearForm();
 
+	SimpleGear_ptr getSimpleGear() const;
 	void reset();
+	void setSimpleGear(SimpleGear_ptr simpleGear);
 
 private:
 	GearSlider* m_faceWidthSlider;

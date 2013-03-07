@@ -15,6 +15,9 @@ typedef shared_ptr<InvoluteGearGUIStateNode> InvoluteGearGUIStateNode_ptr;
 class PlaneGUIStateNode;
 typedef shared_ptr<PlaneGUIStateNode> PlaneGUIStateNode_ptr;
 
+class SimpleGearGUIStateNode;
+typedef shared_ptr<SimpleGearGUIStateNode> SimpleGearGUIStateNode_ptr;
+
 #include "happah/geometries/Mesh.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
@@ -71,6 +74,25 @@ public:
 private:
 	Plane_ptr m_plane;
 	PlaneForm* m_planeForm;
+};
+
+#include "happah/geometries/SimpleGear.h"
+#include "happah/gui/forms/SimpleGearForm.h"
+
+class SimpleGearGUIStateNode : public GUIStateNode {
+public:
+	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name);
+	~SimpleGearGUIStateNode();
+
+	void accept(GUIVisitor& guiVisitor);
+	Form* getForm();
+	SimpleGear_ptr getSimpleGear() const;
+	SimpleGearGUIStateNode_ptr getptr();
+
+private:
+	SimpleGear_ptr m_simpleGear;
+	SimpleGearForm* m_simpleGearForm;
+
 };
 
 #endif // GUI_STATE_NODE_H

@@ -9,7 +9,7 @@
 #include "happah/HappahTypes.h"
 #include "happah/kdtree/BBox.h"
 #include "happah/kdtree/BSphere.h"
-#include "happah/primitives/Triangle.h"
+#include "happah/math/Triangle.h"
 
 struct CirclePoint {
   hpreal angle;

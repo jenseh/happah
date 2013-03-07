@@ -57,10 +57,9 @@ HEADERS += \
 #	happah/kdtree/TriangleKDTree.h \
 #	happah/kdtree/TriangleKDTreeNode.h \
 \
-	happah/primitives/Circle.h \
-	happah/primitives/Color.h \
-	happah/primitives/Ray.h \
-	happah/primitives/Triangle.h \
+	happah/math/Circle.h \
+	happah/math/Ray.h \
+	happah/math/Triangle.h \
 \
 	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \

@@ -16,13 +16,19 @@ public:
 
 #include "happah/scene/SceneManager.h"
 
-class DrawManager : public DrawVisitor {
+class DrawManager : public DrawVisitor, public SceneListener {
 public:
 	DrawManager(SceneManager_ptr sceneManager);
 	~DrawManager();
 	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
 	void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 	QGLContext* getGlContext();
+	void handleSubtreeInsertedEvent(Node_ptr root);
+	void handleSubtreesInsertedEvent(vector<Node_ptr>& roots);
+	void handleSubtreeRemovedEvent(Node_ptr root);
+	void handleSubtreesRemovedEvent(vector<Node_ptr>& roots);
+	void handleSubtreeUpdatedEvent(Node_ptr root);
+	void handleSubtreesUpdatedEvent(vector<Node_ptr>& roots);
 	bool init();
 
 private:

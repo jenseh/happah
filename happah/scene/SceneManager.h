@@ -26,13 +26,13 @@ public:
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
-	void registerListener(SceneListener* sceneListener);
+	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);
 	void remove(vector<Node_ptr>& nodes);
 	void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
 	Node_ptr removeChildContaining(shared_ptr<void> data);
 	Node_ptr removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
-	void unregisterListener(SceneListener* sceneListener);
+	void unregisterSceneListener(SceneListener* sceneListener);
 
 private:
 	list<SceneListener*> m_listeners;
@@ -42,10 +42,12 @@ private:
 	template<class G, class N> 
 	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color);
 
-	void triggerSubtreeInsertedEvent(Node_ptr node);
-	void triggerSubtreesInsertedEvent(vector<Node_ptr>& nodes);
-	void triggerSubtreeRemovedEvent(Node_ptr node);
-	void triggerSubtreesRemovedEvent(vector<Node_ptr>& nodes);
+	void triggerSubtreeInsertedEvent(Node_ptr root);
+	void triggerSubtreesInsertedEvent(vector<Node_ptr>& roots);
+	void triggerSubtreeRemovedEvent(Node_ptr root);
+	void triggerSubtreesRemovedEvent(vector<Node_ptr>& roots);
+	void triggerSubtreeUpdatedEvent(Node_ptr root);
+	void triggerSubtreesUpdatedEvent(vector<Node_ptr>& roots);
 
 };
 typedef shared_ptr<SceneManager> SceneManager_ptr;

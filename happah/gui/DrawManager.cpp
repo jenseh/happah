@@ -24,12 +24,179 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager) 
-	: m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {}
+	: m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
+	m_sceneManager->registerSceneListener(this);
+}
 
 DrawManager::~DrawManager() {}
 
+void DrawManager::compileShader(GLuint shader, const char* filePath) {
+	ifstream sourceFile(filePath);
+	if (sourceFile) {
+		stringstream temp;
+		temp << sourceFile.rdbuf();
+		sourceFile.close();
+		string sourceString = temp.str();
+		const char* source = sourceString.c_str();
+		int sourceStringLength = sourceString.length();
+		glShaderSource(shader, 1, (const GLchar**) &source, &sourceStringLength);
+		glCompileShader(shader);
+		GLint compileStatus;
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
+		if (compileStatus == GL_FALSE) {
+			char log[256];
+			glGetShaderInfoLog(shader, 256, NULL, log);
+			cerr << "Compilation of shader failed." << endl;
+			printf(" Infolog: %s\n", log);
+		} else
+			cout << "Compilation was successful." << endl;
+	} else
+		cerr << "Failed to open source file." << endl;
+}
+
+void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(m_program);
+
+	//TODO: REMOVE THIS AS SOON AS QMatrix4x4 is removed
+	QMatrix4x4 vMatrix = *viewMatrix;
+	QMatrix4x4 pMatrix = *projectionMatrix;
+	GLfloat viewMatrixFloats[16];
+	GLfloat projectionMatrixFloats[16];
+	const qreal* viewMatrixQreals = vMatrix.constData();
+	const qreal* projectionMatrixQreals = pMatrix.constData();
+	for (int j = 0; j < 16; ++j) {
+		viewMatrixFloats[j] = viewMatrixQreals[j];
+		projectionMatrixFloats[j] = projectionMatrixQreals[j];
+	}
+	//TODO: Until here
+	m_modelMatrix = glm::mat4(1.0f);
+	m_viewMatrix = glm::make_mat4(viewMatrixFloats);
+	m_projectionMatrix = glm::make_mat4(projectionMatrixFloats);
+	m_cameraPosition.x = cameraPosition->x();
+	m_cameraPosition.y = cameraPosition->y();
+	m_cameraPosition.z = cameraPosition->z();
+
+	RigidAffineTransformation identityTransformation;
+	m_sceneManager->draw(*this, identityTransformation);
+}
+
+void DrawManager::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+	// If no Buffer has been assigned, assign one, and write Data into it
+	if (!renderStateNode.isInitialized())
+		initialize(renderStateNode);
+	drawObject(renderStateNode, rigidAffineTransformation);
+}
+
+void DrawManager::drawObject(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
+	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
+	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+
+	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
+	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
+	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
+	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
+	glUniform1f(m_ambientFactorLocation, (GLfloat) renderStateNode.getMaterial().getAmbientFactor());
+	glUniform1f(m_diffuseFactorLocation, (GLfloat) renderStateNode.getMaterial().getDiffuseFactor());
+	glUniform1f(m_specularFactorLocation, (GLfloat) renderStateNode.getMaterial().getSpecularFactor());
+	glUniform1f(m_phongExponentLocation, (GLfloat) renderStateNode.getMaterial().getPhongExponent());
+	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
+	if (renderStateNode.hasColorVector()) {
+		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
+		glUniform1i(m_isColoredLocation, 1);
+	} else {
+		hpcolor color = renderStateNode.getColor();
+		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
+		glUniform1i(m_isColoredLocation, 0);
+	}
+	int size;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+	glDrawElements(GL_TRIANGLES, size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}
+
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
+}
+
+void DrawManager::handleSubtreeInsertedEvent(Node_ptr root) {}
+
+void DrawManager::handleSubtreesInsertedEvent(vector<Node_ptr>& roots) {}
+
+void DrawManager::handleSubtreeRemovedEvent(Node_ptr root) {
+	//TODO
+}
+
+void DrawManager::handleSubtreesRemovedEvent(vector<Node_ptr>& roots) {
+	//TODO
+}
+
+void DrawManager::handleSubtreeUpdatedEvent(Node_ptr root) {}
+
+void DrawManager::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {}
+
+bool DrawManager::init() {
+	m_glContext->create();
+	m_glContext->makeCurrent();
+
+	GLenum errorCode = glewInit();
+	if (GLEW_OK != errorCode) {
+		fprintf(stderr, "Glew initialization failed: %s\n", glewGetErrorString(errorCode));
+		return false;
+	}
+
+	QGLFormat glFormat = m_glContext->format();
+	if (!glFormat.sampleBuffers())
+		qWarning() << "Could not enable sample buffers";
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	if (!initShaderPrograms())
+		return false;
+	return true;
+}
+
+void DrawManager::initialize(RenderStateNode& renderStateNode) {
+	GLuint bufferID;
+	GLint size = (renderStateNode.getVertexData()->size());
+	// Create New VertexArrayObject
+	glGenVertexArrays(1, &bufferID);
+	renderStateNode.setVertexArrayObjectID(bufferID);
+	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
+
+	// Create New Vertex Buffer Object
+	glGenBuffers(1, &bufferID);
+	renderStateNode.setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(renderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
+	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
+	glEnableVertexAttribArray(m_vertexLocation);
+	glEnableVertexAttribArray(m_normalLocation);
+
+	// Create New Color Buffer Object
+	if (renderStateNode.hasColorVector()) {
+		glGenBuffers(1, &bufferID);
+		renderStateNode.setColorBufferID(bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getColorBufferID());
+		glBufferData(GL_ARRAY_BUFFER, renderStateNode.getColorVector()->size() * sizeof(glm::vec4), renderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(m_colorLocation);
+
+	}
+	// Create IndexBuffer;
+	size= renderStateNode.getIndices()->size();
+	glGenBuffers(1, &bufferID);
+	renderStateNode.setIndexBufferID(bufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderStateNode.getIndexBufferID());
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(renderStateNode.getIndices()->at(0)), GL_DYNAMIC_DRAW);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	renderStateNode.setInitialized(true);
 }
 
 bool DrawManager::initShaderPrograms() {
@@ -97,156 +264,5 @@ bool DrawManager::initShaderPrograms() {
 		cerr << "Failed to find cameraPositionLocation." << endl;
 
 	return true;
-}
-
-void DrawManager::compileShader(GLuint shader, const char* filePath) {
-	ifstream sourceFile(filePath);
-	if (sourceFile) {
-		stringstream temp;
-		temp << sourceFile.rdbuf();
-		sourceFile.close();
-		string sourceString = temp.str();
-		const char* source = sourceString.c_str();
-		int sourceStringLength = sourceString.length();
-		glShaderSource(shader, 1, (const GLchar**) &source, &sourceStringLength);
-		glCompileShader(shader);
-		GLint compileStatus;
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-		if (compileStatus == GL_FALSE) {
-			char log[256];
-			glGetShaderInfoLog(shader, 256, NULL, log);
-			cerr << "Compilation of shader failed." << endl;
-			printf(" Infolog: %s\n", log);
-		} else
-			cout << "Compilation was successful." << endl;
-	} else
-		cerr << "Failed to open source file." << endl;
-}
-
-
-
-void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(m_program);
-
-	//TODO: REMOVE THIS AS SOON AS QMatrix4x4 is removed
-	QMatrix4x4 vMatrix = *viewMatrix;
-	QMatrix4x4 pMatrix = *projectionMatrix;
-	GLfloat viewMatrixFloats[16];
-	GLfloat projectionMatrixFloats[16];
-	const qreal* viewMatrixQreals = vMatrix.constData();
-	const qreal* projectionMatrixQreals = pMatrix.constData();
-	for (int j = 0; j < 16; ++j) {
-		viewMatrixFloats[j] = viewMatrixQreals[j];
-		projectionMatrixFloats[j] = projectionMatrixQreals[j];
-	}
-	//TODO: Until here
-	m_modelMatrix = glm::mat4(1.0f);
-	m_viewMatrix = glm::make_mat4(viewMatrixFloats);
-	m_projectionMatrix = glm::make_mat4(projectionMatrixFloats);
-	m_cameraPosition.x = cameraPosition->x();
-	m_cameraPosition.y = cameraPosition->y();
-	m_cameraPosition.z = cameraPosition->z();
-
-	RigidAffineTransformation identityTransformation;
-	m_sceneManager->draw(*this, identityTransformation);
-}
-
-void DrawManager::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
-	// If no Buffer has been assigned, assign one, and write Data into it
-	if (!renderStateNode.isInitialized())
-		initialize(renderStateNode);
-	drawObject(renderStateNode, rigidAffineTransformation);
-}
-
-bool DrawManager::init() {
-	m_glContext->create();
-	m_glContext->makeCurrent();
-
-	GLenum errorCode = glewInit();
-	if (GLEW_OK != errorCode) {
-		fprintf(stderr, "Glew initialization failed: %s\n", glewGetErrorString(errorCode));
-		return false;
-	}
-
-	QGLFormat glFormat = m_glContext->format();
-	if (!glFormat.sampleBuffers())
-		qWarning() << "Could not enable sample buffers";
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
-	if (!initShaderPrograms())
-		return false;
-	return true;
-}
-
-void DrawManager::initialize(RenderStateNode& renderStateNode) {
-	GLuint bufferID;
-	GLint size = (renderStateNode.getVertexData()->size());
-	// Create New VertexArrayObject
-	glGenVertexArrays(1, &bufferID);
-	renderStateNode.setVertexArrayObjectID(bufferID);
-	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
-
-	// Create New Vertex Buffer Object
-	glGenBuffers(1, &bufferID);
-	renderStateNode.setVertexBufferID(bufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(renderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
-	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
-	glEnableVertexAttribArray(m_vertexLocation);
-	glEnableVertexAttribArray(m_normalLocation);
-
-	// Create New Color Buffer Object
-	if (renderStateNode.hasColorVector()) {
-		glGenBuffers(1, &bufferID);
-		renderStateNode.setColorBufferID(bufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, renderStateNode.getColorVector()->size() * sizeof(glm::vec4), renderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(m_colorLocation);
-
-	}
-	// Create IndexBuffer;
-	size= renderStateNode.getIndices()->size();
-	glGenBuffers(1, &bufferID);
-	renderStateNode.setIndexBufferID(bufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderStateNode.getIndexBufferID());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(renderStateNode.getIndices()->at(0)), GL_DYNAMIC_DRAW);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	renderStateNode.setInitialized(true);
-}
-
-void DrawManager::drawObject(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
-	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
-	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
-	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-
-	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
-	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
-	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
-	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
-	glUniform1f(m_ambientFactorLocation, (GLfloat) renderStateNode.getMaterial().getAmbientFactor());
-	glUniform1f(m_diffuseFactorLocation, (GLfloat) renderStateNode.getMaterial().getDiffuseFactor());
-	glUniform1f(m_specularFactorLocation, (GLfloat) renderStateNode.getMaterial().getSpecularFactor());
-	glUniform1f(m_phongExponentLocation, (GLfloat) renderStateNode.getMaterial().getPhongExponent());
-	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	if (renderStateNode.hasColorVector()) {
-		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-		glUniform1i(m_isColoredLocation, 1);
-	} else {
-		hpcolor color = renderStateNode.getColor();
-		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
-		glUniform1i(m_isColoredLocation, 0);
-	}
-	int size;
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-	glDrawElements(GL_TRIANGLES, size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 

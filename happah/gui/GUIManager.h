@@ -27,11 +27,16 @@ public:
 
 	void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
 	void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
+	void handleSubtreeInsertedEvent(Node_ptr root);
+	void handleSubtreesInsertedEvent(vector<Node_ptr>& roots);
+	void handleSubtreeRemovedEvent(Node_ptr root);
+	void handleSubtreesRemovedEvent(vector<Node_ptr>& roots);
+	void handleSubtreeUpdatedEvent(Node_ptr root);
+	void handleSubtreesUpdatedEvent(vector<Node_ptr>& roots);
 	bool init();
 	void insert(InvoluteGear_ptr involuteGear);
 	void insert(Plane_ptr plane);
 	void insert(SimpleGear_ptr simpleGear);
-	void sceneChanged();
 	void update(InvoluteGear_ptr involuteGear);
 	void update(SimpleGear_ptr simpleGear);
 	void visit(InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
@@ -51,6 +56,8 @@ private:
 	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G>
 	void doUpdate3D(shared_ptr<G> geometry);
+	void sceneChanged();
+
 };
 
 

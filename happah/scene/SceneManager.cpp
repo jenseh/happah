@@ -20,7 +20,10 @@ void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 	shared_ptr<N> dataNode;
 	if(node) {
 		dataNode = static_pointer_cast<N>(node);
-		if(dataNode->hasChild(guiStateNode)) return;
+		if(dataNode->hasChild(guiStateNode)) {
+			triggerSubtreeUpdatedEvent(guiStateNode);
+			return;
+		}
 	} else {
 		dataNode = shared_ptr<N>(new N(data));
 		insertChild(dataNode);
@@ -45,6 +48,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
 			triangleMeshRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(triangleMeshRenderStateNode);
 			return;
 		}
 	} else {
@@ -88,7 +92,7 @@ void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMe
 	doInsert<SimpleGear, SimpleGearNode>(simpleGear, triangleMesh, color);
 }
 
-void SceneManager::registerListener(SceneListener* sceneListener) {
+void SceneManager::registerSceneListener(SceneListener* sceneListener) {
 	m_listeners.push_back(sceneListener);
 }
 
@@ -122,27 +126,37 @@ Node_ptr SceneManager::removeContaining(shared_ptr<void> parentData, shared_ptr<
 	return node;
 }
 
-void SceneManager::triggerSubtreeInsertedEvent(Node_ptr node) {
+void SceneManager::triggerSubtreeInsertedEvent(Node_ptr root) {
 	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
-		(*i)->sceneChanged();
+		(*i)->handleSubtreeInsertedEvent(root);
 }
 
-void SceneManager::triggerSubtreesInsertedEvent(vector<Node_ptr>& nodes) {
+void SceneManager::triggerSubtreesInsertedEvent(vector<Node_ptr>& roots) {
 	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
-		(*i)->sceneChanged();
+		(*i)->handleSubtreesInsertedEvent(roots);
 }
 
-void SceneManager::triggerSubtreeRemovedEvent(Node_ptr node) {
+void SceneManager::triggerSubtreeRemovedEvent(Node_ptr root) {
 	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
-		(*i)->sceneChanged();
+		(*i)->handleSubtreeRemovedEvent(root);
 }
 
-void SceneManager::triggerSubtreesRemovedEvent(vector<Node_ptr>& nodes) {
+void SceneManager::triggerSubtreesRemovedEvent(vector<Node_ptr>& roots) {
 	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
-		(*i)->sceneChanged();
+		(*i)->handleSubtreesRemovedEvent(roots);
 }
 
-void SceneManager::unregisterListener(SceneListener* sceneListener) {
+void SceneManager::triggerSubtreeUpdatedEvent(Node_ptr root) {
+	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
+		(*i)->handleSubtreeUpdatedEvent(root);
+}
+
+void SceneManager::triggerSubtreesUpdatedEvent(vector<Node_ptr>& roots) {
+	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
+		(*i)->handleSubtreesUpdatedEvent(roots);
+}
+
+void SceneManager::unregisterSceneListener(SceneListener* sceneListener) {
 	m_listeners.remove(sceneListener);
 }
 

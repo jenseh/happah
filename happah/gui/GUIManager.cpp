@@ -9,7 +9,7 @@ GUIManager::GUIManager(SceneManager_ptr sceneManager)
 		m_sceneGraphExplorerPanel(m_mainWindow.getSceneGraphExplorerPanel()),
 		m_sceneManager(sceneManager),
 		m_toolPanel(m_mainWindow.getToolPanel()) {
-	m_sceneManager->registerListener(this);
+	m_sceneManager->registerSceneListener(this);
 }
 
 GUIManager::~GUIManager() {
@@ -56,6 +56,30 @@ void GUIManager::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiSt
 
 void GUIManager::handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode) {
 	m_toolPanel->setForm(guiStateNode->getForm());
+}
+
+void GUIManager::handleSubtreeInsertedEvent(Node_ptr root) {
+	sceneChanged();
+}
+
+void GUIManager::handleSubtreesInsertedEvent(vector<Node_ptr>& roots) {
+	sceneChanged();
+}
+
+void GUIManager::handleSubtreeRemovedEvent(Node_ptr root) {
+	sceneChanged();
+}
+
+void GUIManager::handleSubtreesRemovedEvent(vector<Node_ptr>& roots) {
+	sceneChanged();
+}
+
+void GUIManager::handleSubtreeUpdatedEvent(Node_ptr root) {
+	sceneChanged();
+}
+
+void GUIManager::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {
+	sceneChanged();
 }
 
 bool GUIManager::init() {

@@ -28,7 +28,6 @@ InvoluteGear& InvoluteGear::operator=(const InvoluteGear& other) {
 	m_bottomClearance = other.m_bottomClearance;
 	m_filletRadius = other.m_filletRadius;
 	m_helixAngle = other.m_helixAngle;
-	m_name = other.m_name;
 }
 
 bool InvoluteGear::verifyConstraints(bool print) {

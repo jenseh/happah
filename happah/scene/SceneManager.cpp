@@ -64,7 +64,7 @@ void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNo
 		planeNode = dynamic_pointer_cast<PlaneNode>(node);
 		if(planeNode->hasChild(planeGUIStateNode)) return;
 	} else {
-		planeNode = PlaneNode_ptr( new PlaneNode(plane) );
+		planeNode = PlaneNode_ptr(new PlaneNode(plane));
 		insertChild(planeNode);
 	}
 

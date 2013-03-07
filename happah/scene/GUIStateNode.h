@@ -60,10 +60,10 @@ private:
 
 class PlaneGUIStateNode : public GUIStateNode {
 public:
-	PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name );
+	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, string name);
 	~PlaneGUIStateNode();
 
-	void accept( GUIVisitor& guiVisitor );
+	void accept(GUIVisitor& guiVisitor);
 	Form* getForm();
 	Plane_ptr getPlane() const;
 	PlaneGUIStateNode_ptr getptr();

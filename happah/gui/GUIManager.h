@@ -29,8 +29,8 @@ public:
 	void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 	bool init();
 	void insert(InvoluteGear_ptr involuteGear);
-	void insert(SimpleGear_ptr simpleGear);
 	void insert(Plane_ptr plane);
+	void insert(SimpleGear_ptr simpleGear);
 	void sceneChanged();
 	void update(InvoluteGear_ptr involuteGear);
 	void update(SimpleGear_ptr simpleGear);

@@ -66,9 +66,8 @@ void GUIManager::insert(SimpleGear_ptr simpleGear) {
 void GUIManager::insert( Plane_ptr plane ) {
 	ostringstream oss;
 	oss << "Plane " << m_counter++;
-	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(
-			new PlaneGUIStateNode( plane, m_toolPanel->getPlaneForm(), oss.str() ));
-	m_sceneManager->insert( plane, planeGUIStateNode );
+	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), oss.str()));
+	m_sceneManager->insert(plane, planeGUIStateNode);
 }
 
 

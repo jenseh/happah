@@ -3,6 +3,8 @@
 
 #include <memory>
 
+using namespace std;
+
 #include "happah/geometries/Plane.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
@@ -12,15 +14,15 @@
 class PlaneNode : public SimpleGeometryNode<Plane> {
 
 public:
-	PlaneNode( Plane_ptr plane );
+	PlaneNode(Plane_ptr plane);
 	virtual ~PlaneNode();
 
-	virtual void accept( SceneVisitor& sceneVisitor );
-	void insertChild( PlaneGUIStateNode_ptr planeGUIStateNode );
-	void insertChild( TriangleMeshNode_ptr triangleMeshNode );
+	virtual void accept(SceneVisitor& sceneVisitor);
+	void insertChild(PlaneGUIStateNode_ptr planeGUIStateNode);
+	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
 
 };
 
-typedef std::shared_ptr<PlaneNode> PlaneNode_ptr;
+typedef shared_ptr<PlaneNode> PlaneNode_ptr;
 
 #endif // PLANENODE_H

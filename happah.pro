@@ -44,7 +44,7 @@ HEADERS += \
 	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
 	happah/gui/forms/SimpleGearListener.h \
-	happah/gui/forms/DiscForm.cpp \
+	happah/gui/forms/DiscForm.h \
 \
 #	happah/kdtree/BBox.h \
 #	happah/kdtree/BSphere.h \

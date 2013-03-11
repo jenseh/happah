@@ -15,7 +15,7 @@ HEADERS += \
 	happah/geometries/BSplineGearCurve.h \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
-#	happah/geometries/Disc.h \
+	happah/geometries/Disc.h \
 	happah/geometries/Gear.h \
 	happah/geometries/Geometry.h \
 	happah/geometries/InvoluteGear.h \
@@ -25,7 +25,7 @@ HEADERS += \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
 #	happah/geometries/SpherePatch.h \
-#	happah/geometries/StandardProfile.h \
+	happah/geometries/StandardProfile.h \
 #	happah/geometries/TriPatch.h \
 #	happah/geometries/ZCircleCloud.h \
 \
@@ -46,17 +46,11 @@ HEADERS += \
 	happah/gui/forms/SimpleGearListener.h \
 \
 #	happah/kdtree/BBox.h \
-#	happah/kdtree/Box.h \
 #	happah/kdtree/BSphere.h \
 #	happah/kdtree/ExplicitKDTree.h \
 #	happah/kdtree/ExplicitKDTreeInnerNode.h \
 #	happah/kdtree/ExplicitKDTreeLeaf.h \
 #	happah/kdtree/ExplicitKDTreeNode.h \
-#	happah/kdtree/ImplicitKDTree.h \
-#	happah/kdtree/IntersectInfo.h \
-#	happah/kdtree/TriangleBox.h \
-#	happah/kdtree/TriangleKDTree.h \
-#	happah/kdtree/TriangleKDTreeNode.h \
 \
 	happah/math/Circle.h \
 	happah/math/Ray.h \
@@ -80,7 +74,7 @@ HEADERS += \
 \
 #	happah/simulations/CircularSimulationResult.h \
 #	happah/simulations/DiscGearGrind.h \
-#	happah/simulations/Kinematic.h \
+	happah/simulations/Kinematic.h \
 #	happah/simulations/Simulation.h \
 #	happah/simulations/WormGearGrind.h \
 \
@@ -96,7 +90,7 @@ SOURCES += \
 	happah/geometries/BSplineGearCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
-#	happah/geometries/Disc.cpp \
+	happah/geometries/Disc.cpp \
 	happah/geometries/Gear.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/InvoluteGear.cpp \
@@ -106,7 +100,7 @@ SOURCES += \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
 #	happah/geometries/SpherePatch.cpp \
-#	happah/geometries/StandardProfile.cpp \
+	happah/geometries/StandardProfile.cpp \
 #	happah/geometries/TriPatch.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \
@@ -124,14 +118,11 @@ SOURCES += \
 	happah/gui/forms/SimpleGearForm.cpp \
 \
 #	happah/kdtree/BBox.cpp \
-#	happah/kdtree/Box.cpp \
 #	happah/kdtree/BSphere.cpp \
 #	happah/kdtree/ExplicitKDTree.cpp \
 #	happah/kdtree/ExplicitKDTreeInnerNode.cpp \
 #	happah/kdtree/ExplicitKDTreeLeaf.cpp \
 #	happah/kdtree/ExplicitKDTreeNode.cpp \
-#	happah/kdtree/ImplicitKDTree.cpp \
-#	happah/kdtree/TriangleKDTree.cpp \
 \
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
@@ -147,7 +138,7 @@ SOURCES += \
 \
 #	happah/simulations/CircularSimulationResult.cpp \
 #	happah/simulations/DiscGearGrind.cpp \
-#	happah/simulations/Kinematic.cpp \
+	happah/simulations/Kinematic.cpp \
 #	happah/simulations/Simulation.cpp \
 #	happah/simulations/WormGearGrind.cpp \
 \

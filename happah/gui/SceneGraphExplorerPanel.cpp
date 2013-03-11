@@ -14,7 +14,7 @@ SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sce
 	layout->addWidget(m_deleteButton);
 	setLayout(layout);
 
-	connect(m_listWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(handleItemDoubleClickedEvent(QListWidgetItem*)));
+	connect(m_listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClickedEvent(QListWidgetItem*)));
 	connect(m_deleteButton, SIGNAL(clicked()), this, SLOT(handleDeleteButtonClickedEvent()));
 }
 
@@ -37,7 +37,7 @@ void SceneGraphExplorerPanel::handleDeleteButtonClickedEvent() {
 	m_sceneGraphExplorerListener.handleGUIStateNodesDeletedEvent(selectedGUIStateNodes);
 }
 
-void SceneGraphExplorerPanel::handleItemDoubleClickedEvent(QListWidgetItem* item) {
+void SceneGraphExplorerPanel::handleItemClickedEvent(QListWidgetItem* item) {
 	m_sceneGraphExplorerListener.handleGUIStateNodeSelectedEvent(m_guiStateNodesByItem[item]);
 }
 

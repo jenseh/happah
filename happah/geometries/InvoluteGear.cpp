@@ -33,11 +33,8 @@ bool InvoluteGear::verifyAndLog(bool condition, std::string message) {
 }
 
 bool InvoluteGear::verifyConstraints(bool print) {
-	if(getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())))
-		std::cerr << "WE GOT THIS PROBLEM!!!" << std::endl;
-	bool aha;
 	if(print) {
-		aha = verifyAndLog((m_toothCount > 2), "No involutes possible with only two or less teeth!")
+		return verifyAndLog((m_toothCount > 2), "No involutes possible with only two or less teeth!")
 			&& verifyAndLog((m_pressureAngle < M_PI / 2.0f),
 					"Pressure angle is too big! A pressure angle of PI/2 would be a circle")
 			&& verifyAndLog((getBaseRadius() <= getReferenceRadius() - m_module),
@@ -53,7 +50,7 @@ bool InvoluteGear::verifyConstraints(bool print) {
 			&& verifyAndLog(getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())),
 					"Involute ends after half of angular pitch!");
 	} else {
-		aha = (m_toothCount > 2)
+		return (m_toothCount > 2)
 			&& (m_pressureAngle < M_PI / 2.0f)
 			&& (getBaseRadius() <= getReferenceRadius() - m_module)
 			&& ((pow((getRootRadius() + m_filletRadius) / getBaseRadius(), 2.0f)) - 1.0f >= 0.0f)
@@ -62,9 +59,6 @@ bool InvoluteGear::verifyConstraints(bool print) {
 			&& (getStopFilletInvoluteAngle() <= involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module))
 			&& (getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())));
 	}
-	if(getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())))
-			std::cerr << "EVEN AFTER!" << std::endl;
-	return aha;
 }
 
 hpuint InvoluteGear::getToothCount() { return m_toothCount; }

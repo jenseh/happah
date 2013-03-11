@@ -5,7 +5,8 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 		m_forms(new QStackedWidget(this)), 
 		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
 		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
-		m_planeForm(new PlaneForm(m_forms)) {
+		m_discForm(new DiscForm(guiManager, m_forms)),
+		m_planeForm(new PlaneForm(m_forms)){
 	QGridLayout* buttonsLayout = new QGridLayout();
 	buttonsLayout->setSpacing(2);
 	QWidget* buttons = new QWidget(this);
@@ -14,6 +15,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	add(buttonsLayout, "IG", m_involuteGearForm, 0, 0);
 	add(buttonsLayout, "SG", m_simpleGearForm, 0, 1);
 	add(buttonsLayout, "P", m_planeForm, 0, 2);
+	add(buttonsLayout, "D", m_discForm, 0, 3);
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);
@@ -47,6 +49,10 @@ PlaneForm* ToolPanel::getPlaneForm() {
 
 SimpleGearForm* ToolPanel::getSimpleGearForm() {
 	return m_simpleGearForm;
+}
+
+DiscForm* ToolPanel::getDiscForm() {
+	return m_discForm;
 }
 
 void ToolPanel::handleButtonClickedEvent() {

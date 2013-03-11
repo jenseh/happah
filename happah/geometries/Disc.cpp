@@ -24,6 +24,10 @@ hpreal Disc::getRadius() {
     return m_radius;
 }
 
+void Disc::setRadius(hpreal radius){
+	m_radius = radius;
+}
+
 // Create a profile of height values
 void Disc::createHeightProfile() {
     m_heightProfile = std::vector<glm::vec2>();

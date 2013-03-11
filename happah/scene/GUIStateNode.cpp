@@ -83,3 +83,20 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
+DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name)
+	: GUIStateNode(name), m_disc(disc), m_discForm(discForm) {}
+
+DiscGUIStateNode::~DiscGUIStateNode() {
+	if(m_discForm->getDisc() == m_disc)
+		m_discForm->reset();
+}
+
+shared_ptr<void> DiscGUIStateNode::getData() const {
+	return m_disc;
+}
+
+Form* DiscGUIStateNode::getForm() {
+	m_discForm->setDisc(m_disc);
+	return m_discForm;
+}
+

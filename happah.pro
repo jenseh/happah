@@ -44,6 +44,7 @@ HEADERS += \
 	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
 	happah/gui/forms/SimpleGearListener.h \
+	happah/gui/forms/DiscForm.cpp \
 \
 #	happah/kdtree/BBox.h \
 #	happah/kdtree/BSphere.h \
@@ -69,6 +70,7 @@ HEADERS += \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGearNode.h \
+	happah/scene/DiscNode.cpp \
 	happah/scene/SimpleGeometryNode.h \
 	happah/scene/TriangleMeshNode.h \
 \
@@ -116,6 +118,7 @@ SOURCES += \
 	happah/gui/forms/InvoluteGearForm.cpp \
 	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
+	happah/gui/forms/DiscForm.cpp \
 \
 #	happah/kdtree/BBox.cpp \
 #	happah/kdtree/BSphere.cpp \
@@ -134,6 +137,7 @@ SOURCES += \
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
 	happah/scene/SimpleGearNode.cpp \
+	happah/scene/DiscNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
 \
 #	happah/simulations/CircularSimulationResult.cpp \

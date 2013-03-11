@@ -25,6 +25,7 @@ public:
 
     ~Disc();
     hpreal getRadius();
+    void setRadius(hpreal);
     glm::vec3 getCenter();
     TriangleMesh* toTriangleMesh();
 private:

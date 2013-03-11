@@ -76,12 +76,20 @@ void GUIManager::insert( Plane_ptr plane ) {
 	m_sceneManager->insert(plane, planeGUIStateNode);
 }
 
+void GUIManager::insert(Disc_ptr disc) {
+	doInsert3D<Disc, DiscGUIStateNode, DiscForm>(disc, "Disc", m_toolPanel->getDiscForm());
+}
+
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate3D<InvoluteGear>(involuteGear);
 }
 
 void GUIManager::update(SimpleGear_ptr simpleGear) {
 	doUpdate3D<SimpleGear>(simpleGear);
+}
+
+void GUIManager::update(Disc_ptr disc) {
+	doUpdate3D<Disc>(disc);
 }
 
 GUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(GUIManager& guiManager)

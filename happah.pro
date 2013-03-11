@@ -38,6 +38,8 @@ HEADERS += \
 	happah/gui/ToolPanel.h \
 	happah/gui/Viewport3D.h \
 \
+	happah/gui/context-menus/ContextMenu.h \
+\
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/InvoluteGearListener.h \

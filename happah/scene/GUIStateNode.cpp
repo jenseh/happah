@@ -10,6 +10,10 @@ void GUIStateNode::accept(GUIVisitor& guiVisitor) {
 	Node::accept(guiVisitor);
 }
 
+ContextMenu* GUIStateNode::getContextMenu() {
+	return NULL;
+}
+
 const string& GUIStateNode::getName() const {
 	return m_name;
 }

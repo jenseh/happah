@@ -41,7 +41,6 @@ Ray Viewport3D::getMouseRay() {
 	return result;
 }
 
-
 void Viewport3D::initializeGL() {
 	// Setup and start a timer
 	m_timer = new QTimer(this);

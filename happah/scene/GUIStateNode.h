@@ -22,6 +22,7 @@ class DiscGUIStateNode;
 typedef shared_ptr<DiscGUIStateNode> DiscGUIStateNode_ptr;
 
 #include "happah/geometries/Mesh.h"
+#include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
 
@@ -31,6 +32,7 @@ public:
 	virtual ~GUIStateNode();
 
 	void accept(GUIVisitor& guiVisitor);
+	virtual ContextMenu* getContextMenu();
 	virtual shared_ptr<void> getData() const = 0;
 	virtual Form* getForm() = 0;
 	const string& getName() const;

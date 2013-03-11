@@ -19,13 +19,14 @@
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/gui/Viewport3DListener.h"
 
 using namespace std;
 
 class Viewport3D: public QGLWidget {
 
 public:
-    Viewport3D(DrawManager& drawManager, QWidget* parent = 0);
+    Viewport3D(Viewport3DListener& viewport3DListener, DrawManager& drawManager, QWidget* parent = 0);
 
 protected:
 	void initializeGL();
@@ -50,6 +51,7 @@ private:
 	hpmat4x4 m_projectionMatrix;
 	hpvec3 m_camera, m_center, m_up;
 	QPoint m_mousePos;
+	Viewport3DListener& m_viewport3DListener;
 	float m_zoomRad, m_theta, m_phi; //is zoomRad german?
 
 	const static int WAIT_TIME = 40;

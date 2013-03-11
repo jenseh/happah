@@ -80,6 +80,10 @@ void GUIManager::insert(Disc_ptr disc) {
 	doInsert3D<Disc, DiscGUIStateNode, DiscForm>(disc, "Disc", m_toolPanel->getDiscForm());
 }
 
+void GUIManager::mouseClickEvent(Ray ray){
+	//TODO do something cool here
+}
+
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate3D<InvoluteGear>(involuteGear);
 }

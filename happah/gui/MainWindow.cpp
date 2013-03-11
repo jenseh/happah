@@ -21,7 +21,7 @@ MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& scene
 	QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
 	centralWidget->setLayout(centralWidgetLayout);
 	centralWidgetLayout->addWidget(m_toolPanel);
-	centralWidgetLayout->addWidget(new Viewport3D(drawManager, this), 1);
+	centralWidgetLayout->addWidget( new Viewport3D(guiManager, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
 	setCentralWidget(centralWidget);

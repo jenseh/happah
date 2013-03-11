@@ -3,8 +3,8 @@
 
 #include "happah/gui/Viewport3D.h"
 
-Viewport3D::Viewport3D(DrawManager& drawManager, QWidget* parent)
-	: QGLWidget(drawManager.getGlContext(), parent), m_drawManager(drawManager) {
+Viewport3D::Viewport3D(Viewport3DListener& viewport3DListener,DrawManager& drawManager, QWidget* parent)
+	: QGLWidget(drawManager.getGlContext(), parent), m_viewport3DListener(viewport3DListener), m_drawManager(drawManager) {
 
 	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
 
@@ -34,7 +34,8 @@ Ray Viewport3D::getMouseRay() {
 	hpvec3 winPos;
 	winPos.x = m_mousePos.x();
 	winPos.y = height() - m_mousePos.y(); // Because screen coordinates on the top not the bottom
-	winPos.z = 1.0; // Touching the "far plane"
+	glReadPixels(m_mousePos.x(), m_mousePos.y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winPos.z);
+	//winPos.z = 1.0; // Touching the "far plane"
 	hpvec4 viewport(0, 0, width(), height());
 	hpvec3 point = glm::unProject(winPos, m_viewMatrix, m_projectionMatrix, viewport );
 	result.direction = point - m_camera;
@@ -118,7 +119,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 }
 void Viewport3D::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
-	getMouseRay();
+	m_viewport3DListener.mouseClickEvent(getMouseRay());
 }
 
 void Viewport3D::wheelEvent(QWheelEvent *event) {

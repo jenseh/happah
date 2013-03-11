@@ -82,28 +82,14 @@ void DrawManager::doDraw(RenderStateNode& renderStateNode, RigidAffineTransforma
 	glBindVertexArray(0);
 }
 
-void DrawManager::draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition) {
+void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(m_program);
 
-	//TODO: REMOVE THIS AS SOON AS QMatrix4x4 is removed
-	QMatrix4x4 vMatrix = *viewMatrix;
-	QMatrix4x4 pMatrix = *projectionMatrix;
-	GLfloat viewMatrixFloats[16];
-	GLfloat projectionMatrixFloats[16];
-	const qreal* viewMatrixQreals = vMatrix.constData();
-	const qreal* projectionMatrixQreals = pMatrix.constData();
-	for (int j = 0; j < 16; ++j) {
-		viewMatrixFloats[j] = viewMatrixQreals[j];
-		projectionMatrixFloats[j] = projectionMatrixQreals[j];
-	}
-	//TODO: Until here
-	m_modelMatrix = glm::mat4(1.0f);
-	m_viewMatrix = glm::make_mat4(viewMatrixFloats);
-	m_projectionMatrix = glm::make_mat4(projectionMatrixFloats);
-	m_cameraPosition.x = cameraPosition->x();
-	m_cameraPosition.y = cameraPosition->y();
-	m_cameraPosition.z = cameraPosition->z();
+	m_modelMatrix = hpmat4x4(1.0f);
+	m_viewMatrix = viewMatrix;
+	m_projectionMatrix = projectionMatrix;
+	m_cameraPosition = cameraPosition;
 
 	RigidAffineTransformation identityTransformation;
 	m_sceneManager->draw(m_drawVisitor, identityTransformation);

@@ -21,7 +21,7 @@ public:
 	DrawManager(SceneManager_ptr sceneManager);
 	~DrawManager();
 
-	void draw(QMatrix4x4* projectionMatrix, QMatrix4x4* viewMatrix, QVector3D* cameraPosition);
+	void draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition);
 	QGLContext* getGlContext();
 	bool init();
 

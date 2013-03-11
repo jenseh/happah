@@ -11,15 +11,13 @@
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 Disc::Disc(hpreal radius): Geometry(){
     m_radius = radius; // doppelt so groß wie ein zahn
-    m_module = m_radius / 2.0;
-    m_length = m_module * M_PI;
-    m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
+    m_standardProfile = NULL;
+    updateValues();
 }
 
 Disc::~Disc() {
     delete m_standardProfile;
 }
-
 
 // Create a profile of height values
 void Disc::createHeightProfile() {
@@ -114,6 +112,7 @@ hpreal Disc::getRadius() {
 
 void Disc::setRadius(hpreal radius){
 	m_radius = radius;
+	updateValues();
 }
 
 TriangleMesh* Disc::toTriangleMesh(){
@@ -204,6 +203,14 @@ TriangleMesh* Disc::toTriangleMesh(){
 	}
 
 	return new TriangleMesh(vertexData, indices);
+}
+
+void Disc::updateValues(){
+    m_module = m_radius / 2.0;
+    m_length = m_module * M_PI;
+    if( m_standardProfile != NULL )
+    	delete m_standardProfile;
+    m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
 }
 
 

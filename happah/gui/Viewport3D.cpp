@@ -8,22 +8,41 @@ Viewport3D::Viewport3D(DrawManager& drawManager, QWidget* parent)
 
 	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
 
-	m_projectionMatrix.setToIdentity();
-	m_viewMatrix.setToIdentity();
+	m_projectionMatrix = hpmat4x4(1.0);
+	m_viewMatrix = hpmat4x4(1.0);
 	m_zoomRad = 5.0f;
-	m_camera.setX(0.0f);
-	m_camera.setY(0.0f);
-	m_camera.setZ(m_zoomRad);
-	m_center.setX(0.0f);
-	m_center.setY(0.0f);
-	m_center.setZ(0.0f);
-	m_up.setX(0.0f);
-	m_up.setY(m_zoomRad);
-	m_up.setZ(0.0f);
+
+	m_camera.x = 0.0;
+	m_camera.y = 0.0;
+	m_camera.z = m_zoomRad;
+
+	m_center.x = 0.0;
+	m_center.y = 0.0;
+	m_center.z = 0.0;
+	m_up.x = 0.0;
+	m_up.y = m_zoomRad;
+	m_up.z = 0.0;
+
 	m_theta = 0;
 	m_phi = 0;
 
 }
+
+Ray Viewport3D::calcRay(int x, int y, int width, int height) {
+	hpvec4 point;
+	point.x = 2.0 * (hpreal)x / (hpreal)width - 1;
+	point.y = - 2.0 * (hpreal)y / (hpreal)height + 1;
+	point.z = m_camera.z + m_zoomRad;
+	hpmat4x4 viewProjectionInverse = glm::inverse(m_projectionMatrix * m_viewMatrix);
+	Ray result;
+	result.origin = m_camera;
+	point  = viewProjectionInverse*point;
+	result.direction.x = point.x - m_camera.x;
+	result.direction.y = point.y - m_camera.y;
+	result.direction.z = point.z - m_camera.z;
+	return result;
+}
+s
 
 void Viewport3D::initializeGL() {
 	// Setup and start a timer
@@ -36,20 +55,17 @@ void Viewport3D::initializeGL() {
 void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
-	m_projectionMatrix.setToIdentity();
-	m_projectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
+	m_projectionMatrix = glm::perspective(45.0f, ratio, 0.1f, 100.0f);
 }
 
 void Viewport3D::paintGL() {
 	updateView();
-	m_drawManager.draw(&m_projectionMatrix, &m_viewMatrix, &m_camera);
+
+	m_drawManager.draw(m_projectionMatrix, m_viewMatrix, m_camera);
 }
 
 void Viewport3D::updateView() {
-	//Update ViewMatrix
-	QMatrix4x4 LookatMatrix;
-	LookatMatrix.lookAt(m_camera, m_center, m_up);
-	m_viewMatrix = LookatMatrix;
+	m_viewMatrix =glm::lookAt(m_camera, m_center, m_up);
 }
 
 void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
@@ -60,16 +76,16 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 	float dx = (float) (event->x() - m_mousePos.x()) / width;
 	float dy = (float) (event->y() - m_mousePos.y()) / height;
 
-	QVector3D forward =m_center - m_camera;
-	forward.normalize();
+	hpvec3 forward =m_center - m_camera;
+	forward = glm::normalize(forward);
 	forward *= m_zoomRad;
-	QVector3D right = QVector3D::crossProduct(m_up, forward);
-	right.normalize();
+	hpvec3 right = glm::cross(m_up, forward);
+	right = glm::normalize(right);
 	right *= m_zoomRad;
-	m_up.normalize();
+	m_up = glm::normalize(m_up);
 	m_up *= m_zoomRad;
 
-	QVector3D delta;
+	hpvec3 delta;
 
 	if (event->buttons() == Qt::LeftButton) {
 		m_theta = dx*M_PI;
@@ -78,13 +94,13 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 		m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
 		// Recalc forward
 		forward =m_center - m_camera;
-		forward.normalize();
+		forward = glm::normalize(forward);
 		forward *= m_zoomRad;
 
 		m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
 		// recalc up
-		m_up = QVector3D::crossProduct(forward, right);
-		m_up.normalize();
+		m_up = glm::cross(forward, right);
+		m_up = glm::normalize(m_up);
 		m_up *= m_zoomRad;
 
 		updateGL();
@@ -112,7 +128,7 @@ void Viewport3D::wheelEvent(QWheelEvent *event) {
 	float steps = degrees / 15;
 
 	m_zoomRad = m_zoomRad - steps;
-	m_camera.setZ(m_zoomRad);
+	m_camera.z = m_zoomRad;
 	updateGL();
 
 }

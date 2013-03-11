@@ -1,6 +1,7 @@
 #ifndef GLVIEWPORT3D_H_
 #define GLVIEWPORT3D_H_
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
 #include <QGLWidget>
 #include <QGLBuffer>
@@ -14,6 +15,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "happah/math/Ray.h"
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/scene/SceneManager.h"
@@ -36,6 +38,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
+	Ray calcRay(int x, int y, int width, int height);
 	void updateView();
 	void setZoom(float zoom);
 
@@ -43,9 +46,9 @@ private:
 	DrawManager& m_drawManager;
 
 	uint m_lastSceneState;
-	QMatrix4x4 m_viewMatrix;
-	QMatrix4x4 m_projectionMatrix;
-	QVector3D m_camera, m_center, m_up;
+	hpmat4x4 m_viewMatrix;
+	hpmat4x4 m_projectionMatrix;
+	hpvec3 m_camera, m_center, m_up;
 	QPoint m_mousePos;
 	float m_zoomRad, m_theta, m_phi; //is zoomRad german?
 

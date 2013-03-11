@@ -40,6 +40,7 @@ private:
 
     std::vector<glm::vec4> createVertexData();
     void createHeightProfile();
+    void updateValues();
 };
 
 typedef shared_ptr<Disc> Disc_ptr;

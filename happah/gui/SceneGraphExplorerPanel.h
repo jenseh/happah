@@ -32,7 +32,7 @@ private:
 
 private slots:
 	void handleDeleteButtonClickedEvent();
-	void handleItemDoubleClickedEvent(QListWidgetItem* item);
+	void handleItemClickedEvent(QListWidgetItem* item);
 
 };
 

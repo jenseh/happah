@@ -43,12 +43,11 @@ GearSlider::GearSlider(const QString &title, bool smoothValues, QWidget *parent)
 	QGridLayout *gridLayout = new QGridLayout;
 	gridLayout->setHorizontalSpacing(0);
 	gridLayout->setVerticalSpacing(0);
-	gridLayout->setRowStretch(0, 3);
-	gridLayout->setRowStretch(1, 1);
+	gridLayout->setRowStretch(2, 2);
 	gridLayout->addWidget(m_slider,     0, 0, 1, 3);
 	gridLayout->addWidget(m_minLabel,   1, 0);
 	gridLayout->addWidget(m_maxLabel,   1, 2);
-	gridLayout->addWidget(m_valueLabel, 2, 1);
+	gridLayout->addWidget(m_valueLabel, 2, 1, Qt::AlignTop);
 	setLayout(gridLayout);
 
 	connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));

@@ -28,9 +28,13 @@ SceneGraphExplorerPanel::~SceneGraphExplorerPanel() {}
 
 void SceneGraphExplorerPanel::contextMenuEvent (QContextMenuEvent* event) {
 
-	QListWidgetItem* selectedItem = m_listWidget->itemAt(QCursor::pos());
+	QListWidgetItem* selectedItem = m_listWidget->itemAt(m_listWidget->mapFromGlobal(event->pos()));
 	GUIStateNode_ptr selectedGUIStateNode = m_guiStateNodesByItem[selectedItem];
 
+	if(selectedGUIStateNode && selectedGUIStateNode->getContextMenu()) {
+		ContextMenu* contextMenu = selectedGUIStateNode->getContextMenu();
+		QAction* action = contextMenu->exec(event->pos());
+	}
 }
 
 void SceneGraphExplorerPanel::insert(GUIStateNode_ptr guiStateNode) {

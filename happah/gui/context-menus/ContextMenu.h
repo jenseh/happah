@@ -1,8 +1,12 @@
 #ifndef CONTEXTMENU_H
 #define CONTEXTMENU_H
 
-class ContextMenu {
+#include <QMenu>
+
+class ContextMenu : public QMenu {
+	Q_OBJECT
+
 public:
-	ContextMenu(){}
+	ContextMenu(QWidget *parent = 0);
 };
 #endif //CONTEXTMENU_H

@@ -117,6 +117,8 @@ SOURCES += \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/Viewport3D.cpp \
 \
+	happah/gui/context-menus/ContextMenu.cpp \
+\
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
 	happah/gui/forms/PlaneForm.cpp \

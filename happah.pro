@@ -78,8 +78,8 @@ HEADERS += \
 	happah/simulations/CircularSimulationResult.h \
 #	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
-	happah/simulations/Simulation.h \
-	happah/simulations/WormGearGrind.h \
+#	happah/simulations/Simulation.h \
+#	happah/simulations/WormGearGrind.h \
 \
 	happah/transformations/RigidAffineTransformation.h
 
@@ -144,8 +144,8 @@ SOURCES += \
 	happah/simulations/CircularSimulationResult.cpp \
 #	happah/simulations/DiscGearGrind.cpp \
 	happah/simulations/Kinematic.cpp \
-	happah/simulations/Simulation.cpp \
-	happah/simulations/WormGearGrind.cpp \
+#	happah/simulations/Simulation.cpp \
+#	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp
 

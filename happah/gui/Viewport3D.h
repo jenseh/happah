@@ -38,7 +38,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
-	Ray calcRay(int x, int y, int width, int height);
+	Ray getMouseRay();
 	void updateView();
 	void setZoom(float zoom);
 

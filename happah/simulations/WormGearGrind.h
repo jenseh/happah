@@ -4,8 +4,8 @@
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/kdtree/ExplicitKDTree.h"
-#include "happah/primitives/Circle.h"
-#include "happah/primitives/Triangle.h"
+#include "happah/math/Circle.h"
+#include "happah/math/Triangle.h"
 #include "happah/simulations/CircularSimulationResult.h"
 
 class WormGearGrind

@@ -28,21 +28,19 @@ Viewport3D::Viewport3D(DrawManager& drawManager, QWidget* parent)
 
 }
 
-Ray Viewport3D::calcRay(int x, int y, int width, int height) {
-	hpvec4 point;
-	point.x = 2.0 * (hpreal)x / (hpreal)width - 1;
-	point.y = - 2.0 * (hpreal)y / (hpreal)height + 1;
-	point.z = m_camera.z + m_zoomRad;
-	hpmat4x4 viewProjectionInverse = glm::inverse(m_projectionMatrix * m_viewMatrix);
+Ray Viewport3D::getMouseRay() {
 	Ray result;
 	result.origin = m_camera;
-	point  = viewProjectionInverse*point;
-	result.direction.x = point.x - m_camera.x;
-	result.direction.y = point.y - m_camera.y;
-	result.direction.z = point.z - m_camera.z;
+	hpvec3 winPos;
+	winPos.x = m_mousePos.x();
+	winPos.y = height() - m_mousePos.y(); // Because screen coordinates on the top not the bottom
+	winPos.z = 1.0; // Touching the "far plane"
+	hpvec4 viewport(0, 0, width(), height());
+	hpvec3 point = glm::unProject(winPos, m_viewMatrix, m_projectionMatrix, viewport );
+	result.direction = point - m_camera;
 	return result;
 }
-s
+
 
 void Viewport3D::initializeGL() {
 	// Setup and start a timer
@@ -121,6 +119,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 }
 void Viewport3D::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
+	getMouseRay();
 }
 
 void Viewport3D::wheelEvent(QWheelEvent *event) {

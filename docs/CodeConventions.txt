@@ -3,7 +3,7 @@ The following should be a minimum convention for how to write the code in Happah
 Variables:
 - Constant variables are written in upper-case with underscores between each word.
 - All non-constant variables are written in camel-case.
-- All class variables should end with an underscore (_).
+- All class variables should start with "m_".
 - Variable names should begin with a non-capital letter.
 - No class variables should be public.
 

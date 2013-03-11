@@ -1,20 +1,16 @@
 #ifndef INVOLUTEGEAR_H
 #define INVOLUTEGEAR_H
 
-#include <cmath>
-#include <cstring>
 #include <glm/glm.hpp>
-#include <iostream>
 #include <memory>
-#include <sstream>
 #include <vector>
+#include <cstring>
 
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Gear.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/BSplineGearCurve.h"
-//#include "../models/TriangleMesh.h"
-//#include "../models/QuadMesh.h"
+
 //#include "happah/geometries/ZCircleCloud.h"
 
 /** @class InvoluteGear
@@ -42,11 +38,11 @@ typedef shared_ptr<InvoluteGear> InvoluteGear_ptr;
 
 class InvoluteGear : public Gear {
 public:
-	InvoluteGear(uint toothCount = 15,
+	InvoluteGear(hpuint toothCount = 15,
 			hpreal module = 0.13,
 			hpreal facewidth = 0.2f,
 			hpreal pressureAngle = M_PI / 6.0f,
-			hpreal bottomClearance = 0.0f,
+			hpreal bottomClearance = 0.0002f,
 			hpreal filletRadius = 0.0f,
 			hpreal helixAngle = 0.0f);
 
@@ -56,7 +52,7 @@ public:
 
 	InvoluteGear& operator=(const InvoluteGear& other);
 
-    uint   getToothCount();
+    hpuint getToothCount();
     hpreal getModule();
     hpreal getFacewidth(); //Zahnradbreite
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
@@ -75,7 +71,7 @@ public:
      * If minimum > maximum no value is found.
      * methods start from the promise that current gear is a valid gear
      */
-    uint* getPossibleToothCounts();
+    hpuint* getPossibleToothCounts();
     hpreal* getPossibleModules();
     hpreal* getPossiblePressureAngles();
     hpreal* getPossibleBottomClearances();
@@ -83,7 +79,7 @@ public:
 
     // Values are only set, if they would produce proper gear.
     // The bool returned shows if value could be set.
-    bool setToothCount(uint toothCount);
+    bool setToothCount(hpuint toothCount);
     bool setModule(hpreal module);
     bool setFacewidth(hpreal facewidth);
     bool setPressureAngle(hpreal pressureAngle);
@@ -100,7 +96,7 @@ public:
     std::string toString();
 
 private:
-    uint   m_toothCount;
+    hpuint m_toothCount;
     hpreal m_module;
     hpreal m_facewidth;
     hpreal m_pressureAngle;
@@ -111,6 +107,7 @@ private:
     template <class T> T *getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize);
 
     bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern �berhaupt erstellbar ist
+    bool verifyAndLog(bool condition, std::string message);
     hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Gr��e Zahnl�cke = Gr��e Zahnbreite
     hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fu�rundung endet/in Evolvente �bergeht
     hpreal getStartFilletAngle(); //Winkel, an dem Fu�rundung startet
@@ -119,13 +116,13 @@ private:
     hpvec2 mirrorPoint(const hpvec2 &point, const hpvec2 &axis);
 
     hpvec2 pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, const hpreal &angle);
-    void insertCirclePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+    void insertCirclePoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
                                                     const hpreal &sampleAngleSize,
                                                     const hpreal &radius);
-    void insertFilletPoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+    void insertFilletPoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
                                                     const hpreal &sampleAngleSize,
                                                     const hpreal &angle);
-    void insertInvolutePoints(std::vector<hpvec2> &v, const uint &start, const uint &stopBefore,
+    void insertInvolutePoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
                                                     const hpreal &startInvAngle, const hpreal &stopInvAngle);
 };
 

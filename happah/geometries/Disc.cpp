@@ -130,7 +130,7 @@ TriangleMesh* Disc::toTriangleMesh(){
 	vertexData->reserve(Z_DETAIL_LEVEL * m_heightProfile.size() *2);
 	// draw the sides (german: Mantelflaechen) of the gear
 	// this is the important part where the height profile will come into play
-	for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
+	for (int i = 0; i <= Z_DETAIL_LEVEL; i++) {
 		for (unsigned int j = 0; j < m_heightProfile.size();j++) {
 			vertexData->push_back(hpvec3(m_heightProfile[j].x,
 										sin(i * dalpha) * m_heightProfile[j].y,
@@ -152,7 +152,7 @@ TriangleMesh* Disc::toTriangleMesh(){
 	}
 
 	//TODO Compute normals
-	/*
+
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
@@ -202,7 +202,7 @@ TriangleMesh* Disc::toTriangleMesh(){
 			}
 		}
 	}
-	*/
+
 	return new TriangleMesh(vertexData, indices);
 }
 

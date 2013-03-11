@@ -8,6 +8,7 @@ class LineMeshNode;
 class PointCloudNode;
 class RenderStateNode;
 class SimpleGearNode;
+class DiscNode;
 
 class SceneVisitor {
 
@@ -19,7 +20,7 @@ public:
 	virtual void visit(PointCloudNode& pointCloudNode) = 0;
 	virtual void visit(RenderStateNode& renderStateNode) = 0;
 	virtual void visit(SimpleGearNode& simpleGearNode) = 0;
-
+	virtual void visit(DiscNode& discNode) = 0;
 };
 
 #endif // SCENE_VISITOR_H

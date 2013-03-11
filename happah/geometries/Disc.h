@@ -26,6 +26,7 @@ public:
     ~Disc();
     hpreal getRadius();
     glm::vec3 getCenter();
+    void setRadius(hpreal);
     TriangleMesh* toTriangleMesh();
 private:
     hpreal m_radius;// Radius der Scheibe ( y-achse und z-achse )

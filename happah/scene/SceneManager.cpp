@@ -7,6 +7,7 @@
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/RenderStateNode.h"
 #include "happah/scene/SimpleGearNode.h"
+#include "happah/scene/DiscNode.h"
 
 SceneManager::SceneManager() {}
 
@@ -90,6 +91,14 @@ void SceneManager::insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr 
 
 void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
 	doInsert<SimpleGear, SimpleGearNode>(simpleGear, triangleMesh, color);
+}
+
+void SceneManager::insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode) {
+	doInsert<Disc, DiscNode, DiscGUIStateNode>(disc, discGUIStateNode);
+}
+
+void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	doInsert<Disc, DiscNode>(disc, triangleMesh, color);
 }
 
 void SceneManager::registerSceneListener(SceneListener* sceneListener) {

@@ -11,6 +11,7 @@ class SceneManager;
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/Disc.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
@@ -26,6 +27,9 @@ public:
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
+	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
+
 	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);
 	void remove(vector<Node_ptr>& nodes);

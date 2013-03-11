@@ -20,4 +20,4 @@ public:
 typedef shared_ptr<SimpleGearNode> SimpleGearNode_ptr;
 
 
-#endif // SIMPLE_GEAR_NODE_H
+#endif

@@ -281,11 +281,6 @@ std::vector<hpvec2>* InvoluteGear::getToothProfile() {
 	int sampleBeta4 = (TOOTH_SAMPLE_SIZE % 2 == 0) ? TOOTH_SAMPLE_SIZE / 2 : TOOTH_SAMPLE_SIZE / 2 + 1;
 
 	//if assertion fails, values haven't been possible for involute gear and construction would fail!
-	if(sampleBeta1 >= 0
-		&& sampleBeta2 >= sampleBeta1
-		&& sampleBeta3 >= sampleBeta2
-		&& sampleBeta4 >= sampleBeta3)
-		std::cerr << "ASSERTION HAPPENED!" << std::endl;
 	assert(sampleBeta1 >= 0
 		&& sampleBeta2 >= sampleBeta1
 		&& sampleBeta3 >= sampleBeta2

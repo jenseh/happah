@@ -11,20 +11,22 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "happah/geometries/NonDrawable.h"
 #include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/Geometry.h"
+#include "happah/HappahTypes.h"
+#include "happah/geometries/Mesh.h"
 
 using namespace std;
 
 
-class Disc: public NonDrawable {
+class Disc: public Geometry {
 public:
-    Disc(hpreal radius = 1.0f, std::string name = "Disc");
+    Disc(hpreal radius = 1.0f);
 
     ~Disc();
     hpreal getRadius();
     glm::vec3 getCenter();
-    QuadMesh* toQuadMesh();
+    TriangleMesh* toTriangleMesh();
 private:
     hpreal m_radius;// Radius der Scheibe ( y-achse und z-achse )
     hpreal m_length;// Länge/Breite der Scheibe ( x-achse )
@@ -38,4 +40,6 @@ private:
     std::vector<glm::vec4> createVertexData();
     void createHeightProfile();
 };
+
+typedef shared_ptr<Disc> Disc_ptr;
 #endif // DISC_H

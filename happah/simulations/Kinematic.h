@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "happah/primitives/Polynom.h"
+#include "happah/math/Polynom.h"
 
 class Kinematic
 {

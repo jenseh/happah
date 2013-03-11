@@ -1,14 +1,14 @@
 #ifndef EXPLICITKDTREEINNERNODE_H
 #define EXPLICITKDTREEINNERNODE_H
 
+#include "happah/kdtree/ExplicitKDTreeNode.h"
 #include "happah/kdtree/ExplicitKDTreeInnerNode.h"
 #include "happah/kdtree/ExplicitKDTreeLeaf.h"
-#include "happah/kdtree/ExplicitKDTreeNode.h"
 
 class ExplicitKDTreeInnerNode : public ExplicitKDTreeNode
 {
 public:
-  ExplicitKDTreeInnerNode(std::vector<Triangle*>* triangles, BBox* bBox, int depth);
+  ExplicitKDTreeInnerNode(std::vector<Triangle*>* triangles, BBox* bBox, hpuint depth, hpuint maxTrianglesPerBox);
 
   bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth);
 

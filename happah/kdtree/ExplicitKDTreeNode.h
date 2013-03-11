@@ -1,13 +1,13 @@
 #ifndef EXPLICITKDTREENODE_H
 #define EXPLICITKDTREENODE_H
 
+#include <vector>
+#include <list>
 #include <algorithm>
 #include <iostream>
-#include <list>
-#include <vector>
 
-#include "happah/primitives/Circle.h"
-#include "happah/primitives/Triangle.h"
+#include "happah/math/Triangle.h"
+#include "happah/math/Circle.h"
 
 
 class ExplicitKDTreeNode
@@ -15,7 +15,7 @@ class ExplicitKDTreeNode
 public:
   virtual ~ExplicitKDTreeNode();
 
-  virtual bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth);
+  virtual bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, hpuint depth);
 };
 
 #endif // EXPLICITKDTREENODE_H

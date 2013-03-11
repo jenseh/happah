@@ -20,13 +20,6 @@ Disc::~Disc() {
     delete m_standardProfile;
 }
 
-hpreal Disc::getRadius() {
-    return m_radius;
-}
-
-void Disc::setRadius(hpreal radius){
-	m_radius = radius;
-}
 
 // Create a profile of height values
 void Disc::createHeightProfile() {
@@ -115,6 +108,14 @@ std::vector<glm::vec4> Disc::createVertexData() {
     return vertexData;
 }
 
+hpreal Disc::getRadius() {
+    return m_radius;
+}
+
+void Disc::setRadius(hpreal radius){
+	m_radius = radius;
+}
+
 TriangleMesh* Disc::toTriangleMesh(){
 	// This creates the quads for a gear. The gear axis is the model's z-axis.
 	std::vector<hpvec3> *vertexData = new std::vector<hpvec3>;
@@ -150,6 +151,8 @@ TriangleMesh* Disc::toTriangleMesh(){
 		}
 	}
 
+	//TODO Compute normals
+	/*
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
@@ -199,6 +202,7 @@ TriangleMesh* Disc::toTriangleMesh(){
 			}
 		}
 	}
+	*/
 	return new TriangleMesh(vertexData, indices);
 }
 

@@ -1,10 +1,3 @@
-/*
- * DiscListener.h
- *
- *  Created on: 11.03.2013
- *      Author: jlabeit
- */
-
 #ifndef DISCLISTENER_H_
 #define DISCLISTENER_H_
 
@@ -19,4 +12,4 @@ public:
 };
 
 
-#endif /* DISCLISTENER_H_ */
+#endif

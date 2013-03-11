@@ -1,10 +1,3 @@
-/*
- * DiscNode.h
- *
- *  Created on: 11.03.2013
- *      Author: jlabeit
- */
-
 #ifndef DISCNODE_H_
 #define DISCNODE_H_
 
@@ -26,4 +19,4 @@ public:
 };
 typedef shared_ptr<DiscNode> DiscNode_ptr;
 
-#endif /* DISCNODE_H_ */
+#endif

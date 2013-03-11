@@ -1,10 +1,3 @@
-/*
- * DiscForm.h
- *
- *  Created on: 11.03.2013
- *      Author: jlabeit
- */
-
 #ifndef DISCFORM_H_
 #define DISCFORM_H_
 
@@ -15,6 +8,7 @@
 
 
 class DiscForm : public Form{
+	Q_OBJECT
 	public:
 		DiscForm(DiscListener& discListener, QWidget* parent = 0);
 		~DiscForm();
@@ -38,4 +32,4 @@ class DiscForm : public Form{
 
 };
 
-#endif /* DISCFORM_H_ */
+#endif

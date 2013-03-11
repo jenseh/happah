@@ -42,7 +42,6 @@ Ray Viewport3D::calcRay(int x, int y, int width, int height) {
 	result.direction.z = point.z - m_camera.z;
 	return result;
 }
-s
 
 void Viewport3D::initializeGL() {
 	// Setup and start a timer

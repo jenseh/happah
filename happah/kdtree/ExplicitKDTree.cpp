@@ -1,6 +1,6 @@
-#include "happah/kdtree/ExplicitKDTree.h"
+#include "ExplicitKDTree.h"
 
-ExplicitKDTree::ExplicitKDTree(std::vector<Triangle*>* triangles) {
+ExplicitKDTree::ExplicitKDTree(std::vector<Triangle*>* triangles, hpuint maxTrianglesPerBox) {
   // Compute bounding box for whole tree
   float minX = INFINITY, minY = INFINITY, minZ = INFINITY, maxX = -INFINITY, maxY = -INFINITY, maxZ = -INFINITY;
 
@@ -26,20 +26,7 @@ ExplicitKDTree::ExplicitKDTree(std::vector<Triangle*>* triangles) {
   m_bBox = new BBox(min, max);
 
   // Create root node
-  m_root = new ExplicitKDTreeInnerNode(triangles, m_bBox, 0);
-
-//    std::cout << "Built BBox-Min: " << m_bBox->getMin()->x << ", " << m_bBox->getMin()->y << ", " << m_bBox->getMin()->z << std::endl;
-//    std::cout << "Built BBox-Max: " << m_bBox->getMax()->x << ", " << m_bBox->getMax()->y << ", " << m_bBox->getMax()->z << std::endl;
-
-//  for (std::vector<Triangle*>::iterator t = triangles->begin(); t != triangles->end(); t++) {
-//      glm::vec3& t_v0 = (*t)->vertices[0];
-//      glm::vec3& t_v1 = (*t)->vertices[1];
-//      glm::vec3& t_v2 = (*t)->vertices[2];
-
-//      std::cout << "triangleA: " << t_v0.x << ", " << t_v0.y << ", " << t_v0.z << std::endl;
-//      std::cout << "triangleB: " << t_v1.x << ", " << t_v1.y << ", " << t_v1.z << std::endl;
-//      std::cout << "triangleC: " << t_v2.x << ", " << t_v2.y << ", " << t_v2.z << std::endl;
-//    }
+  m_root = new ExplicitKDTreeInnerNode(triangles, m_bBox, 0, maxTrianglesPerBox);
 }
 
 bool ExplicitKDTree::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults) {

@@ -1,4 +1,4 @@
-#include "happah/kdtree/ExplicitKDTreeInnerNode.h"
+#include "ExplicitKDTreeInnerNode.h"
 
 template <class T>
 class TriangleSorter {
@@ -12,30 +12,11 @@ public:
 
 
 
-ExplicitKDTreeInnerNode::ExplicitKDTreeInnerNode(std::vector<Triangle*>* triangles, BBox* bBox, int depth)
+ExplicitKDTreeInnerNode::ExplicitKDTreeInnerNode(std::vector<Triangle*>* triangles, BBox* bBox, hpuint depth, hpuint maxTrianglesPerBox)
 {
-//  std::cout << "Creating at depth: " << depth << " with size: " << triangles->size() << std::endl;
-
-//  for (unsigned int i = 0; i < triangles->size(); i++) {
-//    for (int i=0; i<3; i++) {
-//        for (int j=0; j<3; j++) {
-//            if ((triangles[i]->vertices[i][j] < -1000.0f || triangles[i]->vertices[i][j] > 1000.0f)
-//                || (triangles[i]->vertices[i][j] < -1000.0f || triangles[i]->vertices[i][j] > 1000.0f)
-//                || (triangles[i]->vertices[i][j] < -1000.0f || triangles[i]->vertices[i][j] > 1000.0f))
-//              {
-//                std::cout << "triangleA: " << triangles[i]->vertices[0].x << ", " << triangles[i]->vertices[0].y << ", " << triangles[i]->vertices[0].z << std::endl;
-//                std::cout << "triangleB: " << triangles[i]->vertices[1].x << ", " << triangles[i]->vertices[1].y << ", " << triangles[i]->vertices[1].z << std::endl;
-//                std::cout << "triangleC: " << triangles[i]->vertices[2].x << ", " << triangles[i]->vertices[2].y << ", " << triangles[i]->vertices[2].z << std::endl;
-//              }
-//          }
-//      }
-//  }
-
   m_bBox = bBox;
   m_axis = depth % 3;
   unsigned int size = triangles->size();
-
-  const unsigned int maxTrianglesPerBox = 500;
 
   // Sort triangles (point A) along an axis
   std::sort(triangles->begin(), triangles->end(), TriangleSorter<Triangle>(m_axis));
@@ -74,16 +55,14 @@ ExplicitKDTreeInnerNode::ExplicitKDTreeInnerNode(std::vector<Triangle*>* triangl
 
   // Determine whether to set an inner node or leaf for each child
   if (leftTriangles->size() > maxTrianglesPerBox) {
-      m_leftChild = new ExplicitKDTreeInnerNode(leftTriangles, boxes[0], depth + 1);
+      m_leftChild = new ExplicitKDTreeInnerNode(leftTriangles, boxes[0], depth + 1, maxTrianglesPerBox);
   } else {
-//      std::cout << "Building left leaf at depth: " << depth << " with size " << leftTriangles->size() << std::endl;
       m_leftChild = new ExplicitKDTreeLeaf(leftTriangles, depth + 1);
   }
 
   if (rightTriangles->size() > maxTrianglesPerBox) {
-      m_rightChild = new ExplicitKDTreeInnerNode(rightTriangles, boxes[1], depth + 1);
+      m_rightChild = new ExplicitKDTreeInnerNode(rightTriangles, boxes[1], depth + 1, maxTrianglesPerBox);
   } else {
-//      std::cout << "Building right leaf at depth: " << depth << " with size " << rightTriangles->size() << std::endl;
       m_rightChild = new ExplicitKDTreeLeaf(rightTriangles, depth + 1);
   }
 }
@@ -101,7 +80,6 @@ bool ExplicitKDTreeInnerNode::intersectAll(Circle& intersector, std::list<Circle
 
       return (intersectA || intersectB);
     } else {
-//      std::cout << "Not intersected at depth: " << depth << std::endl;
       return false;
     }
 }

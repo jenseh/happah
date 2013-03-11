@@ -47,12 +47,12 @@ HEADERS += \
 	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/DiscListener.h \
 \
-#	happah/kdtree/BBox.h \
-#	happah/kdtree/BSphere.h \
-#	happah/kdtree/ExplicitKDTree.h \
-#	happah/kdtree/ExplicitKDTreeInnerNode.h \
-#	happah/kdtree/ExplicitKDTreeLeaf.h \
-#	happah/kdtree/ExplicitKDTreeNode.h \
+	happah/kdtree/BBox.h \
+	happah/kdtree/BSphere.h \
+	happah/kdtree/ExplicitKDTree.h \
+	happah/kdtree/ExplicitKDTreeInnerNode.h \
+	happah/kdtree/ExplicitKDTreeLeaf.h \
+	happah/kdtree/ExplicitKDTreeNode.h \
 \
 	happah/math/Circle.h \
 	happah/math/Ray.h \
@@ -75,11 +75,11 @@ HEADERS += \
 	happah/scene/SimpleGeometryNode.h \
 	happah/scene/TriangleMeshNode.h \
 \
-#	happah/simulations/CircularSimulationResult.h \
+	happah/simulations/CircularSimulationResult.h \
 #	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
-#	happah/simulations/Simulation.h \
-#	happah/simulations/WormGearGrind.h \
+	happah/simulations/Simulation.h \
+	happah/simulations/WormGearGrind.h \
 \
 	happah/transformations/RigidAffineTransformation.h
 
@@ -121,12 +121,12 @@ SOURCES += \
 	happah/gui/forms/SimpleGearForm.cpp \
 	happah/gui/forms/DiscForm.cpp \
 \
-#	happah/kdtree/BBox.cpp \
-#	happah/kdtree/BSphere.cpp \
-#	happah/kdtree/ExplicitKDTree.cpp \
-#	happah/kdtree/ExplicitKDTreeInnerNode.cpp \
-#	happah/kdtree/ExplicitKDTreeLeaf.cpp \
-#	happah/kdtree/ExplicitKDTreeNode.cpp \
+	happah/kdtree/BBox.cpp \
+	happah/kdtree/BSphere.cpp \
+	happah/kdtree/ExplicitKDTree.cpp \
+	happah/kdtree/ExplicitKDTreeInnerNode.cpp \
+	happah/kdtree/ExplicitKDTreeLeaf.cpp \
+	happah/kdtree/ExplicitKDTreeNode.cpp \
 \
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
@@ -141,11 +141,11 @@ SOURCES += \
 	happah/scene/DiscNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
 \
-#	happah/simulations/CircularSimulationResult.cpp \
+	happah/simulations/CircularSimulationResult.cpp \
 #	happah/simulations/DiscGearGrind.cpp \
 	happah/simulations/Kinematic.cpp \
-#	happah/simulations/Simulation.cpp \
-#	happah/simulations/WormGearGrind.cpp \
+	happah/simulations/Simulation.cpp \
+	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp
 

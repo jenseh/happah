@@ -109,6 +109,8 @@ SOURCES += \
 #	happah/geometries/TriPatch.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \
+	happah/math/Ray.cpp \
+\
 	happah/gui/DrawManager.cpp \
 	happah/gui/GearSlider.cpp \
 	happah/gui/GUIManager.cpp \

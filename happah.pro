@@ -28,6 +28,7 @@ HEADERS += \
 #	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
 #	happah/geometries/TriPatch.h \
+	happah/geometries/Worm.h \
 #	happah/geometries/ZCircleCloud.h \
 \
 	happah/gui/DrawManager.h \
@@ -51,6 +52,8 @@ HEADERS += \
 	happah/gui/forms/SimpleGearListener.h \
 	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/DiscListener.h \
+	happah/gui/forms/WormForm.h \
+	happah/gui/forms/WormListener.h \
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/BSphere.h \
@@ -59,7 +62,7 @@ HEADERS += \
 	happah/kdtree/KDTreeLeaf.h \
 	happah/kdtree/KDTreeNode.h \
 \
-	happah/math/Circle.h \
+#	happah/math/Circle.h \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
@@ -79,6 +82,7 @@ HEADERS += \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGearNode.h \
 	happah/scene/DiscNode.cpp \
+	happah/scene/WormNode.cpp \
 	happah/scene/SimpleGeometryNode.h \
 	happah/scene/TriangleMeshNode.h \
 \
@@ -113,6 +117,7 @@ SOURCES += \
 #	happah/geometries/SpherePatch.cpp \
 	happah/geometries/StandardProfile.cpp \
 #	happah/geometries/TriPatch.cpp \
+	happah/geometries/Worm.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \
 	happah/gui/DrawManager.cpp \
@@ -132,6 +137,7 @@ SOURCES += \
 	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
 	happah/gui/forms/DiscForm.cpp \
+	happah/gui/forms/WormForm.cpp \
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/BSphere.cpp \
@@ -155,6 +161,7 @@ SOURCES += \
 	happah/scene/SceneManager.cpp \
 	happah/scene/SimpleGearNode.cpp \
 	happah/scene/DiscNode.cpp \
+	happah/scene/WormNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
 \
 	happah/simulations/CircularSimulationResult.cpp \

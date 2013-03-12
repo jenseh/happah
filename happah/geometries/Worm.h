@@ -1,11 +1,11 @@
 #ifndef WORM_H
 #define WORM_H
 
-#include <cmath>
 #include <glm/glm.hpp>
+#include <cmath>
 
-#include "happah/geometries/Geometry.h"
 #include "happah/HappahTypes.h"
+#include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/StandardProfile.h"
 #include "happah/LoggingUtils.h"
@@ -22,6 +22,14 @@ public:
   
   std::vector<hpvec3>* createVertexData();
   
+  hpreal getToothCount();
+  hpreal getModule();
+  hpreal getPressureAngle();
+
+  void setToothCount(hpreal toothCount);
+  void setModule(hpreal module);
+  void setPressureAngle(hpreal pressureAngle);
+
   TriangleMesh* toTriangleMesh();
   
 private:
@@ -32,5 +40,6 @@ private:
   
   hpreal m_radius;
 };
+typedef shared_ptr<Worm> Worm_ptr;
 
 #endif // WORM_H

@@ -12,6 +12,7 @@ class SceneManager;
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/Disc.h"
+#include "happah/geometries/Worm.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
@@ -29,6 +30,8 @@ public:
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
 	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
+	void insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
 
 	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);

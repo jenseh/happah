@@ -35,10 +35,10 @@ std::vector<hpvec3>* Worm::createVertexData() {
       hpreal nextAngle = nextAngleRatio * 2.0 * M_PI;
       
       for (hpuint tooth = 0; tooth < m_toothCount; tooth++) {
-        hpreal toothRatio = (hpreal) tooth / m_toothCount;
+//        hpreal toothRatio = (hpreal) tooth / m_toothCount;
         
         for (hpuint posZIdx = 0; posZIdx < pointsPerTooth; posZIdx++) {
-          hpreal pointRatio     = (hpreal) posZIdx       / pointsPerTooth;
+//          hpreal pointRatio     = (hpreal) posZIdx       / pointsPerTooth;
           hpreal nextPointRatio = (hpreal) (posZIdx + 1) / pointsPerTooth;
           
           hpuint angleOffset     = angleRatio     * pointsPerTooth;
@@ -60,10 +60,10 @@ std::vector<hpvec3>* Worm::createVertexData() {
           hpreal posZ_RZ = posZTooth + profileTooth.at(posZIdx).x;
           hpreal posZ_RN = nextPosZTooth + profileTooth.at((posZIdx + 1) % pointsPerTooth).x;
           
-          hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ, 1.0);
-          hpvec3 pointRN = hpvec3(radiusRN * cos(angle),     radiusRN * sin(angle),     posZ_RN, 1.0);
-          hpvec3 pointNZ = hpvec3(radiusNZ * cos(nextAngle), radiusNZ * sin(nextAngle), posZ_RZ, 1.0);
-          hpvec3 pointNN = hpvec3(radiusNN * cos(nextAngle), radiusNN * sin(nextAngle), posZ_RN, 1.0);
+          hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ);
+          hpvec3 pointRN = hpvec3(radiusRN * cos(angle),     radiusRN * sin(angle),     posZ_RN);
+          hpvec3 pointNZ = hpvec3(radiusNZ * cos(nextAngle), radiusNZ * sin(nextAngle), posZ_RZ);
+          hpvec3 pointNN = hpvec3(radiusNN * cos(nextAngle), radiusNN * sin(nextAngle), posZ_RN);
           
           // TODO: create real normals
           hpvec2 normalTempRZ = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
@@ -71,10 +71,10 @@ std::vector<hpvec3>* Worm::createVertexData() {
           hpvec2 normalTempNZ = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
           hpvec2 normalTempNN = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
           
-          hpvec3 normalRZ = hpvec3(normalTempRZ.x, normalTempRZ.y, 0.0, 1.0);
-          hpvec3 normalRN = hpvec3(normalTempRN.x, normalTempRN.y, 0.0, 1.0);
-          hpvec3 normalNZ = hpvec3(normalTempNZ.x, normalTempNZ.y, 0.0, 1.0);
-          hpvec3 normalNN = hpvec3(normalTempNN.x, normalTempNN.y, 0.0, 1.0);
+          hpvec3 normalRZ = hpvec3(normalTempRZ.x, normalTempRZ.y, 0.0);
+          hpvec3 normalRN = hpvec3(normalTempRN.x, normalTempRN.y, 0.0);
+          hpvec3 normalNZ = hpvec3(normalTempNZ.x, normalTempNZ.y, 0.0);
+          hpvec3 normalNN = hpvec3(normalTempNN.x, normalTempNN.y, 0.0);
           
           // Push points in counter clockwise direction
           vertexData->push_back(pointRN);
@@ -95,6 +95,26 @@ std::vector<hpvec3>* Worm::createVertexData() {
     }
 
     return vertexData;
+}
+
+hpreal Worm::getToothCount() {
+	return m_toothCount;
+}
+hpreal Worm::getModule() {
+	return m_module;
+}
+hpreal Worm::getPressureAngle() {
+	return m_pressureAngle;
+}
+
+void Worm::setToothCount(hpreal toothCount) {
+	m_toothCount = toothCount;
+}
+void Worm::setModule(hpreal module) {
+	m_module = module;
+}
+void Worm::setPressureAngle(hpreal pressureAngle) {
+	m_pressureAngle = pressureAngle;
 }
 
 TriangleMesh* Worm::toTriangleMesh() {

@@ -51,13 +51,13 @@ void WormGearGrind::calculateGrindingDepth(){
            simResult.addItem(hitResult->hitPointB, z);
 
           //TODO: Implement this function
-//           std::vector<glm::vec3*>* closestPoints = m_worm->getClosestPoints(hitResult->hitPoint);
+//           std::vector<hpvec3*>* closestPoints = m_worm->getClosestPoints(hitResult->hitPoint);
 //           std::cout << "CP size: " << closestPoints->size() << std::endl;
 
-//           std::vector<glm::vec3*>::iterator posCP = closestPoints->begin();
-//           std::vector<glm::vec3*>::iterator endCP = closestPoints->end();
+//           std::vector<hpvec3*>::iterator posCP = closestPoints->begin();
+//           std::vector<hpvec3*>::iterator endCP = closestPoints->end();
 //           for (; posCP != endCP; posCP++) {
-//              glm::vec3* closestPoint = *posCP;
+//              hpvec3* closestPoint = *posCP;
 //              std::cout << "HitPoint: " << hitResult->hitPoint.x << ", " << hitResult->hitPoint.y << " : " << hitResult->hitPoint.z << std::endl;
 //              std::cout << "   ClosestPoint: " << closestPoint->x << ", " << closestPoint->y << " : " << closestPoint->z << std::endl;
 //           }
@@ -114,19 +114,19 @@ void inline WormGearGrind::computeIntersectingTriangles(size_t& z, KDTree& tree,
   tree.intersectAll(transformedCircle, hitResults);
 }
 
-glm::vec3 inline WormGearGrind::transformVector(glm::vec3& vector, QMatrix4x4& transformation) {
-  QVector3D result = transformation.mapVector(QVector3D(vector.x, vector.y, vector.z));
-  return glm::vec3(result.x(), result.y(), result.z());
+hpvec3 inline WormGearGrind::transformVector(hpvec3& vector, hpmat4x4& transformation) {
+  hpvec3 result = transformation.mapVector(hpvec3(vector.x, vector.y, vector.z));
+  return hpvec3(result.x(), result.y(), result.z());
 }
-glm::vec3 inline WormGearGrind::transformPoint(glm::vec3& point, QMatrix4x4& transformation) {
+hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformation) {
   QVector4D result = transformation.map(QVector4D(point.x, point.y, point.z, 1.0f));
-  return glm::vec3(result.x(), result.y(), result.z());
+  return hpvec3(result.x(), result.y(), result.z());
 }
 
 // This transform a triangle into a different the space of the circle.
 // Note that normals are not transformed, since we don't use them here.
 Triangle WormGearGrind::transformTriangle(Triangle& triangle) {
-  QMatrix4x4 transformation = *(m_gear->getModelMatrix()) * (m_worm->getModelMatrix()->inverted(0));
+  hpmat4x4 transformation = *(m_gear->getModelMatrix()) * (m_worm->getModelMatrix()->inverted(0));
   return Triangle(transformPoint(triangle.vertices[0], transformation),
                   transformPoint(triangle.vertices[1], transformation),
                   transformPoint(triangle.vertices[2], transformation));
@@ -135,7 +135,7 @@ Triangle WormGearGrind::transformTriangle(Triangle& triangle) {
 // This transform a circle into the different space of the triangle.
 // Note that the radius is not transformed, since we forbid scaling.
 Circle WormGearGrind::transformCircle(Circle& circle) {
-  QMatrix4x4 transformation = *(m_worm->getModelMatrix()) * (m_gear->getModelMatrix()->inverted(0));
+  hpmat4x4 transformation = *(m_worm->getModelMatrix()) * (m_gear->getModelMatrix()->inverted(0));
   return Circle(transformPoint(circle.m_center, transformation),
                   transformVector(circle.m_normal, transformation), circle.m_radius);
 }

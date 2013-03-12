@@ -7,7 +7,7 @@
 #include <QWidget>
 
 #include "happah/HappahTypes.h"
-
+//TODO: rename GearSlider to Slider!!
 class GearSlider: public QGroupBox {
     Q_OBJECT
 

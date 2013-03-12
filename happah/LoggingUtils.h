@@ -1,15 +1,15 @@
-#ifndef VECTORUTILS_H
-#define VECTORUTILS_H
+#ifndef LOGGINGUTILS_H
+#define LOGGINGUTILS_H
 
 #include <iostream>
 #include <string>
 #include "glm/glm.hpp"
-#include "../../HappahTypes.h"
+#include "happah/HappahTypes.h"
 
-class VectorUtils
+class LoggingUtils
 {
 public:
-  VectorUtils();
+	LoggingUtils();
 
   static void printVal(const char* name, hpuint& value);
   static void printVal(const char* name, hpreal& value);
@@ -23,4 +23,4 @@ public:
   static void printVec(glm::vec4& vector);
 };
 
-#endif // VECTORUTILS_H
+#endif // LOGGINGUTILS_H

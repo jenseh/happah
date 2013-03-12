@@ -39,6 +39,10 @@ private:
   hpuint m_rotations;
   
   hpreal m_radius;
+
+  StandardProfile* m_standardProfile;
+
+  void updateValues();
 };
 typedef shared_ptr<Worm> Worm_ptr;
 

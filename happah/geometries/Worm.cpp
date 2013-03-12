@@ -7,7 +7,9 @@ Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotati
   m_pressureAngle = pressureAngle;
   m_rotations = rotations;
   
-  m_radius = 3.0 * m_module * m_toothCount / 2.0;
+  m_standardProfile = NULL;
+
+  updateValues();
 }
 
 Worm::~Worm() {}
@@ -22,9 +24,7 @@ std::vector<hpvec3>* Worm::createVertexData() {
     hpuint pointsPerTooth = 200;
     
     std::vector<hpvec2> profileTooth = std::vector<hpvec2>();
-
-    StandardProfile* standardProfile = new StandardProfile(m_module, m_pressureAngle, 0.0, 0.0);
-    standardProfile->getProfilePartition(profileTooth, pointsPerTooth);
+    m_standardProfile->getProfilePartition(profileTooth, pointsPerTooth);
 
     
     for(hpuint angleStep = 0; angleStep < angleResolution; angleStep++) {
@@ -125,4 +125,11 @@ TriangleMesh* Worm::toTriangleMesh() {
     }
     TriangleMesh* result = new TriangleMesh(vertexData, indices);
     return result;
+}
+
+void Worm::updateValues(){
+	m_radius = 3.0 * m_module * m_toothCount / 2.0;
+    if( m_standardProfile != NULL )
+    	delete m_standardProfile;
+    m_standardProfile = new StandardProfile(m_module, m_pressureAngle, 0.0, 0.0);
 }

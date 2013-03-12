@@ -1,10 +1,3 @@
-/*
- * BasicRack.h
- *
- *  Created on: Dez 5, 2012
- *      Author: julian
- */
-
 #include "happah/geometries/Disc.h"
 
 

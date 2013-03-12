@@ -25,20 +25,20 @@ public:
 
     ~Disc();
     hpreal getRadius();
-    glm::vec3 getCenter();
+    hpvec3 getCenter();
     void setRadius(hpreal);
     TriangleMesh* toTriangleMesh();
 private:
     hpreal m_radius;// Radius der Scheibe ( y-achse und z-achse )
     hpreal m_length;// Länge/Breite der Scheibe ( x-achse )
     hpreal m_module; // Modul des höhenprofils
-    std::vector<glm::vec2> m_heightProfile;
+    std::vector<hpvec2> m_heightProfile;
     StandardProfile* m_standardProfile;
 
     const static int SEGMENT_COUNT = 50; //maximum: 4500
     const static int Z_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
 
-    std::vector<glm::vec4> createVertexData();
+    std::vector<hpvec4> createVertexData();
     void createHeightProfile();
     void updateValues();
 };

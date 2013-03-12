@@ -70,7 +70,7 @@ hpreal StandardProfile::getHeight(hpreal x) const {
 			+ (m_bottomClearance + m_filletRadius * (sin(m_pressureAngle) - 1))
 					* tan(m_pressureAngle);
 	hpreal x_4 = x_3 + m_filletRadius * cos(m_pressureAngle);
-	hpreal x_5 = (m_module * M_PI) / 2;
+	//hpreal x_5 = (m_module * M_PI) / 2; //TODO: Katja should take a look at this unused line
 
 	hpreal center[2];
 	calcRootCircleCenter(center);

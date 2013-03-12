@@ -52,10 +52,10 @@ void WormForm::changePressureAngle(hpreal pressureAngle) {
 
 void WormForm::createWorm() {
 	//TODO: create a worm here
-//	if(m_wormInserted)
-//		m_worm = Worm_ptr(new Worm(*m_worm));
-//	m_wormListener.insert(m_worm);
-//	m_wormInserted = true;
+	if(m_wormInserted)
+		m_worm = Worm_ptr(new Worm(*m_worm));
+	m_wormListener.insert(m_worm);
+	m_wormInserted = true;
 }
 
 Worm_ptr WormForm::getWorm() const {

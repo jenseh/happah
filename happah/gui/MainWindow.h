@@ -18,7 +18,7 @@ public:
 	MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager);
 	virtual ~MainWindow();
 
-	ContextMenuControl* getContextMenu();
+	ContextMenuControl* getContextMenuControl();
 	SceneGraphExplorerPanel* getSceneGraphExplorerPanel();
 	ToolPanel* getToolPanel();
 

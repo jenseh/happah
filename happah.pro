@@ -132,6 +132,8 @@ SOURCES += \
 	happah/kdtree/ExplicitKDTreeLeaf.cpp \
 	happah/kdtree/ExplicitKDTreeNode.cpp \
 \
+	happah/math/Ray.cpp \
+\
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/LineMeshNode.cpp\

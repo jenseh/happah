@@ -10,7 +10,7 @@ void GUIStateNode::accept(GUIVisitor& guiVisitor) {
 	Node::accept(guiVisitor);
 }
 
-ContextMenu* GUIStateNode::getContextMenu() {
+ContextMenu* GUIStateNode::getContextMenu() const {
 	return NULL;
 }
 
@@ -26,6 +26,8 @@ TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
 	return m_triangleMesh;
 }
 
+void GUIStateNode::setContextMenu(ContextMenu* contextMenu) {}
+
 void GUIStateNode::setName(const char* name) {
 	m_name = string(name);
 }
@@ -34,16 +36,19 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
-InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name)
-	: GUIStateNode(name), m_involuteGear(involuteGear), m_involuteGearForm(involuteGearForm) {}
+InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear,
+	InvoluteGearForm* involuteGearForm, InvoluteGearContextMenu* contextMenu, string name)
+	: GUIStateNode(name), m_involuteGear(involuteGear), m_involuteGearForm(involuteGearForm), m_involuteGearContextMenu(contextMenu) {
+
+}
 
 InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 	if(m_involuteGearForm->getInvoluteGear() == m_involuteGear)
 		m_involuteGearForm->reset();
 }
 
-ContextMenu* InvoluteGearGUIStateNode::getContextMenu() {
-
+ContextMenu* InvoluteGearGUIStateNode::getContextMenu() const {
+	return m_involuteGearContextMenu;
 }
 
 shared_ptr<void> InvoluteGearGUIStateNode::getData() const {
@@ -55,7 +60,11 @@ Form* InvoluteGearGUIStateNode::getForm() {
 	return m_involuteGearForm;
 }
 
-PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name ) :
+void InvoluteGearGUIStateNode::setContextMenu(InvoluteGearContextMenu* contextMenu) {
+	m_involuteGearContextMenu = contextMenu;
+}
+
+PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, ContextMenu* contextMenu, string name ) :
 	GUIStateNode(name), m_plane(plane), m_planeForm(planeForm) {
 }
 
@@ -74,7 +83,7 @@ Form* PlaneGUIStateNode::getForm() {
 	return m_planeForm;
 }
 
-SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name)
+SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, ContextMenu* contextMenu, string name)
 	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm) {}
 
 SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
@@ -91,7 +100,7 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
-DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name)
+DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, ContextMenu* contextMenu, string name)
 	: GUIStateNode(name), m_disc(disc), m_discForm(discForm) {}
 
 DiscGUIStateNode::~DiscGUIStateNode() {

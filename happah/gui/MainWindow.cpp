@@ -32,7 +32,7 @@ MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& scene
 
 MainWindow::~MainWindow() {}
 
-ContextMenuControl* MainWindow::getContextMenu() {
+ContextMenuControl* MainWindow::getContextMenuControl() {
 	return m_contextMenuControl;
 }
 

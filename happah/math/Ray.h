@@ -1,31 +1,24 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "happah/HappahTypes.h"
+#include "happah/kdtree/BBox.h"
+#include "happah/math/Triangle.h"
 
 struct Ray
 {
-    glm::vec3 origin;				// Origin point of the ray.
-    glm::vec3 direction;			// Normalized vector pointing in the direction of the ray.
-    glm::vec3 inverse_direction; 	// Used for intersection tests.
-    int         id;					// ID of this ray.
+    hpvec3 origin;				// Origin point of the ray.
+    hpvec3 direction;			// Normalized vector pointing in the direction of the ray.
 
-    void transform(glm::mat4& matrix){
-        glm::vec4 point1,point2;
+    Ray();
+    Ray(hpvec3 orig, hpvec3 dir);
+    hpreal intersectDistance(Triangle& triangle);
+    bool intersects(BBox& box, hpreal length);
+    void transform(hpmat4x4& matrix);
 
-        point1[0] = origin[0];
-        point1[1] = origin[1];
-        point1[2]= origin[2];
-        point1[3] = 1;
 
-        point2 = point1;
-        point2[0] += direction[0];
-        point2[1] += direction[1];
-        point2[2] += direction[2];
+private:
+    bool checkLineBox( hpvec3 boxPointMin, hpvec3 boxPointMax, hpvec3 linePoint1, hpvec3 linePoint2, hpvec3 &hitPoint);
+    bool getIntersection( float fDst1, float fDst2, hpvec3 P1, hpvec3 P2, hpvec3 &Hit);
+    bool inBox( hpvec3 hitPoint, hpvec3 boxPointMin, hpvec3 boxPointMax, const int axis);
 
-        point1 = matrix * point1;
-        point2 = matrix * point2;
-        origin = (glm::vec3)point1;
-        direction = (glm::vec3)(point2 - point1);
-        inverse_direction = (glm::vec3)(point1 - point2);
-    }
 };

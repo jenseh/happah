@@ -1,6 +1,7 @@
 #ifndef GLVIEWPORT3D_H_
 #define GLVIEWPORT3D_H_
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
 #include <QGLWidget>
 #include <QGLBuffer>
@@ -14,16 +15,18 @@
 #include <cmath>
 #include <iostream>
 
+#include "happah/math/Ray.h"
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/gui/Viewport3DListener.h"
 
 using namespace std;
 
 class Viewport3D: public QGLWidget {
 
 public:
-    Viewport3D(DrawManager& drawManager, QWidget* parent = 0);
+    Viewport3D(Viewport3DListener& viewport3DListener, DrawManager& drawManager, QWidget* parent = 0);
 
 protected:
 	void initializeGL();
@@ -36,6 +39,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
+	Ray getMouseRay();
 	void updateView();
 	void setZoom(float zoom);
 
@@ -43,10 +47,11 @@ private:
 	DrawManager& m_drawManager;
 
 	uint m_lastSceneState;
-	QMatrix4x4 m_viewMatrix;
-	QMatrix4x4 m_projectionMatrix;
-	QVector3D m_camera, m_center, m_up;
+	hpmat4x4 m_viewMatrix;
+	hpmat4x4 m_projectionMatrix;
+	hpvec3 m_camera, m_center, m_up;
 	QPoint m_mousePos;
+	Viewport3DListener& m_viewport3DListener;
 	float m_zoomRad, m_theta, m_phi; //is zoomRad german?
 
 	const static int WAIT_TIME = 40;

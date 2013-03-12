@@ -25,6 +25,7 @@ class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
 #include "happah/geometries/Mesh.h"
+#include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
 
@@ -34,11 +35,13 @@ public:
 	virtual ~GUIStateNode();
 
 	void accept(GUIVisitor& guiVisitor);
+	virtual ContextMenu* getContextMenu() const;
 	virtual shared_ptr<void> getData() const = 0;
 	virtual Form* getForm() = 0;
 	const string& getName() const;
 	GUIStateNode_ptr getptr();
 	TriangleMesh_ptr getTriangleMesh() const;
+	void setContextMenu(ContextMenu* contextMenu);
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 
@@ -49,20 +52,23 @@ private:
 };
 
 #include "happah/geometries/InvoluteGear.h"
+#include "happah/gui/context-menus/InvoluteGearContextMenu.h"
 #include "happah/gui/forms/InvoluteGearForm.h"
 
 class InvoluteGearGUIStateNode : public GUIStateNode {
 public:
-	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name);
+	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, InvoluteGearContextMenu* contextMenu, string name);
 	~InvoluteGearGUIStateNode();
 
+	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
+	void setContextMenu(InvoluteGearContextMenu* contextMenu);
 
 private:
 	InvoluteGear_ptr m_involuteGear;
 	InvoluteGearForm* m_involuteGearForm;
-
+	InvoluteGearContextMenu* m_involuteGearContextMenu;
 };
 
 #include "happah/geometries/Plane.h"
@@ -70,7 +76,7 @@ private:
 
 class PlaneGUIStateNode : public GUIStateNode {
 public:
-	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, string name);
+	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, ContextMenu* contextMenu, string name);
 	~PlaneGUIStateNode();
 
 	shared_ptr<void> getData() const;
@@ -86,7 +92,7 @@ private:
 
 class SimpleGearGUIStateNode : public GUIStateNode {
 public:
-	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name);
+	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, ContextMenu* contextMenu, string name);
 	~SimpleGearGUIStateNode();
 
 	shared_ptr<void> getData() const;
@@ -103,7 +109,7 @@ private:
 
 class DiscGUIStateNode : public GUIStateNode {
 public:
-	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name);
+	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, ContextMenu* contextMenu, string name);
 	~DiscGUIStateNode();
 
 	shared_ptr<void> getData() const;

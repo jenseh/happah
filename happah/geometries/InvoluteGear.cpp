@@ -21,8 +21,16 @@ InvoluteGear::~InvoluteGear() {}
 
 //TODO: do we need this?
 InvoluteGear& InvoluteGear::operator=(const InvoluteGear& other) {
-	InvoluteGear* gear = new InvoluteGear(other.m_toothCount, other.m_module, other.m_facewidth, other.m_pressureAngle, other.m_bottomClearance, other.m_filletRadius, other.m_helixAngle);
-	return *gear;
+	if(this != &other) {
+		m_toothCount = other.m_toothCount;
+		m_module = other.m_module;
+		m_facewidth = other.m_facewidth;
+		m_pressureAngle = other.m_pressureAngle;
+		m_bottomClearance = other.m_bottomClearance;
+		m_filletRadius = other.m_filletRadius;
+		m_helixAngle = other.m_helixAngle;
+	}
+	return *this;
 }
 
 //TODO: use logging here!

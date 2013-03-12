@@ -1,4 +1,4 @@
-#include "PointCloudNode.h"
+#include "happah/scene/PointCloudNode.h"
 
 PointCloudNode::PointCloudNode(PointCloud_ptr pointCloud)
 	: SimpleGeometryNode<PointCloud>(pointCloud) {}

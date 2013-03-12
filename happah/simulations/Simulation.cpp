@@ -6,4 +6,4 @@ Simulation::~Simulation(){}
 
 void Simulation::runSimulation(){}
 
-Drawable* Simulation::getDisplay(double time){return NULL;}
+Geometry* Simulation::getDisplay(double time){return 0;}

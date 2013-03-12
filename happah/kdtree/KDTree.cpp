@@ -1,14 +1,14 @@
-#include "ExplicitKDTree.h"
+#include "KDTree.h"
 
-ExplicitKDTree::ExplicitKDTree(std::vector<Triangle*>* triangles, hpuint maxTrianglesPerBox) {
+KDTree::KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox) {
   // Compute bounding box for whole tree
   float minX = INFINITY, minY = INFINITY, minZ = INFINITY, maxX = -INFINITY, maxY = -INFINITY, maxZ = -INFINITY;
 
-  for (std::vector<Triangle*>::iterator t = triangles->begin(); t != triangles->end(); t++) {
+  for (std::vector<Triangle>::iterator t = triangles->begin(); t != triangles->end(); t++) {
       for (int i = 0; i < 3; i++) {
-        float x = (*t)->vertices[i].x;
-        float y = (*t)->vertices[i].y;
-        float z = (*t)->vertices[i].z;
+        float x = t->vertices[i].x;
+        float y = t->vertices[i].y;
+        float z = t->vertices[i].z;
 
         if (x < minX) minX = x;
         else if (x > maxX) maxX = x;
@@ -26,10 +26,14 @@ ExplicitKDTree::ExplicitKDTree(std::vector<Triangle*>* triangles, hpuint maxTria
   m_bBox = new BBox(min, max);
 
   // Create root node
-  m_root = new ExplicitKDTreeInnerNode(triangles, m_bBox, 0, maxTrianglesPerBox);
+  m_root = new KDTreeInnerNode(triangles, m_bBox, 0, maxTrianglesPerBox);
 }
 
-bool ExplicitKDTree::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults) {
+bool KDTree::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults) {
   BBox intersectorBox = intersector.computeBoundingBox();
   return m_root->intersectAll(intersector, hitResults, &intersectorBox, 0);
+}
+
+hpreal KDTree::intersectFirst(Ray& intersector, hpreal maxLength){
+	return m_root->intersectFirst(intersector, maxLength);
 }

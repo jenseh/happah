@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <unordered_map>
 #include <vector>
+#include <QContextMenuEvent>
 
 using namespace std;
 
@@ -29,6 +30,7 @@ private:
 	unordered_map<GUIStateNode_ptr, QListWidgetItem*> m_itemsByGUIStateNode;
 	QListWidget* m_listWidget;
 	SceneGraphExplorerListener& m_sceneGraphExplorerListener;
+	void contextMenuEvent (QContextMenuEvent* event);
 
 private slots:
 	void handleDeleteButtonClickedEvent();

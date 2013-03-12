@@ -7,7 +7,10 @@
 #include "happah/gui/Viewport3D.h"
 
 MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager)
-	: m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)), m_toolPanel(new ToolPanel(guiManager, this)) {
+	: m_contextMenuControl(new ContextMenuControl(this)),
+	m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
+	m_toolPanel(new ToolPanel(guiManager, this)) {
+	
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 
@@ -21,13 +24,17 @@ MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& scene
 	QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
 	centralWidget->setLayout(centralWidgetLayout);
 	centralWidgetLayout->addWidget(m_toolPanel);
-	centralWidgetLayout->addWidget(new Viewport3D(drawManager, this), 1);
+	centralWidgetLayout->addWidget( new Viewport3D(guiManager, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
 	setCentralWidget(centralWidget);
 }
 
 MainWindow::~MainWindow() {}
+
+ContextMenuControl* MainWindow::getContextMenuControl() {
+	return m_contextMenuControl;
+}
 
 SceneGraphExplorerPanel* MainWindow::getSceneGraphExplorerPanel() {
 	return m_sceneGraphExplorerPanel;

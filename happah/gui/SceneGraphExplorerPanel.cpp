@@ -1,10 +1,14 @@
+#include <QActionGroup>
+#include <QCursor>
 #include <QList>
+#include <QMenu>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <vector>
 
 using namespace std;
 
+#include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
 
 SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sceneGraphExplorerListener, QWidget* parent)
@@ -14,11 +18,24 @@ SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sce
 	layout->addWidget(m_deleteButton);
 	setLayout(layout);
 
+	setContextMenuPolicy (Qt::DefaultContextMenu);
+
 	connect(m_listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClickedEvent(QListWidgetItem*)));
 	connect(m_deleteButton, SIGNAL(clicked()), this, SLOT(handleDeleteButtonClickedEvent()));
 }
 
 SceneGraphExplorerPanel::~SceneGraphExplorerPanel() {}
+
+void SceneGraphExplorerPanel::contextMenuEvent (QContextMenuEvent* event) {
+
+	QListWidgetItem* selectedItem = m_listWidget->itemAt(m_listWidget->mapFromGlobal(event->pos()));
+	GUIStateNode_ptr selectedGUIStateNode = m_guiStateNodesByItem[selectedItem];
+
+	if(selectedGUIStateNode && selectedGUIStateNode->getContextMenu()) {
+		ContextMenu* contextMenu = selectedGUIStateNode->getContextMenu();
+		QAction* action = contextMenu->exec(event->pos());
+	}
+}
 
 void SceneGraphExplorerPanel::insert(GUIStateNode_ptr guiStateNode) {
 	int index = m_listWidget->count();

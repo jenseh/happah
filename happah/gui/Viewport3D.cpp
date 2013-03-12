@@ -3,26 +3,43 @@
 
 #include "happah/gui/Viewport3D.h"
 
-Viewport3D::Viewport3D(DrawManager& drawManager, QWidget* parent)
-	: QGLWidget(drawManager.getGlContext(), parent), m_drawManager(drawManager) {
+Viewport3D::Viewport3D(Viewport3DListener& viewport3DListener,DrawManager& drawManager, QWidget* parent)
+	: QGLWidget(drawManager.getGlContext(), parent), m_viewport3DListener(viewport3DListener), m_drawManager(drawManager) {
 
 	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
 
-	m_projectionMatrix.setToIdentity();
-	m_viewMatrix.setToIdentity();
+	m_projectionMatrix = hpmat4x4(1.0);
+	m_viewMatrix = hpmat4x4(1.0);
 	m_zoomRad = 5.0f;
-	m_camera.setX(0.0f);
-	m_camera.setY(0.0f);
-	m_camera.setZ(m_zoomRad);
-	m_center.setX(0.0f);
-	m_center.setY(0.0f);
-	m_center.setZ(0.0f);
-	m_up.setX(0.0f);
-	m_up.setY(m_zoomRad);
-	m_up.setZ(0.0f);
+
+	m_camera.x = 0.0;
+	m_camera.y = 0.0;
+	m_camera.z = m_zoomRad;
+
+	m_center.x = 0.0;
+	m_center.y = 0.0;
+	m_center.z = 0.0;
+	m_up.x = 0.0;
+	m_up.y = m_zoomRad;
+	m_up.z = 0.0;
+
 	m_theta = 0;
 	m_phi = 0;
 
+}
+
+Ray Viewport3D::getMouseRay() {
+	Ray result;
+	result.origin = m_camera;
+	hpvec3 winPos;
+	winPos.x = m_mousePos.x();
+	winPos.y = height() - m_mousePos.y(); // Because screen coordinates on the top not the bottom
+	glReadPixels(m_mousePos.x(), m_mousePos.y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winPos.z);
+	//winPos.z = 1.0; // Touching the "far plane"
+	hpvec4 viewport(0, 0, width(), height());
+	hpvec3 point = glm::unProject(winPos, m_viewMatrix, m_projectionMatrix, viewport );
+	result.direction = point - m_camera;
+	return result;
 }
 
 void Viewport3D::initializeGL() {
@@ -36,20 +53,17 @@ void Viewport3D::initializeGL() {
 void Viewport3D::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
-	m_projectionMatrix.setToIdentity();
-	m_projectionMatrix.perspective(45.0f, ratio, 0.1f, 100.0f);
+	m_projectionMatrix = glm::perspective(45.0f, ratio, 0.1f, 100.0f);
 }
 
 void Viewport3D::paintGL() {
 	updateView();
-	m_drawManager.draw(&m_projectionMatrix, &m_viewMatrix, &m_camera);
+
+	m_drawManager.draw(m_projectionMatrix, m_viewMatrix, m_camera);
 }
 
 void Viewport3D::updateView() {
-	//Update ViewMatrix
-	QMatrix4x4 LookatMatrix;
-	LookatMatrix.lookAt(m_camera, m_center, m_up);
-	m_viewMatrix = LookatMatrix;
+	m_viewMatrix =glm::lookAt(m_camera, m_center, m_up);
 }
 
 void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
@@ -60,16 +74,16 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 	float dx = (float) (event->x() - m_mousePos.x()) / width;
 	float dy = (float) (event->y() - m_mousePos.y()) / height;
 
-	QVector3D forward =m_center - m_camera;
-	forward.normalize();
+	hpvec3 forward =m_center - m_camera;
+	forward = glm::normalize(forward);
 	forward *= m_zoomRad;
-	QVector3D right = QVector3D::crossProduct(m_up, forward);
-	right.normalize();
+	hpvec3 right = glm::cross(m_up, forward);
+	right = glm::normalize(right);
 	right *= m_zoomRad;
-	m_up.normalize();
+	m_up = glm::normalize(m_up);
 	m_up *= m_zoomRad;
 
-	QVector3D delta;
+	hpvec3 delta;
 
 	if (event->buttons() == Qt::LeftButton) {
 		m_theta = dx*M_PI;
@@ -78,13 +92,13 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 		m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
 		// Recalc forward
 		forward =m_center - m_camera;
-		forward.normalize();
+		forward = glm::normalize(forward);
 		forward *= m_zoomRad;
 
 		m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
 		// recalc up
-		m_up = QVector3D::crossProduct(forward, right);
-		m_up.normalize();
+		m_up = glm::cross(forward, right);
+		m_up = glm::normalize(m_up);
 		m_up *= m_zoomRad;
 
 		updateGL();
@@ -105,6 +119,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 }
 void Viewport3D::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
+	m_viewport3DListener.handleMouseClickEvent(getMouseRay());
 }
 
 void Viewport3D::wheelEvent(QWheelEvent *event) {
@@ -112,7 +127,7 @@ void Viewport3D::wheelEvent(QWheelEvent *event) {
 	float steps = degrees / 15;
 
 	m_zoomRad = m_zoomRad - steps;
-	m_camera.setZ(m_zoomRad);
+	m_camera.z = m_zoomRad;
 	updateGL();
 
 }

@@ -4,7 +4,7 @@
 #include "happah/HappahTypes.h"
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/ZCircleCloud.h"
-#include "happah/kdtree/ExplicitKDTree.h"
+#include "happah/kdtree/KDTree.h"
 #include "happah/math/Circle.h"
 #include "happah/math/Triangle.h"
 #include "happah/simulations/CircularSimulationResult.h"
@@ -21,7 +21,7 @@ public:
 private:
   hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
   hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
-  void inline computeIntersectingTriangles(size_t& z, ExplicitKDTree& tree, std::list<CircleHitResult*>* hitResults);
+  void inline computeIntersectingTriangles(size_t& z, KDTree& tree, std::list<CircleHitResult*>* hitResults);
 
 
   Triangle translateTriangle(Triangle& triangle, hpvec3& vector);

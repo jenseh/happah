@@ -11,15 +11,13 @@
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 Disc::Disc(hpreal radius): Geometry(){
     m_radius = radius; // doppelt so groß wie ein zahn
-    m_module = m_radius / 2.0;
-    m_length = m_module * M_PI;
-    m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
+    m_standardProfile = NULL;
+    updateValues();
 }
 
 Disc::~Disc() {
     delete m_standardProfile;
 }
-
 
 // Create a profile of height values
 void Disc::createHeightProfile() {
@@ -114,6 +112,7 @@ hpreal Disc::getRadius() {
 
 void Disc::setRadius(hpreal radius){
 	m_radius = radius;
+	updateValues();
 }
 
 TriangleMesh* Disc::toTriangleMesh(){
@@ -124,12 +123,10 @@ TriangleMesh* Disc::toTriangleMesh(){
 
 	float dalpha = 2 * M_PI / Z_DETAIL_LEVEL;
 
-	// Create the height profile given the current gear settings
+	// Create the height profile given the current disc settings
 	createHeightProfile();
 
 	vertexData->reserve(Z_DETAIL_LEVEL * m_heightProfile.size() *2);
-	// draw the sides (german: Mantelflaechen) of the gear
-	// this is the important part where the height profile will come into play
 	for (int i = 0; i <= Z_DETAIL_LEVEL; i++) {
 		for (unsigned int j = 0; j < m_heightProfile.size();j++) {
 			vertexData->push_back(hpvec3(m_heightProfile[j].x,
@@ -204,6 +201,14 @@ TriangleMesh* Disc::toTriangleMesh(){
 	}
 
 	return new TriangleMesh(vertexData, indices);
+}
+
+void Disc::updateValues(){
+    m_module = m_radius / 2.0;
+    m_length = m_module * M_PI;
+    if( m_standardProfile != NULL )
+    	delete m_standardProfile;
+    m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
 }
 
 

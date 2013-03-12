@@ -5,6 +5,9 @@
 #include <memory>
 #include <vector>
 #include "happah/HappahTypes.h"
+#include "happah/math/Ray.h"
+#include "happah/math/Triangle.h"
+
 using namespace std;
 
 class Mesh {
@@ -25,6 +28,8 @@ class TriangleMesh : public Mesh {
 public:
     TriangleMesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
     ~TriangleMesh();
+    vector<Triangle>* toTriangles();
+    vector<Ray>* toRays();
 };
 typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
@@ -35,11 +40,5 @@ public:
 };
 typedef shared_ptr<LineMesh> LineMesh_ptr;
 
-class PointCloud : public Mesh{
-public:
-	PointCloud(vector<hpvec3>* vertexData, vector<hpuint>* indices);
-	~PointCloud();
-};
-typedef shared_ptr<PointCloud> PointCloud_ptr;
 
 #endif /* MESH_H_ */

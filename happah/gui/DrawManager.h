@@ -32,14 +32,10 @@ private:
 		DefaultDrawVisitor(DrawManager& drawManager);
 		~DefaultDrawVisitor();
 		
-<<<<<<< HEAD
-		void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-		
-=======
 		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
->>>>>>> branch 'master' of https://github.com/happah-graphics/happah.git
+		
+
 	private:
 		DrawManager& m_drawManager;
 

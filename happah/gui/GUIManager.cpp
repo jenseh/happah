@@ -87,13 +87,6 @@ void GUIManager::insert( Plane_ptr plane ) {
 
 void GUIManager::insert(Disc_ptr disc) {
 	doInsert3D<Disc, DiscGUIStateNode, DiscForm, ContextMenu>(disc, "Disc", m_toolPanel->getDiscForm());
-<<<<<<< HEAD
-=======
-}
-
-void GUIManager::mouseClickEvent(Ray ray){
-	//TODO do something cool here
->>>>>>> branch 'master' of https://github.com/happah-graphics/happah.git
 }
 
 void GUIManager::update(InvoluteGear_ptr involuteGear) {

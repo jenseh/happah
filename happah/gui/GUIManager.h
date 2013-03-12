@@ -25,7 +25,7 @@ class GUIManager;
 #include "happah/scene/SceneManager.h"
 #include "happah/gui/Viewport3DListener.h"
 
-class GUIManager : public InvoluteGearListener, public SimpleGearListener, public DiscListener, public WormListener, public Viewport3DListener {
+class GUIManager : public InvoluteGearListener, public SimpleGearListener, public DiscListener, public WormListener, public PlaneListener, public Viewport3DListener {
 
 public:
 	GUIManager(SceneManager_ptr sceneManager);
@@ -39,6 +39,7 @@ public:
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
 	void update(InvoluteGear_ptr involuteGear);
+	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);

@@ -19,6 +19,10 @@ public:
 private:
 	Plane_ptr m_plane;
 	bool m_planeInserted;
+	PlaneListener& m_planeListener;
+
+private slots:
+	void createPlane();
 
 };
 

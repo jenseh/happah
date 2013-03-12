@@ -78,11 +78,12 @@ void GUIManager::insert(SimpleGear_ptr simpleGear) {
 	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, ContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
 }
 
-void GUIManager::insert( Plane_ptr plane ) {
+void GUIManager::insert(Plane_ptr plane) {
 	ostringstream oss;
 	oss << "Plane " << m_counter++;
-	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), m_contextMenuControl->getContextMenu(), oss.str()));
-	m_sceneManager->insert(plane, planeGUIStateNode);
+	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm, ContextMenu>(plane, "Plane", m_toolPanel->getPlaneForm());
+//	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), m_contextMenuControl->getContextMenu(), oss.str()));
+//	m_sceneManager->insert(plane, planeGUIStateNode);
 }
 
 void GUIManager::insert(Disc_ptr disc) {
@@ -99,6 +100,10 @@ void GUIManager::update(InvoluteGear_ptr involuteGear) {
 
 void GUIManager::update(SimpleGear_ptr simpleGear) {
 	doUpdate3D<SimpleGear>(simpleGear);
+}
+
+void GUIManager::update(Plane_ptr plane) {
+	doUpdate3D<Plane>(plane);
 }
 
 void GUIManager::update(Disc_ptr disc) {

@@ -7,6 +7,7 @@ class TriangleMeshNode;
 class LineMeshNode;
 class PointCloudNode;
 class RenderStateNode;
+class ElementRenderStateNode;
 class SimpleGearNode;
 class DiscNode;
 
@@ -19,6 +20,7 @@ public:
 	virtual void visit(LineMeshNode& lineMeshNode) = 0;
 	virtual void visit(PointCloudNode& pointCloudNode) = 0;
 	virtual void visit(RenderStateNode& renderStateNode) = 0;
+	virtual void visit(ElementRenderStateNode& elementRenderStateNode)= 0;
 	virtual void visit(SimpleGearNode& simpleGearNode) = 0;
 	virtual void visit(DiscNode& discNode) = 0;
 };

@@ -21,6 +21,7 @@ HEADERS += \
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
+	happah/geometries/PointCloud.h\
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
@@ -62,6 +63,7 @@ HEADERS += \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
+	happah/scene/ElementRenderStateNode.h\
 	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \
 	happah/scene/DrawVisitor.h \
@@ -70,6 +72,7 @@ HEADERS += \
 	happah/scene/Node.h\
 	happah/scene/PlaneNode.h \
 	happah/scene/PointCloudNode.h\
+	happah/scene/PointCloudRenderStateNode.h\
 	happah/scene/RenderStateNode.h\
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
@@ -103,6 +106,7 @@ SOURCES += \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
+	happah/geometries/PointCloud.cpp\
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
@@ -138,12 +142,14 @@ SOURCES += \
 \
 	happah/math/Ray.cpp \
 \
+	happah/scene/ElementRenderStateNode.cpp\
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/LineMeshNode.cpp\
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
 	happah/scene/PlaneNode.cpp \
+	happah/scene/PointCloudRenderStateNode.cpp\
 	happah/scene/PointCloudNode.cpp\
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \

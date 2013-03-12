@@ -54,25 +54,25 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::doDraw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
 
-	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
+	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
 	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
 	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
 	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
-	glUniform1f(m_ambientFactorLocation, (GLfloat) renderStateNode.getMaterial().getAmbientFactor());
-	glUniform1f(m_diffuseFactorLocation, (GLfloat) renderStateNode.getMaterial().getDiffuseFactor());
-	glUniform1f(m_specularFactorLocation, (GLfloat) renderStateNode.getMaterial().getSpecularFactor());
-	glUniform1f(m_phongExponentLocation, (GLfloat) renderStateNode.getMaterial().getPhongExponent());
+	glUniform1f(m_ambientFactorLocation, (GLfloat) elementRenderStateNode.getMaterial().getAmbientFactor());
+	glUniform1f(m_diffuseFactorLocation, (GLfloat) elementRenderStateNode.getMaterial().getDiffuseFactor());
+	glUniform1f(m_specularFactorLocation, (GLfloat) elementRenderStateNode.getMaterial().getSpecularFactor());
+	glUniform1f(m_phongExponentLocation, (GLfloat) elementRenderStateNode.getMaterial().getPhongExponent());
 	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	if (renderStateNode.hasColorVector()) {
+	if (elementRenderStateNode.hasColorVector()) {
 		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
 		glUniform1i(m_isColoredLocation, 1);
 	} else {
-		hpcolor color = renderStateNode.getColor();
+		hpcolor color = elementRenderStateNode.getColor();
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_isColoredLocation, 0);
 	}
@@ -121,45 +121,45 @@ bool DrawManager::init() {
 	return true;
 }
 
-void DrawManager::initialize(RenderStateNode& renderStateNode) {
+void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 	GLuint bufferID;
-	GLint size = (renderStateNode.getVertexData()->size());
+	GLint size = (elementRenderStateNode.getVertexData()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
-	renderStateNode.setVertexArrayObjectID(bufferID);
-	glBindVertexArray(renderStateNode.getVertexArrayObjectID());
+	elementRenderStateNode.setVertexArrayObjectID(bufferID);
+	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
 
 	// Create New Vertex Buffer Object
 	glGenBuffers(1, &bufferID);
-	renderStateNode.setVertexBufferID(bufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(renderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	elementRenderStateNode.setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(elementRenderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
 	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
 	glEnableVertexAttribArray(m_vertexLocation);
 	glEnableVertexAttribArray(m_normalLocation);
 
 	// Create New Color Buffer Object
-	if (renderStateNode.hasColorVector()) {
+	if (elementRenderStateNode.hasColorVector()) {
 		glGenBuffers(1, &bufferID);
-		renderStateNode.setColorBufferID(bufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, renderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, renderStateNode.getColorVector()->size() * sizeof(glm::vec4), renderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		elementRenderStateNode.setColorBufferID(bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getColorBufferID());
+		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), elementRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(m_colorLocation);
 
 	}
 	// Create IndexBuffer;
-	size= renderStateNode.getIndices()->size();
+	size= elementRenderStateNode.getIndices()->size();
 	glGenBuffers(1, &bufferID);
-	renderStateNode.setIndexBufferID(bufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderStateNode.getIndexBufferID());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(renderStateNode.getIndices()->at(0)), GL_DYNAMIC_DRAW);
+	elementRenderStateNode.setIndexBufferID(bufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementRenderStateNode.getIndexBufferID());
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(elementRenderStateNode.getIndices()->at(0)), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	renderStateNode.setInitialized(true);
+	elementRenderStateNode.setInitialized(true);
 }
 
 bool DrawManager::initShaderPrograms() {
@@ -234,11 +234,11 @@ DrawManager::DefaultDrawVisitor::DefaultDrawVisitor(DrawManager& drawManager)
 
 DrawManager::DefaultDrawVisitor::~DefaultDrawVisitor() {}
 
-void DrawManager::DefaultDrawVisitor::draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::DefaultDrawVisitor::draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
-	if (!renderStateNode.isInitialized())
-		m_drawManager.initialize(renderStateNode);
-	m_drawManager.doDraw(renderStateNode, rigidAffineTransformation);
+	if (!elementRenderStateNode.isInitialized())
+		m_drawManager.initialize(elementRenderStateNode);
+	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation);
 }
 
 DrawManager::DefaultSceneListener::DefaultSceneListener(DrawManager& drawManager)

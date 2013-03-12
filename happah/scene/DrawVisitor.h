@@ -2,12 +2,12 @@
 #define DRAW_VISITOR_H
 
 class RigidAffineTransformation;
-class RenderStateNode;
+class ElementRenderStateNode;
 
 class DrawVisitor {
 
 public:
-	virtual void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation) = 0;
+	virtual void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) = 0;
 
 };
 

@@ -3,7 +3,7 @@
 
 #include "happah/geometries/Mesh.h"
 #include "happah/scene/SimpleGeometryNode.h"
-#include "happah/scene/RenderStateNode.h"
+#include "happah/scene/ElementRenderStateNode.h"
 
 
 class LineMeshNode : public SimpleGeometryNode<LineMesh>  {

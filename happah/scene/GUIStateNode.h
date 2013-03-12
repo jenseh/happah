@@ -126,7 +126,7 @@ private:
 
 class WormGUIStateNode : public GUIStateNode {
 public:
-	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name);
+	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, ContextMenu* contextMenu, string name);
 	~WormGUIStateNode();
 
 	shared_ptr<void> getData() const;

@@ -90,7 +90,7 @@ void GUIManager::insert(Disc_ptr disc) {
 }
 
 void GUIManager::insert(Worm_ptr worm) {
-	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+	doInsert3D<Worm, WormGUIStateNode, WormForm, ContextMenu>(worm, "Worm", m_toolPanel->getWormForm());
 }
 
 void GUIManager::update(InvoluteGear_ptr involuteGear) {

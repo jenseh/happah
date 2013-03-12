@@ -119,7 +119,7 @@ Form* DiscGUIStateNode::getForm() {
 
 // Worm
 
-WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name)
+WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, ContextMenu* contextMenu, string name)
 	: GUIStateNode(name), m_worm(worm), m_wormForm(wormForm) {}
 
 WormGUIStateNode::~WormGUIStateNode() {

@@ -49,4 +49,9 @@ vector<Triangle>* TriangleMesh::toTriangles(){
 
 LineMesh::LineMesh(vector<hpvec3>* vertexData,vector<hpuint>* indices)
 		: Mesh(vertexData,indices) {}
+<<<<<<< HEAD
 LineMesh::~LineMesh() {}
+=======
+LineMesh::~LineMesh() {}
+
+>>>>>>> branch 'master' of https://github.com/happah-graphics/happah.git

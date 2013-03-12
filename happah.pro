@@ -107,7 +107,10 @@ SOURCES += \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
 	happah/geometries/PointCloud.cpp\
+<<<<<<< HEAD
 	happah/geometries/PointCloud.cpp\
+=======
+>>>>>>> branch 'master' of https://github.com/happah-graphics/happah.git
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
@@ -127,8 +130,11 @@ SOURCES += \
 	happah/gui/context-menus/ContextMenu.cpp \
 	happah/gui/context-menus/ContextMenuControl.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
+<<<<<<< HEAD
 	happah/gui/context-menus/ContextMenuControl.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
+=======
+>>>>>>> branch 'master' of https://github.com/happah-graphics/happah.git
 \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \

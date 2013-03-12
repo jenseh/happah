@@ -7,7 +7,8 @@
 #include <vector>
 
 #include "happah/scene/DrawVisitor.h"
-#include "happah/scene/RenderStateNode.h"
+#include "happah/scene/ElementRenderStateNode.h"
+#include "happah/scene/PointCloudRenderStateNode.h"
 
 class HappahGlFormat : public QGLFormat {
 public:
@@ -31,9 +32,14 @@ private:
 		DefaultDrawVisitor(DrawManager& drawManager);
 		~DefaultDrawVisitor();
 		
+<<<<<<< HEAD
 		void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		
+=======
+		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+>>>>>>> branch 'master' of https://github.com/happah-graphics/happah.git
 	private:
 		DrawManager& m_drawManager;
 
@@ -88,8 +94,10 @@ private:
 	hpvec3   m_cameraPosition;
 
 	void compileShader(GLuint shader, const char* filePath);
-	void doDraw(RenderStateNode& triangleMeshRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-	void initialize(RenderStateNode& triangleMeshRenderStateNode);
+	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+	void initialize(ElementRenderStateNode& elementRenderStateNode);
+	void initialize(PointCloudRenderStateNode& elementRenderStateNode);
 	bool initShaderPrograms();
 
 };

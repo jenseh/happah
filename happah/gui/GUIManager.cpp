@@ -80,6 +80,10 @@ void GUIManager::insert(Disc_ptr disc) {
 	doInsert3D<Disc, DiscGUIStateNode, DiscForm>(disc, "Disc", m_toolPanel->getDiscForm());
 }
 
+void GUIManager::insert(Worm_ptr worm) {
+	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+}
+
 void GUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate3D<InvoluteGear>(involuteGear);
 }
@@ -90,6 +94,10 @@ void GUIManager::update(SimpleGear_ptr simpleGear) {
 
 void GUIManager::update(Disc_ptr disc) {
 	doUpdate3D<Disc>(disc);
+}
+
+void GUIManager::update(Worm_ptr worm) {
+	doUpdate3D<Worm>(worm);
 }
 
 GUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(GUIManager& guiManager)

@@ -100,3 +100,21 @@ Form* DiscGUIStateNode::getForm() {
 	return m_discForm;
 }
 
+// Worm
+
+WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name)
+	: GUIStateNode(name), m_worm(worm), m_wormForm(wormForm) {}
+
+WormGUIStateNode::~WormGUIStateNode() {
+	if(m_wormForm->getWorm() == m_worm)
+		m_wormForm->reset();
+}
+
+shared_ptr<void> WormGUIStateNode::getData() const {
+	return m_worm;
+}
+
+Form* WormGUIStateNode::getForm() {
+	m_wormForm->setWorm(m_worm);
+	return m_wormForm;
+}

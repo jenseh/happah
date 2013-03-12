@@ -1,36 +1,36 @@
 #ifndef ZCIRCLECLOUD_H
 #define ZCIRCLECLOUD_H
 
-#include <QMatrix4x4>
 #include <vector>
 
-#include "happah/primitives/Circle.h"
+#include "happah/math/Circle.h"
+#include "happah/HappahTypes.h"
 
 class ZCircleCloud
 {
 public:
-  ZCircleCloud(std::vector<glm::vec2>* points, std::vector<float>* posZ, int resolutionXY, int resolutionZ, glm::vec3& referenceDir);
+  ZCircleCloud(std::vector<hpvec2>* points, std::vector<hpreal>* posZ, int resolutionXY, int resolutionZ, hpvec3& referenceDir);
 
   int getResolutionXY();
   int getResolutionZ();
-  QMatrix4x4* getModelMatrix();
-  void setModelMatrix(QMatrix4x4& modelMatrix);
-  glm::vec3& getReferenceDir();
-  std::vector<glm::vec3*>* getClosestPoints(glm::vec3 hitPoint);
+  hpmat4x4* getModelMatrix();
+  void setModelMatrix(hpmat4x4& modelMatrix);
+  hpvec3& getReferenceDir();
+  std::vector<hpvec3*>* getClosestPoints(hpvec3 hitPoint);
 
-  glm::vec3 getPoint(int posXYIdx, int posZIdx);
+  hpvec3 getPoint(int posXYIdx, int posZIdx);
 //  Circle computeCircle(int posZIdx, int radiusIdx);
   Circle computeOuterCircle(int posZIdx);
 
 private:
-  std::vector<glm::vec2>* m_points;
-  std::vector<float>* m_posZ;
+  std::vector<hpvec2>* m_points;
+  std::vector<hpreal>* m_posZ;
 
-  glm::vec3& m_referenceDir;
+  hpvec3& m_referenceDir;
 
   int m_resolutionXY;
   int m_resolutionZ;
 
-  QMatrix4x4 m_modelMatrix;
+  hpmat4x4 m_modelMatrix;
 };
 #endif // ZCIRCLECLOUD_H

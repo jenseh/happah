@@ -21,6 +21,9 @@ typedef shared_ptr<SimpleGearGUIStateNode> SimpleGearGUIStateNode_ptr;
 class DiscGUIStateNode;
 typedef shared_ptr<DiscGUIStateNode> DiscGUIStateNode_ptr;
 
+class WormGUIStateNode;
+typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
+
 #include "happah/geometries/Mesh.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
@@ -109,6 +112,23 @@ public:
 private:
 	Disc_ptr m_disc;
 	DiscForm* m_discForm;
+
+};
+
+#include "happah/geometries/Worm.h"
+#include "happah/gui/forms/WormForm.h"
+
+class WormGUIStateNode : public GUIStateNode {
+public:
+	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name);
+	~WormGUIStateNode();
+
+	shared_ptr<void> getData() const;
+	Form* getForm();
+
+private:
+	Worm_ptr m_worm;
+	WormForm* m_wormForm;
 
 };
 

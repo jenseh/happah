@@ -6,7 +6,8 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
 		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
 		m_discForm(new DiscForm(guiManager, m_forms)),
-		m_planeForm(new PlaneForm(m_forms)){
+		m_planeForm(new PlaneForm(m_forms)),
+		m_wormForm(new WormForm(guiManager, m_forms)){
 	QGridLayout* buttonsLayout = new QGridLayout();
 	buttonsLayout->setSpacing(2);
 	QWidget* buttons = new QWidget(this);
@@ -16,6 +17,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	add(buttonsLayout, "SG", m_simpleGearForm, 0, 1);
 	add(buttonsLayout, "P", m_planeForm, 0, 2);
 	add(buttonsLayout, "D", m_discForm, 0, 3);
+	add(buttonsLayout, "W", m_wormForm, 0, 4);
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);
@@ -53,6 +55,10 @@ SimpleGearForm* ToolPanel::getSimpleGearForm() {
 
 DiscForm* ToolPanel::getDiscForm() {
 	return m_discForm;
+}
+
+WormForm* ToolPanel::getWormForm() {
+	return m_wormForm;
 }
 
 void ToolPanel::handleButtonClickedEvent() {

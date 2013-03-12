@@ -42,6 +42,10 @@ InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 		m_involuteGearForm->reset();
 }
 
+ContextMenu* InvoluteGearGUIStateNode::getContextMenu() {
+
+}
+
 shared_ptr<void> InvoluteGearGUIStateNode::getData() const {
 	return m_involuteGear;
 }

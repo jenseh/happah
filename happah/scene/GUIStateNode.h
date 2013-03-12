@@ -55,13 +55,14 @@ public:
 	InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear, InvoluteGearForm* involuteGearForm, string name);
 	~InvoluteGearGUIStateNode();
 
+	ContextMenu* getContextMenu();
 	shared_ptr<void> getData() const;
 	Form* getForm();
 
 private:
 	InvoluteGear_ptr m_involuteGear;
 	InvoluteGearForm* m_involuteGearForm;
-
+//	InvoluteGearContextPanel* m_involuteGearContextPanel;
 };
 
 #include "happah/geometries/Plane.h"

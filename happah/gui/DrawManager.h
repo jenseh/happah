@@ -8,6 +8,7 @@
 
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/ElementRenderStateNode.h"
+#include "happah/scene/PointCloudRenderStateNode.h"
 
 class HappahGlFormat : public QGLFormat {
 public:
@@ -32,7 +33,7 @@ private:
 		~DefaultDrawVisitor();
 		
 		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-		
+		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 	private:
 		DrawManager& m_drawManager;
 
@@ -88,7 +89,9 @@ private:
 
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 	void initialize(ElementRenderStateNode& elementRenderStateNode);
+	void initialize(PointCloudRenderStateNode& elementRenderStateNode);
 	bool initShaderPrograms();
 
 };

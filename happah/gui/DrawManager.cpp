@@ -78,7 +78,34 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 	}
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-	glDrawElements(GL_TRIANGLES, size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}
+
+void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
+	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
+	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+
+	glBindVertexArray(pointCloudRenderStateNode.getVertexArrayObjectID());
+	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
+	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
+	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
+	glUniform1f(m_ambientFactorLocation, (GLfloat)pointCloudRenderStateNode.getMaterial().getAmbientFactor());
+	glUniform1f(m_diffuseFactorLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getDiffuseFactor());
+	glUniform1f(m_specularFactorLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getSpecularFactor());
+	glUniform1f(m_phongExponentLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getPhongExponent());
+	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
+	if (pointCloudRenderStateNode.hasColorVector()) {
+		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
+		glUniform1i(m_isColoredLocation, 1);
+	} else {
+		hpcolor color = pointCloudRenderStateNode.getColor();
+		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
+		glUniform1i(m_isColoredLocation, 0);
+	}
+
+	glDrawArrays(pointCloudRenderStateNode.getMode(),0,pointCloudRenderStateNode.getVertexData()->size());
 	glBindVertexArray(0);
 }
 
@@ -162,6 +189,41 @@ void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 	elementRenderStateNode.setInitialized(true);
 }
 
+void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNode) {
+	GLuint bufferID;
+	GLint size = (pointCloudRenderStateNode.getVertexData()->size());
+	// Create New VertexArrayObject
+	glGenVertexArrays(1, &bufferID);
+	pointCloudRenderStateNode.setVertexArrayObjectID(bufferID);
+	glBindVertexArray(pointCloudRenderStateNode.getVertexArrayObjectID());
+
+	// Create New Vertex Buffer Object
+	glGenBuffers(1, &bufferID);
+	pointCloudRenderStateNode.setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
+	glEnableVertexAttribArray(m_vertexLocation);
+
+
+	// Create New Color Buffer Object
+	if (pointCloudRenderStateNode.hasColorVector()) {
+		glGenBuffers(1, &bufferID);
+		pointCloudRenderStateNode.setColorBufferID(bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorBufferID());
+		glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), pointCloudRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(m_colorLocation);
+
+	}
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	pointCloudRenderStateNode.setInitialized(true);
+}
+
+
 bool DrawManager::initShaderPrograms() {
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	compileShader(m_vertexShader, "shader/simple.vert");
@@ -239,6 +301,12 @@ void DrawManager::DefaultDrawVisitor::draw(ElementRenderStateNode& elementRender
 	if (!elementRenderStateNode.isInitialized())
 		m_drawManager.initialize(elementRenderStateNode);
 	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation);
+}
+
+void DrawManager::DefaultDrawVisitor::draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	if (!pointCloudRenderStateNode.isInitialized())
+		m_drawManager.initialize(pointCloudRenderStateNode);
+	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation);
 }
 
 DrawManager::DefaultSceneListener::DefaultSceneListener(DrawManager& drawManager)

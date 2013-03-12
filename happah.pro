@@ -109,8 +109,6 @@ SOURCES += \
 #	happah/geometries/TriPatch.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \
-	happah/math/Ray.cpp \
-\
 	happah/gui/DrawManager.cpp \
 	happah/gui/GearSlider.cpp \
 	happah/gui/GUIManager.cpp \
@@ -159,10 +157,9 @@ FORMS +=
 RESOURCES += 
 
 win32 {
-	QMAKE_CXXFLAGS += -fexceptions -DGL_GLEXT_PROTOTYPES
-	CONFIG += exceptions
+	QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__ -DGL_GLEXT_PROTOTYPES
 	LIBS += -lglew32
-	INCLUDEPATH += ../include
+	INCLUDEPATH += ./
 }
 
 unix {

@@ -1,8 +1,9 @@
 #ifndef POINT_CLOUD_NODE_H_
 #define POINT_CLOUD_NODE_H_
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/PointCloud.h"
 #include "happah/scene/SimpleGeometryNode.h"
+#include "happah/scene/PointCloudRenderStateNode.h"
 #include "happah/scene/RenderStateNode.h"
 
 class PointCloudNode : public SimpleGeometryNode<PointCloud>{

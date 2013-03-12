@@ -3,8 +3,7 @@
 
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Gear.h"
-#include "happah/kdtree/TriangleKDTree.h"
-#include "happah/primitives/Color.h"
+#include "happah/kdtree/KDTree.h"
 #include "happah/simulations/Kinematic.h"
 
 class DiscGearGrind
@@ -21,8 +20,8 @@ private:
 
     TriangleMesh* m_discMesh;
     TriangleMesh* m_gearMesh;
-    std::vector<Ray*> m_gearRays;
-    TriangleKDTree m_kdTree;
+    std::vector<Ray>* m_gearRays;
+    KDTree* m_kdTree;
 
     vector<double> m_distances;
 

@@ -123,12 +123,10 @@ TriangleMesh* Disc::toTriangleMesh(){
 
 	float dalpha = 2 * M_PI / Z_DETAIL_LEVEL;
 
-	// Create the height profile given the current gear settings
+	// Create the height profile given the current disc settings
 	createHeightProfile();
 
 	vertexData->reserve(Z_DETAIL_LEVEL * m_heightProfile.size() *2);
-	// draw the sides (german: Mantelflaechen) of the gear
-	// this is the important part where the height profile will come into play
 	for (int i = 0; i <= Z_DETAIL_LEVEL; i++) {
 		for (unsigned int j = 0; j < m_heightProfile.size();j++) {
 			vertexData->push_back(hpvec3(m_heightProfile[j].x,

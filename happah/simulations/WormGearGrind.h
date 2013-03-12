@@ -20,7 +20,7 @@ public:
 private:
   glm::vec3 inline transformVector(glm::vec3& vector, QMatrix4x4& transformation);
   glm::vec3 inline transformPoint(glm::vec3& point, QMatrix4x4& transformation);
-  void inline computeIntersectingTriangles(size_t& z, ExplicitKDTree& tree, std::list<CircleHitResult*>* hitResults);
+  void inline computeIntersectingTriangles(size_t& z, KDTree& tree, std::list<CircleHitResult*>* hitResults);
 
 
   Triangle translateTriangle(Triangle& triangle, glm::vec3& vector);

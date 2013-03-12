@@ -1,11 +1,11 @@
-#include "RenderStateNode.h"
+#include "happah/scene/RenderStateNode.h"
 #include <exception>
 
 
 using namespace std;
 
-RenderStateNode::RenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, hpcolor& color)
-	:m_mode(mode),m_vertexData(vertexData),m_indices(indices),m_color(color), m_vertexBufferID(0), m_indexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
+RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, hpcolor& color)
+	:m_vertexData(vertexData),m_color(color), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
 
 	Material material;
 	material.setAmbientFactor(1.5f);
@@ -15,8 +15,8 @@ RenderStateNode::RenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::v
 	m_material = material;
 }
 
-RenderStateNode::RenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, vector<hpcolor>* colorVector)
-	:m_mode(mode),m_vertexData(vertexData),m_indices(indices),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_indexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
+RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, vector<hpcolor>* colorVector)
+	:m_vertexData(vertexData),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
 
 
 	if (colorVector->size() != vertexData->size()/2)
@@ -31,7 +31,7 @@ RenderStateNode::RenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::v
 }
 
 RenderStateNode::~RenderStateNode() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void RenderStateNode::accept(SceneVisitor& sceneVisitor) {
@@ -39,9 +39,6 @@ void RenderStateNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
-void RenderStateNode::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
-	drawVisitor.draw(*this, rigidAffineTransformation);
-}
 
 void RenderStateNode::setVertexBufferID(GLuint id) {
 	m_vertexBufferID = id;
@@ -49,12 +46,7 @@ void RenderStateNode::setVertexBufferID(GLuint id) {
 GLuint RenderStateNode::getVertexBufferID() {
 	return m_vertexBufferID;
 }
-void RenderStateNode::setIndexBufferID(GLuint id) {
-	m_indexBufferID = id;
-}
-GLuint RenderStateNode::getIndexBufferID() {
-	return m_indexBufferID;
-}
+
 void RenderStateNode::setVertexArrayObjectID(GLuint id) {
 	m_vertexArrayObjectID = id;
 }
@@ -67,7 +59,6 @@ void RenderStateNode::setColor(hpcolor color) {
 hpcolor RenderStateNode::getColor() {
 	return m_color;
 }
-
 void RenderStateNode::setColorVector(vector<hpcolor>* colorVector) {
 	if (m_vertexData->size() != colorVector->size()/2)
 		throw; // TODO: Find Proper Exception !
@@ -101,16 +92,9 @@ Material RenderStateNode::getMaterial() {
 	return m_material;
 }
 
-GLuint RenderStateNode::getMode() {
-	return m_mode;
-}
 
 vector<hpvec3>* RenderStateNode::getVertexData() {
 	return m_vertexData;
-}
-
-vector<hpuint>* RenderStateNode::getIndices(){
-	return m_indices;
 }
 
 vector<hpvec4>* RenderStateNode::getColorVector(){
@@ -119,36 +103,10 @@ vector<hpvec4>* RenderStateNode::getColorVector(){
 	return m_colorVector;
 }
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, hpcolor& color)
-	: RenderStateNode(GL_TRIANGLES,triangleMesh->getVertexData(),triangleMesh->getIndices(),color){}
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, std::vector<hpcolor>* colorVector)
-	: RenderStateNode(GL_TRIANGLES,triangleMesh->getVertexData(),triangleMesh->getIndices(),colorVector) {}
 
-TriangleMeshRenderStateNode::~TriangleMeshRenderStateNode() {
-	// TODO Auto-generated destructor stub
-}
 
-LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, hpcolor& color)
-	: RenderStateNode(GL_LINES,lineMesh->getVertexData(),lineMesh->getIndices(),color){}
 
-LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, std::vector<hpcolor>* colorVector)
-	: RenderStateNode(GL_LINES,lineMesh->getVertexData(),lineMesh->getIndices(),colorVector) {}
 
-LineMeshRenderStateNode::~LineMeshRenderStateNode() {
-	// TODO Auto-generated destructor stub
-}
-
-PointCloudRenderStateNode::PointCloudRenderStateNode(PointCloud_ptr pointCloud, hpcolor& color)
-	: RenderStateNode(GL_POINTS,pointCloud->getVertexData(),pointCloud->getIndices(),color){}
-
-PointCloudRenderStateNode::PointCloudRenderStateNode(PointCloud_ptr pointCloud, std::vector<hpcolor>* colorVector)
-	: RenderStateNode(GL_POINTS,pointCloud->getVertexData(),pointCloud->getIndices(),colorVector) {}
-
-PointCloudRenderStateNode::~PointCloudRenderStateNode() {
-	// TODO Auto-generated destructor stub
-}
-
-//TODO : color buffer
 
 

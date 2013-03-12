@@ -21,7 +21,7 @@ void WormGearGrind::calculateGrindingDepth(){
 //         std::cout << "EtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
 //         std::cout << "EtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
 //   }
-   ExplicitKDTree tree = ExplicitKDTree(triangles);
+   KDTree tree = KDTree(triangles);
    size_t resolutionZ = m_worm->getResolutionZ();
 
    size_t resultAngleSlotCount = 100;
@@ -107,7 +107,7 @@ void WormGearGrind::calculateGrindingDepth(){
 }
 
 
-void inline WormGearGrind::computeIntersectingTriangles(size_t& z, ExplicitKDTree& tree, std::list<CircleHitResult*>* hitResults) {
+void inline WormGearGrind::computeIntersectingTriangles(size_t& z, KDTree& tree, std::list<CircleHitResult*>* hitResults) {
   Circle circle = m_worm->computeOuterCircle(z);
   Circle transformedCircle = transformCircle(circle);
 

@@ -6,7 +6,7 @@
 class Viewport3DListener {
 
 public:
-	virtual void mouseClickEvent(Ray ray) = 0;
+	virtual void handleMouseClickEvent(Ray ray) = 0;
 };
 
 #endif

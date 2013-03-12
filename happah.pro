@@ -17,10 +17,11 @@ HEADERS += \
 #	happah/geometries/ControlNet2.h \
 	happah/geometries/Disc.h \
 	happah/geometries/Gear.h \
-	happah/geometries/Geometry.h \
+	happah/geometries/Geometry.h \ 
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
+	happah/geometries/PointCloud.h\
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
@@ -39,6 +40,8 @@ HEADERS += \
 	happah/gui/Viewport3D.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
+	happah/gui/context-menus/ContextMenuControl.h \
+	happah/gui/context-menus/InvoluteGearContextMenu.h \
 \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
@@ -51,15 +54,16 @@ HEADERS += \
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/BSphere.h \
-	happah/kdtree/ExplicitKDTree.h \
-	happah/kdtree/ExplicitKDTreeInnerNode.h \
-	happah/kdtree/ExplicitKDTreeLeaf.h \
-	happah/kdtree/ExplicitKDTreeNode.h \
+	happah/kdtree/KDTree.h \
+	happah/kdtree/KDTreeInnerNode.h \
+	happah/kdtree/KDTreeLeaf.h \
+	happah/kdtree/KDTreeNode.h \
 \
 	happah/math/Circle.h \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
+	happah/scene/ElementRenderStateNode.h\
 	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \
 	happah/scene/DrawVisitor.h \
@@ -68,6 +72,7 @@ HEADERS += \
 	happah/scene/Node.h\
 	happah/scene/PlaneNode.h \
 	happah/scene/PointCloudNode.h\
+	happah/scene/PointCloudRenderStateNode.h\
 	happah/scene/RenderStateNode.h\
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
@@ -78,9 +83,9 @@ HEADERS += \
 	happah/scene/TriangleMeshNode.h \
 \
 	happah/simulations/CircularSimulationResult.h \
-#	happah/simulations/DiscGearGrind.h \
+	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
-#	happah/simulations/Simulation.h \
+	happah/simulations/Simulation.h \
 #	happah/simulations/WormGearGrind.h \
 \
 	happah/transformations/RigidAffineTransformation.h
@@ -101,6 +106,8 @@ SOURCES += \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
+	happah/geometries/PointCloud.cpp\
+	happah/geometries/PointCloud.cpp\
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
@@ -118,6 +125,10 @@ SOURCES += \
 	happah/gui/Viewport3D.cpp \
 \
 	happah/gui/context-menus/ContextMenu.cpp \
+	happah/gui/context-menus/ContextMenuControl.cpp \
+	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
+	happah/gui/context-menus/ContextMenuControl.cpp \
+	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
 \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
@@ -127,19 +138,21 @@ SOURCES += \
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/BSphere.cpp \
-	happah/kdtree/ExplicitKDTree.cpp \
-	happah/kdtree/ExplicitKDTreeInnerNode.cpp \
-	happah/kdtree/ExplicitKDTreeLeaf.cpp \
-	happah/kdtree/ExplicitKDTreeNode.cpp \
+	happah/kdtree/KDTree.cpp \
+	happah/kdtree/KDTreeInnerNode.cpp \
+	happah/kdtree/KDTreeLeaf.cpp \
+	happah/kdtree/KDTreeNode.cpp \
 \
 	happah/math/Ray.cpp \
 \
+	happah/scene/ElementRenderStateNode.cpp\
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/LineMeshNode.cpp\
 	happah/scene/Material.cpp \
 	happah/scene/Node.cpp \
 	happah/scene/PlaneNode.cpp \
+	happah/scene/PointCloudRenderStateNode.cpp\
 	happah/scene/PointCloudNode.cpp\
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
@@ -148,9 +161,9 @@ SOURCES += \
 	happah/scene/TriangleMeshNode.cpp \
 \
 	happah/simulations/CircularSimulationResult.cpp \
-#	happah/simulations/DiscGearGrind.cpp \
+	happah/simulations/DiscGearGrind.cpp \
 	happah/simulations/Kinematic.cpp \
-#	happah/simulations/Simulation.cpp \
+	happah/simulations/Simulation.cpp \
 #	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp

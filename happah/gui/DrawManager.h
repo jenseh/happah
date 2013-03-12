@@ -32,6 +32,7 @@ private:
 		~DefaultDrawVisitor();
 		
 		void draw(RenderStateNode& renderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		
 	private:
 		DrawManager& m_drawManager;

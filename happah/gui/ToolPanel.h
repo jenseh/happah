@@ -14,6 +14,7 @@ using namespace std;
 #include "happah/gui/forms/SimpleGearForm.h"
 #include "happah/gui/forms/PlaneForm.h"
 #include "happah/gui/forms/DiscForm.h"
+#include "happah/gui/forms/WormForm.h"
 
 class ToolPanel : public QWidget {
 Q_OBJECT
@@ -26,6 +27,7 @@ public:
 	PlaneForm* getPlaneForm();
 	SimpleGearForm* getSimpleGearForm();
 	DiscForm* getDiscForm();
+	WormForm* getWormForm();
 	void setForm(Form* form);	
 
 private:
@@ -34,8 +36,9 @@ private:
 	unordered_map<QPushButton*,Form*> m_formsByButton;
 	InvoluteGearForm* m_involuteGearForm;
 	SimpleGearForm* m_simpleGearForm;
-	PlaneForm* m_planeForm;
 	DiscForm* m_discForm;
+	PlaneForm* m_planeForm;
+	WormForm* m_wormForm;
 
 	void add(QGridLayout* buttonLayout, const char* text, Form* form, int row, int column);
 

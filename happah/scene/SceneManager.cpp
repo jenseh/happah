@@ -8,6 +8,7 @@
 #include "happah/scene/RenderStateNode.h"
 #include "happah/scene/SimpleGearNode.h"
 #include "happah/scene/DiscNode.h"
+#include "happah/scene/WormNode.h"
 
 SceneManager::SceneManager() {}
 
@@ -99,6 +100,14 @@ void SceneManager::insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode) 
 
 void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
 	doInsert<Disc, DiscNode>(disc, triangleMesh, color);
+}
+
+void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {
+	doInsert<Worm, WormNode, WormGUIStateNode>(worm, wormGUIStateNode);
+}
+
+void SceneManager::insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	doInsert<Worm, WormNode>(worm, triangleMesh, color);
 }
 
 void SceneManager::registerSceneListener(SceneListener* sceneListener) {

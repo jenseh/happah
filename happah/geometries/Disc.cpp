@@ -15,88 +15,14 @@ Disc::~Disc() {
 // Create a profile of height values
 void Disc::createHeightProfile() {
     m_heightProfile = std::vector<glm::vec2>();
-    m_heightProfile.resize(SEGMENT_COUNT);
+    m_heightProfile.resize(HEIGHT_PROFILE_DETAIL_LEVEL);
     hpreal x = m_length / 2.0;
-    hpreal deltaX = m_length/(double)SEGMENT_COUNT;
-    for( int i = 0; i < SEGMENT_COUNT; i++){
+    hpreal deltaX = m_length/(double)HEIGHT_PROFILE_DETAIL_LEVEL;
+    for( int i = 0; i < HEIGHT_PROFILE_DETAIL_LEVEL; i++){
         m_heightProfile[i].x = x;
         m_heightProfile[i].y = m_standardProfile->getHeight(x) + m_module;
         x += deltaX;
     }
-}
-
-// This creates the quads for a gear. The gear axis is the model's z-axis.
-std::vector<glm::vec4> Disc::createVertexData() {
-    std::vector<glm::vec4> vertexData;
-
-    float dalpha = 2 * M_PI / Z_DETAIL_LEVEL;
-
-    // Create the height profile given the current gear settings
-    createHeightProfile();
-
-
-    // draw the sides (german: Mantelflaechen) of the gear
-    // this is the important part where the height profile will come into play
-    for (int i = 0; i < Z_DETAIL_LEVEL; i++) {
-        hpreal alpha1 = i * dalpha;
-        hpreal sinAlpha1 = sin(alpha1);
-        hpreal cosAlpha1 = cos(alpha1);
-        hpreal alpha2 = alpha1 + dalpha;
-        hpreal sinAlpha2 = sin(alpha2);
-        hpreal cosAlpha2 = cos(alpha2);
-        for (unsigned int segmentNum = 0; segmentNum < m_heightProfile.size()-1;
-                segmentNum++) {
-
-            glm::vec4 a, b, c, d, normNext, norm;
-
-            a.x = m_heightProfile[segmentNum+1].x;
-            a.y = sinAlpha1 * m_heightProfile[segmentNum+1].y;
-            a.z = cosAlpha1 * m_heightProfile[segmentNum+1].y;
-            a.w = 1.0f;
-
-            b.x = m_heightProfile[segmentNum].x;
-            b.y = sinAlpha1 * m_heightProfile[segmentNum].y;
-            b.z = cosAlpha1 * m_heightProfile[segmentNum].y;
-            b.w = 1.0f;
-
-            c.x = m_heightProfile[segmentNum].x;
-            c.y = sinAlpha2 * m_heightProfile[segmentNum].y;
-            c.z = cosAlpha2 * m_heightProfile[segmentNum].y;
-            c.w = 1.0f;
-
-            d.x = m_heightProfile[segmentNum+1].x;
-            d.y = sinAlpha2 * m_heightProfile[segmentNum+1].y;
-            d.z = cosAlpha2 * m_heightProfile[segmentNum+1].y;
-            d.w = 1.0f;
-
-            /*norm = glm::vec4(
-                    glm::normalize(
-                            glm::cross(glm::vec3(0.0f, 0.0f, c.z - b.z),
-                                    glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
-                    1.0f);*/
-            glm::vec3 tempNorm = glm::cross( (glm::vec3)(a - b), (glm::vec3)(c - b));
-            norm.x = tempNorm.x;
-            norm.y = tempNorm.y;
-            norm.z = tempNorm.z;
-            norm.w = 1.0f;
-            norm = glm::normalize(norm);
-
-
-
-
-            vertexData.push_back(a);
-            //dataPushback(normNext);
-            vertexData.push_back(norm);
-            vertexData.push_back(b);
-            vertexData.push_back(norm);
-            vertexData.push_back(c);
-            vertexData.push_back(norm);
-            vertexData.push_back(d);
-            //dataPushback(normNext);
-            vertexData.push_back(norm);
-        }
-    }
-    return vertexData;
 }
 
 hpreal Disc::getRadius() {
@@ -114,20 +40,20 @@ TriangleMesh* Disc::toTriangleMesh(){
 	std::vector<hpuint> *indices = new std::vector<hpuint>;
 	hpvec3 wildcardNormal = hpvec3(0.0f, 0.0f, 0.0f);
 
-	float dalpha = 2 * M_PI / Z_DETAIL_LEVEL;
+	float dalpha = 2 * M_PI / ANGLE_DETAIL_LEVEL;
 
 	// Create the height profile given the current disc settings
 	createHeightProfile();
 
-	vertexData->reserve(Z_DETAIL_LEVEL * m_heightProfile.size() *2);
-	for (int i = 0; i <= Z_DETAIL_LEVEL; i++) {
+	vertexData->reserve(ANGLE_DETAIL_LEVEL * m_heightProfile.size() *2);
+	for (int i = 0; i <= ANGLE_DETAIL_LEVEL; i++) {
 		for (unsigned int j = 0; j < m_heightProfile.size();j++) {
 			vertexData->push_back(hpvec3(m_heightProfile[j].x,
 										sin(i * dalpha) * m_heightProfile[j].y,
 										cos(i * dalpha) * m_heightProfile[j].y));
 			vertexData->push_back(wildcardNormal);
 
-			if(i != Z_DETAIL_LEVEL) {
+			if(i != ANGLE_DETAIL_LEVEL) {
 				hpuint jNext = (j == m_heightProfile.size() - 1) ? 0 : (j + 1);
 
 				indices->push_back(i * m_heightProfile.size() + jNext);		//0
@@ -141,19 +67,17 @@ TriangleMesh* Disc::toTriangleMesh(){
 		}
 	}
 
-	//TODO Compute normals
-
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
-	uint indicesInRow = indices->size() / Z_DETAIL_LEVEL;
+	uint indicesInRow = indices->size() / ANGLE_DETAIL_LEVEL;
 	uint trianglePairsInRow  = indicesInRow / 6;
 
 	//array steps is necessary to walk in the vertexData array to the right places
 	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
 
 	// go one step further in width direction to reach all points
-	for(uint i = 0; i < Z_DETAIL_LEVEL; ++i) {
+	for(uint i = 0; i <= ANGLE_DETAIL_LEVEL; ++i) {
 		for (uint j = 0; j < trianglePairsInRow; ++j) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
@@ -169,8 +93,6 @@ TriangleMesh* Disc::toTriangleMesh(){
 				} else {
 					da = -1; db = -2;
 				}
-
-				//TODO: n ist int und wird mit uint verglichen! => static_cast???
 				n += steps[k];
 				if (k == 2 && j == trianglePairsInRow - 1)
 					n -= indicesInRow;
@@ -192,7 +114,6 @@ TriangleMesh* Disc::toTriangleMesh(){
 			}
 		}
 	}
-
 	return new TriangleMesh(vertexData, indices);
 }
 

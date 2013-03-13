@@ -56,6 +56,7 @@ void DiscForm::reset() {
 	updateRanges();
 }
 
+
 void DiscForm::setDisc(Disc_ptr disc) {
 	m_disc = disc;
 	m_discInserted = true;

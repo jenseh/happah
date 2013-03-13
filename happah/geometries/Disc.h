@@ -1,10 +1,3 @@
-/*
- * BasicRack.h
- *
- *  Created on: Dez 5, 2012
- *      Author: julian
- */
-
 #ifndef DISC_H
 #define DISC_H
 
@@ -35,10 +28,9 @@ private:
     std::vector<hpvec2> m_heightProfile;
     StandardProfile* m_standardProfile;
 
-    const static int SEGMENT_COUNT = 50; //maximum: 4500
-    const static int Z_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
+    const static int HEIGHT_PROFILE_DETAIL_LEVEL = 50;
+    const static int ANGLE_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
 
-    std::vector<hpvec4> createVertexData();
     void createHeightProfile();
     void updateValues();
 };

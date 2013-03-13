@@ -32,15 +32,21 @@ WormForm::WormForm(WormListener& wormListener, QWidget* parent)
 	updateRanges();
 }
 
-WormForm::~WormForm() {}
+WormForm::~WormForm() {
+	delete m_toothCountSlider;
+	delete m_moduleSlider;
+	delete m_pressureAngleSlider;
+}
 
 void WormForm::changeToothCount(hpreal toothCount) {
 	m_worm->setToothCount((int) round(toothCount));
+	updateRanges();
 	updateWorm();
 }
 
 void WormForm::changeModule(hpreal module) {
 	m_worm->setModule(module);
+	updateRanges();
 	updateWorm();
 }
 
@@ -84,7 +90,11 @@ void WormForm::updateWorm() {
 }
 
 void WormForm::updateRanges() {
+	hpreal toothCount = (hpreal) m_worm->getToothCount();
+	hpreal module = m_worm->getModule();
+	hpreal pressureAngle = m_worm->getPressureAngle();
+
 	m_toothCountSlider->setSliderValues((hpreal) m_worm->getToothCount(), 1, 100);
 	m_moduleSlider->setSliderValues(m_worm->getModule(), 0.1 * M_PI, 20.0 * M_PI);
-	m_pressureAngleSlider->setSliderValues(m_worm->getPressureAngle(), 0.1, 0.785);
+	m_pressureAngleSlider->setSliderValues(m_worm->getPressureAngle(), 10.0 / 360.0 * 2.0 * M_PI, 90.0 / 360.0 * 2.0 * M_PI);
 }

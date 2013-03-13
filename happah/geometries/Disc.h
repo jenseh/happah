@@ -1,10 +1,3 @@
-/*
- * BasicRack.h
- *
- *  Created on: Dez 5, 2012
- *      Author: julian
- */
-
 #ifndef DISC_H
 #define DISC_H
 

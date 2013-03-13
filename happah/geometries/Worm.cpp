@@ -1,18 +1,16 @@
 #include "Worm.h"
 
 Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations)
+	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations)
 {
-  m_toothCount = toothCount;
-  m_module = module;
-  m_pressureAngle = pressureAngle;
-  m_rotations = rotations;
-  
   m_standardProfile = NULL;
 
   updateValues();
 }
 
-Worm::~Worm() {}
+Worm::~Worm() {
+    delete m_standardProfile;
+}
 
 
 std::vector<hpvec3>* Worm::createVertexData() {
@@ -109,19 +107,24 @@ hpreal Worm::getPressureAngle() {
 
 void Worm::setToothCount(hpreal toothCount) {
 	m_toothCount = toothCount;
+	updateValues();
 }
 void Worm::setModule(hpreal module) {
 	m_module = module;
+	updateValues();
 }
 void Worm::setPressureAngle(hpreal pressureAngle) {
 	m_pressureAngle = pressureAngle;
+	updateValues();
 }
 
 TriangleMesh* Worm::toTriangleMesh() {
     std::vector<hpvec3>* vertexData = createVertexData();
     std::vector<hpuint>* indices = new std::vector<hpuint>();
-    for (hpuint index = 0; index < vertexData->size()/2; index++) {
-    	indices->at(index) = index;
+    hpuint indexCount =  vertexData->size() / 2;
+    indices->reserve(indexCount);
+    for (hpuint index = 0; index < indexCount; index++) {
+    	indices->push_back(index);
     }
     TriangleMesh* result = new TriangleMesh(vertexData, indices);
     return result;

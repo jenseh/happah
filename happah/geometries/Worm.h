@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <cmath>
 
+#include <memory>
+
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
@@ -44,6 +46,6 @@ private:
 
   void updateValues();
 };
-typedef shared_ptr<Worm> Worm_ptr;
+typedef std::shared_ptr<Worm> Worm_ptr;
 
 #endif // WORM_H

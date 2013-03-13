@@ -25,10 +25,7 @@ WormForm::WormForm(WormListener& wormListener, QWidget* parent)
 	connect(m_moduleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
 	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 
-	Worm* worm = new Worm();
-	m_worm = Worm_ptr(worm);
-	delete worm;
-
+	m_worm = Worm_ptr(new Worm());
 	updateRanges();
 }
 
@@ -69,9 +66,7 @@ Worm_ptr WormForm::getWorm() const {
 }
 
 void WormForm::reset() {
-	Worm* worm = new Worm();
-	m_worm = Worm_ptr(worm);
-	delete worm;
+	m_worm = Worm_ptr(new Worm());
 	m_wormInserted = false;
 
 	updateRanges();

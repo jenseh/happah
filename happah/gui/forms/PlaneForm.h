@@ -4,6 +4,7 @@
 #include "happah/geometries/Plane.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/PlaneListener.h"
+#include "happah/gui/VectorInput.h"
 
 class PlaneForm : public Form {
 Q_OBJECT
@@ -17,6 +18,8 @@ public:
 	void setPlane(Plane_ptr plane);
 
 private:
+	VectorInput* m_originInput;
+	VectorInput* m_normalInput;
 	Plane_ptr m_plane;
 	bool m_planeInserted;
 	PlaneListener& m_planeListener;

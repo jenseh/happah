@@ -1,4 +1,3 @@
-#include <exception>
 #include <iostream>
 
 using namespace std;
@@ -15,8 +14,9 @@ Plane::Plane(const Plane& other)
 Plane::~Plane() {}
 
 hpvec3& Plane::check(hpvec3& normal) {
-	if(normal.x == 0.0 && normal.y == 0.0 && normal.z == 0.0) throw;
-	// does not work! does not throw, but get stuck somewhere...
+	if(normal.x == 0.0 && normal.y == 0.0 && normal.z == 0.0) {
+		std::cerr << "Plane with normal == 0 generated!" << std::endl;
+	}
 	return normal;
 }
 
@@ -55,9 +55,13 @@ TriangleMesh* Plane::toTriangleMesh() {
 //	std::cout << b.x << b.y << b.z << std::endl;
 	
 	vertexData->push_back(m_origin + a + b);
+	vertexData->push_back(m_normal);
 	vertexData->push_back(m_origin - a + b);
+	vertexData->push_back(m_normal);
 	vertexData->push_back(m_origin - a - b);
+	vertexData->push_back(m_normal);
 	vertexData->push_back(m_origin + a - b);
+	vertexData->push_back(m_normal);
 
 	indices->push_back(0);
 	indices->push_back(2);

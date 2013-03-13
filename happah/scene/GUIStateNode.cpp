@@ -26,8 +26,6 @@ TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
 	return m_triangleMesh;
 }
 
-void GUIStateNode::setContextMenu(ContextMenu* contextMenu) {}
-
 void GUIStateNode::setName(const char* name) {
 	m_name = string(name);
 }
@@ -64,10 +62,6 @@ shared_ptr<void> InvoluteGearGUIStateNode::getData() const {
 Form* InvoluteGearGUIStateNode::getForm() {
 	m_involuteGearForm->setInvoluteGear(m_involuteGear);
 	return m_involuteGearForm;
-}
-
-void InvoluteGearGUIStateNode::setContextMenu(InvoluteGearContextMenu* contextMenu) {
-	m_involuteGearContextMenu = contextMenu;
 }
 
 PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name ) :

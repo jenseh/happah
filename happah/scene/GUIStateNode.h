@@ -41,7 +41,6 @@ public:
 	const string& getName() const;
 	GUIStateNode_ptr getptr();
 	TriangleMesh_ptr getTriangleMesh() const;
-	void setContextMenu(ContextMenu* contextMenu);
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 
@@ -63,7 +62,6 @@ public:
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
-	void setContextMenu(InvoluteGearContextMenu* contextMenu);
 
 private:
 	InvoluteGear_ptr m_involuteGear;

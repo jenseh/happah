@@ -10,6 +10,10 @@ class SimpleGeometryNode : public Node {
 public:
 	SimpleGeometryNode(shared_ptr<G> geometry)
 		: m_geometry(geometry) {}
+
+	SimpleGeometryNode(shared_ptr<G> geometry, RigidAffineTransformation& transformation)
+		: m_geometry(geometry), m_rigidAffineTransformation(transformation) {}
+
 	virtual ~SimpleGeometryNode() {}
 
 	virtual bool contains(shared_ptr<void> data) const {

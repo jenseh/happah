@@ -20,12 +20,13 @@ class GUIManager;
 #include "happah/gui/context-menus/ContextMenuControl.h"
 #include "happah/gui/forms/InvoluteGearListener.h"
 #include "happah/gui/forms/SimpleGearListener.h"
+#include "happah/gui/forms/SimulationListener.h"
 #include "happah/gui/forms/DiscListener.h"
 #include "happah/gui/forms/WormListener.h"
 #include "happah/scene/SceneManager.h"
 #include "happah/gui/Viewport3DListener.h"
 
-class GUIManager : public InvoluteGearListener, public SimpleGearListener, public DiscListener, public WormListener, public PlaneListener, public Viewport3DListener {
+class GUIManager : public InvoluteGearListener, public SimpleGearListener, public DiscListener, public WormListener, public PlaneListener, public Viewport3DListener, public SimulationListener {
 
 public:
 	GUIManager(SceneManager_ptr sceneManager);
@@ -36,11 +37,13 @@ public:
 	void insert(InvoluteGear_ptr involuteGear);
 	void insert(Plane_ptr plane);
 	void insert(SimpleGear_ptr simpleGear);
+	void insert(SimulationResult simulationResult);
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
+	void update(SimulationResult simulationResult);
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);
 

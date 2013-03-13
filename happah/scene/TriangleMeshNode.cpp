@@ -3,6 +3,9 @@
 TriangleMeshNode::TriangleMeshNode(TriangleMesh_ptr triangleMesh) 
 	: SimpleGeometryNode<TriangleMesh>(triangleMesh) {}
 
+TriangleMeshNode::TriangleMeshNode(TriangleMesh_ptr triangleMesh, RigidAffineTransformation& transformation):
+		SimpleGeometryNode<TriangleMesh>(triangleMesh, transformation) { }
+
 TriangleMeshNode::~TriangleMeshNode() {}
 
 void TriangleMeshNode::accept(SceneVisitor& sceneVisitor) {

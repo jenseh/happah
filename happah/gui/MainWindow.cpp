@@ -29,7 +29,7 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
 	m_defaultContextMenu = new ContextMenu(this);
-	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
+	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, guiManager, this);
 
 	setCentralWidget(centralWidget);
 }

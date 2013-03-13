@@ -53,6 +53,7 @@ InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 }
 
 ContextMenu* InvoluteGearGUIStateNode::getContextMenu() const {
+	m_involuteGearContextMenu->setInvoluteGear(m_involuteGear);
 	return m_involuteGearContextMenu;
 }
 

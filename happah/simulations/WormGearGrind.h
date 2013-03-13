@@ -1,18 +1,22 @@
 #ifndef WORMGEARGRIND_H
 #define WORMGEARGRIND_H
 
+#include <time.h>
+
 #include "happah/HappahTypes.h"
 #include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/Worm.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/math/Circle.h"
 #include "happah/math/Triangle.h"
 #include "happah/simulations/CircularSimulationResult.h"
+#include "happah/transformations/RigidAffineTransformation.h"
 
 class WormGearGrind
 {
 public:
-  WormGearGrind(InvoluteGear& worm, InvoluteGear& gear);
+  WormGearGrind(Worm& worm, InvoluteGear& gear, RigidAffineTransformation& wormTransformation, RigidAffineTransformation& gearTransformation);
   ~WormGearGrind();
 
   void runSimulation();
@@ -33,6 +37,9 @@ public:
 private:
   ZCircleCloud* m_worm;
   TriangleMesh* m_gear;
+
+  hpmat4x4 m_wormModelMatrix;
+  hpmat4x4 m_gearModelMatrix;
 
   constexpr static hpreal MAX_DIST = 1.0f;
 };

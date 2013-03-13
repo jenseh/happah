@@ -10,6 +10,7 @@
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/ZCircleCloud.h"
 #include "happah/LoggingUtils.h"
 
 
@@ -33,6 +34,7 @@ public:
   void setPressureAngle(hpreal pressureAngle);
 
   TriangleMesh* toTriangleMesh();
+  ZCircleCloud* toZCircleCloud();
   
 private:
   hpuint m_toothCount;

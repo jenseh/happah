@@ -1,10 +1,11 @@
-#include <time.h>
-
 #include "happah/simulations/WormGearGrind.h"
 
-WormGearGrind::WormGearGrind(InvoluteGear& worm, InvoluteGear& gear) {
+WormGearGrind::WormGearGrind(Worm& worm, InvoluteGear& gear, RigidAffineTransformation& wormTransformation, RigidAffineTransformation& gearTransformation) {
     m_worm = worm.toZCircleCloud();
     m_gear = gear.toTriangleMesh();
+
+    m_wormModelMatrix = wormTransformation.toMatrix4x4();
+    m_gearModelMatrix = gearTransformation.toMatrix4x4();
 }
 
 WormGearGrind::~WormGearGrind() {}
@@ -12,8 +13,7 @@ WormGearGrind::~WormGearGrind() {}
 
 void WormGearGrind::calculateGrindingDepth(){
    std::cout << "Starting simulation:" << std::endl;
-   m_gear->fillTriangles();
-   std::vector<Triangle*>* triangles = m_gear->getTriangles();
+   std::vector<Triangle>* triangles = m_gear->toTriangles();
 
 //   for (int i = 0; i < triangles->size(); i++) {
 //         Triangle* triangle = triangles->at(i);
@@ -102,7 +102,7 @@ void WormGearGrind::calculateGrindingDepth(){
 
 
    end = clock();
-   std::cout << "Time required for execution: " << (double)(end-start)/CLOCKS_PER_SEC << " seconds." << std::endl << std::endl;
+   std::cout << "Time required for execution: " << (double)(end-start) / CLOCKS_PER_SEC << " seconds." << std::endl << std::endl;
    return;
 }
 
@@ -115,18 +115,18 @@ void inline WormGearGrind::computeIntersectingTriangles(size_t& z, KDTree& tree,
 }
 
 hpvec3 inline WormGearGrind::transformVector(hpvec3& vector, hpmat4x4& transformation) {
-  hpvec3 result = transformation.mapVector(hpvec3(vector.x, vector.y, vector.z));
-  return hpvec3(result.x(), result.y(), result.z());
+  hpvec4 result = transformation * hpvec4(vector.x, vector.y, vector.z, 1.0);
+  return hpvec3(result.x, result.y, result.z); //TODO: does this make sense?
 }
 hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformation) {
-  QVector4D result = transformation.map(QVector4D(point.x, point.y, point.z, 1.0f));
-  return hpvec3(result.x(), result.y(), result.z());
+  hpvec4 result = transformation * hpvec4(point.x, point.y, point.z, 1.0f);
+  return hpvec3(result.x, result.y, result.z); //TODO: does this make sense?
 }
 
 // This transform a triangle into a different the space of the circle.
 // Note that normals are not transformed, since we don't use them here.
 Triangle WormGearGrind::transformTriangle(Triangle& triangle) {
-  hpmat4x4 transformation = *(m_gear->getModelMatrix()) * (m_worm->getModelMatrix()->inverted(0));
+  hpmat4x4 transformation = m_gearModelMatrix * glm::inverse(m_wormModelMatrix);
   return Triangle(transformPoint(triangle.vertices[0], transformation),
                   transformPoint(triangle.vertices[1], transformation),
                   transformPoint(triangle.vertices[2], transformation));
@@ -135,7 +135,7 @@ Triangle WormGearGrind::transformTriangle(Triangle& triangle) {
 // This transform a circle into the different space of the triangle.
 // Note that the radius is not transformed, since we forbid scaling.
 Circle WormGearGrind::transformCircle(Circle& circle) {
-  hpmat4x4 transformation = *(m_worm->getModelMatrix()) * (m_gear->getModelMatrix()->inverted(0));
+  hpmat4x4 transformation = m_wormModelMatrix * glm::inverse(m_gearModelMatrix);
   return Circle(transformPoint(circle.m_center, transformation),
                   transformVector(circle.m_normal, transformation), circle.m_radius);
 }

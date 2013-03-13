@@ -2,7 +2,7 @@
 
 ZCircleCloud::ZCircleCloud(std::vector<hpvec2>* points, std::vector<hpreal>* posZ, int resolutionXY, int resolutionZ, hpvec3& referenceDir)
   : m_points(points), m_posZ(posZ), m_resolutionXY(resolutionXY), m_resolutionZ(resolutionZ), m_referenceDir(referenceDir) {
-  m_modelMatrix.setToIdentity();
+  m_modelMatrix = hpmat4x4(); //TODO: check whether this is the identity matrix
 }
 
 

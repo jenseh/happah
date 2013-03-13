@@ -29,14 +29,13 @@ SceneGraphExplorerPanel::~SceneGraphExplorerPanel() {}
 
 void SceneGraphExplorerPanel::contextMenuEvent (QContextMenuEvent* event) {
 
-	QPoint ppp = QCursor::pos();
 	QPoint globalPoint = event->globalPos();
 	QListWidgetItem* selectedItem = m_listWidget->itemAt(m_listWidget->mapFromGlobal(globalPoint));
 	GUIStateNode_ptr selectedGUIStateNode = m_guiStateNodesByItem[selectedItem];
 
-	if(selectedGUIStateNode && selectedGUIStateNode->getContextMenu()) {
+	if(selectedGUIStateNode != NULL && selectedGUIStateNode->getContextMenu() != NULL ) {
 		ContextMenu* contextMenu = selectedGUIStateNode->getContextMenu();
-		QAction* action = contextMenu->exec(ppp);
+		QAction* action = contextMenu->exec(globalPoint);
 	}
 }
 

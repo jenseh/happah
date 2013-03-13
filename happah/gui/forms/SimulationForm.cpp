@@ -5,7 +5,7 @@
 
 SimulationForm::SimulationForm(SimulationListener& simulationListener, QWidget* parent)
 	: Form(parent),
-		m_timeSlider(new GearSlider(tr("approximated time"))),
+		m_timeSlider(new Slider(tr("approximated time"))),
 		m_simulationInserted(false),
 		m_simulationListener(simulationListener) {
 	QPushButton* createButton = new QPushButton("create simulation");

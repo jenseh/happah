@@ -3,7 +3,7 @@
 
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/InvoluteGear.h"
-#include "happah/gui/GearSlider.h"
+#include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/SimulationListener.h"
 #include "happah/simulations/DiscGearGrind.h"
@@ -20,7 +20,7 @@ class SimulationForm : public Form {
 		void setSimulation(DiscGearGrind_ptr simulation);
 
 	private:
-		GearSlider* m_timeSlider;
+		Slider* m_timeSlider;
 		DiscGearGrind_ptr m_simulation;
 		bool m_simulationInserted;
 		SimulationListener& m_simulationListener;

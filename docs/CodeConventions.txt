@@ -19,4 +19,4 @@ Braces:
 - Opening braces should be placed in the same line as the method declaration (K & R style).
 
 Pointers:
-- The pointer symbol (*) should be placed after the type and not after the variable declaration.
+- The pointer symbol (*) is attached to the type not the variable declaration.

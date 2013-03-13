@@ -25,10 +25,10 @@ void main() {
    	
    	// TODO: check if color attribute is disabled , if so, set vColor to a color given by a uniform
    	if (isColored == 1){
-	vColor = color;	
+		vColor = color;	
 	}
 	else {
-	vColor = colorComponent;
+		vColor = colorComponent;
 	}   
    
 	gl_Position = modelViewProjectionMatrix * vertex;

@@ -171,13 +171,13 @@ void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 		glGenBuffers(1, &bufferID);
 		elementRenderStateNode.setColorBufferID(bufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), elementRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(hpcolor), &(elementRenderStateNode.getColorVector()->at(0)), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 		glEnableVertexAttribArray(m_colorLocation);
 	}
 
 	// Create IndexBuffer;
-	size= elementRenderStateNode.getIndices()->size();
+	size = elementRenderStateNode.getIndices()->size();
 	glGenBuffers(1, &bufferID);
 	elementRenderStateNode.setIndexBufferID(bufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementRenderStateNode.getIndexBufferID());
@@ -211,8 +211,8 @@ void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNod
 		glGenBuffers(1, &bufferID);
 		pointCloudRenderStateNode.setColorBufferID(bufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), pointCloudRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorVector()->size() * sizeof(hpcolor), pointCloudRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 		glEnableVertexAttribArray(m_colorLocation);
 
 	}

@@ -16,7 +16,7 @@
 class Worm : public Geometry {
 public:
   Worm(hpuint toothCount = 16,
-      hpreal module = 0.2 * M_PI,
+      hpreal module = 0.02 * M_PI,
       hpreal pressureAngle = 20.0 / 360.0 * 2.0 * M_PI,
       hpuint rotations = 1);
       

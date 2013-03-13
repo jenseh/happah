@@ -35,7 +35,7 @@ private:
 
     vector<double> m_distances;
 
-    Kinematic m_gearMouvement;
+    Kinematic m_gearMovement;
 
     void calculateGrindingDepth(double time);
 };

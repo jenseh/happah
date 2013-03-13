@@ -90,6 +90,6 @@ void WormForm::updateRanges() {
 	hpreal pressureAngle = m_worm->getPressureAngle();
 
 	m_toothCountSlider->setSliderValues((hpreal) m_worm->getToothCount(), 1, 100);
-	m_moduleSlider->setSliderValues(m_worm->getModule(), 0.1 * M_PI, 20.0 * M_PI);
+	m_moduleSlider->setSliderValues(m_worm->getModule(), 0.001 * M_PI, 20.0 * M_PI);
 	m_pressureAngleSlider->setSliderValues(m_worm->getPressureAngle(), 10.0 / 360.0 * 2.0 * M_PI, 90.0 / 360.0 * 2.0 * M_PI);
 }

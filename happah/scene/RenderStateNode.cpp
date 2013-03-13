@@ -18,9 +18,9 @@ RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, hpcolor& color)
 RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, vector<hpcolor>* colorVector)
 	:m_vertexData(vertexData),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
 
-	size_t a = colorVector->size();
+	size_t a = colorVector->size(); //TODO: remove
 	size_t b = vertexData->size();
-	if (colorVector->size() != vertexData->size()/2)
+	if (colorVector->size() != vertexData->size() / 2)
 		throw;		// TODO : find proper exception;
 
 	Material material;
@@ -61,7 +61,7 @@ hpcolor RenderStateNode::getColor() {
 	return m_color;
 }
 void RenderStateNode::setColorVector(vector<hpcolor>* colorVector) {
-	if (m_vertexData->size() != colorVector->size()/2)
+	if (m_vertexData->size() != colorVector->size() / 2)
 		throw; // TODO: Find Proper Exception !
 	m_colorVector = colorVector;
 }

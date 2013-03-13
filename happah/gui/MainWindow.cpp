@@ -6,9 +6,10 @@
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/Viewport3D.h"
 
-MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager)
-	: m_contextMenuControl(new ContextMenuControl(this)),
-	m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
+MainWindow::MainWindow(GUIManager& guiManager,
+	SceneGraphExplorerListener& sceneGraphExplorerListener,
+	DrawManager& drawManager
+) : m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
 	m_toolPanel(new ToolPanel(guiManager, this)) {
 	
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
@@ -27,14 +28,13 @@ MainWindow::MainWindow(GUIManager& guiManager, SceneGraphExplorerListener& scene
 	centralWidgetLayout->addWidget( new Viewport3D(guiManager, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
+	m_defaultContextMenu = new ContextMenu(this);
+	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
+
 	setCentralWidget(centralWidget);
 }
 
 MainWindow::~MainWindow() {}
-
-ContextMenuControl* MainWindow::getContextMenuControl() {
-	return m_contextMenuControl;
-}
 
 SceneGraphExplorerPanel* MainWindow::getSceneGraphExplorerPanel() {
 	return m_sceneGraphExplorerPanel;
@@ -42,6 +42,14 @@ SceneGraphExplorerPanel* MainWindow::getSceneGraphExplorerPanel() {
 
 ToolPanel* MainWindow::getToolPanel() {
 	return m_toolPanel;
+}
+
+ContextMenu* MainWindow::getDefaultContextMenu() {
+	return m_defaultContextMenu;
+}
+
+InvoluteGearContextMenu* MainWindow::getInvoluteGearContextMenu() {
+	return m_involuteGearContextMenu;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

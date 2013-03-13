@@ -6,9 +6,9 @@
 
 SimpleGearForm::SimpleGearForm(SimpleGearListener& simpleGearListener, QWidget* parent)
 	: Form(parent),
-		m_faceWidthSlider(new GearSlider(tr("face width"))),
-		m_helixAngleSlider(new GearSlider(tr("helix angle"))),
-		m_radiusSlider(new GearSlider(tr("approximated radius"))),
+		m_faceWidthSlider(new Slider(tr("face width"))),
+		m_helixAngleSlider(new Slider(tr("helix angle"))),
+		m_radiusSlider(new Slider(tr("approximated radius"))),
 		m_simpleGearInserted(false),
 		m_simpleGearListener(simpleGearListener) {
 	QPushButton* createButton = new QPushButton("create gear");

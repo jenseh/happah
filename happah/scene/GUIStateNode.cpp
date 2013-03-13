@@ -1,6 +1,6 @@
 #include "happah/scene/GUIStateNode.h"
 
-GUIStateNode::GUIStateNode(string name)
+GUIStateNode::GUIStateNode(string& name)
 	: m_name(name) {}
 
 GUIStateNode::~GUIStateNode() {}
@@ -26,8 +26,6 @@ TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
 	return m_triangleMesh;
 }
 
-void GUIStateNode::setContextMenu(ContextMenu* contextMenu) {}
-
 void GUIStateNode::setName(const char* name) {
 	m_name = string(name);
 }
@@ -36,10 +34,15 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
-InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(InvoluteGear_ptr involuteGear,
-	InvoluteGearForm* involuteGearForm, InvoluteGearContextMenu* contextMenu, string name)
-	: GUIStateNode(name), m_involuteGear(involuteGear), m_involuteGearForm(involuteGearForm), m_involuteGearContextMenu(contextMenu) {
-
+InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(
+	InvoluteGear_ptr involuteGear,
+	InvoluteGearForm* involuteGearForm, 
+	InvoluteGearContextMenu* contextMenu, 
+	string name
+) : GUIStateNode(name), 
+	m_involuteGear(involuteGear), 
+	m_involuteGearForm(involuteGearForm), 
+	m_involuteGearContextMenu(contextMenu) {
 }
 
 InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
@@ -48,6 +51,7 @@ InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 }
 
 ContextMenu* InvoluteGearGUIStateNode::getContextMenu() const {
+	m_involuteGearContextMenu->setInvoluteGear(m_involuteGear);
 	return m_involuteGearContextMenu;
 }
 
@@ -60,11 +64,7 @@ Form* InvoluteGearGUIStateNode::getForm() {
 	return m_involuteGearForm;
 }
 
-void InvoluteGearGUIStateNode::setContextMenu(InvoluteGearContextMenu* contextMenu) {
-	m_involuteGearContextMenu = contextMenu;
-}
-
-PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, ContextMenu* contextMenu, string name ) :
+PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name ) :
 	GUIStateNode(name), m_plane(plane), m_planeForm(planeForm) {
 }
 
@@ -83,7 +83,7 @@ Form* PlaneGUIStateNode::getForm() {
 	return m_planeForm;
 }
 
-SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, ContextMenu* contextMenu, string name)
+SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name)
 	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm) {}
 
 SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
@@ -100,7 +100,7 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
-DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, ContextMenu* contextMenu, string name)
+DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name)
 	: GUIStateNode(name), m_disc(disc), m_discForm(discForm) {}
 
 DiscGUIStateNode::~DiscGUIStateNode() {
@@ -119,7 +119,7 @@ Form* DiscGUIStateNode::getForm() {
 
 // Worm
 
-WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, ContextMenu* contextMenu, string name)
+WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name)
 	: GUIStateNode(name), m_worm(worm), m_wormForm(wormForm) {}
 
 WormGUIStateNode::~WormGUIStateNode() {

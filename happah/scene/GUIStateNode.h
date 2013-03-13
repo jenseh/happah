@@ -31,7 +31,7 @@ typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
 class GUIStateNode : public Node {
 public:
-	GUIStateNode(string name);
+	GUIStateNode(string& name);
 	virtual ~GUIStateNode();
 
 	void accept(GUIVisitor& guiVisitor);
@@ -41,7 +41,6 @@ public:
 	const string& getName() const;
 	GUIStateNode_ptr getptr();
 	TriangleMesh_ptr getTriangleMesh() const;
-	void setContextMenu(ContextMenu* contextMenu);
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 
@@ -63,7 +62,6 @@ public:
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
-	void setContextMenu(InvoluteGearContextMenu* contextMenu);
 
 private:
 	InvoluteGear_ptr m_involuteGear;
@@ -76,7 +74,7 @@ private:
 
 class PlaneGUIStateNode : public GUIStateNode {
 public:
-	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, ContextMenu* contextMenu, string name);
+	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, string name);
 	~PlaneGUIStateNode();
 
 	shared_ptr<void> getData() const;
@@ -92,7 +90,7 @@ private:
 
 class SimpleGearGUIStateNode : public GUIStateNode {
 public:
-	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, ContextMenu* contextMenu, string name);
+	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name);
 	~SimpleGearGUIStateNode();
 
 	shared_ptr<void> getData() const;
@@ -109,7 +107,7 @@ private:
 
 class DiscGUIStateNode : public GUIStateNode {
 public:
-	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, ContextMenu* contextMenu, string name);
+	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name);
 	~DiscGUIStateNode();
 
 	shared_ptr<void> getData() const;
@@ -126,7 +124,7 @@ private:
 
 class WormGUIStateNode : public GUIStateNode {
 public:
-	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, ContextMenu* contextMenu, string name);
+	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name);
 	~WormGUIStateNode();
 
 	shared_ptr<void> getData() const;

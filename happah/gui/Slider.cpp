@@ -3,9 +3,9 @@
 #include <QGridLayout>
 #include <sstream>
 
-#include "happah/gui/GearSlider.h"
+#include "happah/gui/Slider.h"
 
-GearSlider::GearSlider(const QString &title, bool smoothValues, QWidget *parent) : QGroupBox(parent) {
+Slider::Slider(const QString &title, bool smoothValues, QWidget *parent) : QGroupBox(parent) {
 
 	setTitle(title);
 
@@ -53,22 +53,22 @@ GearSlider::GearSlider(const QString &title, bool smoothValues, QWidget *parent)
 	connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
 }
 
-void GearSlider::setSliderValues(hpreal value, hpreal min, hpreal max) {
+void Slider::setSliderValues(hpreal value, hpreal min, hpreal max) {
 	m_value	 = value;
 	setRange(min, max);
 }
 
-void GearSlider::setRange(hpreal min, hpreal max) {
+void Slider::setRange(hpreal min, hpreal max) {
 	m_minValue  = min;
 	m_maxValue  = max;
 	updateView();
 }
 
-void GearSlider::setNewRange(hpreal *minmax) {
+void Slider::setNewRange(hpreal *minmax) {
 	setRange(minmax[0], minmax[1]);
 }
 
-void GearSlider::updateView() {
+void Slider::updateView() {
 	QString smin, smax, svalue;
 	m_minLabel->setText(smin.setNum(m_minValue));
 	m_maxLabel->setText(smax.setNum(m_maxValue));
@@ -82,23 +82,23 @@ void GearSlider::updateView() {
 	m_valueLabel->setText(svalue.setNum(m_value));
 }
 
-hpreal GearSlider::getValue() {
+hpreal Slider::getValue() {
 	return m_value;
 }
 
-void GearSlider::valueChanged(int value) {
+void Slider::valueChanged(int value) {
 	QString str;
 	m_value = getValueFromSlider(value);
 	emit valueChanged(m_value);
 	m_valueLabel->setText(str.setNum(m_value));
 }
 
-hpreal GearSlider::getValueFromSlider(int value) {
+hpreal Slider::getValueFromSlider(int value) {
 	uint stepSize = m_smoothValues ? 100 : (m_maxValue - m_minValue);
 	return (m_minValue + value * (m_maxValue - m_minValue) / stepSize);
 }
 
-int GearSlider::getValueForSlider(hpreal value) {
+int Slider::getValueForSlider(hpreal value) {
 	uint stepSize = m_smoothValues ? 100 : (m_maxValue - m_minValue);
 	return static_cast<int>((value - m_minValue) * stepSize / (m_maxValue - m_minValue));
 }

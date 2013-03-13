@@ -12,7 +12,7 @@
 
 DiscForm::DiscForm(DiscListener& discListener, QWidget* parent)
 	: Form(parent),
-		m_radiusSlider(new GearSlider(tr("approximated radius"))),
+		m_radiusSlider(new Slider(tr("approximated radius"))),
 		m_discInserted(false),
 		m_discListener(discListener) {
 	QPushButton* createButton = new QPushButton("create disc");

@@ -32,7 +32,7 @@ HEADERS += \
 #	happah/geometries/ZCircleCloud.h \
 \
 	happah/gui/DrawManager.h \
-	happah/gui/GearSlider.h \
+	happah/gui/Slider.h \
 	happah/gui/GUIManager.h \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerListener.h \
@@ -41,7 +41,6 @@ HEADERS += \
 	happah/gui/Viewport3D.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
-	happah/gui/context-menus/ContextMenuControl.h \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
 \
 	happah/gui/forms/Form.h \
@@ -123,7 +122,7 @@ SOURCES += \
 #	happah/geometries/ZCircleCloud.cpp \
 \
 	happah/gui/DrawManager.cpp \
-	happah/gui/GearSlider.cpp \
+	happah/gui/Slider.cpp \
 	happah/gui/GUIManager.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
@@ -131,7 +130,6 @@ SOURCES += \
 	happah/gui/Viewport3D.cpp \
 \
 	happah/gui/context-menus/ContextMenu.cpp \
-	happah/gui/context-menus/ContextMenuControl.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
 \
 	happah/gui/forms/Form.cpp \

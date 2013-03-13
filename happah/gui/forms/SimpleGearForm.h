@@ -2,7 +2,7 @@
 #define SIMPLE_GEAR_FORM_H
 
 #include "happah/geometries/SimpleGear.h"
-#include "happah/gui/GearSlider.h"
+#include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/SimpleGearListener.h"
 
@@ -18,9 +18,9 @@ public:
 	void setSimpleGear(SimpleGear_ptr simpleGear);
 
 private:
-	GearSlider* m_faceWidthSlider;
-	GearSlider* m_helixAngleSlider;
-	GearSlider* m_radiusSlider;
+	Slider* m_faceWidthSlider;
+	Slider* m_helixAngleSlider;
+	Slider* m_radiusSlider;
 	SimpleGear_ptr m_simpleGear;
 	bool m_simpleGearInserted;
 	SimpleGearListener& m_simpleGearListener;

@@ -5,16 +5,16 @@
 
 InvoluteGearForm::InvoluteGearForm(InvoluteGearListener& involuteGearListener, QWidget* parent)
 	: Form(parent), 
-		m_bottomClearanceSlider(new GearSlider(tr("bottom clearance"))),
-		m_faceWidthSlider(new GearSlider(tr("facewidth"))),
-		m_filletRadiusSlider(new GearSlider(tr("fillet radius"))),
+		m_bottomClearanceSlider(new Slider(tr("bottom clearance"))),
+		m_faceWidthSlider(new Slider(tr("facewidth"))),
+		m_filletRadiusSlider(new Slider(tr("fillet radius"))),
 		m_involuteGear(new InvoluteGear()), 
 		m_involuteGearInserted(false), 
 		m_involuteGearListener(involuteGearListener),
-		m_helixAngleSlider(new GearSlider(tr("helix angle"))),
-		m_moduleSlider(new GearSlider(tr("module"))),
-		m_pressureAngleSlider(new GearSlider(tr("pressure angle"))),
-		m_toothCountSlider(new GearSlider(tr("number of teeth"), false)) {
+		m_helixAngleSlider(new Slider(tr("helix angle"))),
+		m_moduleSlider(new Slider(tr("module"))),
+		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
+		m_toothCountSlider(new Slider(tr("number of teeth"), false)) {
 	QPushButton* createButton  = new QPushButton("create gear");
 
 	QVBoxLayout* layout = new QVBoxLayout();

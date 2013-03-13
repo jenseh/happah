@@ -1,7 +1,7 @@
 #ifndef WORMFORM_H_
 #define WORMFORM_H_
 
-#include "happah/gui/GearSlider.h"
+#include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/WormListener.h"
 
@@ -17,9 +17,9 @@ public:
 	void setWorm(Worm_ptr worm);
 
 private:
-	GearSlider* m_toothCountSlider;
-	GearSlider* m_moduleSlider;
-	GearSlider* m_pressureAngleSlider;
+	Slider* m_toothCountSlider;
+	Slider* m_moduleSlider;
+	Slider* m_pressureAngleSlider;
 	Worm_ptr m_worm;
 	bool m_wormInserted;
 	WormListener& m_wormListener;

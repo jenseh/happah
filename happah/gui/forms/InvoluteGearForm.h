@@ -2,7 +2,7 @@
 #define INVOLUTE_GEAR_FORM_H
 
 #include "happah/geometries/InvoluteGear.h"
-#include "happah/gui/GearSlider.h"
+#include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/InvoluteGearListener.h"
 
@@ -18,16 +18,16 @@ public:
 	void setInvoluteGear(InvoluteGear_ptr involuteGear);
 
 private:
-	GearSlider* m_bottomClearanceSlider;
-	GearSlider* m_faceWidthSlider;
-	GearSlider* m_filletRadiusSlider;
+	Slider* m_bottomClearanceSlider;
+	Slider* m_faceWidthSlider;
+	Slider* m_filletRadiusSlider;
 	InvoluteGear_ptr m_involuteGear;
 	bool m_involuteGearInserted;
 	InvoluteGearListener& m_involuteGearListener;
-	GearSlider* m_helixAngleSlider;
-	GearSlider* m_moduleSlider;
-	GearSlider* m_pressureAngleSlider;
-	GearSlider* m_toothCountSlider;
+	Slider* m_helixAngleSlider;
+	Slider* m_moduleSlider;
+	Slider* m_pressureAngleSlider;
+	Slider* m_toothCountSlider;
 
 	void updateInvoluteGear();
 

@@ -2,7 +2,7 @@
 #define DISCFORM_H_
 
 #include "happah/geometries/Disc.h"
-#include "happah/gui/GearSlider.h"
+#include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/DiscListener.h"
 
@@ -18,7 +18,7 @@ class DiscForm : public Form{
 		void setDisc(Disc_ptr Disc);
 
 	private:
-		GearSlider* m_radiusSlider;
+		Slider* m_radiusSlider;
 		Disc_ptr m_disc;
 		bool m_discInserted;
 		DiscListener& m_discListener;

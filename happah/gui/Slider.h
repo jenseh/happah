@@ -7,12 +7,12 @@
 #include <QWidget>
 
 #include "happah/HappahTypes.h"
-//TODO: rename GearSlider to Slider!!
-class GearSlider: public QGroupBox {
+
+class Slider: public QGroupBox {
     Q_OBJECT
 
 public:
-    GearSlider(const QString &title, bool smoothValues = true, QWidget *parent = 0);
+    Slider(const QString &title, bool smoothValues = true, QWidget *parent = 0);
 
     void setSliderValues(hpreal value, hpreal min, hpreal max);
     void setRange(hpreal min, hpreal max);

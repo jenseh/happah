@@ -172,10 +172,10 @@ void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 		elementRenderStateNode.setColorBufferID(bufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getColorBufferID());
 		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), elementRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 		glEnableVertexAttribArray(m_colorLocation);
-
 	}
+
 	// Create IndexBuffer;
 	size= elementRenderStateNode.getIndices()->size();
 	glGenBuffers(1, &bufferID);

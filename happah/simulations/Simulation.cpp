@@ -2,3 +2,5 @@
 
 
 
+	Simulation::Simulation() {}
+	Simulation::~Simulation() {}

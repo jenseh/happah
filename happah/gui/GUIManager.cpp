@@ -109,7 +109,7 @@ void GUIManager::update(SimpleGear_ptr simpleGear) {
 }
 
 void GUIManager::update(SimulationResult simulationResult) {
-
+	//TODO
 }
 
 void GUIManager::update(Plane_ptr plane) {

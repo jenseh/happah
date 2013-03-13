@@ -1,13 +1,16 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(Disc_ptr disc, Gear_ptr gear):
-    m_disc(disc), m_gear(gear), m_maxDistance(1.0)
+	m_disc(disc), m_gear(gear), m_maxDistance(1.0)
 {
     m_gearMouvement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius(),  -m_disc->getRadius()),
                                                     glm::vec3(0, -m_disc->getRadius(), m_disc->getRadius()));
     // Convert to right representation
     m_discMesh = TriangleMesh_ptr(m_disc->toTriangleMesh());
     m_gearMesh = TriangleMesh_ptr(m_gear->toTriangleMesh());
+
+
+
     m_gearRays = m_gearMesh->toRays();
     // resize distances array
     m_distances.resize(m_gearRays->size());
@@ -35,7 +38,7 @@ void DiscGearGrind::calculateGrindingDepth(double time){
 }
 
 
-SimulationResult DiscGearGrind::getDisplay(double time){
+SimulationResult DiscGearGrind::getSimulationResult(double time){
     calculateGrindingDepth(time);
     // Fill color
     for( size_t i = 0; i < m_distances.size(); i++){
@@ -49,4 +52,8 @@ SimulationResult DiscGearGrind::getDisplay(double time){
 //                                          tempMat[0][2], tempMat[1][2], tempMat[2][2], tempMat[3][2],
 //                                          tempMat[0][3], tempMat[1][3], tempMat[2][3], tempMat[3][3]));
     return SimulationResult(m_gearColor, m_gearMesh, m_discMesh);
+}
+
+void DiscGearGrind::runSimulation(){
+
 }

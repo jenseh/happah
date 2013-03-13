@@ -1,10 +1,13 @@
 #ifndef SIMULATIONFORM_H_
 #define SIMULATIONFORM_H_
 
-#include "happah/simulations/Simulation.h"
+#include "happah/geometries/Disc.h"
+#include "happah/geometries/InvoluteGear.h"
 #include "happah/gui/GearSlider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/forms/SimulationListener.h"
+#include "happah/simulations/DiscGearGrind.h"
+#include "happah/simulations/Simulation.h"
 
 class SimulationForm : public Form {
 	Q_OBJECT
@@ -12,13 +15,13 @@ class SimulationForm : public Form {
 		SimulationForm(SimulationListener& simulationListener, QWidget* parent = 0);
 		~SimulationForm();
 
-		Simulation_ptr getSimulation() const;
+		DiscGearGrind_ptr getSimulation() const;
 		void reset();
-		void setSimulation(Simulation_ptr simulation);
+		void setSimulation(DiscGearGrind_ptr simulation);
 
 	private:
 		GearSlider* m_timeSlider;
-		Simulation_ptr m_simulation;
+		DiscGearGrind_ptr m_simulation;
 		bool m_simulationInserted;
 		SimulationListener& m_simulationListener;
 

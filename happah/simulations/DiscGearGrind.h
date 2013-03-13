@@ -1,6 +1,8 @@
 #ifndef DISCGEARGRIND_H
 #define DISCGEARGRIND_H
 
+#include <memory>
+
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Gear.h"
 #include "happah/kdtree/KDTree.h"
@@ -8,14 +10,15 @@
 #include "happah/simulations/Kinematic.h"
 
 
-class DiscGearGrind
+class DiscGearGrind : public Simulation
 {
 
 public:
     DiscGearGrind(Disc_ptr disc, Gear_ptr gear);
     ~DiscGearGrind();
 
-    SimulationResult getDisplay(double time);
+    SimulationResult getSimulationResult(double time);
+    void runSimulation();
 
 private:
 
@@ -36,5 +39,7 @@ private:
 
     void calculateGrindingDepth(double time);
 };
+
+typedef std::shared_ptr<DiscGearGrind> DiscGearGrind_ptr;
 
 #endif // DISCGEARGRIND_H

@@ -1,6 +1,8 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
+#include <memory>
+
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/Geometry.h"
 #include "happah/transformations/RigidAffineTransformation.h"
@@ -27,10 +29,13 @@ public:
 class Simulation
 {
 public:
-  virtual ~Simulation();
+	Simulation();
+	virtual ~Simulation();
 
-  virtual void runSimulation();
-  virtual SimulationResult getSimulationResult(double time);
+  virtual void runSimulation() = 0;
+  virtual SimulationResult getSimulationResult(double time) = 0;
 };
+
+typedef std::shared_ptr<Simulation> Simulation_ptr;
 
 #endif // SIMULATION_H

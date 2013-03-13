@@ -17,7 +17,6 @@ class GUIManager;
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/ToolPanel.h"
 #include "happah/gui/context-menus/ContextMenu.h"
-#include "happah/gui/context-menus/ContextMenuControl.h"
 #include "happah/gui/forms/InvoluteGearListener.h"
 #include "happah/gui/forms/SimpleGearListener.h"
 #include "happah/gui/forms/DiscListener.h"
@@ -51,7 +50,7 @@ private:
 		~DefaultSceneGraphExplorerListener();
 
 		void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
-		void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);		
+		void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 
 	private:
 		GUIManager& m_guiManager;
@@ -112,7 +111,6 @@ private:
 	};
 
 	int m_counter;
-	ContextMenuControl* m_contextMenuControl;
 	DrawManager m_drawManager;
 	unordered_map<shared_ptr<void>, GUIStateNode_ptr> m_guiStateNodes;
 	DefaultSceneGraphExplorerListener m_sceneGraphExplorerListener;
@@ -125,10 +123,18 @@ private:
 	SubtreesUpdatedEventHandler m_subtreesUpdatedEventHandler;
 	ToolPanel* m_toolPanel;
 
+
+	template<class G, class S>
+	void doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	template<class G, class S, class F>
+	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G, class S, class F, class M>
-	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu = NULL);
+	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
+
 	template<class G>
 	void doUpdate3D(shared_ptr<G> geometry);
+
+	string toFinalLabel(const char* label);
 
 };
 

@@ -2,6 +2,7 @@
 #include <QCursor>
 #include <QList>
 #include <QMenu>
+#include <QPoint>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <vector>
@@ -28,12 +29,14 @@ SceneGraphExplorerPanel::~SceneGraphExplorerPanel() {}
 
 void SceneGraphExplorerPanel::contextMenuEvent (QContextMenuEvent* event) {
 
-	QListWidgetItem* selectedItem = m_listWidget->itemAt(m_listWidget->mapFromGlobal(event->pos()));
+	QPoint ppp = QCursor::pos();
+	QPoint globalPoint = event->globalPos();
+	QListWidgetItem* selectedItem = m_listWidget->itemAt(m_listWidget->mapFromGlobal(globalPoint));
 	GUIStateNode_ptr selectedGUIStateNode = m_guiStateNodesByItem[selectedItem];
 
 	if(selectedGUIStateNode && selectedGUIStateNode->getContextMenu()) {
 		ContextMenu* contextMenu = selectedGUIStateNode->getContextMenu();
-		QAction* action = contextMenu->exec(event->pos());
+		QAction* action = contextMenu->exec(ppp);
 	}
 }
 

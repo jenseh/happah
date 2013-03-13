@@ -4,7 +4,6 @@
 
 GUIManager::GUIManager(SceneManager_ptr sceneManager)
 	  : m_counter(0),
-		m_contextMenuControl(m_mainWindow.getContextMenuControl()),
 		m_drawManager(sceneManager),
 		m_sceneGraphExplorerListener(*this),
 		m_mainWindow(*this, m_sceneGraphExplorerListener, m_drawManager),
@@ -26,19 +25,25 @@ GUIManager::~GUIManager() {
 	m_sceneManager->remove(guiStateNodes);
 }
 
-template<class G, class S, class F, class M>
-void GUIManager::doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
+template<class G, class S>
+void GUIManager::doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	m_sceneManager->insert(geometry, triangleMesh, color);
-	ostringstream oss;
-	oss << label << " " << m_counter++;
-	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, oss.str()));
 	guiStateNode->setTriangleMesh(triangleMesh);
-	// if (contextMenu != NULL) {
-	// 	guiStateNode->setContextMenu(contextMenu);
-	// }
 	m_sceneManager->insert(geometry, guiStateNode);
+}
+
+template<class G, class S, class F>
+void GUIManager::doInsert3D(shared_ptr<G> geometry, const char* label, F* form) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
+	doInsert3D(geometry, guiStateNode);
+}
+
+template<class G, class S, class F, class M>
+void GUIManager::doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, toFinalLabel(label)));
+	doInsert3D(geometry, guiStateNode);
 }
 
 template<class G>
@@ -71,27 +76,33 @@ bool GUIManager::init() {
 
 void GUIManager::insert(InvoluteGear_ptr involuteGear) {
 	doInsert3D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
-		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_contextMenuControl->getInvoluteGearContextMenu());
+		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
 void GUIManager::insert(SimpleGear_ptr simpleGear) {
-	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, ContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
+	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
 }
 
 void GUIManager::insert(Plane_ptr plane) {
 	ostringstream oss;
-	oss << "Plane " << m_counter++;
-	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm, ContextMenu>(plane, "Plane", m_toolPanel->getPlaneForm());
-//	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), m_contextMenuControl->getContextMenu(), oss.str()));
+//	oss << "Plane " << m_counter++; TODO: m_counter is increased in doInsert3D call => delete this???
+	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
+//	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), oss.str()));
 //	m_sceneManager->insert(plane, planeGUIStateNode);
 }
 
 void GUIManager::insert(Disc_ptr disc) {
-	doInsert3D<Disc, DiscGUIStateNode, DiscForm, ContextMenu>(disc, "Disc", m_toolPanel->getDiscForm());
+	doInsert3D<Disc, DiscGUIStateNode, DiscForm>(disc, "Disc", m_toolPanel->getDiscForm());
 }
 
 void GUIManager::insert(Worm_ptr worm) {
-	doInsert3D<Worm, WormGUIStateNode, WormForm, ContextMenu>(worm, "Worm", m_toolPanel->getWormForm());
+	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+}
+
+string GUIManager::toFinalLabel(const char* label) {
+	ostringstream oss;
+	oss << label << " " << m_counter++;
+	return oss.str();
 }
 
 void GUIManager::update(InvoluteGear_ptr involuteGear) {

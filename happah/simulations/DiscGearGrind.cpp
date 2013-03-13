@@ -39,10 +39,10 @@ void DiscGearGrind::calculateGrindingDepth(double time){
 }
 
 
-pair<TriangleMesh*,TriangleMesh*> DiscGearGrind::getDisplay(double time){
+DiscGearGrindResult DiscGearGrind::getDisplay(double time){
     calculateGrindingDepth(time);
     // Fill color
-//    vector<hpcolor>* colorData = m_gearMesh->getColorData();
+    vector<hpcolor>* colorData /*= m_gearMesh->getColorData()*/;
 //    for( size_t i = 0; i < m_distances.size(); i++){
 //        (*colorData)[i].green = 0.5;
 //        //(*colorData)[i].red = min((*colorData)[i].red, (float)(m_distances[i]*0.2));
@@ -55,5 +55,5 @@ pair<TriangleMesh*,TriangleMesh*> DiscGearGrind::getDisplay(double time){
 //                                          tempMat[0][1], tempMat[1][1], tempMat[2][1], tempMat[3][1],
 //                                          tempMat[0][2], tempMat[1][2], tempMat[2][2], tempMat[3][2],
 //                                          tempMat[0][3], tempMat[1][3], tempMat[2][3], tempMat[3][3]));
-    return pair<TriangleMesh*,TriangleMesh*>(m_gearMesh, m_discMesh);
+    return DiscGearGrindResult(m_gearMesh, m_discMesh, colorData);
 }

@@ -5,9 +5,11 @@
 
 using namespace std;
 
+#include "happah/geometries/Geometry.h"
+#include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
 
-class Plane {
+class Plane : public Geometry {
 public:
 	Plane(hpvec3 origin, hpvec3 normal);
 	Plane(const Plane& other);
@@ -19,6 +21,8 @@ public:
 	void setOrigin(hpvec3 origin);
 
 	Plane& operator=(const Plane& other);
+
+	TriangleMesh* toTriangleMesh();
 
 private:
 	hpvec3 m_normal;

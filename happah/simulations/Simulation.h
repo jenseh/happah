@@ -3,13 +3,16 @@
 
 #include "happah/geometries/Geometry.h"
 
+class SimulationResult{
+};
+
 class Simulation
 {
 public:
   virtual ~Simulation();
 
   virtual void runSimulation();
-  virtual Geometry* getDisplay(double time);
+  virtual SimulationResult getDisplay(double time);
 };
 
 #endif // SIMULATION_H

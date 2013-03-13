@@ -4,15 +4,29 @@
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Gear.h"
 #include "happah/kdtree/KDTree.h"
+#include "happah/simulations/Simulation.h"
 #include "happah/simulations/Kinematic.h"
+
+class DiscGearGrindResult: public SimulationResult{
+public:
+	vector<hpcolor>* m_discColor;
+	TriangleMesh* m_discMesh;
+	TriangleMesh* m_gearMesh;
+
+	DiscGearGrindResult(TriangleMesh* gearMesh, TriangleMesh* discMesh, vector<hpcolor>* discColor):
+		m_gearMesh(gearMesh), m_discMesh(discMesh), m_discColor(discColor){
+
+	}
+};
 
 class DiscGearGrind
 {
+
 public:
     DiscGearGrind(Disc* disc, Gear* gear);
     ~DiscGearGrind();
 
-    pair<TriangleMesh*,TriangleMesh*> getDisplay(double time);
+    DiscGearGrindResult getDisplay(double time);
 
 private:
     Disc* m_disc;

@@ -3,12 +3,13 @@
 
 #include "happah/geometries/Plane.h"
 #include "happah/gui/forms/Form.h"
+#include "happah/gui/forms/PlaneListener.h"
 
 class PlaneForm : public Form {
 Q_OBJECT
 
 public:
-	PlaneForm(QWidget* parent = 0);
+	PlaneForm(PlaneListener& planeListener, QWidget* parent = NULL);
 	~PlaneForm();
 
 	Plane_ptr getPlane() const;
@@ -18,6 +19,10 @@ public:
 private:
 	Plane_ptr m_plane;
 	bool m_planeInserted;
+	PlaneListener& m_planeListener;
+
+private slots:
+	void createPlane();
 
 };
 

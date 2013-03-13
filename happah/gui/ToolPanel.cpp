@@ -6,7 +6,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
 		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
 		m_discForm(new DiscForm(guiManager, m_forms)),
-		m_planeForm(new PlaneForm(m_forms)),
+		m_planeForm(new PlaneForm(guiManager, m_forms)),
 		m_wormForm(new WormForm(guiManager, m_forms)){
 	QGridLayout* buttonsLayout = new QGridLayout();
 	buttonsLayout->setSpacing(2);

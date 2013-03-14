@@ -7,6 +7,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
 		m_discForm(new DiscForm(guiManager, m_forms)),
 		m_planeForm(new PlaneForm(guiManager, m_forms)),
+		m_simulationForm(new SimulationForm(guiManager, m_forms)),
 		m_wormForm(new WormForm(guiManager, m_forms)){
 	QGridLayout* buttonsLayout = new QGridLayout();
 	buttonsLayout->setSpacing(2);
@@ -18,6 +19,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	add(buttonsLayout, "P", m_planeForm, 0, 2);
 	add(buttonsLayout, "D", m_discForm, 0, 3);
 	add(buttonsLayout, "W", m_wormForm, 0, 4);
+	add(buttonsLayout, "S", m_simulationForm, 0, 5);
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);

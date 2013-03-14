@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <math.h>
 
+#include "happah/HappahTypes.h"
+
 using namespace __gnu_cxx;
 
 class CircularSimulationResult
@@ -19,8 +21,8 @@ private:
   hash_map<int, float>* m_entries;
   int m_angleSteps;
   int m_posZSteps;
-  float m_angleRange;
-  glm::vec3 m_referenceDir;
+  hpreal m_angleRange;
+  hpvec3 m_referenceDir;
 };
 
 #endif // CIRCULARSIMULATIONRESULT_H

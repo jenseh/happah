@@ -404,21 +404,21 @@ struct Circle {
 
 
 		if (!pSS01) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, lineDirection, p0, p1 - p0);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, lineDirection, p0, p2 - p0);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p0, p1 - p0);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p0, p2 - p0);
 		  } else if (!pSS12) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, lineDirection, p1, p0 - p1);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, lineDirection, p1, p2 - p1);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, p0 - p1);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p1, p2 - p1);
 		  } else if (!pSS02) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, lineDirection, p2, p0 - p2);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, lineDirection, p2, p1 - p2);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p2, p0 - p2);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, p1 - p2);
 		  }
 
 		  return true;
 	}
 
 	// This method computes the one and only one intersection point in XY plane (or parallel) of two lines when we know that it must exist
-	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& lineDirectionA, hpvec3& linePointB, hpvec3 lineDirectionB) {
+	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionB) { //TODO: what about: /*, hpvec3& lineDirectionA*/
 		hpreal t = (linePointA.z - linePointB.z) / lineDirectionB.z;
 		return linePointB + t * lineDirectionB;
 	}

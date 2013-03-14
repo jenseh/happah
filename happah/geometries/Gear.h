@@ -2,6 +2,7 @@
 #define GEAR_H
 
 #include <glm/glm.hpp>
+#include <memory>
 #include <vector>
 //#include <cstdlib>
 #include <iostream>
@@ -72,5 +73,6 @@ void printVec3(hpvec3 vec) {
 
 };
 
+typedef std::shared_ptr<Gear> Gear_ptr;
 
 #endif //GEAR_H

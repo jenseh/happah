@@ -25,6 +25,7 @@ const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager) 
 	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
+	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
 }
 
@@ -70,11 +71,13 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
 	if (elementRenderStateNode.hasColorVector()) {
 		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-		glUniform1i(m_isColoredLocation, 1);
+		glUniform1i(m_isColorPerVertexLocation, 1);
+		glUniform1i(m_isSkipLightingContributionComputationLocation, 1);
 	} else {
 		hpcolor color = elementRenderStateNode.getColor();
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
-		glUniform1i(m_isColoredLocation, 0);
+		glUniform1i(m_isColorPerVertexLocation, 0);
+		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
 	}
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
@@ -98,14 +101,16 @@ void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, R
 	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
 	if (pointCloudRenderStateNode.hasColorVector()) {
 		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-		glUniform1i(m_isColoredLocation, 1);
+		glUniform1i(m_isColorPerVertexLocation, 1);
+		glUniform1i(m_isSkipLightingContributionComputationLocation, 1);
 	} else {
 		hpcolor color = pointCloudRenderStateNode.getColor();
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
-		glUniform1i(m_isColoredLocation, 0);
+		glUniform1i(m_isColorPerVertexLocation, 0);
+		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
 	}
 
-	glDrawArrays(pointCloudRenderStateNode.getMode(),0,pointCloudRenderStateNode.getVertexData()->size());
+	glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
 	glBindVertexArray(0);
 }
 
@@ -171,13 +176,13 @@ void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 		glGenBuffers(1, &bufferID);
 		elementRenderStateNode.setColorBufferID(bufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), elementRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(hpcolor), &(elementRenderStateNode.getColorVector()->at(0)), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 		glEnableVertexAttribArray(m_colorLocation);
-
 	}
+
 	// Create IndexBuffer;
-	size= elementRenderStateNode.getIndices()->size();
+	size = elementRenderStateNode.getIndices()->size();
 	glGenBuffers(1, &bufferID);
 	elementRenderStateNode.setIndexBufferID(bufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementRenderStateNode.getIndexBufferID());
@@ -211,8 +216,8 @@ void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNod
 		glGenBuffers(1, &bufferID);
 		pointCloudRenderStateNode.setColorBufferID(bufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorVector()->size() * sizeof(glm::vec4), pointCloudRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorVector()->size() * sizeof(hpcolor), pointCloudRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 		glEnableVertexAttribArray(m_colorLocation);
 
 	}
@@ -280,9 +285,12 @@ bool DrawManager::initShaderPrograms() {
 	m_colorComponentLocation = glGetUniformLocation(m_program, "colorComponent");
 	if (m_colorComponentLocation < 0)
 		cerr << "Failed to find color Component." << endl;
-	m_isColoredLocation = glGetUniformLocation(m_program, "isColored");
-	if (m_isColoredLocation < 0)
-		cerr << "Failed to find isColored." << endl;
+	m_isColorPerVertexLocation = glGetUniformLocation(m_program, "isColorPerVertex");
+	if (m_isColorPerVertexLocation < 0)
+		cerr << "Failed to find isColorPerVertex." << endl;
+	m_isSkipLightingContributionComputationLocation = glGetUniformLocation(m_program, "isSkipLightingContributionComputation");
+	if (m_isSkipLightingContributionComputationLocation < 0)
+		cerr << "Failed to find isSkipLightingContributionComputation." << endl;
 	//Camera and Light uniforms
 	m_cameraPositionLocation = glGetUniformLocation(m_program, "cameraPosition");
 	if (m_cameraPositionLocation < 0)

@@ -9,6 +9,7 @@ class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
 
 public:
 	TriangleMeshNode(TriangleMesh_ptr triangleMesh);
+	TriangleMeshNode(TriangleMesh_ptr triangleMesh, RigidAffineTransformation& transformation);
 	virtual ~TriangleMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);

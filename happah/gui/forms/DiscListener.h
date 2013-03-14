@@ -8,7 +8,6 @@ class DiscListener  {
 public:
 	virtual void insert(Disc_ptr disc) = 0;
 	virtual void update(Disc_ptr disc) = 0;
-
 };
 
 

@@ -14,6 +14,7 @@ using namespace std;
 #include "happah/gui/forms/SimpleGearForm.h"
 #include "happah/gui/forms/PlaneForm.h"
 #include "happah/gui/forms/DiscForm.h"
+#include "happah/gui/forms/SimulationForm.h"
 #include "happah/gui/forms/WormForm.h"
 
 class ToolPanel : public QWidget {
@@ -38,6 +39,7 @@ private:
 	SimpleGearForm* m_simpleGearForm;
 	DiscForm* m_discForm;
 	PlaneForm* m_planeForm;
+	SimulationForm* m_simulationForm;
 	WormForm* m_wormForm;
 
 	void add(QGridLayout* buttonLayout, const char* text, Form* form, int row, int column);

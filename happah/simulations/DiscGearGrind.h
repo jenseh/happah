@@ -1,47 +1,45 @@
 #ifndef DISCGEARGRIND_H
 #define DISCGEARGRIND_H
 
+#include <memory>
+
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Gear.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/simulations/Simulation.h"
 #include "happah/simulations/Kinematic.h"
 
-class DiscGearGrindResult: public SimulationResult{
-public:
-	vector<hpcolor>* m_discColor;
-	TriangleMesh* m_discMesh;
-	TriangleMesh* m_gearMesh;
 
-	DiscGearGrindResult(TriangleMesh* gearMesh, TriangleMesh* discMesh, vector<hpcolor>* discColor):
-		m_gearMesh(gearMesh), m_discMesh(discMesh), m_discColor(discColor){
-
-	}
-};
-
-class DiscGearGrind
+class DiscGearGrind : public Simulation
 {
 
 public:
-    DiscGearGrind(Disc* disc, Gear* gear);
+    DiscGearGrind(Disc_ptr disc, Gear_ptr gear);
     ~DiscGearGrind();
 
-    DiscGearGrindResult getDisplay(double time);
+    SimulationResult getSimulationResult(double time);
+    void runSimulation();
 
 private:
-    Disc* m_disc;
-    Gear* m_gear;
 
-    TriangleMesh* m_discMesh;
-    TriangleMesh* m_gearMesh;
+    Disc_ptr m_disc;
+    Gear_ptr m_gear;
+
+    TriangleMesh_ptr m_discMesh;
+    vector<hpcolor>* m_gearColor;
+    TriangleMesh_ptr m_gearMesh;
     std::vector<Ray>* m_gearRays;
     KDTree* m_kdTree;
 
+    hpreal m_maxDistance;
+
     vector<double> m_distances;
 
-    Kinematic m_gearMouvement;
+    Kinematic m_gearMovement;
 
     void calculateGrindingDepth(double time);
 };
+
+typedef std::shared_ptr<DiscGearGrind> DiscGearGrind_ptr;
 
 #endif // DISCGEARGRIND_H

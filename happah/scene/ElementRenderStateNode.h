@@ -23,7 +23,7 @@ public:
 	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
 
 
-	void 	setIndexBufferID(GLuint id);
+	void					setIndexBufferID(GLuint id);
 
 	GLuint 					getIndexBufferID();
 	GLuint 					getMode();

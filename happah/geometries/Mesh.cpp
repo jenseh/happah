@@ -25,10 +25,10 @@ vector<Ray>* TriangleMesh::toRays(){
 	vector<hpuint>* indices = getIndices();
 
 	vector<Ray>* result = new vector<Ray>();
-	result->reserve(indices->size());
-	for( size_t i = 0; i < indices->size(); i++){
-		result->push_back(	Ray(vertexData->at(2*indices->at(i)), // Origin
-								vertexData->at(2*indices->at(i)+1)) ); // Direction
+	result->resize(vertexData->size()/2);
+	for( size_t i = 0; i < vertexData->size(); i+=2){
+		result->at(i/2) = 	Ray(vertexData->at(i), // Origin
+								vertexData->at(i+1) ); // Direction
 	}
 	return result;
 }

@@ -79,7 +79,8 @@ private:
 	GLint m_diffuseFactorLocation;
 	GLint m_specularFactorLocation;
 	GLint m_colorComponentLocation;
-	GLint m_isColoredLocation;
+	GLint m_isColorPerVertexLocation;
+	GLint m_isSkipLightingContributionComputationLocation;
 	GLint m_phongExponentLocation;
 	GLint m_cameraPositionLocation;
 
@@ -88,6 +89,8 @@ private:
 	hpmat4x4 m_projectionMatrix;
 	hpmat3x3 m_normalMatrix;
 	hpvec3   m_cameraPosition;
+
+	bool m_isSkipLightingContributionComputation;
 
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);

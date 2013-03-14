@@ -5,11 +5,11 @@
 
 using namespace std;
 ElementRenderStateNode::ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, hpcolor& color)
-	:RenderStateNode(vertexData,color),m_mode(mode),m_indices(indices),m_indexBufferID(0) {
+	: RenderStateNode(vertexData, color), m_mode(mode), m_indices(indices), m_indexBufferID(0) {
 }
 
 ElementRenderStateNode::ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, vector<hpcolor>* colorVector)
-	:RenderStateNode(vertexData,colorVector),m_mode(mode),m_indices(indices),m_indexBufferID(0) {
+	: RenderStateNode(vertexData, colorVector), m_mode(mode), m_indices(indices), m_indexBufferID(0) {
 }
 
 ElementRenderStateNode::~ElementRenderStateNode() {

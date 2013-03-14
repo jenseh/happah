@@ -51,6 +51,8 @@ HEADERS += \
 	happah/gui/forms/SimpleGearListener.h \
 	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/DiscListener.h \
+	happah/gui/forms/SimulationForm.h \
+	happah/gui/forms/SimulationListener.h \
 	happah/gui/forms/WormForm.h \
 	happah/gui/forms/WormListener.h \
 \
@@ -134,6 +136,7 @@ SOURCES += \
 	happah/gui/forms/InvoluteGearForm.cpp \
 	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
+	happah/gui/forms/SimulationForm.cpp \
 	happah/gui/forms/DiscForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \

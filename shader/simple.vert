@@ -7,12 +7,12 @@ in vec4 color;
 uniform mat4 modelMatrix;				
 uniform mat4 modelViewProjectionMatrix;				
 uniform mat3 normalMatrix;
-uniform int  isColored;	
-uniform vec4 colorComponent;				 					
+uniform vec4 colorComponent;	
+uniform int  isColorPerVertex;		 					
 
-out vec4 vVertex; // vertex position world space				
-out vec4 vNormal; // vertex normal world space
-out vec4 vColor; // vertex color
+out vec4 vVertex;	// vertex position world space				
+out vec4 vNormal;	// vertex normal world space
+out vec4 vColor;	// vertex color
 
 void main() {
 	vVertex = modelMatrix * vertex;      
@@ -24,11 +24,11 @@ void main() {
    	
    	
    	// TODO: check if color attribute is disabled , if so, set vColor to a color given by a uniform
-   	if (isColored == 1){
-	vColor = color;	
+   	if (isColorPerVertex == 1){
+		vColor = color;
 	}
 	else {
-	vColor = colorComponent;
+		vColor = colorComponent;
 	}   
    
 	gl_Position = modelViewProjectionMatrix * vertex;

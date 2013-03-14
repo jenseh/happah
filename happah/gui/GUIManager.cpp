@@ -83,6 +83,12 @@ void GUIManager::insert(SimpleGear_ptr simpleGear) {
 	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
 }
 
+void GUIManager::insert(SimulationResult simulationResult) {
+	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
+	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
+	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
+}
+
 void GUIManager::insert(Plane_ptr plane) {
 	ostringstream oss;
 //	oss << "Plane " << m_counter++; TODO: m_counter is increased in doInsert3D call => delete this???
@@ -111,6 +117,10 @@ void GUIManager::update(InvoluteGear_ptr involuteGear) {
 
 void GUIManager::update(SimpleGear_ptr simpleGear) {
 	doUpdate3D<SimpleGear>(simpleGear);
+}
+
+void GUIManager::update(SimulationResult simulationResult) {
+	//TODO
 }
 
 void GUIManager::update(Plane_ptr plane) {

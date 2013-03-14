@@ -32,6 +32,8 @@ public:
 	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
 	void insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Geometry_ptr geometry, TriangleMesh_ptr mesh, hpcolor& color, RigidAffineTransformation& transformation);
+	void insert(Geometry_ptr geometry, TriangleMesh_ptr mesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 
 	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);
@@ -46,8 +48,13 @@ private:
 
 	template<class G, class N, class S> 
 	void doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode);
-	template<class G, class N> 
+	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);
 	void triggerSubtreesInsertedEvent(vector<Node_ptr>& roots);

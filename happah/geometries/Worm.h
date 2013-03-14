@@ -10,13 +10,14 @@
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/ZCircleCloud.h"
 #include "happah/LoggingUtils.h"
 
 
 class Worm : public Geometry {
 public:
   Worm(hpuint toothCount = 16,
-      hpreal module = 0.2 * M_PI,
+      hpreal module = 0.02 * M_PI,
       hpreal pressureAngle = 20.0 / 360.0 * 2.0 * M_PI,
       hpuint rotations = 1);
       
@@ -33,6 +34,7 @@ public:
   void setPressureAngle(hpreal pressureAngle);
 
   TriangleMesh* toTriangleMesh();
+  ZCircleCloud* toZCircleCloud();
   
 private:
   hpuint m_toothCount;

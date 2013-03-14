@@ -7,7 +7,7 @@
 #include "happah/gui/forms/DiscListener.h"
 
 
-class DiscForm : public Form{
+class DiscForm : public Form {
 	Q_OBJECT
 	public:
 		DiscForm(DiscListener& discListener, QWidget* parent = 0);
@@ -15,7 +15,7 @@ class DiscForm : public Form{
 
 		Disc_ptr getDisc() const;
 		void reset();
-		void setDisc(Disc_ptr Disc);
+		void setDisc(Disc_ptr disc);
 
 	private:
 		Slider* m_radiusSlider;

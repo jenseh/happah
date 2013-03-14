@@ -8,6 +8,7 @@
 
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Gear.h"
+#include "happah/geometries/Mesh.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/BSplineGearCurve.h"
 
@@ -88,8 +89,7 @@ public:
     bool setHelixAngle(hpreal helixAngle);
 
     std::vector<hpvec2>* getToothProfile();
-//    std::vector<hpvec2>* getGearProfile(hpreal depth);
-
+    TriangleMesh* toTriangleMesh();
 //    ZCircleCloud* toZCircleCloud();
     SimpleGear* toSimpleGear();
 

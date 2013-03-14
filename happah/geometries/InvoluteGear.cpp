@@ -356,35 +356,53 @@ hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle
 	point.y = radius * glm::cos(involuteStartAngle + angle) + radius * angle * glm::sin(involuteStartAngle + angle);
 	return point;
 }
-/*
-std::vector<hpvec2>* InvoluteGear::getGearProfile(hpreal depth) {
+TriangleMesh* InvoluteGear::toTriangleMesh() {
 
-	// last point of tooth profile isn't taken because next tooth profile would have the same one
-	std::vector<hpvec2> *profile = new std::vector<hpvec2>((TOOTH_SAMPLE_SIZE - 1) * getToothCount());
-	std::vector<hpvec2> *toothProfile = getToothProfile();
+	TriangleMesh* mesh = Gear::toTriangleMesh();
+	//TODO: replace following two lines with good value for innerGearRadius
+	std::vector<hpvec2>* profile = getGearProfile(0);
+	hpreal innerGearRadius = glm::length(profile->at(0)) / 2.0f;
+	vector<hpvec3>* vertexData = mesh->getVertexData();
+	vector<hpuint>* indices = mesh->getIndices();
 
-	//TODO: here we could insert something for the helixangle!
-	//TODO: I use this code to refuse an array-resizing, as we know the array size from the beginning
-	//But is this really necessary? Is it maybe even faster to use already provided methods?
-	for (hpuint i = 0; i < TOOTH_SAMPLE_SIZE - 1; ++i) {
-		profile->at(i) = toothProfile->at(i);
-	}
+	for(hpuint side = 0; side < 2; ++side) {
+		profile = getGearProfile(side * getFacewidth());
+		hpreal depth = side * getFacewidth();
+		hpuint startIndex = vertexData->size() / 2;
+		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
+		if (side == 1)
+			normal *= -1.0f;
+		for(hpuint i = 0; i < profile->size(); ++i) {
+			hpvec2 currentProfilePoint = profile->at(i);
+			hpvec2 currentInnerPoint = glm::normalize(currentProfilePoint) * innerGearRadius;
 
-	delete toothProfile; //memory is freed as toothProfile isn't needed any longer
-
-	for (hpuint i = 1; i < getToothCount(); ++i) {
-		hpreal mirrorAngle = getAngularPitch() * (i);
-		hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
-
-		for (hpuint j = 0; j < TOOTH_SAMPLE_SIZE - 1; ++j) {
-			hpuint k = i * (TOOTH_SAMPLE_SIZE - 1) + j;
-			profile->at(k) = mirrorPoint(profile->at(k - 1 - 2 * j), mirrorAxis);
+			vertexData->push_back(hpvec3(currentInnerPoint, depth));
+			vertexData->push_back(normal);
+			vertexData->push_back(hpvec3(currentProfilePoint, depth));
+			vertexData->push_back(normal);
 		}
+
+		for(hpuint i = startIndex, g = 0; i < vertexData->size() / 2 - 2; ++i, ++g) {
+			indices->push_back(i);
+			if(g % 2 == 0) {
+				indices->push_back(i + 1);
+				indices->push_back(i + 2);
+			} else {
+				indices->push_back(i + 2);
+				indices->push_back(i + 1);
+			}
+		}
+		indices->push_back(vertexData->size() / 2 - 2);
+		indices->push_back(vertexData->size() / 2 - 1);
+		indices->push_back(startIndex);
+
+		indices->push_back(vertexData->size() / 2 - 1);
+		indices->push_back(startIndex);
+		indices->push_back(startIndex + 1);
 	}
-
-	return profile;
+	return mesh;
 }
-
+/*
 ZCircleCloud* InvoluteGear::toZCircleCloud() {
 	// Create the profile given the current gear settings
 	std::vector<hpvec2> *profile = getGearProfile(0);

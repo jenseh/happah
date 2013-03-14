@@ -1,5 +1,6 @@
 #include "happah/geometries/Gear.h"
 #include "glm/gtx/rotate_vector.hpp"
+#include <iostream>
 
 Gear::Gear() : Geometry() {}
 Gear::~Gear() {}
@@ -31,9 +32,9 @@ bool Gear::toothProfileIsInClockDirection() {
 
 TriangleMesh* Gear::toTriangleMesh() {
 	// Create vector for the result
-	std::vector<hpvec3> *vertexData = new std::vector<hpvec3>;
-	std::vector<hpuint> *indices = new std::vector<hpuint>;
-	std::vector<hpvec2> *profile;
+	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpuint>* indices = new std::vector<hpuint>;
+	std::vector<hpvec2>* profile;
 	hpvec3 wildcardNormal = hpvec3(0.0f, 0.0f, 0.0f);
 
 	hpreal dz = getFacewidth() / WIDTH_SAMPLE_SIZE;
@@ -108,5 +109,6 @@ TriangleMesh* Gear::toTriangleMesh() {
 			}
 		}
 	}
+
 	return new TriangleMesh(vertexData, indices);
 }

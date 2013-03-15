@@ -119,7 +119,8 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event) {
 }
 void Viewport3D::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
-	m_viewport3DListener.handleMouseClickEvent(getMouseRay());
+	Ray ray(getMouseRay());
+	m_viewport3DListener.handleMouseClickEvent(ray);
 }
 
 void Viewport3D::wheelEvent(QWheelEvent *event) {

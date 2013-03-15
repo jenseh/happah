@@ -2,15 +2,15 @@
 #define PLANEFORM_H
 
 #include "happah/geometries/Plane.h"
-#include "happah/gui/forms/Form.h"
-#include "happah/gui/forms/PlaneListener.h"
+#include "happah/gui/GUIManager.h"
 #include "happah/gui/VectorInput.h"
+#include "happah/gui/forms/Form.h"
 
 class PlaneForm : public Form {
 Q_OBJECT
 
 public:
-	PlaneForm(PlaneListener& planeListener, QWidget* parent = NULL);
+	PlaneForm(GUIManager& guiManager, QWidget* parent = NULL);
 	~PlaneForm();
 
 	Plane_ptr getPlane() const;
@@ -23,11 +23,11 @@ private slots:
 	void updatePlaneNormal();
 
 private:
+	GUIManager& m_guiManager;
 	VectorInput* m_originInput;
 	VectorInput* m_normalInput;
 	Plane_ptr m_plane;
 	bool m_planeInserted;
-	PlaneListener& m_planeListener;
 
 };
 

@@ -1,15 +1,15 @@
-#ifndef WORMFORM_H_
-#define WORMFORM_H_
+#ifndef WORM_FORM_H
+#define WORM_FORM_H
 
+#include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
-#include "happah/gui/forms/WormListener.h"
 
 class WormForm : public Form {
 Q_OBJECT
 
 public:
-	WormForm(WormListener& wormListener, QWidget* parent = 0);
+	WormForm(GUIManager& guiManager, QWidget* parent = 0);
 	~WormForm();
 
 	Worm_ptr getWorm() const;
@@ -17,22 +17,22 @@ public:
 	void setWorm(Worm_ptr worm);
 
 private:
-	Slider* m_toothCountSlider;
+	GUIManager& m_guiManager;
 	Slider* m_moduleSlider;
 	Slider* m_pressureAngleSlider;
+	Slider* m_toothCountSlider;
 	Worm_ptr m_worm;
 	bool m_wormInserted;
-	WormListener& m_wormListener;
 
 	void updateRanges();
 	void updateWorm();
 
 private slots:
-	void changeToothCount(hpreal); //TODO: Change to hpuint
 	void changeModule(hpreal);
 	void changePressureAngle(hpreal);
+	void changeToothCount(hpreal); //TODO: Change to hpuint
 	void createWorm();
 
 };
 
-#endif /* WORMFORM_H_ */
+#endif // WORM_FORM_H

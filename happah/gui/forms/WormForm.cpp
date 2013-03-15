@@ -4,13 +4,13 @@
 #include "happah/geometries/Worm.h"
 #include "happah/gui/forms/WormForm.h"
 
-WormForm::WormForm(WormListener& wormListener, QWidget* parent)
+WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-		m_toothCountSlider(new Slider(tr("tooth count"))),
+		m_guiManager(guiManager),
 		m_moduleSlider(new Slider(tr("module"))),
 		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
-		m_wormInserted(false),
-		m_wormListener(wormListener) {
+		m_toothCountSlider(new Slider(tr("tooth count"))),
+		m_wormInserted(false) {
 	QPushButton* createButton = new QPushButton("create worm");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -57,7 +57,7 @@ void WormForm::createWorm() {
 	//TODO: create a worm here
 	if(m_wormInserted)
 		m_worm = Worm_ptr(new Worm(*m_worm));
-	m_wormListener.insert(m_worm);
+	m_guiManager.insert(m_worm);
 	m_wormInserted = true;
 }
 
@@ -81,7 +81,7 @@ void WormForm::setWorm(Worm_ptr worm) {
 
 void WormForm::updateWorm() {
 	if(m_wormInserted)
-		m_wormListener.update(m_worm);
+		m_guiManager.update(m_worm);
 }
 
 void WormForm::updateRanges() {

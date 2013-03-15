@@ -1,20 +1,14 @@
-/*
- * DiscForm.cpp
- *
- *  Created on: 11.03.2013
- *      Author: jlabeit
- */
-
 #include "DiscForm.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
 
-DiscForm::DiscForm(DiscListener& discListener, QWidget* parent)
+DiscForm::DiscForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-		m_radiusSlider(new Slider(tr("approximated radius"))),
+		m_disc(new Disc()),
 		m_discInserted(false),
-		m_discListener(discListener) {
+		m_guiManager(guiManager),
+		m_radiusSlider(new Slider(tr("approximated radius"))) {
 	QPushButton* createButton = new QPushButton("create disc");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -25,7 +19,6 @@ DiscForm::DiscForm(DiscListener& discListener, QWidget* parent)
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createDisc()));
 	connect(m_radiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeRadius(hpreal)));
 
-	m_disc = Disc_ptr(new Disc());
 	updateRanges();
 }
 
@@ -41,7 +34,7 @@ void DiscForm::changeRadius(hpreal radius) {
 void DiscForm::createDisc() {
 	if(m_discInserted)
 		m_disc = Disc_ptr(new Disc(*m_disc));
-	m_discListener.insert(m_disc);
+	m_guiManager.insert(m_disc);
 	m_discInserted = true;
 }
 
@@ -66,7 +59,7 @@ void DiscForm::setDisc(Disc_ptr disc) {
 
 void DiscForm::updateDisc() {
 	if(m_discInserted)
-		m_discListener.update(m_disc);
+		m_guiManager.update(m_disc);
 }
 
 void DiscForm::updateRanges() {

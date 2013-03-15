@@ -3,14 +3,14 @@
 
 #include "happah/gui/forms/InvoluteGearForm.h"
 
-InvoluteGearForm::InvoluteGearForm(InvoluteGearListener& involuteGearListener, QWidget* parent)
+InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), 
 		m_bottomClearanceSlider(new Slider(tr("bottom clearance"))),
 		m_faceWidthSlider(new Slider(tr("facewidth"))),
 		m_filletRadiusSlider(new Slider(tr("fillet radius"))),
+		m_guiManager(guiManager),
 		m_involuteGear(new InvoluteGear()), 
 		m_involuteGearInserted(false), 
-		m_involuteGearListener(involuteGearListener),
 		m_helixAngleSlider(new Slider(tr("helix angle"))),
 		m_moduleSlider(new Slider(tr("module"))),
 		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
@@ -93,7 +93,7 @@ void InvoluteGearForm::changeToothCount(hpreal toothCount) {
 void InvoluteGearForm::createInvoluteGear() {
 	if(m_involuteGearInserted)
 		m_involuteGear = InvoluteGear_ptr(new InvoluteGear(*m_involuteGear));
-	m_involuteGearListener.insert(m_involuteGear);
+	m_guiManager.insert(m_involuteGear);
 	m_involuteGearInserted = true;
 }
 
@@ -117,7 +117,7 @@ void InvoluteGearForm::setInvoluteGear(InvoluteGear_ptr involuteGear) {
 
 void InvoluteGearForm::updateInvoluteGear() {
 	if(m_involuteGearInserted)
-		m_involuteGearListener.update(m_involuteGear);
+		m_guiManager.update(m_involuteGear);
 }
 
 void InvoluteGearForm::updateRanges() {

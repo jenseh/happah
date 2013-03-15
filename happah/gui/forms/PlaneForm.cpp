@@ -3,9 +3,8 @@
 
 #include "happah/gui/forms/PlaneForm.h"
 
-PlaneForm::PlaneForm(PlaneListener& planeListener, QWidget* parent)
-	: Form(parent), m_planeListener(planeListener)
-{
+PlaneForm::PlaneForm(GUIManager& guiManager, QWidget* parent)
+	: Form(parent), m_guiManager(guiManager) {
 	m_originInput = new VectorInput( "Origin", true, true, this );
 	m_originInput->setValue( hpvec3(0.f, 0.f, 0.f) );
 	connect(m_originInput, SIGNAL(valueChanged()), this, SLOT(updatePlaneOrigin()));
@@ -32,7 +31,7 @@ void PlaneForm::createPlane() {
 	if( m_planeInserted ) {
 		m_plane = Plane_ptr(new Plane(m_originInput->getValue(), m_normalInput->getValue()));
 	}
-	m_planeListener.insert(m_plane);
+	m_guiManager.insert(m_plane);
 	m_planeInserted = true;
 }
 
@@ -54,10 +53,10 @@ void PlaneForm::setPlane(Plane_ptr plane) {
 
 void PlaneForm::updatePlaneOrigin() {
 	m_plane->setOrigin(m_originInput->getValue());
-	m_planeListener.update(m_plane);
+	m_guiManager.update(m_plane);
 }
 
 void PlaneForm::updatePlaneNormal() {
 	m_plane->setNormal(m_normalInput->getValue());
-	m_planeListener.update(m_plane);
+	m_guiManager.update(m_plane);
 }

@@ -4,13 +4,13 @@
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/gui/forms/SimpleGearForm.h"
 
-SimpleGearForm::SimpleGearForm(SimpleGearListener& simpleGearListener, QWidget* parent)
+SimpleGearForm::SimpleGearForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
 		m_faceWidthSlider(new Slider(tr("face width"))),
+		m_guiManager(guiManager),
 		m_helixAngleSlider(new Slider(tr("helix angle"))),
 		m_radiusSlider(new Slider(tr("approximated radius"))),
-		m_simpleGearInserted(false),
-		m_simpleGearListener(simpleGearListener) {
+		m_simpleGearInserted(false) {
 	QPushButton* createButton = new QPushButton("create gear");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -53,7 +53,7 @@ void SimpleGearForm::changeRadius(hpreal radius) {
 void SimpleGearForm::createSimpleGear() {
 	if(m_simpleGearInserted)
 		m_simpleGear = SimpleGear_ptr(new SimpleGear(*m_simpleGear));
-	m_simpleGearListener.insert(m_simpleGear);
+	m_guiManager.insert(m_simpleGear);
 	m_simpleGearInserted = true;
 }
 
@@ -79,7 +79,7 @@ void SimpleGearForm::setSimpleGear(SimpleGear_ptr simpleGear) {
 
 void SimpleGearForm::updateSimpleGear() {
 	if(m_simpleGearInserted)
-		m_simpleGearListener.update(m_simpleGear);
+		m_guiManager.update(m_simpleGear);
 }
 
 void SimpleGearForm::updateRanges() {

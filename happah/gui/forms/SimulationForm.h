@@ -3,34 +3,35 @@
 
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/InvoluteGear.h"
+#include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
-#include "happah/gui/forms/SimulationListener.h"
 #include "happah/simulations/DiscGearGrind.h"
 #include "happah/simulations/Simulation.h"
 
 class SimulationForm : public Form {
-	Q_OBJECT
-	public:
-		SimulationForm(SimulationListener& simulationListener, QWidget* parent = 0);
-		~SimulationForm();
+Q_OBJECT
 
-		DiscGearGrind_ptr getSimulation() const;
-		void reset();
-		void setSimulation(DiscGearGrind_ptr simulation);
+public:
+	SimulationForm(GUIManager& guiManager, QWidget* parent = 0);
+	~SimulationForm();
 
-	private:
-		Slider* m_timeSlider;
-		DiscGearGrind_ptr m_simulation;
-		bool m_simulationInserted;
-		SimulationListener& m_simulationListener;
+	DiscGearGrind_ptr getSimulation() const;
+	void reset();
+	void setSimulation(DiscGearGrind_ptr simulation);
 
-		void updateRanges();
-		void updateSimulation();
+private:
+	GUIManager& m_guiManager;
+	DiscGearGrind_ptr m_simulation;
+	bool m_simulationInserted;
+	Slider* m_timeSlider;
 
-	private slots:
-		void changeTime(hpreal);
-		void createSimulation();
+	void updateRanges();
+	void updateSimulation();
+
+private slots:
+	void createSimulation();
+	void changeTime(hpreal);
 
 };
 

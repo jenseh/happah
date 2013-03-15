@@ -2,33 +2,33 @@
 #define DISCFORM_H_
 
 #include "happah/geometries/Disc.h"
+#include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
-#include "happah/gui/forms/DiscListener.h"
-
 
 class DiscForm : public Form {
-	Q_OBJECT
-	public:
-		DiscForm(DiscListener& discListener, QWidget* parent = 0);
-		~DiscForm();
+Q_OBJECT
 
-		Disc_ptr getDisc() const;
-		void reset();
-		void setDisc(Disc_ptr disc);
+public:
+	DiscForm(GUIManager& guiManager, QWidget* parent = 0);
+	~DiscForm();
 
-	private:
-		Slider* m_radiusSlider;
-		Disc_ptr m_disc;
-		bool m_discInserted;
-		DiscListener& m_discListener;
+	Disc_ptr getDisc() const;
+	void reset();
+	void setDisc(Disc_ptr disc);
 
-		void updateRanges();
-		void updateDisc();
+private:
+	Disc_ptr m_disc;
+	bool m_discInserted;
+	GUIManager& m_guiManager;
+	Slider* m_radiusSlider;
 
-	private slots:
-		void changeRadius(hpreal);
-		void createDisc();
+	void updateDisc();
+	void updateRanges();
+
+private slots:
+	void changeRadius(hpreal);
+	void createDisc();
 
 };
 

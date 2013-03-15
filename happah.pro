@@ -31,6 +31,7 @@ HEADERS += \
 	happah/geometries/Worm.h \
 #	happah/geometries/ZCircleCloud.h \
 \
+	happah/gui/DefaultGUIManager.h \
 	happah/gui/DrawManager.h \
 	happah/gui/Slider.h \
 	happah/gui/GUIManager.h \
@@ -46,16 +47,11 @@ HEADERS += \
 \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
-	happah/gui/forms/InvoluteGearListener.h \
 	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
-	happah/gui/forms/SimpleGearListener.h \
 	happah/gui/forms/DiscForm.h \
-	happah/gui/forms/DiscListener.h \
 	happah/gui/forms/SimulationForm.h \
-	happah/gui/forms/SimulationListener.h \
 	happah/gui/forms/WormForm.h \
-	happah/gui/forms/WormListener.h \
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/BSphere.h \
@@ -122,9 +118,9 @@ SOURCES += \
 	happah/geometries/Worm.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
 \
+	happah/gui/DefaultGUIManager.cpp \
 	happah/gui/DrawManager.cpp \
 	happah/gui/Slider.cpp \
-	happah/gui/GUIManager.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
 	happah/gui/ToolPanel.cpp \

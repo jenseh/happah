@@ -3,11 +3,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-SimulationForm::SimulationForm(SimulationListener& simulationListener, QWidget* parent)
+SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-		m_timeSlider(new Slider(tr("approximated time"))),
+		m_guiManager(guiManager),
 		m_simulationInserted(false),
-		m_simulationListener(simulationListener) {
+		m_timeSlider(new Slider(tr("approximated time"))) {
 	QPushButton* createButton = new QPushButton("create simulation");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -33,7 +33,7 @@ void SimulationForm::changeTime(hpreal time) {
 void SimulationForm::createSimulation() {
 	if(!m_simulationInserted){
 		m_simulation->runSimulation();
-		m_simulationListener.insert(m_simulation->getSimulationResult(m_timeSlider->getValue()));
+		m_guiManager.insert(m_simulation->getSimulationResult(m_timeSlider->getValue()));
 		m_simulationInserted = true;
 	}
 }
@@ -56,7 +56,7 @@ void SimulationForm::setSimulation(DiscGearGrind_ptr simulation) {
 
 void SimulationForm::updateSimulation() {
 	if(m_simulationInserted)
-		m_simulationListener.update(m_simulation->getSimulationResult(m_timeSlider->getValue()));
+		m_guiManager.update(m_simulation->getSimulationResult(m_timeSlider->getValue()));
 }
 
 void SimulationForm::updateRanges() {

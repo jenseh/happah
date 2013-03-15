@@ -4,7 +4,7 @@
 #include <QApplication>
 
 #include "happah/scene/SceneManager.h"
-#include "happah/gui/GUIManager.h"
+#include "happah/gui/DefaultGUIManager.h"
 
 class Happah : public QApplication {
 Q_OBJECT
@@ -17,7 +17,7 @@ public:
 
 private:
 	SceneManager_ptr m_sceneManager;
-	GUIManager m_guiManager;
+	DefaultGUIManager m_defaultGUIManager;
 
 };
 

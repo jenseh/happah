@@ -17,15 +17,17 @@ public:
 	void reset();
 	void setPlane(Plane_ptr plane);
 
+private slots:
+	void createPlane();
+	void updatePlaneOrigin();
+	void updatePlaneNormal();
+
 private:
 	VectorInput* m_originInput;
 	VectorInput* m_normalInput;
 	Plane_ptr m_plane;
 	bool m_planeInserted;
 	PlaneListener& m_planeListener;
-
-private slots:
-	void createPlane();
 
 };
 

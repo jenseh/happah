@@ -10,15 +10,15 @@
 class VectorInput : public QGroupBox {
 	Q_OBJECT
 
-
 public:
-	VectorInput(const QString &title, bool showLength, QWidget *parent = 0);
+	VectorInput(const QString &title, bool showLength, bool zeroAllowed, QWidget *parent = 0);
 
-	void setVectorValue(hpvec3 value);
 	hpvec3 getValue();
+	hpreal getLength();
+	void setValue(hpvec3 value);
 
 signals:
-	void valueChanged(hpvec3 value);
+	void valueChanged();
 
 private slots:
 	void xValueChanged(double value);
@@ -26,8 +26,9 @@ private slots:
 	void zValueChanged(double value);
 
 private:
-	QLabel* m_lengthLabel;
 	bool m_showLength;
+	bool m_zeroAllowed;
+	QLabel* m_lengthLabel;
 	QDoubleSpinBox* m_xValueBox;
 	QDoubleSpinBox* m_yValueBox;
 	QDoubleSpinBox* m_zValueBox;

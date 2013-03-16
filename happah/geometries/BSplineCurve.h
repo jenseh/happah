@@ -26,29 +26,32 @@ public:
 
 	void addControlPoint( glm::vec3 newPoint );
 	void addControlPoint( float x, float y, float z );
-	void setControlPoint( unsigned int index, glm::vec3 newValue );
-	glm::vec3 getControlPoint( unsigned int index ) const;
-	unsigned int getNumberOfControlPoints() const;
-	void resetKnots();
-
 	void addCurve( BSplineCurve *curve );
 	void approximatePoints( std::vector<hpvec2>* points , unsigned int numberOfControlPoints ); //KATJA!!!
 
-	void setDegree( unsigned int degree );
-	int getDegree() const;
-	void setUniform( bool uniform );
-	void setPeriodic( bool periodic );
-	void setClamped( bool clamped );
-	bool getUniform() const;
-	bool getPeriodic() const;
-	bool getClamped() const;
-
-	glm::vec3 getValueAt( float t ) const;
+	bool check( bool debugOutput ) const;
 
 	virtual void getBounds( glm::vec2* min, glm::vec2* max ) const;
+	bool getClamped() const;
+	glm::vec3 getControlPoint( unsigned int index ) const;
+	int getDegree() const;
+	unsigned int getNumberOfControlPoints() const;
+	bool getPeriodic() const;
+	bool getUniform() const;
+	glm::vec3 getValueAt( float t ) const;
 
-	private:
+	void setClamped( bool clamped );
+	void setControlPoint( unsigned int index, glm::vec3 newValue );
+	void setDegree( unsigned int degree );
+	void setPeriodic( bool periodic );
+	void setUniform( bool uniform );
+
+	void resetKnots();
+
+
+private:
 	void calculateDrawingData();
+
 };
 
-#endif
+#endif // BSPLINECURVE_H

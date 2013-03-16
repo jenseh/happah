@@ -52,6 +52,22 @@ unsigned int BSplineCurve::getNumberOfControlPoints() const {
 	return m_controlPoints.size();
 }
 
+bool BSplineCurve::check( bool debugOutput ) const {
+		m_controlPoints.size() == m_degree + 1; // Bezier-curve property per segment
+		if( debugOutput ) {
+			std::cout << "BSplineCurve checking routine\n";
+			std::cout << "degree:\t " << m_degree << " \t control points:\t " << m_controlPoints.size() << std::endl;
+			std::cout << "knots :\t " << m_knots.size() << " (" << m_knots.size()-1 << " knot spans)" << std::endl;
+			std::cout << "number of segments (degree & coefficients):\t " << m_controlPoints.size() - m_degree << std::endl;
+			std::cout << "number of segments (breakpoints / knots)  :\t " << m_knots.size() -1 << std::endl;
+			std::cout << "valid configuration:\t " << ( m_controlPoints.size() == m_knots.size() - 1 - m_degree ) << std::endl << std::endl;
+		}
+		if( m_controlPoints.size() != m_knots.size() - 1 - m_degree ) {
+			return false;
+		}
+		return true;
+}
+
 void BSplineCurve::resetKnots() {
 	int num = m_knots.size();
 	if( num > 0 ) {
@@ -186,7 +202,7 @@ void BSplineCurve::getBounds( glm::vec2* min, glm::vec2* max ) const {
 
 glm::vec3 BSplineCurve::getValueAt( float t ) const {
 	// only for uniform, noncyclic, without end-point-interpolation
-	if( m_drawKnots.size() < m_degree + 2 ) {
+	if( m_drawKnots.size() < m_degree + 3 ) {
 		return glm::vec3(0,0,0);
 	}
 	if( t < m_drawKnots[m_degree] ) {
@@ -197,11 +213,17 @@ glm::vec3 BSplineCurve::getValueAt( float t ) const {
 	}
 	else {
 		int l;
-		for( int i = m_degree; i < m_drawKnots.size()-m_degree; i++ ) {
+		for( int i = m_degree; i < m_drawKnots.size()-m_degree-1; i++ ) {
 			if( m_drawKnots[i] <= t ) {
 				l = i;
 			}
 		}
+
+//		std::cout << "#knts: " << m_drawKnots.size() << " > take [" << l-m_degree << ", " << l+m_degree << "] " << std::endl;
+//		std::cout << "#pts:  " << m_drawPoints.size() << " (last idx: " << m_drawPoints.size() - 1 << ") ";
+//		std::cout << "> take [" << l-m_degree << ", " << l << "] " << std::endl;
+//		std::cout << std::endl;
+
 		std::vector<float> knots (m_drawKnots.begin()+l-m_degree,m_drawKnots.begin()+l+m_degree+1);
 		std::vector<glm::vec3> output (m_drawPoints.begin()+l-m_degree,m_drawPoints.begin()+l+1);
 		std::vector<glm::vec3> old (output);

@@ -3,6 +3,7 @@
 using namespace std;
 
 #include "happah/geometries/Plane.h"
+#include "happah/HappahConstants.h"
 
 Plane::Plane(hpvec3 origin, hpvec3 normal) 
 	: m_normal(check(normal)), m_origin(origin) {
@@ -26,6 +27,15 @@ hpvec3 Plane::getNormal() const {
 
 hpvec3 Plane::getOrigin() const {
 	return m_origin;
+}
+
+bool Plane::intersect( Ray& ray, hpvec3& intersectionPoint ) {
+	if( glm::abs(glm::dot(ray.getDirection(), m_normal)) < EPSILON ) {
+		return false;
+	}
+	hpreal t = -(glm::dot(ray.getOrigin(), m_normal) + glm::dot(m_origin, m_normal)) / glm::dot(ray.getDirection(), m_normal);
+	intersectionPoint = ray.getOrigin() + t*ray.getDirection();
+	return true;
 }
 
 void Plane::setNormal(hpvec3 normal) {

@@ -29,12 +29,14 @@ public:
 	void insert(DiscGearGrindResult simulationResult);
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
+	void insert(SpherePatch_ptr spherePatch);
 	void update(DiscGearGrindResult simulationResult);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);
+	void update(SpherePatch_ptr SpherePatch);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {

@@ -6,9 +6,11 @@
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/Worm.h"
 #include "happah/simulations/Simulation.h"
 #include "happah/simulations/DiscGearGrind.h"
+
 
 class GUIManager {
 public:
@@ -18,12 +20,15 @@ public:
 	virtual void insert(DiscGearGrindResult simulationResult) = 0;
 	virtual void insert(Disc_ptr disc) = 0;
 	virtual void insert(Worm_ptr worm) = 0;
+	virtual void insert(SpherePatch_ptr SpherePatch)= 0;
 	virtual void update(InvoluteGear_ptr involuteGear) = 0;
 	virtual void update(Plane_ptr plane) = 0;
 	virtual void update(SimpleGear_ptr simpleGear) = 0;
 	virtual void update(DiscGearGrindResult simulationResult) = 0;
 	virtual void update(Disc_ptr disc) = 0;
 	virtual void update(Worm_ptr worm) = 0;
+	virtual void update(SpherePatch_ptr SpherePatch)= 0;
+
 };
 
 #endif // GUI_MANAGER_H

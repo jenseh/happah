@@ -6,6 +6,7 @@
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/PointCloudNode.h"
+
 class SpherePatchNode : public SimpleGeometryNode<SpherePatch>{
 
 public:
@@ -13,7 +14,7 @@ public:
 	virtual ~SpherePatchNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
-	//void insertChild(SpherePatchGUIStateNode_ptr spherePatchGUIStateNode);
+	void insertChild(SpherePatchGUIStateNode_ptr spherePatchGUIStateNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
 	//void insertChild(PointCloudNode_ptr pointCloudNode);
 };

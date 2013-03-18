@@ -89,37 +89,43 @@ private:
 	PlaneForm* m_planeForm;
 };
 
+#include "happah/gui/context-menus/SimpleGearContextMenu.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/gui/forms/SimpleGearForm.h"
 
 class SimpleGearGUIStateNode : public GUIStateNode {
 public:
-	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name);
+	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu,  string name);
 	~SimpleGearGUIStateNode();
 
+	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 
 private:
 	SimpleGear_ptr m_simpleGear;
+	SimpleGearContextMenu* m_simpleGearContextMenu;
 	SimpleGearForm* m_simpleGearForm;
 
 };
 
 #include "happah/geometries/Disc.h"
 #include "happah/gui/forms/DiscForm.h"
+#include "happah/gui/context-menus/DiscContextMenu.h"
 
 class DiscGUIStateNode : public GUIStateNode {
 public:
-	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name);
+	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
 	~DiscGUIStateNode();
 
+	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 
 private:
 	Disc_ptr m_disc;
 	DiscForm* m_discForm;
+	DiscContextMenu* m_discContextMenu;
 
 };
 

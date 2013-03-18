@@ -10,7 +10,6 @@
 #include "happah/scene/GeometryFindVisitor.h"
 #include "happah/simulations/DiscGearGrind.h"
 #include "happah/simulations/Simulation.h"
-#include <QComboBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -24,17 +23,18 @@ public:
 	DiscGearGrind_ptr getSimulation() const;
 	void reset();
 	void setSimulation(DiscGearGrind_ptr simulation);
+	void setDisc(Disc_ptr disc);
+	void setGear(SimpleGear_ptr gear);
 
 private:
+	Disc_ptr m_disc;
+	SimpleGear_ptr m_gear;
 	GUIManager& m_guiManager;
 	DiscGearGrind_ptr m_simulation;
 	bool m_simulationInserted;
 	Slider* m_timeSlider;
-	QComboBox* m_discSelector;
-	QComboBox* m_gearSelector;
 
 	void updateRanges();
-	void updateSelectors();
 	void updateSimulation();
 
 private slots:

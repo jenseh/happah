@@ -2,6 +2,7 @@
 #define BSPLINECURVE_H
 
 #include <glm/glm.hpp>
+#include <memory>
 #include <vector>
 
 #include "happah/HappahTypes.h"
@@ -53,5 +54,7 @@ private:
 	void calculateDrawingData();
 
 };
+
+typedef std::shared_ptr<BSplineCurve> BSplineCurve_ptr;
 
 #endif // BSPLINECURVE_H

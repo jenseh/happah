@@ -64,6 +64,9 @@ DiscForm* ToolPanel::getDiscForm() {
 WormForm* ToolPanel::getWormForm() {
 	return m_wormForm;
 }
+SimulationForm* ToolPanel::getSimulationForm() {
+	return m_simulationForm;
+}
 
 SpherePatchForm* ToolPanel::getSpherePatchForm() {
 	return m_spherePatchForm;

@@ -82,19 +82,17 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 }
 
 void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
-	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
+	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
 
 void DefaultGUIManager::insert(Plane_ptr plane) {
-	ostringstream oss;
-//	oss << "Plane " << m_counter++; TODO: m_counter is increased in doInsert3D call => delete this???
 	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
 //	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), oss.str()));
 //	m_sceneManager->insert(plane, planeGUIStateNode);
 }
 
 void DefaultGUIManager::insert(Disc_ptr disc) {
-	doInsert3D<Disc, DiscGUIStateNode, DiscForm>(disc, "Disc", m_toolPanel->getDiscForm());
+	doInsert3D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
 }
 
 void DefaultGUIManager::insert(Worm_ptr worm) {
@@ -137,6 +135,14 @@ void DefaultGUIManager::update(Worm_ptr worm) {
 }
 void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
 	doUpdate3D<SpherePatch>(spherePatch);
+}
+
+void DefaultGUIManager::useInSimulation(Disc_ptr disc) {
+	m_toolPanel->getSimulationForm()->setDisc(disc);
+}
+
+void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear){
+	m_toolPanel->getSimulationForm()->setGear(gear);
 }
 
 void DefaultGUIManager::visitScene(SceneVisitor& visitor) {

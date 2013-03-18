@@ -86,8 +86,6 @@ void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
 }
 
 void DefaultGUIManager::insert(Plane_ptr plane) {
-	ostringstream oss;
-//	oss << "Plane " << m_counter++; TODO: m_counter is increased in doInsert3D call => delete this???
 	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
 //	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), oss.str()));
 //	m_sceneManager->insert(plane, planeGUIStateNode);

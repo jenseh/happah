@@ -67,6 +67,7 @@ HEADERS += \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
+	happah/scene/BSplineCurveNode.h \
 	happah/scene/DiscNode.h \
 	happah/scene/DrawVisitor.h \
 	happah/scene/ElementRenderStateNode.h\
@@ -156,6 +157,7 @@ SOURCES += \
 \
 	happah/math/Ray.cpp \
 \
+	happah/scene/BSplineCurveNode.cpp \
 	happah/scene/DiscNode.cpp \
 	happah/scene/ElementRenderStateNode.cpp\
 	happah/scene/GUIStateNode.cpp \

@@ -9,6 +9,7 @@
 #include "happah/scene/SimpleGearNode.h"
 #include "happah/scene/DiscNode.h"
 #include "happah/scene/WormNode.h"
+#include "happah/scene/SpherePatchNode.h"
 
 SceneManager::SceneManager() {}
 
@@ -184,6 +185,9 @@ void SceneManager::insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor&
 	doInsert<Worm, WormNode>(worm, triangleMesh, color);
 }
 
+void SceneManager::insert(SpherePatch_ptr spherePatch, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	doInsert<SpherePatch, SpherePatchNode>(spherePatch,triangleMesh,color);
+}
 
 void SceneManager::registerSceneListener(SceneListener* sceneListener) {
 	m_listeners.push_back(sceneListener);

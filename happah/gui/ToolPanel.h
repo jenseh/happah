@@ -15,6 +15,7 @@ using namespace std;
 #include "happah/gui/forms/PlaneForm.h"
 #include "happah/gui/forms/DiscForm.h"
 #include "happah/gui/forms/SimulationForm.h"
+#include "happah/gui/forms/SimpleGearForm.h"
 #include "happah/gui/forms/SpherePatchForm.h"
 #include "happah/gui/forms/WormForm.h"
 
@@ -30,6 +31,7 @@ public:
 	SimpleGearForm* getSimpleGearForm();
 	DiscForm* getDiscForm();
 	WormForm* getWormForm();
+	SimulationForm* getSimulationForm();
 	SpherePatchForm* getSpherePatchForm();
 	void setForm(Form* form);	
 

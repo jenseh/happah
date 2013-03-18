@@ -43,7 +43,9 @@ HEADERS += \
 	happah/gui/Viewport3D.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
+	happah/gui/context-menus/DiscContextMenu.h \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
+	happah/gui/context-menus/SimpleGearContextMenu.h \
 \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
@@ -132,7 +134,9 @@ SOURCES += \
 	happah/gui/Viewport3D.cpp \
 \
 	happah/gui/context-menus/ContextMenu.cpp \
+	happah/gui/context-menus/DiscContextMenu.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
+	happah/gui/context-menus/SimpleGearContextMenu.cpp \
 \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \

@@ -9,6 +9,8 @@
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/Viewport3DListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
+#include "happah/gui/context-menus/DiscContextMenu.h"
+#include "happah/gui/context-menus/SimpleGearContextMenu.h"
 
 class DrawManager;
 class InvoluteGearContextMenu;
@@ -24,7 +26,9 @@ public:
 	ToolPanel* getToolPanel();
 
 	ContextMenu* getDefaultContextMenu();
+	DiscContextMenu* getDiscContextMenu();
 	InvoluteGearContextMenu* getInvoluteGearContextMenu();
+	SimpleGearContextMenu* getSimpleGearContextMenu();
 
 protected:
 	void keyPressEvent(QKeyEvent* event);
@@ -37,7 +41,10 @@ private:
 	ToolPanel* m_toolPanel;
 
 	ContextMenu* m_defaultContextMenu;
+	DiscContextMenu* m_discContextMenu;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;
+	SimpleGearContextMenu* m_simpleGearContextMenu;
+
 
 };
 

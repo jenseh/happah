@@ -24,8 +24,12 @@ public:
 	DiscGearGrind_ptr getSimulation() const;
 	void reset();
 	void setSimulation(DiscGearGrind_ptr simulation);
+	void setDisc(Disc_ptr disc);
+	void setGear(SimpleGear_ptr gear);
 
 private:
+	Disc_ptr m_disc;
+	SimpleGear_ptr m_gear;
 	GUIManager& m_guiManager;
 	DiscGearGrind_ptr m_simulation;
 	bool m_simulationInserted;

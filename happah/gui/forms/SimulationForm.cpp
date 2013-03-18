@@ -19,9 +19,7 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createSimulation()));
 	connect(m_timeSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeTime(hpreal)));
-	InvoluteGear* tempGear = new InvoluteGear;
-	m_simulation = DiscGearGrind_ptr(new DiscGearGrind( Disc_ptr(new Disc), SimpleGear_ptr( tempGear->toSimpleGear())  ));
-	delete tempGear;
+	m_simulation = NULL;
 	updateRanges();
 }
 
@@ -34,6 +32,9 @@ void SimulationForm::changeTime(hpreal time) {
 }
 
 void SimulationForm::createSimulation() {
+	if( m_simulation == NULL ){
+		m_simulation = DiscGearGrind_ptr(new DiscGearGrind(m_disc, m_gear));
+	}
 	if(!m_simulationInserted){
 		m_simulation->runSimulation();
 		m_guiManager.insert(m_simulation->getSimulationResult(m_timeSlider->getValue()));
@@ -47,6 +48,14 @@ DiscGearGrind_ptr SimulationForm::getSimulation() const {
 
 void SimulationForm::reset() {
 
+}
+
+void SimulationForm::setDisc(Disc_ptr disc){
+	m_disc = disc;
+
+}
+void SimulationForm::setGear(SimpleGear_ptr gear){
+	m_gear = gear;
 }
 
 

@@ -38,6 +38,8 @@ public:
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);
 	void update(SpherePatch_ptr SpherePatch);
+	void useInSimulation(Disc_ptr disc);
+	void useInSimulation(SimpleGear_ptr gear);
 	void visitScene(SceneVisitor& visitor);
 
 private:

@@ -50,6 +50,7 @@ InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 		m_involuteGearForm->reset();
 }
 
+
 ContextMenu* InvoluteGearGUIStateNode::getContextMenu() const {
 	m_involuteGearContextMenu->setInvoluteGear(m_involuteGear);
 	return m_involuteGearContextMenu;
@@ -83,12 +84,16 @@ Form* PlaneGUIStateNode::getForm() {
 	return m_planeForm;
 }
 
-SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, string name)
-	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm) {}
+SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu, string name)
+	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm), m_simpleGearContextMenu(simpleGearContextMenu) {}
 
 SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
 	if(m_simpleGearForm->getSimpleGear() == m_simpleGear)
 		m_simpleGearForm->reset();
+}
+
+ContextMenu* SimpleGearGUIStateNode::getContextMenu() const {
+	return m_simpleGearContextMenu;
 }
 
 shared_ptr<void> SimpleGearGUIStateNode::getData() const {
@@ -100,12 +105,17 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
-DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, string name)
-	: GUIStateNode(name), m_disc(disc), m_discForm(discForm) {}
+DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
+	: GUIStateNode(name), m_disc(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
 
 DiscGUIStateNode::~DiscGUIStateNode() {
 	if(m_discForm->getDisc() == m_disc)
 		m_discForm->reset();
+}
+
+ContextMenu* DiscGUIStateNode::getContextMenu() const {
+	m_discContextMenu->setDisc(m_disc);
+	return m_discContextMenu;
 }
 
 shared_ptr<void> DiscGUIStateNode::getData() const {

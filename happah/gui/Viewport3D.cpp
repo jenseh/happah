@@ -29,8 +29,6 @@ Viewport3D::Viewport3D(Viewport3DListener& viewport3DListener,DrawManager& drawM
 }
 
 Ray Viewport3D::getMouseRay() {
-	Ray result;
-	result.origin = m_camera;
 	hpvec3 winPos;
 	winPos.x = m_mousePos.x();
 	winPos.y = height() - m_mousePos.y(); // Because screen coordinates on the top not the bottom
@@ -38,8 +36,7 @@ Ray Viewport3D::getMouseRay() {
 	//winPos.z = 1.0; // Touching the "far plane"
 	hpvec4 viewport(0, 0, width(), height());
 	hpvec3 point = glm::unProject(winPos, m_viewMatrix, m_projectionMatrix, viewport );
-	result.direction = point - m_camera;
-	return result;
+	return Ray(m_camera, point - m_camera);
 }
 
 void Viewport3D::initializeGL() {

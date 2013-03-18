@@ -3,38 +3,40 @@
 Ray::Ray() { }
 
 Ray::Ray(hpvec3 orig, hpvec3 dir){
-	origin = orig;
-	direction = dir;
+	m_origin = orig;
+	m_direction = dir;
+	if( dir == hpvec3(0) )
+		throw;
 }
 
 void Ray::transform(hpmat4x4& matrix){
 	hpvec4 point1,point2;
 
-	point1[0] = origin[0];
-	point1[1] = origin[1];
-	point1[2]= origin[2];
+	point1[0] = m_origin[0];
+	point1[1] = m_origin[1];
+	point1[2]= m_origin[2];
 	point1[3] = 1;
 
 	point2 = point1;
-	point2[0] += direction[0];
-	point2[1] += direction[1];
-	point2[2] += direction[2];
+	point2[0] += m_direction[0];
+	point2[1] += m_direction[1];
+	point2[2] += m_direction[2];
 
 	point1 = matrix * point1;
 	point2 = matrix * point2;
-	origin = (glm::vec3)point1;
-	direction = (glm::vec3)(point2 - point1);
+	m_origin = (glm::vec3)point1;
+	m_direction = (glm::vec3)(point2 - point1);
 }
 
 hpreal Ray::intersectDistance(Triangle& triangle){
 	hpvec3 position;
-	glm::intersectRayTriangle(origin, direction, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], position);
-	return glm::distance(origin, position);
+	glm::intersectRayTriangle(m_origin, m_direction, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], position);
+	return glm::distance(m_origin, position);
 }
 
 bool Ray::intersects(BBox& box, hpreal length){
 	hpvec3 hitPoint;
-	return checkLineBox(*(box.getMin()), *(box.getMax()), origin, origin + direction * length, hitPoint);
+	return checkLineBox(*(box.getMin()), *(box.getMax()), m_origin, m_origin + m_direction * length, hitPoint);
 }
 
 bool Ray::checkLineBox( hpvec3 boxPointMin, hpvec3 boxPointMax, hpvec3 linePoint1, hpvec3 linePoint2, hpvec3 &hitPoint) {
@@ -73,5 +75,9 @@ bool inline Ray::inBox( hpvec3 hitPoint, hpvec3 boxPointMin, hpvec3 boxPointMax,
 	if ( axis==2 && hitPoint.z > boxPointMin.z && hitPoint.z < boxPointMax.z && hitPoint.x > boxPointMin.x && hitPoint.x < boxPointMax.x) return true;
 	if ( axis==3 && hitPoint.x > boxPointMin.x && hitPoint.x < boxPointMax.x && hitPoint.y > boxPointMin.y && hitPoint.y < boxPointMax.y) return true;
 	return true;
+}
+
+void Ray::moveOrigin(hpreal delta){
+    m_origin += delta * m_direction;
 }
 

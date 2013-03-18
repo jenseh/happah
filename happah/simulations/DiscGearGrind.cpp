@@ -31,7 +31,7 @@ void DiscGearGrind::calculateGrindingDepth(double time){
         // Transform Ray
         Ray ray = m_gearRays->at(i);
         ray.transform(matrix);
-        ray.origin -= m_maxDistance * ray.direction;
+        ray.moveOrigin(-m_maxDistance);
         m_distances[i] = m_kdTree->intersectFirst(ray, m_maxDistance * 2);
     }
 }

@@ -65,10 +65,10 @@ HEADERS += \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
-	happah/scene/DiscFindVisitor.h \
 	happah/scene/DiscNode.h \
 	happah/scene/DrawVisitor.h \
 	happah/scene/ElementRenderStateNode.h\
+	happah/scene/GeometryFindVisitor.h \
 	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \
 	happah/scene/LineMeshNode.h\

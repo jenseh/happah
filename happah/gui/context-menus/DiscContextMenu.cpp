@@ -15,6 +15,7 @@ DiscContextMenu::~DiscContextMenu(){}
 
 void DiscContextMenu::useDiscInSumulation() {
 	m_guiManager.useInSimulation(m_disc);
+
 }
 
 void DiscContextMenu::setDisc(Disc_ptr disc) {

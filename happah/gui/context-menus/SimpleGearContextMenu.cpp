@@ -13,10 +13,11 @@ SimpleGearContextMenu::SimpleGearContextMenu(
 
 SimpleGearContextMenu::~SimpleGearContextMenu(){}
 
+
 void SimpleGearContextMenu::useSimpleGearInSumulation() {
 	m_guiManager.useInSimulation(m_simpleGear);
 }
 
-void SimpleGearContextMenu::setDisc(SimpleGear_ptr simpleGear) {
+void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear) {
 	m_simpleGear = simpleGear;
 }

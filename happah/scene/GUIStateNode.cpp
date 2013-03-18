@@ -93,6 +93,7 @@ SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
 }
 
 ContextMenu* SimpleGearGUIStateNode::getContextMenu() const {
+	m_simpleGearContextMenu->setSimpleGear(m_simpleGear);
 	return m_simpleGearContextMenu;
 }
 

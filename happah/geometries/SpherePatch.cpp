@@ -1,24 +1,18 @@
 #include "happah/geometries/SpherePatch.h"
-#include <glm/gtx/intersect.hpp>
+#include <iostream>
 
-SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::string name) {
-  m_degree = degree;
-  m_a = a;
-  m_b = b;
-  m_c = c;
-  m_u = 1.0f;
-  m_v = 0.0f;
-  m_w = 0.0f;
-  glm::vec3 p000;
-  m_detail = 50;
+
+SpherePatch::SpherePatch(int degree, hpvec3 a, hpvec3 b, hpvec3 c)
+	: m_degree(degree),m_a(a),m_b(b),m_c(c),
+	  m_u(1.0f),m_v(0.0f),m_w(0.0f),m_detail(50),m_center(hpvec3(0.0f)),m_radius(1.0f) {
+
+  hpvec3 p000;
   int n=m_detail;
-  m_center = glm::vec3(0.0f);
-  m_radius = 1.0f;
 
-   uDivideTriangle(); // Just to quick generate 6 controlpoints
-    m_controlPoints[2]=m_controlPoints[2]*2.0f;
-    m_controlPoints[4]=m_controlPoints[4]*2.0f;
-    m_controlPoints[1]=m_controlPoints[1]*2.0f;
+  uDivideTriangle(); // Just to quick generate 6 controlpoints
+  m_controlPoints[2]=m_controlPoints[2]*2.0f;
+  m_controlPoints[4]=m_controlPoints[4]*2.0f;
+  m_controlPoints[1]=m_controlPoints[1]*2.0f;
 
       for(int i=n; i>=0;i--){
          for(int j=n-i; j>=0; j--){
@@ -33,14 +27,14 @@ SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std:
                   m_w = (float)k/(float)n;
 
                   // Create Points on secant triangle
-                  glm::vec3 p100 = triPatch1(m_secantTriPoints[0],m_secantTriPoints[1],m_secantTriPoints[2]);
-                  glm::vec3 p010 = triPatch1(m_secantTriPoints[1],m_secantTriPoints[3],m_secantTriPoints[4]);
-                  glm::vec3 p001 = triPatch1(m_secantTriPoints[2],m_secantTriPoints[4],m_secantTriPoints[5]);
+                  hpvec3 p100 = triPatch1(m_secantTriPoints[0],m_secantTriPoints[1],m_secantTriPoints[2]);
+                  hpvec3 p010 = triPatch1(m_secantTriPoints[1],m_secantTriPoints[3],m_secantTriPoints[4]);
+                  hpvec3 p001 = triPatch1(m_secantTriPoints[2],m_secantTriPoints[4],m_secantTriPoints[5]);
                   bool hit;
                   // get triangle intersections
-                  glm::vec3 p100i = glm::vec3(0.0f);
-                  glm::vec3 p010i = glm::vec3(0.0f);
-                  glm::vec3 p001i = glm::vec3(0.0f);
+                  hpvec3 p100i = hpvec3(0.0f);
+                  hpvec3 p010i = hpvec3(0.0f);
+                  hpvec3 p001i = hpvec3(0.0f);
                   hit = intersectTriangle(glm::normalize(p100),m_controlPoints[0],m_controlPoints[1],m_controlPoints[2],&p100i);
                   hit = intersectTriangle(glm::normalize(p010),m_controlPoints[1],m_controlPoints[3],m_controlPoints[4],&p010i);
                   hit = intersectTriangle(glm::normalize(p001),m_controlPoints[2],m_controlPoints[4],m_controlPoints[5],&p001i);
@@ -53,7 +47,7 @@ SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std:
                   //std::cout << " First Stage Done"<< std::endl;
                   buildSecantTriangle(p100i,p010i,p001i);
                   p000 = triPatch1(m_secantTriPoints[0],m_secantTriPoints[3],m_secantTriPoints[5]);
-                  glm::vec3 p000i = glm::vec3(0.0f);
+                  hpvec3 p000i = hpvec3(0.0f);
                   hit = intersectTriangle(glm::normalize(p000),p100i,p010i,p001i,&p000i);
                   //std::cout << "p000i: "<< p000i.x<<" "<< p000i.y<<" " << p000i.z  <<std::endl;
 
@@ -61,9 +55,9 @@ SpherePatch::SpherePatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std:
                   //p000 = triPatch2(m_controlPoints[0],m_controlPoints[1],m_controlPoints[2],m_controlPoints[3],m_controlPoints[4],m_controlPoints[5]);
                  //std::cout<<"u/v/w"<<" "<<m_u<<"/"<<m_v<<"/"<<m_w<<std::endl;
                  //std::cout << "BezierPunkt: "<< p000.x << "/" << p000.y << "/" <<p000.z << std::endl;
-                 m_vertexData.push_back(glm::vec4(p000i,1.0f));
-                 glm::vec3 normal = (p000-m_center);
-                 m_vertexData.push_back(glm::vec4(normal,0.0f));
+                 m_vertexData.push_back(p000i);
+                 hpvec3 normal = (p000-m_center); // TODO: THINK OF SOMETING NORMAL
+                 m_vertexData.push_back(normal);
 
               }
            }
@@ -92,25 +86,26 @@ void SpherePatch::uDivideTriangle(){
      }
 }
 
-glm::vec3 SpherePatch::triPatch1(glm::vec3 p100,glm::vec3 p010,glm::vec3 p001){
+hpvec3 SpherePatch::triPatch1(hpvec3 p100,hpvec3 p010,hpvec3 p001){
 
-  glm::vec3 p000 = m_u*p100+m_v*p010+m_w*p001;
+  hpvec3 p000 = m_u*p100+m_v*p010+m_w*p001;
 
 
   return  p000;
 }
 
-glm::vec3 SpherePatch::triPatch2(glm::vec3 p200,glm::vec3 p110,glm::vec3 p101,glm::vec3 p020,glm::vec3 p011,glm::vec3 p002){
+hpvec3 SpherePatch::triPatch2(hpvec3 p200,hpvec3 p110,hpvec3 p101,hpvec3 p020,hpvec3 p011,hpvec3 p002){
     return triPatch1(triPatch1(p200,p110,p101),triPatch1(p110,p020,p011),triPatch1(p101,p011,p002));
 }
 
-glm::vec3 SpherePatch::triPatch3(glm::vec3 p300,glm::vec3 p210,glm::vec3 p201,glm::vec3 p120,glm::vec3 p111,
-                    glm::vec3 p102,glm::vec3 p030,glm::vec3 p021,glm::vec3 p012,glm::vec3 p003){
+hpvec3 SpherePatch::triPatch3(hpvec3 p300,hpvec3 p210,hpvec3 p201,hpvec3 p120,hpvec3 p111,
+                    hpvec3 p102,hpvec3 p030,hpvec3 p021,hpvec3 p012,hpvec3 p003){
   return triPatch1(triPatch2(p300,p210,p201,p120,p111,p102),triPatch2(p210,p120,p111,p030,p021,p012),triPatch2(p201,p111,p102,p021,p012,p003));
 }
 
 TriangleMesh* SpherePatch::toTriangleMesh(){
-  std::vector<glm::vec4> *triangles = new std::vector<glm::vec4>();
+  std::vector<hpvec3> *vertexData = &m_vertexData;
+  std::vector<hpuint> *indices = new std::vector<hpuint>();
   int detail = m_detail;
   int save = 1;
   for (int n = 1;n <= detail;n++){
@@ -119,36 +114,29 @@ TriangleMesh* SpherePatch::toTriangleMesh(){
     int b=a+n;
     int c=b+1;
     save = c -n;
-    triangles->push_back(m_vertexData.at((a-1)*2));
-    triangles->push_back(m_vertexData.at(((a-1)*2)+1));
-    triangles->push_back(m_vertexData.at((b-1)*2));
-    triangles->push_back(m_vertexData.at(((b-1)*2)+1));
-    triangles->push_back(m_vertexData.at((c-1)*2));
-    triangles->push_back(m_vertexData.at(((c-1)*2)+1));
+    indices->push_back(a);
+    indices->push_back(b);
+    indices->push_back(c);
     int stop = ((n+1)*(n+2))/2;
     if (c<stop){
       int d = a ;
       int e = b+1;
       int f = c-n;
-    triangles->push_back(m_vertexData.at((d-1)*2));
-    triangles->push_back(m_vertexData.at(((d-1)*2)+1));
-    triangles->push_back(m_vertexData.at((e-1)*2));
-     triangles->push_back(m_vertexData.at(((e-1)*2)+1));
-    triangles->push_back(m_vertexData.at((f-1)*2));
-     triangles->push_back(m_vertexData.at(((f-1)*2)+1));
+    indices->push_back(d);
+    indices->push_back(e);
+    indices->push_back(f);
+
         }
     }
 }
-  std::vector<hpuint> indices;
-  TriangleMesh* result = new TriangleMesh(triangles, indices);
-//  std::cout << "TriPatchVertices" << m_vertexData.size() << std::endl;
+  TriangleMesh* result = new TriangleMesh(vertexData, indices);
   return result;
 }
 
-void SpherePatch::buildSecantTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c){
-  glm::vec3 sa = m_radius*(glm::normalize(a-m_center));
-  glm::vec3 sb = m_radius*(glm::normalize(b-m_center));
-  glm::vec3 sc = m_radius*(glm::normalize(c-m_center));
+void SpherePatch::buildSecantTriangle(hpvec3 a, hpvec3 b, hpvec3 c){
+  hpvec3 sa = m_radius*(glm::normalize(a-m_center));
+  hpvec3 sb = m_radius*(glm::normalize(b-m_center));
+  hpvec3 sc = m_radius*(glm::normalize(c-m_center));
 
   m_secantTriPoints[0]=sa;
   m_secantTriPoints[1]=sa+((sb-sa)/2.0f);
@@ -160,17 +148,17 @@ void SpherePatch::buildSecantTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c){
   //    std::cout << "SecantTriangleCP" << i << ": "<< m_secantTriPoints[i].x <<"/"<< m_secantTriPoints[i].y<<"/" << m_secantTriPoints[i].z << std::endl;
     }
 }
-bool SpherePatch::intersectTriangle(glm::vec3 dir,glm::vec3 e,glm::vec3 f,glm::vec3 g,glm::vec3* hit){
+bool SpherePatch::intersectTriangle(hpvec3 dir,hpvec3 e,hpvec3 f,hpvec3 g,hpvec3* hit){
  float result;
  float epsilon = 0.01f;
- glm::vec3 orig = glm::vec3(0.0f);
-// glm::vec3 dir = glm::vec3(0.0f,1.0f,1.0f);
-// glm::vec3 e = glm::vec3(-1.0f,-1.0f,2.0f);
-// glm::vec3 f = glm::vec3(1.0f,-1.0f,2.0f);
-// glm::vec3 g = glm::vec3(0.0f,2.0f,2.0f);
- glm::vec3 v1 = f-e;
- glm::vec3 v2 = g-e;
- glm::vec3 q = glm::cross(dir,v2);
+ hpvec3 orig = hpvec3(0.0f);
+// hpvec3 dir = hpvec3(0.0f,1.0f,1.0f);
+// hpvec3 e = hpvec3(-1.0f,-1.0f,2.0f);
+// hpvec3 f = hpvec3(1.0f,-1.0f,2.0f);
+// hpvec3 g = hpvec3(0.0f,2.0f,2.0f);
+ hpvec3 v1 = f-e;
+ hpvec3 v2 = g-e;
+ hpvec3 q = glm::cross(dir,v2);
  float det = glm::dot(v1,q);
  if (det>(-epsilon)&&det<(epsilon)){
    result = false;
@@ -178,7 +166,7 @@ bool SpherePatch::intersectTriangle(glm::vec3 dir,glm::vec3 e,glm::vec3 f,glm::v
    return result;
    }
  float inv = (1/det);
- glm::vec3 s = orig-e;
+ hpvec3 s = orig-e;
  float u = inv*glm::dot(s,q);
  if (u<0.0f){
      result = false;
@@ -186,7 +174,7 @@ bool SpherePatch::intersectTriangle(glm::vec3 dir,glm::vec3 e,glm::vec3 f,glm::v
      return result;
 
    }
- glm::vec3 r=glm::cross(s,v1);
+ hpvec3 r=glm::cross(s,v1);
  float v=inv*glm::dot(dir,r);
  if (v<0.0f-epsilon || u+v > 1.0f+epsilon){
      result = false;
@@ -196,7 +184,7 @@ bool SpherePatch::intersectTriangle(glm::vec3 dir,glm::vec3 e,glm::vec3 f,glm::v
  float t= inv*glm::dot(v2,r);
  //std::cout << "HIT"<< std::endl;
  result = true;
- glm::vec3 hitpoint= orig+t*dir;
+ hpvec3 hitpoint= orig+t*dir;
 // std::cout << "hit at " << hitpoint.x<<" " << hitpoint.y<<" " <<hitpoint.z<<std::endl;
  *hit=hitpoint;
  return result;

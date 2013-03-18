@@ -6,6 +6,7 @@
 #include "happah/scene/PointCloudRenderStateNode.h"
 #include "happah/scene/RenderStateNode.h"
 
+
 class PointCloudNode : public SimpleGeometryNode<PointCloud>{
 public:
 	PointCloudNode(PointCloud_ptr PointCloud);
@@ -18,5 +19,7 @@ public:
 private:
 	PointCloudRenderStateNode_ptr m_pointCloudRenderStateNode;
 };
+
+typedef shared_ptr<PointCloudNode> PointCloudNode_ptr;
 
 #endif /* POINT_CLOUD_NODE_H_ */

@@ -25,7 +25,7 @@ HEADERS += \
 #	happah/geometries/RayCloud.h \
 	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
-#	happah/geometries/SpherePatch.h \
+	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/Worm.h \
@@ -112,7 +112,7 @@ SOURCES += \
 #	happah/geometries/RayCloud.cpp \
 	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
-#	happah/geometries/SpherePatch.cpp \
+	happah/geometries/SpherePatch.cpp \
 	happah/geometries/StandardProfile.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/Worm.cpp \

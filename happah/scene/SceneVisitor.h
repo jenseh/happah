@@ -11,6 +11,7 @@ class ElementRenderStateNode;
 class SimpleGearNode;
 class DiscNode;
 class WormNode;
+class SpherePatchNode;
 
 class SceneVisitor {
 
@@ -25,6 +26,7 @@ public:
 	virtual void visit(SimpleGearNode& simpleGearNode) = 0;
 	virtual void visit(DiscNode& discNode) = 0;
 	virtual void visit(WormNode& wormNode) = 0;
+	virtual void visit(SpherePatchNode& spherePatchNode) = 0;
 };
 
 #endif // SCENE_VISITOR_H

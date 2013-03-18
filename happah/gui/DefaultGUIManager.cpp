@@ -70,6 +70,12 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
+void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
+	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
+	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
+	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
+}
+
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 	doInsert3D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
 		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
@@ -77,12 +83,6 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 
 void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
 	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
-}
-
-void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
-	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
-	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 }
 
 void DefaultGUIManager::insert(Plane_ptr plane) {
@@ -101,10 +101,19 @@ void DefaultGUIManager::insert(Worm_ptr worm) {
 	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }
 
+void DefaultGUIManager::insert(SpherePatch_ptr spherePatch) {
+	doInsert3D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
+}
+
 string DefaultGUIManager::toFinalLabel(const char* label) {
 	ostringstream oss;
 	oss << label << " " << m_counter++;
 	return oss.str();
+}
+
+void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
+	m_sceneManager->removeContaining(simulationResult.m_gear, simulationResult.m_gearMesh);
+	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
 }
 
 void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
@@ -113,10 +122,6 @@ void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 
 void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
 	doUpdate3D<SimpleGear>(simpleGear);
-}
-
-void DefaultGUIManager::update(SimulationResult simulationResult) {
-	//TODO
 }
 
 void DefaultGUIManager::update(Plane_ptr plane) {
@@ -129,6 +134,9 @@ void DefaultGUIManager::update(Disc_ptr disc) {
 
 void DefaultGUIManager::update(Worm_ptr worm) {
 	doUpdate3D<Worm>(worm);
+}
+void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
+	doUpdate3D<SpherePatch>(spherePatch);
 }
 
 DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(DefaultGUIManager& defaultGUIManager)

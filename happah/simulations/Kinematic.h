@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "happah/transformations/RigidAffineTransformation.h"
 
 #include "happah/math/Polynom.h"
 
@@ -17,6 +18,7 @@ public :
 
     // Get Matrix at time t
     glm::mat4 getMatrix(double t);
+    RigidAffineTransformation getRigidAffineTransformation(double t);
 
     static Kinematic getLinearKinematic(glm::vec3 start, glm::vec3 end);
 

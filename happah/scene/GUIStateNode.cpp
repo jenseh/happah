@@ -135,3 +135,20 @@ Form* WormGUIStateNode::getForm() {
 	m_wormForm->setWorm(m_worm);
 	return m_wormForm;
 }
+
+SpherePatchGUIStateNode::SpherePatchGUIStateNode(SpherePatch_ptr spherePatch, SpherePatchForm* spherePatchForm, string name)
+	: GUIStateNode(name), m_spherePatch(spherePatch), m_spherePatchForm(spherePatchForm) {}
+
+SpherePatchGUIStateNode::~SpherePatchGUIStateNode() {
+	if(m_spherePatchForm->getSpherePatch() == m_spherePatch)
+		m_spherePatchForm->reset();
+}
+
+shared_ptr<void> SpherePatchGUIStateNode::getData() const {
+	return m_spherePatch;
+}
+
+Form* SpherePatchGUIStateNode::getForm() {
+	m_spherePatchForm->setSpherePatch(m_spherePatch);
+	return m_spherePatchForm;
+}

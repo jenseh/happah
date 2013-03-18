@@ -21,10 +21,15 @@ public:
 	RigidAffineTransformation m_toolTransformation;
 
 
-	DiscGearGrindResult(vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, TriangleMesh_ptr toolMesh):
+	DiscGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
+						Disc_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
+		m_gear(gear),
+		m_gearColor(gearColor),
 		m_gearMesh(gearMesh),
+		m_gearTransformation(gearTransformation),
+		m_tool(tool),
 		m_toolMesh(toolMesh),
-		m_gearColor(gearColor){
+		m_toolTransformation(toolTransformation){
 	}
 };
 

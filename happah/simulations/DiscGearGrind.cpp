@@ -42,18 +42,9 @@ DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
     // Fill color
     for( size_t i = 0; i < m_gearColor->size(); i++){
     	//TODO: @ Julian: Be aware, your distances are all in [0; 2*m_maxDistance], you should change that in calculateGrindingDepth
-    	m_gearColor->at(i) = hpcolor(1.0, 0.0, 0.0, 1.0); //hpcolor(m_distances[i] / m_maxDistance * 2, 0.5, 1.0, 1.0);
-    	if (i > (int)m_gearColor->size() * 0.9
-    	||  i < (int)m_gearColor->size() * 0.1) m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);
+    	m_gearColor->at(i) = hpcolor(m_distances[i] / m_maxDistance * 2, 0.5, 1.0, 1.0);
     }
-//    // Transform disc ethen though gear is actually mouving //TODO: Improve English skills
-//    //glm::mat4 tempMat = glm::inverse(m_gearMouvement.getMatrix(time));
-//    glm::mat4 tempMat = m_gearMouvement.getMatrix(time);
-//    m_gearMesh->setModelMatrix(QMatrix4x4(tempMat[0][0], tempMat[1][0], tempMat[2][0], tempMat[3][0],
-//                                          tempMat[0][1], tempMat[1][1], tempMat[2][1], tempMat[3][1],
-//                                          tempMat[0][2], tempMat[1][2], tempMat[2][2], tempMat[3][2],
-//                                          tempMat[0][3], tempMat[1][3], tempMat[2][3], tempMat[3][3]));
-    return DiscGearGrindResult(m_gearColor, m_gearMesh, m_discMesh);
+    return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh, m_gearMovement.getRigidAffineTransformation(time),  m_disc, m_discMesh, RigidAffineTransformation());
 }
 
 void DiscGearGrind::runSimulation(){

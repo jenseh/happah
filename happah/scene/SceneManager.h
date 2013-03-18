@@ -11,11 +11,13 @@ class SceneManager;
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Worm.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
+
 
 class SceneManager : public Node {
 public:
@@ -34,7 +36,8 @@ public:
 	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
 	void insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
-
+	void insert(SpherePatch_ptr spherePatch, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(SpherePatch_ptr spherePatch, SpherePatchGUIStateNode_ptr spherePatchGUIStateNode);
 	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);
 	void remove(vector<Node_ptr>& nodes);

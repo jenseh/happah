@@ -49,6 +49,7 @@ HEADERS += \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
+	happah/gui/forms/SpherePatchForm.h \
 	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/SimulationForm.h \
 	happah/gui/forms/WormForm.h \
@@ -82,6 +83,7 @@ HEADERS += \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGearNode.h \
 	happah/scene/SimpleGeometryNode.h \
+	happah/scene/SpherePatchNode.h\
 	happah/scene/TriangleMeshNode.h \
 	happah/scene/WormNode.h \
 \
@@ -136,6 +138,7 @@ SOURCES += \
 	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
 	happah/gui/forms/SimulationForm.cpp \
+	happah/gui/forms/SpherePatchForm.cpp \
 	happah/gui/forms/DiscForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
@@ -162,6 +165,7 @@ SOURCES += \
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
 	happah/scene/SimpleGearNode.cpp \
+	happah/scene/SpherePatchNode.cpp\
 	happah/scene/TriangleMeshNode.cpp \
 	happah/scene/WormNode.cpp \
 \

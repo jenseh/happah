@@ -14,6 +14,7 @@ using namespace std;
 #include "happah/gui/ToolPanel.h"
 #include "happah/gui/Viewport3DListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
+#include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
 
 class DefaultGUIManager : public GUIManager {

@@ -185,7 +185,17 @@ DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener(DefaultG
 
 DefaultGUIManager::DefaultViewport3DListener::~DefaultViewport3DListener() {}
 
-void DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener::handleMouseClickEvent(Ray& ray) {}
+void DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener::handleMouseClickEvent(Ray& ray) {
+	RayIntersectionVisitor intersectionVisitor(ray);
+	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
+	if( intersectionVisitor.hasGotIntersection() ) {
+		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
+		std::cout << "(" << secPoint.x << ", " << secPoint.y << ", " << secPoint.z << ")" << std::endl;
+	}
+	else {
+		std::cout << "No intersection." << std::endl;
+	}
+}
 
 DefaultGUIManager::SubtreesInsertedEventHandler::SubtreesInsertedEventHandler(DefaultGUIManager& defaultGUIManager)
 	: m_defaultGUIManager(defaultGUIManager) {}

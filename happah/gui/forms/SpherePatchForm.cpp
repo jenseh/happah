@@ -5,7 +5,7 @@
 
 SpherePatchForm::SpherePatchForm(GUIManager& guiManager, QWidget* parent)
 	:Form(parent), m_guiManager(guiManager),
-	 m_spherePatch(new SpherePatch(2,hpvec3(-1.0f,0.0f,0.0f),hpvec3(1.0f,0.0f,0.0f),hpvec3(0.0f,1.0f,0.0f))),
+	 m_spherePatch(new SpherePatch(2,hpvec3(-2.0f,0.0f,0.0f),hpvec3(2.0f,0.0f,0.0f),hpvec3(0.0f,2.0f,0.0f))),
 	 m_spherePatchInserted(false){
 
 	QPushButton* createButton = new QPushButton("Create Spherical Patch");

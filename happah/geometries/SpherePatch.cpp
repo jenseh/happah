@@ -64,7 +64,7 @@ SpherePatch::SpherePatch(int degree, hpvec3 a, hpvec3 b, hpvec3 c)
         }
 
 
-
+std::cout<<"SpherePatch Created"<<std::endl;
 }
 
 void SpherePatch::uDivideTriangle(){
@@ -150,19 +150,16 @@ void SpherePatch::buildSecantTriangle(hpvec3 a, hpvec3 b, hpvec3 c){
 }
 bool SpherePatch::intersectTriangle(hpvec3 dir,hpvec3 e,hpvec3 f,hpvec3 g,hpvec3* hit){
  float result;
- float epsilon = 0.01f;
+ float epsilon = 0.00001f;
  hpvec3 orig = hpvec3(0.0f);
-// hpvec3 dir = hpvec3(0.0f,1.0f,1.0f);
-// hpvec3 e = hpvec3(-1.0f,-1.0f,2.0f);
-// hpvec3 f = hpvec3(1.0f,-1.0f,2.0f);
-// hpvec3 g = hpvec3(0.0f,2.0f,2.0f);
+
  hpvec3 v1 = f-e;
  hpvec3 v2 = g-e;
  hpvec3 q = glm::cross(dir,v2);
  float det = glm::dot(v1,q);
  if (det>(-epsilon)&&det<(epsilon)){
    result = false;
-   std::cout<< " NO HIT1" <<std::endl;
+ //  std::cout<< " NO HIT1" <<std::endl;
    return result;
    }
  float inv = (1/det);
@@ -170,7 +167,7 @@ bool SpherePatch::intersectTriangle(hpvec3 dir,hpvec3 e,hpvec3 f,hpvec3 g,hpvec3
  float u = inv*glm::dot(s,q);
  if (u<0.0f){
      result = false;
-     std::cout<< " NO HIT2" << std::endl;
+ //    std::cout<< " NO HIT2" << std::endl;
      return result;
 
    }
@@ -178,7 +175,7 @@ bool SpherePatch::intersectTriangle(hpvec3 dir,hpvec3 e,hpvec3 f,hpvec3 g,hpvec3
  float v=inv*glm::dot(dir,r);
  if (v<0.0f-epsilon || u+v > 1.0f+epsilon){
      result = false;
-     std::cout<< " NO HIT3" <<std::endl;
+  //   std::cout<< " NO HIT3" <<std::endl;
      return result;
    }
  float t= inv*glm::dot(v2,r);

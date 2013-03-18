@@ -66,12 +66,13 @@ private:
 
 	GLuint m_fragmentShader;
 	GLuint m_program;
+	GLuint m_pointCloudProgram;
 	GLuint m_vertexShader;
+	GLuint m_geometryShader;
 
 	GLint m_vertexLocation;
 	GLint m_normalLocation;
 	GLint m_colorLocation;
-
 	GLint m_modelMatrixLocation;
 	GLint m_modelViewProjectionMatrixLocation;
 	GLint m_normalMatrixLocation;
@@ -83,14 +84,34 @@ private:
 	GLint m_isSkipLightingContributionComputationLocation;
 	GLint m_phongExponentLocation;
 	GLint m_cameraPositionLocation;
-
 	hpmat4x4 m_modelMatrix;
 	hpmat4x4 m_viewMatrix;
 	hpmat4x4 m_projectionMatrix;
 	hpmat3x3 m_normalMatrix;
 	hpvec3   m_cameraPosition;
-
 	bool m_isSkipLightingContributionComputation;
+
+
+	GLint m_pointCloudVertexLocation;
+	GLint m_pointCloudColorLocation;
+	GLint m_pointCloudModelViewMatrixLocation;
+	GLint m_pointCloudProjectionMatrixLocation;
+	GLint m_pointCloudPointRadiusLocation;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);

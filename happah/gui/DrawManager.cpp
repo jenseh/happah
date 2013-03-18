@@ -56,10 +56,12 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 }
 
 void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+	// CHanged for geometry Shader Test ... reverse after successfull test
+	glUseProgram(m_program);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-
+	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix; // CHanged
 	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
 	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
 	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
@@ -79,9 +81,13 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 		glUniform1i(m_isColorPerVertexLocation, 0);
 		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
 	}
+	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
+	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
+	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
 	glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_POINTS, size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
@@ -295,6 +301,41 @@ bool DrawManager::initShaderPrograms() {
 	m_cameraPositionLocation = glGetUniformLocation(m_program, "cameraPosition");
 	if (m_cameraPositionLocation < 0)
 		cerr << "Failed to find cameraPositionLocation." << endl;
+
+	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	compileShader(m_vertexShader,"shader/pointCloudShader.vert");
+	m_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+	compileShader(m_geometryShader,"shader/pointCloudShader.geom");
+	m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	compileShader(m_fragmentShader,"shader/pointCloudShader.frag");
+
+	m_pointCloudProgram = glCreateProgram();
+	glAttachShader(m_pointCloudProgram, m_vertexShader);
+	glAttachShader(m_pointCloudProgram, m_geometryShader);
+	glAttachShader(m_pointCloudProgram, m_fragmentShader);
+	glLinkProgram(m_pointCloudProgram);
+
+	glGetProgramiv(m_pointCloudProgram, GL_LINK_STATUS, &linkStatus);
+	if (linkStatus == GL_FALSE)
+		cerr << "Linking failed." << endl;
+	else
+		cout << "Linking was successful." << endl;
+
+	m_pointCloudVertexLocation = glGetAttribLocation(m_pointCloudProgram, "vertex");
+	if (m_pointCloudVertexLocation < 0)
+		cerr << "Failed to find pcvertexLocation." << endl;
+	m_pointCloudColorLocation = glGetAttribLocation(m_pointCloudProgram, "color");
+	if (m_pointCloudColorLocation < 0)
+		cerr << "Failed to find pccolorLocation." << endl;
+	m_pointCloudModelViewMatrixLocation = glGetUniformLocation(m_pointCloudProgram, "modelViewMatrix");
+	if (m_pointCloudModelViewMatrixLocation< 0)
+		cerr << "Failed to find ModelViewMatrixLocation." << endl;
+	m_pointCloudProjectionMatrixLocation = glGetUniformLocation(m_pointCloudProgram, "projectionMatrix");
+	if (m_pointCloudProjectionMatrixLocation < 0)
+		cerr << "Failed to find PointCloudProjectionMatrixLocation." << endl;
+	m_pointCloudPointRadiusLocation = glGetUniformLocation(m_pointCloudProgram, "pointRadius");
+	if (m_pointCloudPointRadiusLocation < 0)
+		cerr << "Failed to find PointCloudProjectionMatrixLocation." << endl;
 
 	return true;
 }

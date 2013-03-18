@@ -10,11 +10,11 @@ void SpherePatchNode::accept(SceneVisitor& sceneVisitor){
 	Node::accept(sceneVisitor);
 }
 
-/*
+
 void SpherePatchNode::insertChild(SpherePatchGUIStateNode_ptr SpherePatchGUIStateNode) {
 	Node::insertChild(SpherePatchGUIStateNode);
 }
-*/
+
 
 void SpherePatchNode::insertChild(TriangleMeshNode_ptr triangleMeshNode) {
 	Node::insertChild(triangleMeshNode);

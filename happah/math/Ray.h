@@ -19,6 +19,8 @@ public:
 
     Ray();
     Ray(hpvec3 orig, hpvec3 dir);
+    hpvec3 getOrigin();
+    hpvec3 getDirection();
     hpreal intersectDistance(Triangle& triangle);
     bool intersects(BBox& box, hpreal length);
     void transform(hpmat4x4& matrix);

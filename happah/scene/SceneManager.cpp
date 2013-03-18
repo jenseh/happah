@@ -188,6 +188,9 @@ void SceneManager::insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor&
 void SceneManager::insert(SpherePatch_ptr spherePatch, TriangleMesh_ptr triangleMesh, hpcolor& color) {
 	doInsert<SpherePatch, SpherePatchNode>(spherePatch,triangleMesh,color);
 }
+void SceneManager::insert(SpherePatch_ptr spherePatch, SpherePatchGUIStateNode_ptr spherePatchGUIStateNode) {
+	doInsert<SpherePatch, SpherePatchNode>(spherePatch,spherePatchGUIStateNode);
+}
 
 void SceneManager::registerSceneListener(SceneListener* sceneListener) {
 	m_listeners.push_back(sceneListener);

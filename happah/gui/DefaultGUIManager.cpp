@@ -101,6 +101,10 @@ void DefaultGUIManager::insert(Worm_ptr worm) {
 	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }
 
+void DefaultGUIManager::insert(SpherePatch_ptr spherePatch) {
+	doInsert3D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
+}
+
 string DefaultGUIManager::toFinalLabel(const char* label) {
 	ostringstream oss;
 	oss << label << " " << m_counter++;
@@ -130,6 +134,9 @@ void DefaultGUIManager::update(Disc_ptr disc) {
 
 void DefaultGUIManager::update(Worm_ptr worm) {
 	doUpdate3D<Worm>(worm);
+}
+void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
+	doUpdate3D<SpherePatch>(spherePatch);
 }
 
 DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(DefaultGUIManager& defaultGUIManager)
@@ -186,7 +193,17 @@ DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener(DefaultG
 
 DefaultGUIManager::DefaultViewport3DListener::~DefaultViewport3DListener() {}
 
-void DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener::handleMouseClickEvent(Ray& ray) {}
+void DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener::handleMouseClickEvent(Ray& ray) {
+	RayIntersectionVisitor intersectionVisitor(ray);
+	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
+	if( intersectionVisitor.hasGotIntersection() ) {
+		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
+		std::cout << "(" << secPoint.x << ", " << secPoint.y << ", " << secPoint.z << ")" << std::endl;
+	}
+	else {
+		std::cout << "No intersection." << std::endl;
+	}
+}
 
 DefaultGUIManager::SubtreesInsertedEventHandler::SubtreesInsertedEventHandler(DefaultGUIManager& defaultGUIManager)
 	: m_defaultGUIManager(defaultGUIManager) {}

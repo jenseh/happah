@@ -8,6 +8,7 @@ using namespace std;
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
+#include "happah/math/Ray.h"
 
 class Plane : public Geometry {
 public:
@@ -17,6 +18,7 @@ public:
 
 	hpvec3 getNormal() const;
 	hpvec3 getOrigin() const;
+	bool intersect( Ray& ray, hpvec3& intersectionPoint );
 	void setNormal(hpvec3 normal);
 	void setOrigin(hpvec3 origin);
 

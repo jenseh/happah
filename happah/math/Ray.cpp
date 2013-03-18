@@ -28,6 +28,14 @@ void Ray::transform(hpmat4x4& matrix){
 	m_direction = (glm::vec3)(point2 - point1);
 }
 
+hpvec3 Ray::getOrigin() {
+	return m_origin;
+}
+
+hpvec3 Ray::getDirection() {
+	return m_direction;
+}
+
 hpreal Ray::intersectDistance(Triangle& triangle){
 	hpvec3 position;
 	glm::intersectRayTriangle(m_origin, m_direction, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], position);

@@ -37,7 +37,7 @@ public:
 	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
 	void insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(SpherePatch_ptr spherePatch, TriangleMesh_ptr triangleMesh, hpcolor& color);
-
+	void insert(SpherePatch_ptr spherePatch, SpherePatchGUIStateNode_ptr spherePatchGUIStateNode);
 	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);
 	void remove(vector<Node_ptr>& nodes);

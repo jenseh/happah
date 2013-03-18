@@ -24,6 +24,9 @@ typedef shared_ptr<DiscGUIStateNode> DiscGUIStateNode_ptr;
 class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
+class SpherePatchGUIStateNode;
+typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
+
 #include "happah/geometries/Mesh.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
@@ -136,6 +139,25 @@ private:
 	WormForm* m_wormForm;
 
 };
+
+#include "happah/geometries/SpherePatch.h"
+#include "happah/gui/forms/SpherePatchForm.h"
+
+class SpherePatchGUIStateNode : public GUIStateNode {
+public:
+	SpherePatchGUIStateNode(SpherePatch_ptr spherePatch, SpherePatchForm* spherePatchForm, string name);
+	~SpherePatchGUIStateNode();
+
+	shared_ptr<void> getData() const;
+	Form* getForm();
+
+private:
+	SpherePatch_ptr m_spherePatch;
+	SpherePatchForm* m_spherePatchForm;
+
+};
+
+
 
 #endif // GUI_STATE_NODE_H
 

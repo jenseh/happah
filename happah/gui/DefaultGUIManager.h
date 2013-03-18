@@ -14,6 +14,7 @@ using namespace std;
 #include "happah/gui/ToolPanel.h"
 #include "happah/gui/Viewport3DListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
+#include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
 
 class DefaultGUIManager : public GUIManager {
@@ -29,12 +30,14 @@ public:
 	void insert(DiscGearGrindResult simulationResult);
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
+	void insert(SpherePatch_ptr spherePatch);
 	void update(DiscGearGrindResult simulationResult);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);
+	void update(SpherePatch_ptr SpherePatch);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {

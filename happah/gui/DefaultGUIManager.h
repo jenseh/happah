@@ -38,6 +38,7 @@ public:
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);
 	void update(SpherePatch_ptr SpherePatch);
+	void visitScene(SceneVisitor& visitor);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {

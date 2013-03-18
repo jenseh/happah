@@ -139,6 +139,11 @@ void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
 	doUpdate3D<SpherePatch>(spherePatch);
 }
 
+void DefaultGUIManager::visitScene(SceneVisitor& visitor) {
+	m_sceneManager->accept(visitor);
+
+}
+
 DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(DefaultGUIManager& defaultGUIManager)
 	: m_defaultGUIManager(defaultGUIManager) {}
 

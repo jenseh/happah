@@ -7,8 +7,12 @@
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
+#include "happah/scene/GeometryFindVisitor.h"
 #include "happah/simulations/DiscGearGrind.h"
 #include "happah/simulations/Simulation.h"
+#include <QComboBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 class SimulationForm : public Form {
 Q_OBJECT
@@ -26,8 +30,11 @@ private:
 	DiscGearGrind_ptr m_simulation;
 	bool m_simulationInserted;
 	Slider* m_timeSlider;
+	QComboBox* m_discSelector;
+	QComboBox* m_gearSelector;
 
 	void updateRanges();
+	void updateSelectors();
 	void updateSimulation();
 
 private slots:

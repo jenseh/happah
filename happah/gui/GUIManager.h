@@ -10,6 +10,7 @@
 #include "happah/geometries/Worm.h"
 #include "happah/simulations/Simulation.h"
 #include "happah/simulations/DiscGearGrind.h"
+#include "happah/scene/SceneVisitor.h"
 
 
 class GUIManager {
@@ -28,6 +29,7 @@ public:
 	virtual void update(Disc_ptr disc) = 0;
 	virtual void update(Worm_ptr worm) = 0;
 	virtual void update(SpherePatch_ptr SpherePatch)= 0;
+	virtual void visitScene(SceneVisitor& visitor)= 0;
 
 };
 

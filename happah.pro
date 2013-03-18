@@ -55,7 +55,7 @@ HEADERS += \
 	happah/gui/forms/WormForm.h \
 \
 	happah/kdtree/BBox.h \
-	happah/kdtree/BSphere.h \
+	happah/kdtree/BSphere.h \ 
 	happah/kdtree/KDTree.h \
 	happah/kdtree/KDTreeInnerNode.h \
 	happah/kdtree/KDTreeLeaf.h \
@@ -65,6 +65,7 @@ HEADERS += \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
+	happah/scene/DiscFindVisitor.h \
 	happah/scene/DiscNode.h \
 	happah/scene/DrawVisitor.h \
 	happah/scene/ElementRenderStateNode.h\

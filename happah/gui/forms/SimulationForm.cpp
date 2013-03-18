@@ -1,7 +1,5 @@
 #include "SimulationForm.h"
 
-#include <QPushButton>
-#include <QVBoxLayout>
 
 SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
@@ -11,8 +9,12 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	QPushButton* createButton = new QPushButton("create simulation");
 
 	QVBoxLayout* layout = new QVBoxLayout();
+	m_discSelector = new QComboBox(this);
+	m_gearSelector = new QComboBox(this);
 	layout->addWidget(m_timeSlider);
 	layout->addWidget(createButton);
+	layout->addWidget(m_discSelector);
+	layout->addWidget(m_gearSelector);
 	setLayout(layout);
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createSimulation()));
@@ -58,6 +60,12 @@ void SimulationForm::setSimulation(DiscGearGrind_ptr simulation) {
 void SimulationForm::updateSimulation() {
 	if(m_simulationInserted)
 		m_guiManager.update(m_simulation->getSimulationResult(m_timeSlider->getValue()));
+}
+
+void SimulationForm::updateSelectors() {
+	m_discSelector->clear();
+	m_gearSelector->clear();
+
 }
 
 void SimulationForm::updateRanges() {

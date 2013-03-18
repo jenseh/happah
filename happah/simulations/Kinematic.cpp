@@ -24,3 +24,13 @@ Kinematic Kinematic::getLinearKinematic(glm::vec3 start, glm::vec3 end){
     glm::vec3 delta = end - start;
     return Kinematic(Polynom<double>(2,start.x, delta.x), Polynom<double>(2,start.y, delta.y), Polynom<double>(2,start.z, delta.z));
 }
+
+RigidAffineTransformation Kinematic::getRigidAffineTransformation(double t){
+	glm::mat4 matrix(1);
+    // Rotation
+	matrix = glm::rotate(matrix, (float)m_rotateX.getY(t), glm::vec3(1,0,0));
+	matrix = glm::rotate(matrix, (float)m_rotateY.getY(t), glm::vec3(0,1,0));
+	matrix = glm::rotate(matrix, (float)m_rotateZ.getY(t), glm::vec3(0,0,1));
+    // Translation
+    return RigidAffineTransformation( glm::mat3(matrix), hpvec3(m_translateX.getY(t), m_translateY.getY(t), m_translateZ.getY(t)) );
+}

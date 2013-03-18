@@ -79,7 +79,7 @@ void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
 	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
 }
 
-void DefaultGUIManager::insert(SimulationResult simulationResult) {
+void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
 	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);

@@ -26,7 +26,7 @@ public:
 	void insert(InvoluteGear_ptr involuteGear);
 	void insert(Plane_ptr plane);
 	void insert(SimpleGear_ptr simpleGear);
-	void insert(SimulationResult simulationResult);
+	void insert(DiscGearGrindResult simulationResult);
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
 	void update(InvoluteGear_ptr involuteGear);

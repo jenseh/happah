@@ -30,7 +30,6 @@ public:
 	Node_ptr getParent();
 	Node_ptr getptr();
 	bool hasChild(Node_ptr child) const;
-	void insertChild(Node_ptr child);
 	virtual Node_ptr remove(Node_ptr node);
 	virtual void remove(vector<Node_ptr>& nodes);
 	virtual void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
@@ -41,6 +40,7 @@ protected:
 	set<Node_ptr> m_children;
 	weak_ptr<Node> m_parent;
 
+	void insertChild(Node_ptr child);
 	Node_ptr removeChild(Node_ptr child);
 	void setParent(Node_ptr parent);
 

@@ -8,13 +8,14 @@
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/Worm.h"
 #include "happah/simulations/Simulation.h"
+#include "happah/simulations/DiscGearGrind.h"
 
 class GUIManager {
 public:
 	virtual void insert(InvoluteGear_ptr involuteGear) = 0;
 	virtual void insert(Plane_ptr plane) = 0;
 	virtual void insert(SimpleGear_ptr simpleGear) = 0;
-	virtual void insert(SimulationResult simulationResult) = 0;
+	virtual void insert(DiscGearGrindResult simulationResult) = 0;
 	virtual void insert(Disc_ptr disc) = 0;
 	virtual void insert(Worm_ptr worm) = 0;
 	virtual void update(InvoluteGear_ptr involuteGear) = 0;

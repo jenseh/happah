@@ -74,33 +74,33 @@ template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
 	Node_ptr node = findChildContaining(geometry);
 
-	Node_ptr root;
-	shared_ptr<N> geometryNode;
-	if(node) {
-		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(triangleMesh);
+		Node_ptr root;
+		shared_ptr<N> geometryNode;
 		if(node) {
-			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
-			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
-			triangleMeshRenderStateNode->setColorVector(color);
-			triggerSubtreeUpdatedEvent(triangleMeshRenderStateNode);
-			return;
+			geometryNode = static_pointer_cast<N>(node);
+			node = node->findChildContaining(triangleMesh);
+			if(node) {
+				TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+				TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
+				triangleMeshRenderStateNode->setColorVector(color);
+				triggerSubtreeUpdatedEvent(triangleMeshRenderStateNode);
+				return;
+			}
+		} else {
+			geometryNode = shared_ptr<N>(new N(geometry));
+			insertChild(geometryNode);
+			root = geometryNode;
 		}
-	} else {
-		geometryNode = shared_ptr<N>(new N(geometry));
-		insertChild(geometryNode);
-		root = geometryNode;
-	}
 
-	TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh, transformation));
-	geometryNode->insertChild(triangleMeshNode);
+		TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh, transformation));
+		geometryNode->insertChild(triangleMeshNode);
 
-	if(!root) root = triangleMeshNode;
+		if(!root) root = triangleMeshNode;
 
-	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
-	triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+		TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+		triangleMeshNode->insertChild(triangleMeshRenderStateNode);
 
-	triggerSubtreeInsertedEvent(root);
+		triggerSubtreeInsertedEvent(root);
 }
 
 template<class G, class N>
@@ -136,6 +136,10 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 	triggerSubtreeInsertedEvent(root);
 }
 
+void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){
+	doInsert<SimpleGear, SimpleGearNode >(simpleGear, triangleMesh, color, transformation);
+}
+
 void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode) {
 	doInsert<InvoluteGear, InvoluteGearNode, InvoluteGearGUIStateNode>(involuteGear, involuteGearGUIStateNode);
 }
@@ -168,6 +172,10 @@ void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor&
 	doInsert<Disc, DiscNode>(disc, triangleMesh, color);
 }
 
+void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
+	doInsert<Disc, DiscNode >(disc, triangleMesh, color, transformation);
+}
+
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {
 	doInsert<Worm, WormNode, WormGUIStateNode>(worm, wormGUIStateNode);
 }
@@ -176,13 +184,6 @@ void SceneManager::insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor&
 	doInsert<Worm, WormNode>(worm, triangleMesh, color);
 }
 
-void SceneManager::insert(Geometry_ptr geometry, TriangleMesh_ptr mesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){
-	doInsert<Geometry, SimpleGeometryNode<Geometry> >(geometry, mesh, color, transformation);
-}
-
-void SceneManager::insert(Geometry_ptr geometry, TriangleMesh_ptr mesh, hpcolor& color, RigidAffineTransformation& transformation){
-	doInsert<Geometry, SimpleGeometryNode<Geometry> >(geometry, mesh, color, transformation);
-}
 
 void SceneManager::registerSceneListener(SceneListener* sceneListener) {
 	m_listeners.push_back(sceneListener);

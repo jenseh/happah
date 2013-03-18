@@ -26,10 +26,10 @@ public:
 	void 	setVertexBufferID(GLuint id);
 	void 	setColorBufferID(GLuint id);
 	void 	setColor(hpcolor color);
+	void 	setColorVector(std::vector<hpcolor>* colorVector);
 	void 	setMaterial(Material& material);
 	void 	setInitialized(bool isInitialized);
 
-	virtual void setColorVector(std::vector<hpcolor>* colorVector);
 
 
 	GLuint 					getVertexArrayObjectID();

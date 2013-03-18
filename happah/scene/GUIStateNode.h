@@ -50,6 +50,7 @@ private:
 
 };
 
+
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/gui/context-menus/InvoluteGearContextMenu.h"
 #include "happah/gui/forms/InvoluteGearForm.h"

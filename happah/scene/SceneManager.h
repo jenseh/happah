@@ -30,10 +30,10 @@ public:
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
 	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Disc_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
 	void insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
-	void insert(Geometry_ptr geometry, TriangleMesh_ptr mesh, hpcolor& color, RigidAffineTransformation& transformation);
-	void insert(Geometry_ptr geometry, TriangleMesh_ptr mesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 
 	void registerSceneListener(SceneListener* sceneListener);
 	Node_ptr remove(Node_ptr node);

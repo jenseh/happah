@@ -17,8 +17,9 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createSimulation()));
 	connect(m_timeSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeTime(hpreal)));
-
-	m_simulation = DiscGearGrind_ptr(new DiscGearGrind(Disc_ptr(new Disc), InvoluteGear_ptr(new InvoluteGear) ));
+	InvoluteGear* tempGear = new InvoluteGear;
+	m_simulation = DiscGearGrind_ptr(new DiscGearGrind( Disc_ptr(new Disc), SimpleGear_ptr( tempGear->toSimpleGear())  ));
+	delete tempGear;
 	updateRanges();
 }
 

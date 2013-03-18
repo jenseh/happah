@@ -57,13 +57,15 @@ GLuint RenderStateNode::getVertexArrayObjectID() {
 void RenderStateNode::setColor(hpcolor color) {
 	m_color = color;
 }
-hpcolor RenderStateNode::getColor() {
-	return m_color;
-}
+
 void RenderStateNode::setColorVector(vector<hpcolor>* colorVector) {
 	if (m_vertexData->size() != colorVector->size() / 2)
 		throw; // TODO: Find Proper Exception !
 	m_colorVector = colorVector;
+}
+
+hpcolor RenderStateNode::getColor() {
+	return m_color;
 }
 
 GLuint RenderStateNode::getColorBufferID() {

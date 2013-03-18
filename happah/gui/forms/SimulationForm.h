@@ -3,6 +3,7 @@
 
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/SimpleGear.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"

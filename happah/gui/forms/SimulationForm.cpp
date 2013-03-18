@@ -61,5 +61,5 @@ void SimulationForm::updateSimulation() {
 }
 
 void SimulationForm::updateRanges() {
-	m_timeSlider->setSliderValues(m_timeSlider->getValue(), m_timeSlider->getValue() / 2.0f, m_timeSlider->getValue() * 2.0f);
+	m_timeSlider->setSliderValues(m_timeSlider->getValue(), 0.0, 1.0);
 }

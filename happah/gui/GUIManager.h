@@ -21,7 +21,7 @@ public:
 	virtual void update(InvoluteGear_ptr involuteGear) = 0;
 	virtual void update(Plane_ptr plane) = 0;
 	virtual void update(SimpleGear_ptr simpleGear) = 0;
-	virtual void update(SimulationResult simulationResult) = 0;
+	virtual void update(DiscGearGrindResult simulationResult) = 0;
 	virtual void update(Disc_ptr disc) = 0;
 	virtual void update(Worm_ptr worm) = 0;
 };

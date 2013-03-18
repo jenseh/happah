@@ -29,10 +29,10 @@ public:
 	void insert(DiscGearGrindResult simulationResult);
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
+	void update(DiscGearGrindResult simulationResult);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
-	void update(SimulationResult simulationResult);
 	void update(Disc_ptr disc);
 	void update(Worm_ptr worm);
 

@@ -42,9 +42,7 @@ DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
     // Fill color
     for( size_t i = 0; i < m_gearColor->size(); i++){
     	//TODO: @ Julian: Be aware, your distances are all in [0; 2*m_maxDistance], you should change that in calculateGrindingDepth
-    	m_gearColor->at(i) = hpcolor(1.0, 0.0, 0.0, 1.0); //hpcolor(m_distances[i] / m_maxDistance * 2, 0.5, 1.0, 1.0);
-    	if (i > (int)m_gearColor->size() * 0.9
-    	||  i < (int)m_gearColor->size() * 0.1) m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);
+    	m_gearColor->at(i) = hpcolor(m_distances[i] / m_maxDistance * 2, 0.5, 1.0, 1.0);
     }
     return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh, m_gearMovement.getRigidAffineTransformation(time),  m_disc, m_discMesh, RigidAffineTransformation());
 }

@@ -70,6 +70,12 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
+void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
+	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
+	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
+	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
+}
+
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 	doInsert3D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
 		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
@@ -77,12 +83,6 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 
 void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
 	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm());
-}
-
-void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
-	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
-	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 }
 
 void DefaultGUIManager::insert(Plane_ptr plane) {
@@ -107,16 +107,17 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 	return oss.str();
 }
 
+void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
+	m_sceneManager->removeContaining(simulationResult.m_gear, simulationResult.m_gearMesh);
+	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
+}
+
 void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate3D<InvoluteGear>(involuteGear);
 }
 
 void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
 	doUpdate3D<SimpleGear>(simpleGear);
-}
-
-void DefaultGUIManager::update(SimulationResult simulationResult) {
-	//TODO
 }
 
 void DefaultGUIManager::update(Plane_ptr plane) {

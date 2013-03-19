@@ -10,16 +10,16 @@
 class KDTreeInnerNode : public KDTreeNode
 {
 public:
-  KDTreeInnerNode(std::vector<Triangle>* triangles, BBox* bBox, hpuint depth, hpuint maxTrianglesPerBox);
+  KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox);
   ~KDTreeInnerNode();
 
-  bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth);
+  bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, int depth);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);
 private:
   KDTreeNode* m_leftChild;
   KDTreeNode* m_rightChild;
 
-  BBox* m_bBox;
+  BBox m_bBox;
 
   float m_axisValue;
   int m_axis;

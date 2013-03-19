@@ -1,7 +1,7 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
-	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.2)
+	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(2)
 {
     m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius() - m_gear->getBottomRadius(),  -m_disc->getRadius()),
                                                     glm::vec3(0, -m_disc->getRadius() - m_gear->getBottomRadius(), m_disc->getRadius()));
@@ -24,6 +24,7 @@ DiscGearGrind::~DiscGearGrind() {
 
 void DiscGearGrind::calculateGrindingDepth(double time){
     hpmat4x4 matrix = m_gearMovement.getMatrix(time);
+    vector<Triangle>* triangles = m_discMesh->toTriangles();
     for( size_t i = 0; i < m_gearRays->size(); i++){
         // Transform Ray
         Ray ray = m_gearRays->at(i);
@@ -38,14 +39,16 @@ DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
     calculateGrindingDepth(time);
     // Fill color
     for( size_t i = 0; i < m_gearColor->size(); i++){
+    	/*
     	if( m_distances[i] < 0 ){
     		m_gearColor->at(i) = hpcolor(1.0,0.0,0.0,1.0);
-    	}else if( m_distances[i] < 0.99){
+    	}else if( m_distances[i] < 0.9999){
     		m_gearColor->at(i) = hpcolor(0.0,1.0,0.0,1.0);
+    		std::cout<<m_distances[i]<<std::endl;
     	}else{
     		m_gearColor->at(i) = hpcolor(1.0,1.0,1.0,1.0);
-    	}
-    	/*
+    	}*/
+
     	if( m_distances[i] >= 0 ){
     		m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
     		m_gearColor->at(i) = hpcolor( 0.0, m_distances[i], 1.0, 1.0);
@@ -53,7 +56,7 @@ DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
     		m_gearColor->at(i) = hpcolor(1.0, 0.0, 0.0, 1.0);
     		m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
     	}
-    	*/
+
     }
     return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  m_gearMovement.getRigidAffineTransformation(time),  m_disc, m_discMesh, RigidAffineTransformation());
 }

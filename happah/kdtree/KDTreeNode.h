@@ -16,7 +16,7 @@ class KDTreeNode
 public:
   virtual ~KDTreeNode();
 
-  virtual bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, hpuint depth);
+  virtual bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth);
   virtual hpreal intersectFirst(Ray& intersector, hpreal maxLength);
 };
 

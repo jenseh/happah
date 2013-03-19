@@ -2,7 +2,7 @@
 
 KDTreeNode::~KDTreeNode() {}
 
-bool KDTreeNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, hpuint depth) {
+bool KDTreeNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth) {
 	return false;
 }
 

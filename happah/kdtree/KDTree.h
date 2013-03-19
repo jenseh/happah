@@ -24,7 +24,7 @@ public:
 private:
   KDTreeInnerNode* m_root;
 
-  BBox* m_bBox;
+  BBox m_bBox;
 };
 
 #endif // KDTREE_H

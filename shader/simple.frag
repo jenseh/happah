@@ -16,7 +16,7 @@ out vec4 fragmentColor; // color of each pixel
 //SIMPLE BLINN-PHONG SHADING
 void main() {
 	if (isSkipLightingContributionComputation == 0) {
-	        vec4 lightPosition = vec4(8.0f, 8.0f, 0.0f, 1.0f);    
+	        vec4 lightPosition = vec4(8.0f, 8.0f, 5.0f, 1.0f);    
 	        vec4 lightColor = vec4(0.6f, 0.6f, 0.6f, 1.0f);
 	
 		// calculate lighting in worldspace 

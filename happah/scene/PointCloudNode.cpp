@@ -3,6 +3,9 @@
 PointCloudNode::PointCloudNode(PointCloud_ptr pointCloud)
 	: SimpleGeometryNode<PointCloud>(pointCloud) {}
 
+PointCloudNode::PointCloudNode(PointCloud_ptr pointCloud, RigidAffineTransformation& rigidAffineTransformation)
+	: SimpleGeometryNode<PointCloud>(pointCloud, rigidAffineTransformation){}
+
 PointCloudNode::~PointCloudNode() {}
 
 void PointCloudNode::accept(SceneVisitor& sceneVisitor) {

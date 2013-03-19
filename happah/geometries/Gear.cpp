@@ -105,7 +105,7 @@ TriangleMesh* Gear::toTriangleMesh() {
 					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
 				if (n >= 0 && n < indices->size())
-					vertexData->at(2 * indices->at(n) + 1) = glm::normalize(normal); //insert the normal in the cell after the vertex
+					vertexData->at(2 * indices->at(n) + 1) = -glm::normalize(normal); //insert the normal in the cell after the vertex
 			}
 		}
 	}

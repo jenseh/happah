@@ -13,6 +13,5 @@ class ContextMenu : public QMenu {
 
 public:
 	ContextMenu(QWidget *parent = 0);
-	virtual void setGUIStateNode(GUIStateNode_ptr guiStateNode) {}
 };
 #endif //CONTEXTMENU_H

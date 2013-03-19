@@ -38,7 +38,7 @@ class DiscGearGrind : public Simulation
 {
 
 public:
-    DiscGearGrind(Disc_ptr disc, SimpleGear_ptr gear);
+    DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
     ~DiscGearGrind();
 
     DiscGearGrindResult getSimulationResult(double time);

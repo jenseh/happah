@@ -137,12 +137,12 @@ void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
 	doUpdate3D<SpherePatch>(spherePatch);
 }
 
-void DefaultGUIManager::useInSimulation(Disc_ptr disc) {
-	m_toolPanel->getSimulationForm()->setDisc(disc);
+void DefaultGUIManager::useInSimulation(Disc_ptr disc, TriangleMesh_ptr discMesh) {
+	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
 }
 
-void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear){
-	m_toolPanel->getSimulationForm()->setGear(gear);
+void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
+	m_toolPanel->getSimulationForm()->setGear(gear, gearMesh);
 }
 
 void DefaultGUIManager::visitScene(SceneVisitor& visitor) {

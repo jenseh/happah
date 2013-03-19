@@ -59,8 +59,10 @@ void RenderStateNode::setColor(hpcolor color) {
 }
 
 void RenderStateNode::setColorVector(vector<hpcolor>* colorVector) {
-	if (m_vertexData->size() != colorVector->size() / 2)
+	if (m_vertexData->size() != colorVector->size() * 2) {
+		cerr << m_vertexData->size() <<" != " << colorVector->size() / 2<< endl;
 		throw; // TODO: Find Proper Exception !
+	}
 	m_colorVector = colorVector;
 }
 

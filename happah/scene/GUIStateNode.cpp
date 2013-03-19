@@ -93,7 +93,7 @@ SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
 }
 
 ContextMenu* SimpleGearGUIStateNode::getContextMenu() const {
-	m_simpleGearContextMenu->setSimpleGear(m_simpleGear);
+	m_simpleGearContextMenu->setSimpleGear(m_simpleGear, getTriangleMesh());
 	return m_simpleGearContextMenu;
 }
 
@@ -115,7 +115,7 @@ DiscGUIStateNode::~DiscGUIStateNode() {
 }
 
 ContextMenu* DiscGUIStateNode::getContextMenu() const {
-	m_discContextMenu->setDisc(m_disc);
+	m_discContextMenu->setDisc(m_disc, getTriangleMesh());
 	return m_discContextMenu;
 }
 

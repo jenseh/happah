@@ -1,13 +1,11 @@
 #include "happah/simulations/DiscGearGrind.h"
 
-DiscGearGrind::DiscGearGrind(Disc_ptr disc, SimpleGear_ptr gear):
-	m_disc(disc), m_gear(gear), m_maxDistance(1.0)
+DiscGearGrind::DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
+	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(1.0)
 {
     m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius(),  -m_disc->getRadius()),
                                                     glm::vec3(0, -m_disc->getRadius(), m_disc->getRadius()));
     // Convert to right representation
-    m_discMesh = TriangleMesh_ptr(m_disc->toTriangleMesh());
-    m_gearMesh = TriangleMesh_ptr(m_gear->toTriangleMesh());
     m_gearRays = m_gearMesh->toRays();
 
     // resize distances array

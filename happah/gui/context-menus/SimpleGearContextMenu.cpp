@@ -15,9 +15,10 @@ SimpleGearContextMenu::~SimpleGearContextMenu(){}
 
 
 void SimpleGearContextMenu::useSimpleGearInSumulation() {
-	m_guiManager.useInSimulation(m_simpleGear);
+	m_guiManager.useInSimulation(m_simpleGear, m_simpleGearMesh);
 }
 
-void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear) {
+void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh) {
 	m_simpleGear = simpleGear;
+	m_simpleGearMesh = simpleGearMesh;
 }

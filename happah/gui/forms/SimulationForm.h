@@ -23,12 +23,14 @@ public:
 	DiscGearGrind_ptr getSimulation() const;
 	void reset();
 	void setSimulation(DiscGearGrind_ptr simulation);
-	void setDisc(Disc_ptr disc);
-	void setGear(SimpleGear_ptr gear);
+	void setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh);
+	void setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 
 private:
 	Disc_ptr m_disc;
+	TriangleMesh_ptr m_discMesh;
 	SimpleGear_ptr m_gear;
+	TriangleMesh_ptr m_gearMesh;
 	GUIManager& m_guiManager;
 	DiscGearGrind_ptr m_simulation;
 	bool m_simulationInserted;

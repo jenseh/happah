@@ -15,12 +15,12 @@ public:
 SimpleGearContextMenu(GUIManager& guiManager, QWidget* parent);
 	~SimpleGearContextMenu();
 
-	void setSimpleGear(SimpleGear_ptr simpleGear);
+	void setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh);
 
 private:
 	GUIManager& m_guiManager;
 	SimpleGear_ptr m_simpleGear;
-	SimpleGearGUIStateNode_ptr m_guiStateNode;
+	TriangleMesh_ptr m_simpleGearMesh;
 
 private slots:
 	void useSimpleGearInSumulation();

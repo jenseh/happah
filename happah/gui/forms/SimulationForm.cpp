@@ -29,7 +29,7 @@ void SimulationForm::changeTime(hpreal time) {
 
 void SimulationForm::createSimulation() {
 	if( m_simulation == NULL ){
-		m_simulation = DiscGearGrind_ptr(new DiscGearGrind(m_disc, m_gear));
+		m_simulation = DiscGearGrind_ptr(new DiscGearGrind(m_disc, m_discMesh, m_gear, m_gearMesh));
 	}
 	if(!m_simulationInserted){
 		m_simulation->runSimulation();
@@ -46,12 +46,13 @@ void SimulationForm::reset() {
 
 }
 
-void SimulationForm::setDisc(Disc_ptr disc){
+void SimulationForm::setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh){
 	m_disc = disc;
-
+	m_discMesh = discMesh;
 }
-void SimulationForm::setGear(SimpleGear_ptr gear){
+void SimulationForm::setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
 	m_gear = gear;
+	m_gearMesh = gearMesh;
 }
 
 

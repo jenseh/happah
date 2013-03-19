@@ -29,8 +29,8 @@ public:
 	virtual void update(Disc_ptr disc) = 0;
 	virtual void update(Worm_ptr worm) = 0;
 	virtual void update(SpherePatch_ptr SpherePatch)= 0;
-	virtual void useInSimulation(Disc_ptr disc)= 0;
-	virtual void useInSimulation(SimpleGear_ptr gear)= 0;
+	virtual void useInSimulation(Disc_ptr disc, TriangleMesh_ptr discMesh)= 0;
+	virtual void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr simpleGearMesh)= 0;
 	virtual void visitScene(SceneVisitor& visitor)= 0;
 
 };

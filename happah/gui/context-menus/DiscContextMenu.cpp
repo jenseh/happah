@@ -14,10 +14,11 @@ DiscContextMenu::DiscContextMenu(
 DiscContextMenu::~DiscContextMenu(){}
 
 void DiscContextMenu::useDiscInSumulation() {
-	m_guiManager.useInSimulation(m_disc);
+	m_guiManager.useInSimulation(m_disc, m_discMesh);
 
 }
 
-void DiscContextMenu::setDisc(Disc_ptr disc) {
+void DiscContextMenu::setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh) {
 	m_disc = disc;
+	m_discMesh = discMesh;
 }

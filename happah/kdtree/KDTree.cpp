@@ -1,7 +1,8 @@
 #include "KDTree.h"
 
 KDTree::KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox) {
-  // Compute bounding box for whole tree
+  std::cout<<"Start building\n";
+	// Compute bounding box for whole tree
   float minX = INFINITY, minY = INFINITY, minZ = INFINITY, maxX = -INFINITY, maxY = -INFINITY, maxZ = -INFINITY;
 
   for (std::vector<Triangle>::iterator t = triangles->begin(); t != triangles->end(); t++) {
@@ -24,7 +25,7 @@ KDTree::KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox) {
   glm::vec3 min = glm::vec3(minX, minY, minZ);
   glm::vec3 max = glm::vec3(maxX, maxY, maxZ);
   m_bBox = new BBox(min, max);
-
+  std::cout<<"Finished\n";
   // Create root node
   m_root = new KDTreeInnerNode(triangles, m_bBox, 0, maxTrianglesPerBox);
 }

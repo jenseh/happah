@@ -14,10 +14,11 @@ public:
 
 KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox* bBox, hpuint depth, hpuint maxTrianglesPerBox)
 {
+	//TODO: Something goes wrong here, sometimes all the triangles are put into left side
   m_bBox = bBox;
   m_axis = depth % 3;
   unsigned int size = triangles->size();
-
+  std::cout<<depth<<" "<<size<<std::endl;
   // Sort triangles (point A) along an axis
   std::sort(triangles->begin(), triangles->end(), TriangleSorter<Triangle>(m_axis));
 

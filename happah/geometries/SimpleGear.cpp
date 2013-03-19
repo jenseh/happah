@@ -56,6 +56,10 @@ hpreal SimpleGear::getAngularPitch() {
 	return m_toothProfile->getAngularPitch();
 }
 
+hpreal SimpleGear::getBottomRadius() {
+	return m_toothProfile->getMinLength();
+}
+
 uint SimpleGear::getToothCount() {
 	return m_toothProfile->getToothCount();
 }

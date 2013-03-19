@@ -23,6 +23,10 @@ hpvec3 RigidAffineTransformation::getTranslation() const {
 	return m_translation;
 }
 
+RigidAffineTransformation RigidAffineTransformation::inverse() const{
+	return RigidAffineTransformation(glm::inverse(m_matrix), -m_translation);
+}
+
 void RigidAffineTransformation::setMatrix(const hpmat3x3& matrix) {
 	m_matrix = matrix;
 }

@@ -19,7 +19,7 @@ void Disc::createHeightProfile() {
     hpreal x = m_length / 2.0;
     hpreal deltaX = m_length/(double)HEIGHT_PROFILE_DETAIL_LEVEL;
     for( int i = 0; i < HEIGHT_PROFILE_DETAIL_LEVEL; i++){
-        m_heightProfile[i].x = x;
+        m_heightProfile[i].x = x - m_length;
         m_heightProfile[i].y = m_standardProfile->getHeight(x) + m_module;
         x += deltaX;
     }

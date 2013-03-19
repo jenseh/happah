@@ -25,6 +25,7 @@ public:
 
 	//TODO: leave methods virtual????!!!!
 	virtual hpreal getAngularPitch();
+	virtual hpreal getBottomRadius();
 	virtual uint   getToothCount();
 	virtual hpreal getRadius();
 	virtual hpreal getHelixAngle();

@@ -17,6 +17,7 @@ class SceneManager;
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
+#include "happah/scene/PointCloudNode.h"
 
 
 class SceneManager : public Node {
@@ -57,7 +58,10 @@ private:
 	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
-
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color);
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);
 	void triggerSubtreesInsertedEvent(vector<Node_ptr>& roots);

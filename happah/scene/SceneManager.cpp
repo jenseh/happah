@@ -3,6 +3,7 @@
 
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/PlaneNode.h"
+#include "happah/scene/PointCloudNode.h"
 #include "happah/scene/SceneManager.h"
 #include "happah/scene/TriangleMeshNode.h"
 #include "happah/scene/RenderStateNode.h"
@@ -133,6 +134,38 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
 	triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+
+	triggerSubtreeInsertedEvent(root);
+}
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation){
+	Node_ptr node = findChildContaining(geometry);
+
+	Node_ptr root;
+	shared_ptr<N> geometryNode;
+	if(node){
+		geometryNode = static_pointer_cast<N>(node);
+		node = node->findChildContaining(pointCloud);
+		if(node) {
+			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
+			pointCloudRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(pointCloudRenderStateNode);
+			return;
+		}
+	}else {
+		geometryNode = shared_ptr<N>(new N(geometry));
+		insertChild(geometryNode);
+		root = geometryNode;
+	}
+
+	PointCloudNode_ptr pointCloudNode(new PointCloudNode(pointCloud , transformation));
+	geometryNode->insertChild(pointCloudNode);
+
+	if(!root) root = pointCloudNode;
+
+	PointCloudRenderStateNode_ptr pointCloudRenderStateNode(new PointCloudRenderStateNode(pointCloud,color));
+	pointCloudNode->insertChild(pointCloudRenderStateNode);
 
 	triggerSubtreeInsertedEvent(root);
 }

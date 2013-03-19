@@ -10,6 +10,7 @@
 class PointCloudNode : public SimpleGeometryNode<PointCloud>{
 public:
 	PointCloudNode(PointCloud_ptr PointCloud);
+	PointCloudNode(PointCloud_ptr PointCoud,RigidAffineTransformation& rigidAffineTransformation);
 	virtual ~PointCloudNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);

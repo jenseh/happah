@@ -28,8 +28,8 @@ private:
     std::vector<hpvec2> m_heightProfile;
     StandardProfile* m_standardProfile;
 
-    const static int HEIGHT_PROFILE_DETAIL_LEVEL = 200;
-    const static int ANGLE_DETAIL_LEVEL = 500; // Wie viele samples auf dem rotationskörper gemacht werden
+    const static int HEIGHT_PROFILE_DETAIL_LEVEL = 60;
+    const static int ANGLE_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
 
     void createHeightProfile();
     void updateValues();

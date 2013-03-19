@@ -16,6 +16,7 @@ class KDTree
 {
 public:
   KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox = 500);
+  ~KDTree();
 
   bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);

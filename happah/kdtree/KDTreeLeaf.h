@@ -12,6 +12,7 @@ class KDTreeLeaf : public KDTreeNode
 {
 public:
   KDTreeLeaf(std::vector<Triangle>* triangles, int depth);
+  ~KDTreeLeaf();
 
   bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);

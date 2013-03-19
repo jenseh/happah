@@ -1,12 +1,14 @@
 #include "happah/math/Ray.h"
 
-Ray::Ray() { }
+Ray::Ray() {
 
+}
 Ray::Ray(hpvec3 orig, hpvec3 dir){
 	m_origin = orig;
 	m_direction = dir;
 	if( dir == hpvec3(0) )
 		throw;
+	m_direction = glm::normalize(m_direction);
 }
 
 void Ray::transform(hpmat4x4& matrix){
@@ -26,6 +28,7 @@ void Ray::transform(hpmat4x4& matrix){
 	point2 = matrix * point2;
 	m_origin = (glm::vec3)point1;
 	m_direction = (glm::vec3)(point2 - point1);
+	m_direction = glm::normalize(m_direction);
 }
 
 hpvec3 Ray::getOrigin() {
@@ -37,8 +40,10 @@ hpvec3 Ray::getDirection() {
 }
 
 hpreal Ray::intersectDistance(Triangle& triangle){
-	hpvec3 position;
-	glm::intersectRayTriangle(m_origin, m_direction, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], position);
+	hpvec3 baryPos;
+	glm::intersectLineTriangle(m_origin, m_direction, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], baryPos);
+	hpvec3 position = triangle.vertices[0]* baryPos[0] + triangle.vertices[1] * baryPos[1] + triangle.vertices[2] * baryPos[2];
+	//std::cout<<"Intersect\n";
 	return glm::distance(m_origin, position);
 }
 
@@ -86,6 +91,6 @@ bool inline Ray::inBox( hpvec3 hitPoint, hpvec3 boxPointMin, hpvec3 boxPointMax,
 }
 
 void Ray::moveOrigin(hpreal delta){
-    m_origin += delta * m_direction;
+    m_origin += (delta * m_direction);
 }
 

@@ -3,11 +3,16 @@
 KDTreeLeaf::KDTreeLeaf(std::vector<Triangle>* triangles, int depth)
 {
         m_triangles = triangles;
+        std::cout<<m_triangles->size()<<std::endl;
+}
+
+KDTreeLeaf::~KDTreeLeaf(){
+	delete m_triangles;
 }
 
 
 bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth) {
-      // Leaf node
+		// Leaf node
       std::vector<Triangle>::iterator pos = m_triangles->begin();
       std::vector<Triangle>::iterator end = m_triangles->end();
       bool hit = false;

@@ -3,11 +3,10 @@
 DiscGearGrind::DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
 	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(2)
 {
-    m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius() - m_gear->getBottomRadius(),  -m_disc->getRadius()),
-                                                    glm::vec3(0, -m_disc->getRadius() - m_gear->getBottomRadius(), m_disc->getRadius()));
+    m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius()*2 - m_gear->getBottomRadius(),  0),
+                                                    glm::vec3(0, -m_disc->getRadius() - m_gear->getBottomRadius(), 0));
     // Convert to right representation
     m_gearRays = m_gearMesh->toRays();
-
     // resize distances array
     m_distances.resize(m_gearRays->size());
     m_gearColor = new vector<hpcolor>;
@@ -35,7 +34,7 @@ void DiscGearGrind::calculateGrindingDepth(double time){
 }
 
 
-DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
+DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     calculateGrindingDepth(time);
     // Fill color
     for( size_t i = 0; i < m_gearColor->size(); i++){
@@ -58,9 +57,21 @@ DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
     	}
 
     }
-    return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  m_gearMovement.getRigidAffineTransformation(time),  m_disc, m_discMesh, RigidAffineTransformation());
+    return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  RigidAffineTransformation(),  m_disc, m_discMesh, m_gearMovement.getRigidAffineTransformation(time).inverse());
+}
+
+DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
+	map<hpreal,DiscGearGrindResult>::iterator it = m_precalcResults.lower_bound(time);
+	if( it == m_precalcResults.end() ){
+		it--;
+	}
+	return it->second;
 }
 
 void DiscGearGrind::runSimulation(){
-
+	hpreal deltaT = 1.0 / (hpreal)STEP_COUNT;
+	m_precalcResults.clear();
+	for( hpreal t = 0.0; t <= 1.0; t += deltaT ) {
+		m_precalcResults.insert(pair<hpreal, DiscGearGrindResult>(t, calculateSimulationResult(t)));
+	}
 }

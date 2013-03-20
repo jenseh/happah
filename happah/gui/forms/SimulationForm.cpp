@@ -3,29 +3,23 @@
 
 SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-		m_guiManager(guiManager),
-		m_simulationInserted(false),
-		m_timeSlider(new Slider(tr("approximated time"))) {
-	QPushButton* createButton = new QPushButton("create simulation");
+	  m_guiManager(guiManager),
+	  m_simulationInserted(false) {
 
+	m_simulationTimer = new SimulationTimer(*this,0.0f, 1.0f, 20, 200);
+
+	QPushButton* createButton = new QPushButton("create simulation");
 	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(m_timeSlider);
+	layout->addWidget(m_simulationTimer);
 	layout->addWidget(createButton);
 	setLayout(layout);
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createSimulation()));
-	connect(m_timeSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeTime(hpreal)));
 	m_simulation = NULL;
-	updateRanges();
 }
 
 SimulationForm::~SimulationForm() {}
 
-
-void SimulationForm::changeTime(hpreal time) {
-	updateRanges();
-	updateSimulation();
-}
 
 void SimulationForm::createSimulation() {
 	if( m_simulation == NULL ){
@@ -33,7 +27,7 @@ void SimulationForm::createSimulation() {
 	}
 	if(!m_simulationInserted){
 		m_simulation->runSimulation();
-		m_guiManager.insert(m_simulation->getSimulationResult(m_timeSlider->getValue()));
+		m_guiManager.update(m_simulation->getSimulationResult(0.0f));
 		m_simulationInserted = true;
 	}
 }
@@ -59,16 +53,9 @@ void SimulationForm::setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
 void SimulationForm::setSimulation(DiscGearGrind_ptr simulation) {
 	m_simulation = simulation;
 	m_simulationInserted = true;
-
-	updateRanges();
 }
 
-void SimulationForm::updateSimulation() {
+void SimulationForm::updateSimulation(hpreal time) {
 	if(m_simulationInserted)
-		m_guiManager.update(m_simulation->getSimulationResult(m_timeSlider->getValue()));
-}
-
-
-void SimulationForm::updateRanges() {
-	m_timeSlider->setSliderValues(m_timeSlider->getValue(), 0.0, 1.0);
+		m_guiManager.update(m_simulation->getSimulationResult(time));
 }

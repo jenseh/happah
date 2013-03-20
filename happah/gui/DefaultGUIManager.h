@@ -27,7 +27,7 @@ public:
 	void insert(InvoluteGear_ptr involuteGear);
 	void insert(Plane_ptr plane);
 	void insert(SimpleGear_ptr simpleGear);
-	void insert(DiscGearGrindResult simulationResult);
+	//void insert(DiscGearGrindResult simulationResult);
 	void insert(Disc_ptr disc);
 	void insert(Worm_ptr worm);
 	void insert(SpherePatch_ptr spherePatch);

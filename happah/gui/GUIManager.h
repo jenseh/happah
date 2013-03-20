@@ -18,7 +18,7 @@ public:
 	virtual void insert(InvoluteGear_ptr involuteGear) = 0;
 	virtual void insert(Plane_ptr plane) = 0;
 	virtual void insert(SimpleGear_ptr simpleGear) = 0;
-	virtual void insert(DiscGearGrindResult simulationResult) = 0;
+	//virtual void insert(DiscGearGrindResult simulationResult) = 0;
 	virtual void insert(Disc_ptr disc) = 0;
 	virtual void insert(Worm_ptr worm) = 0;
 	virtual void insert(SpherePatch_ptr SpherePatch)= 0;

@@ -70,11 +70,13 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
+/*
 void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
 	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 }
+*/
 
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 	doInsert3D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(

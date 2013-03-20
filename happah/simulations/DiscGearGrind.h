@@ -2,6 +2,7 @@
 #define DISCGEARGRIND_H
 
 #include <memory>
+#include <map>
 
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/SimpleGear.h"
@@ -24,7 +25,7 @@ public:
 	DiscGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
 						Disc_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
 		m_gear(gear),
-		m_gearColor(gearColor),
+		m_gearColor(new std::vector<hpcolor>(*gearColor) ), // Make copy !
 		m_gearMesh(gearMesh),
 		m_gearTransformation(gearTransformation),
 		m_tool(tool),
@@ -45,6 +46,8 @@ public:
     void runSimulation();
 
 private:
+	static const int STEP_COUNT = 20;
+	std::map< hpreal,DiscGearGrindResult > m_precalcResults;
 
     Disc_ptr m_disc;
     SimpleGear_ptr m_gear;
@@ -62,6 +65,7 @@ private:
     Kinematic m_gearMovement;
 
     void calculateGrindingDepth(double time);
+    DiscGearGrindResult calculateSimulationResult(double time);
 };
 
 typedef std::shared_ptr<DiscGearGrind> DiscGearGrind_ptr;

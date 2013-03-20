@@ -38,8 +38,9 @@ HEADERS += \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerListener.h \
 	happah/gui/SceneGraphExplorerPanel.h \
+	happah/gui/SimulationTimer.h \
 	happah/gui/ToolPanel.h \
-	happah/gui/VectorInput.h \
+	happah/gui/VectorInput.h \ 
 	happah/gui/Viewport3D.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
@@ -130,6 +131,7 @@ SOURCES += \
 	happah/gui/Slider.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
+	happah/gui/SimulationTimer.cpp \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/VectorInput.cpp \
 	happah/gui/Viewport3D.cpp \

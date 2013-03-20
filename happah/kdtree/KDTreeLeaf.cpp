@@ -3,7 +3,6 @@
 KDTreeLeaf::KDTreeLeaf(std::vector<Triangle>* triangles, int depth)
 {
         m_triangles = triangles;
-        std::cout<<m_triangles->size()<<std::endl;
 }
 
 KDTreeLeaf::~KDTreeLeaf(){

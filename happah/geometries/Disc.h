@@ -16,24 +16,21 @@ using namespace std;
 
 class Disc: public Geometry {
 public:
-    Disc(hpreal radius = 1.0f);
-
+    Disc();
     ~Disc();
-    hpreal getRadius();
-    hpvec3 getCenter();
-    void setRadius(hpreal);
+    virtual hpreal getRadius()= 0;
+    virtual void setRadius(hpreal radius)= 0;
     TriangleMesh* toTriangleMesh();
-private:
+protected:
     hpreal m_radius;// Radius der Scheibe ( y-achse und z-achse )
     hpreal m_length;// Länge/Breite der Scheibe ( x-achse )
     hpreal m_module; // Modul des höhenprofils
     std::vector<hpvec2> m_heightProfile;
-    StandardProfile* m_standardProfile;
 
     const static int HEIGHT_PROFILE_DETAIL_LEVEL = 60;
     const static int ANGLE_DETAIL_LEVEL = 100; // Wie viele samples auf dem rotationskörper gemacht werden
 
-    void createHeightProfile();
+    virtual void createHeightProfile()= 0;
     void updateValues();
 };
 

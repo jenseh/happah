@@ -2,56 +2,14 @@
 
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-Disc::Disc(hpreal radius): Geometry(){
-    m_radius = radius; // doppelt so groß wie ein zahn
-    m_standardProfile = NULL;
-    updateValues();
+Disc::Disc(): Geometry(){
+
 }
 
 Disc::~Disc() {
-    delete m_standardProfile;
 }
 
-// Create a profile of height values
-void Disc::createHeightProfile() {
-    /*
-	m_heightProfile = std::vector<glm::vec2>();
-    m_heightProfile.resize(HEIGHT_PROFILE_DETAIL_LEVEL);
-    hpreal x = m_length / 2.0;
-    hpreal deltaX = m_length/(double)HEIGHT_PROFILE_DETAIL_LEVEL;
-    for( int i = 0; i < HEIGHT_PROFILE_DETAIL_LEVEL; i++){
-        m_heightProfile[i].x = x - m_length;
-        m_heightProfile[i].y = m_standardProfile->getHeight(x) + m_module;
-        x += deltaX;
-    }
-    */
-	InvoluteGear* gear = new InvoluteGear();
-	std::vector<glm::vec2>* ptr = gear->getToothProfile();;
-	m_heightProfile.clear();
-	hpreal maxY = 0;
-	for( int i = (ptr->size()/2); i >= 0; i--) {
-		m_heightProfile.push_back(hpvec2(-ptr->at(i).x, ptr->at(i).y));
-		maxY = glm::max(maxY,  ptr->at(i).y);
-	}
-	for( size_t i = 0; i < ptr->size()/2; i++) {
-		m_heightProfile.push_back(hpvec2(ptr->at(i)));
-	}
-	// Invertieren
-	for( vector<hpvec2>::iterator it = m_heightProfile.begin(); it != m_heightProfile.end(); ++it) {
-		it->y = std::abs(it->y - maxY);
-	}
-	delete ptr;
-	delete gear;
-}
 
-hpreal Disc::getRadius() {
-    return m_radius;
-}
-
-void Disc::setRadius(hpreal radius){
-	m_radius = radius;
-	updateValues();
-}
 
 TriangleMesh* Disc::toTriangleMesh(){
 	// This creates the quads for a gear. The gear axis is the model's z-axis.
@@ -136,12 +94,5 @@ TriangleMesh* Disc::toTriangleMesh(){
 	return new TriangleMesh(vertexData, indices);
 }
 
-void Disc::updateValues(){
-    m_module = m_radius / 2.0;
-    m_length = m_module * M_PI;
-    if( m_standardProfile != NULL )
-    	delete m_standardProfile;
-    m_standardProfile = new StandardProfile(m_module, 30 / 180.0 * M_PI, 0, 0);
-}
 
 

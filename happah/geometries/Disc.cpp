@@ -14,7 +14,8 @@ Disc::~Disc() {
 
 // Create a profile of height values
 void Disc::createHeightProfile() {
-    m_heightProfile = std::vector<glm::vec2>();
+    /*
+	m_heightProfile = std::vector<glm::vec2>();
     m_heightProfile.resize(HEIGHT_PROFILE_DETAIL_LEVEL);
     hpreal x = m_length / 2.0;
     hpreal deltaX = m_length/(double)HEIGHT_PROFILE_DETAIL_LEVEL;
@@ -23,6 +24,24 @@ void Disc::createHeightProfile() {
         m_heightProfile[i].y = m_standardProfile->getHeight(x) + m_module;
         x += deltaX;
     }
+    */
+	InvoluteGear* gear = new InvoluteGear();
+	std::vector<glm::vec2>* ptr = gear->getToothProfile();;
+	m_heightProfile.clear();
+	hpreal maxY = 0;
+	for( int i = (ptr->size()/2); i >= 0; i--) {
+		m_heightProfile.push_back(hpvec2(-ptr->at(i).x, ptr->at(i).y));
+		maxY = glm::max(maxY,  ptr->at(i).y);
+	}
+	for( size_t i = 0; i < ptr->size()/2; i++) {
+		m_heightProfile.push_back(hpvec2(ptr->at(i)));
+	}
+	// Invertieren
+	for( vector<hpvec2>::iterator it = m_heightProfile.begin(); it != m_heightProfile.end(); ++it) {
+		it->y = std::abs(it->y - maxY);
+	}
+	delete ptr;
+	delete gear;
 }
 
 hpreal Disc::getRadius() {

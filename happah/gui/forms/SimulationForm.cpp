@@ -47,6 +47,8 @@ void SimulationForm::setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh){
 void SimulationForm::setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
 	m_gear = gear;
 	m_gearMesh = gearMesh;
+	m_disc = Disc_ptr(new GearProfileDisc(*m_gear));
+	m_discMesh = TriangleMesh_ptr(m_disc->toTriangleMesh());
 }
 
 

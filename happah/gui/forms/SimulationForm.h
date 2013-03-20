@@ -2,6 +2,7 @@
 #define SIMULATIONFORM_H_
 
 #include "happah/geometries/Disc.h"
+#include "happah/geometries/GearProfileDisc.h"
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/gui/GUIManager.h"

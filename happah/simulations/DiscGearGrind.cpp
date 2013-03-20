@@ -3,8 +3,8 @@
 DiscGearGrind::DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
 	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(2)
 {
-    m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius()*2 - m_gear->getBottomRadius(),  0),
-                                                    glm::vec3(0, -m_disc->getRadius() - m_gear->getBottomRadius(), 0));
+    m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius() - m_gear->getBottomRadius(),  m_disc->getRadius()),
+                                                    glm::vec3(0, -m_disc->getRadius() - m_gear->getBottomRadius(), -m_disc->getRadius()));
     // Convert to right representation
     m_gearRays = m_gearMesh->toRays();
     // resize distances array

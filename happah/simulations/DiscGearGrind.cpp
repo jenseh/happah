@@ -1,10 +1,14 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
-	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(2)
+	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.3)
 {
-    m_gearMovement = Kinematic::getLinearKinematic(glm::vec3(0,-m_disc->getRadius() - m_gear->getBottomRadius(),  m_disc->getRadius()),
-                                                    glm::vec3(0, -m_disc->getRadius() - m_gear->getBottomRadius(), -m_disc->getRadius()));
+	hpreal alpha = m_gear->getHelixAngle();
+	hpreal z = -m_gear->getFacewidth();
+	hpreal y = -m_disc->getRadius() - m_gear->getBottomRadius();
+	hpvec3 start = hpvec3(0, y,  0);
+	hpvec3 end = hpvec3(sin(alpha) * z, y, z);
+    m_gearMovement = Kinematic::getLinearKinematic(start, end, -alpha / M_PI * 180);
     // Convert to right representation
     m_gearRays = m_gearMesh->toRays();
     // resize distances array
@@ -29,7 +33,10 @@ void DiscGearGrind::calculateGrindingDepth(double time){
         Ray ray = m_gearRays->at(i);
         ray.transform(matrix);
         ray.moveOrigin(-m_maxDistance);
-        m_distances[i] = (m_kdTree->intersectFirst(ray, m_maxDistance * 2) - m_maxDistance) / m_maxDistance;
+        //m_distances[i] = (m_kdTree->intersectFirst(ray, m_maxDistance * 2) - m_maxDistance) / m_maxDistance;
+        for( vector<Triangle>::iterator it = triangles->begin(); it != triangles->end(); ++it) {
+
+        }
     }
 }
 
@@ -49,11 +56,11 @@ DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     	}*/
 
     	if( m_distances[i] >= 0 ){
-    		m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
+    		//m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
     		m_gearColor->at(i) = hpcolor( 0.0, m_distances[i], 1.0, 1.0);
     	}else{
     		m_gearColor->at(i) = hpcolor(1.0, 0.0, 0.0, 1.0);
-    		m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
+    		//m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
     	}
 
     }

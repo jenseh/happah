@@ -115,7 +115,7 @@ void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
 	m_sceneManager->removeContaining(simulationResult.m_gear, simulationResult.m_gearMesh);
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
 	m_sceneManager->removeContaining(simulationResult.m_tool, simulationResult.m_toolMesh);
-	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
+	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 }
 

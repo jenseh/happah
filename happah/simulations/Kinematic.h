@@ -21,6 +21,7 @@ public :
     RigidAffineTransformation getRigidAffineTransformation(double t);
 
     static Kinematic getLinearKinematic(glm::vec3 start, glm::vec3 end);
+    static Kinematic getLinearKinematic(glm::vec3 start, glm::vec3 end, hpreal rotY);
 
 };
 

@@ -16,3 +16,7 @@ void PlaneNode::insertChild(PlaneGUIStateNode_ptr planeGUIStateNode) {
 void PlaneNode::insertChild(TriangleMeshNode_ptr triangleMeshNode) {
 	Node::insertChild(triangleMeshNode);
 }
+
+void PlaneNode::insertChild(PointCloudNode_ptr pointCloudNode) {
+	Node::insertChild(pointCloudNode);
+}

@@ -9,6 +9,7 @@ using namespace std;
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"
+#include "happah/scene/PointCloudNode.h"
 #include "happah/scene/SceneVisitor.h"
 
 class PlaneNode : public SimpleGeometryNode<Plane> {
@@ -20,6 +21,7 @@ public:
 	virtual void accept(SceneVisitor& sceneVisitor);
 	void insertChild(PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
+	void insertChild(PointCloudNode_ptr pointCloudNode);
 
 };
 

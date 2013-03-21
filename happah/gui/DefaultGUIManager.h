@@ -28,7 +28,7 @@ public:
 	void insert(Disc_ptr disc);
 	//void insert(DiscGearGrindResult simulationResult);
 	void insert(InvoluteGear_ptr involuteGear);
-	void insert(Plane_ptr plane);
+	void insert(Plane_ptr plane, hpuint drawMode = HAPPAH_TRIANGLE_MESH);
 	void insert(SimpleGear_ptr simpleGear);
 	void insert(SpherePatch_ptr spherePatch);
 	void insert(Worm_ptr worm);
@@ -137,15 +137,17 @@ private:
 
 
 	template<class G, class S>
-	void doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	void doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
 	template<class G, class S, class F>
-	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form);
+	void doInsert2D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G, class S, class F, class M>
-	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
-
-
+	void doInsert2D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
+	template<class G, class S>
+	void doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	template<class G, class S, class F>
+	void doInsert0D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G>
-	void doUpdate3D(shared_ptr<G> geometry);
+	void doUpdate2D(shared_ptr<G> geometry);
 
 	string toFinalLabel(const char* label);
 

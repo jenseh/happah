@@ -2,6 +2,7 @@
 #define SIMULATIONFORM_H_
 
 #include "happah/geometries/Disc.h"
+#include "happah/geometries/GearProfileDisc.h"
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/gui/GUIManager.h"
@@ -10,10 +11,12 @@
 #include "happah/scene/GeometryFindVisitor.h"
 #include "happah/simulations/DiscGearGrind.h"
 #include "happah/simulations/Simulation.h"
+#include "happah/gui/SimulationTimer.h"
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QTimer>
 
-class SimulationForm : public Form {
+class SimulationForm : public Form, public SimulationTimerListener {
 Q_OBJECT
 
 public:
@@ -27,6 +30,7 @@ public:
 	void setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 
 private:
+
 	Disc_ptr m_disc;
 	TriangleMesh_ptr m_discMesh;
 	SimpleGear_ptr m_gear;
@@ -34,14 +38,12 @@ private:
 	GUIManager& m_guiManager;
 	DiscGearGrind_ptr m_simulation;
 	bool m_simulationInserted;
-	Slider* m_timeSlider;
+	SimulationTimer* m_simulationTimer;
 
-	void updateRanges();
-	void updateSimulation();
+	void updateSimulation(hpreal time);
 
 private slots:
 	void createSimulation();
-	void changeTime(hpreal);
 
 };
 

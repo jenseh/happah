@@ -40,10 +40,9 @@ hpvec3 Ray::getDirection() {
 }
 
 hpreal Ray::intersectDistance(Triangle& triangle){
-	hpvec3 baryPos;
-	glm::intersectLineTriangle(m_origin, m_direction, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], baryPos);
-	hpvec3 position = triangle.vertices[0]* baryPos[0] + triangle.vertices[1] * baryPos[1] + triangle.vertices[2] * baryPos[2];
-	//std::cout<<"Intersect\n";
+	hpvec3 position;
+	if( !intersectTriangle(triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], position) )
+		return 1000000;
 	return glm::distance(m_origin, position);
 }
 
@@ -74,6 +73,35 @@ if ( (getIntersection( linePoint1.x-boxPointMin.x, linePoint2.x-boxPointMin.x, l
 
 return false;
 }
+
+bool Ray::intersectTriangle(hpvec3 e, hpvec3 f, hpvec3 g,hpvec3& hit){
+ float result;
+ float epsilon = 0.00001f;
+
+ hpvec3 v1 = f-e;
+ hpvec3 v2 = g-e;
+ hpvec3 q = glm::cross(m_direction,v2);
+ float det = glm::dot(v1,q);
+ if (det>(-epsilon)&&det<(epsilon)){
+	 return false;
+   }
+ float inv = (1/det);
+ hpvec3 s = m_origin-e;
+ float u = inv*glm::dot(s,q);
+ if (u<0.0f){
+	 return false;
+   }
+ hpvec3 r=glm::cross(s,v1);
+ float v=inv*glm::dot(m_direction,r);
+ if (v<0.0f-epsilon || u+v > 1.0f+epsilon){
+	 return false;
+   }
+ float t= inv*glm::dot(v2,r);
+ hit= m_origin+t*m_direction;
+
+ return true;
+}
+
 
 
 bool inline Ray::getIntersection( float fDst1, float fDst2, hpvec3 P1, hpvec3 P2, hpvec3 &Hit) {

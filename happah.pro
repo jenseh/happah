@@ -17,6 +17,7 @@ HEADERS += \
 #	happah/geometries/ControlNet2.h \
 	happah/geometries/Disc.h \
 	happah/geometries/Gear.h \
+	happah/geometries/GearProfileDisc.h \
 	happah/geometries/Geometry.h \ 
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
@@ -27,6 +28,7 @@ HEADERS += \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
+	happah/geometries/StandardProfileDisc.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/Worm.h \
 #	happah/geometries/ZCircleCloud.h \
@@ -38,8 +40,9 @@ HEADERS += \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerListener.h \
 	happah/gui/SceneGraphExplorerPanel.h \
+	happah/gui/SimulationTimer.h \
 	happah/gui/ToolPanel.h \
-	happah/gui/VectorInput.h \
+	happah/gui/VectorInput.h \ 
 	happah/gui/Viewport3D.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
@@ -47,13 +50,14 @@ HEADERS += \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
 	happah/gui/context-menus/SimpleGearContextMenu.h \
 \
+	happah/gui/forms/BSplineCurveForm.h \
+	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
-	happah/gui/forms/SpherePatchForm.h \
-	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/SimulationForm.h \
+	happah/gui/forms/SpherePatchForm.h \
 	happah/gui/forms/WormForm.h \
 \
 	happah/kdtree/BBox.h \
@@ -111,6 +115,7 @@ SOURCES += \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/Disc.cpp \
 	happah/geometries/Gear.cpp \
+	happah/geometries/GearProfileDisc.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
@@ -121,6 +126,7 @@ SOURCES += \
 #	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
 	happah/geometries/StandardProfile.cpp \
+	happah/geometries/StandardProfileDisc.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/Worm.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
@@ -130,6 +136,7 @@ SOURCES += \
 	happah/gui/Slider.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
+	happah/gui/SimulationTimer.cpp \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/VectorInput.cpp \
 	happah/gui/Viewport3D.cpp \
@@ -139,13 +146,14 @@ SOURCES += \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
 	happah/gui/context-menus/SimpleGearContextMenu.cpp \
 \
+	happah/gui/forms/BSplineCurveForm.cpp \
+	happah/gui/forms/DiscForm.cpp \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
 	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
 	happah/gui/forms/SimulationForm.cpp \
 	happah/gui/forms/SpherePatchForm.cpp \
-	happah/gui/forms/DiscForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
 	happah/kdtree/BBox.cpp \
@@ -171,6 +179,7 @@ SOURCES += \
 	happah/scene/RayIntersectionVisitor.cpp \
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
+	happah/scene/SceneVisitor.cpp \
 	happah/scene/SimpleGearNode.cpp \
 	happah/scene/SpherePatchNode.cpp\
 	happah/scene/TriangleMeshNode.cpp \

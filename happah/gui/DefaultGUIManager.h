@@ -24,20 +24,22 @@ public:
 	~DefaultGUIManager();
 
 	bool init();
+	void insert(BSplineCurve_ptr bSplineCurve);
+	void insert(Disc_ptr disc);
+	//void insert(DiscGearGrindResult simulationResult);
 	void insert(InvoluteGear_ptr involuteGear);
 	void insert(Plane_ptr plane);
 	void insert(SimpleGear_ptr simpleGear);
-	void insert(DiscGearGrindResult simulationResult);
-	void insert(Disc_ptr disc);
-	void insert(Worm_ptr worm);
 	void insert(SpherePatch_ptr spherePatch);
+	void insert(Worm_ptr worm);
+	void update(BSplineCurve_ptr bSplineCurve);
 	void update(DiscGearGrindResult simulationResult);
+	void update(Disc_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
-	void update(Disc_ptr disc);
+	void update(SpherePatch_ptr spherePatch);
 	void update(Worm_ptr worm);
-	void update(SpherePatch_ptr SpherePatch);
 	void useInSimulation(Disc_ptr disc,TriangleMesh_ptr discMesh);
 	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);

@@ -1,7 +1,7 @@
 #ifndef DISCFORM_H_
 #define DISCFORM_H_
 
-#include "happah/geometries/Disc.h"
+#include "happah/geometries/StandardProfileDisc.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"

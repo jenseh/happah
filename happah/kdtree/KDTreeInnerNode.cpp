@@ -12,7 +12,7 @@ public:
 
 
 
-KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox* bBox, hpuint depth, hpuint maxTrianglesPerBox)
+KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox)
 {
 	//TODO: Something goes wrong here, sometimes all the triangles are put into left side
   m_bBox = bBox;
@@ -27,7 +27,8 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox* bBox, h
 
   std::vector<Triangle>* leftTriangles = new std::vector<Triangle>;
   std::vector<Triangle>* rightTriangles = new std::vector<Triangle>;
-
+  BBox leftBox;
+  BBox rightBox;
   std::vector<Triangle>::iterator pos = triangles->begin();
   std::vector<Triangle>::iterator end = triangles->end();
   for (; pos != end; pos++) {
@@ -37,21 +38,17 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox* bBox, h
           || triangle.vertices[1][m_axis] <= m_axisValue
           || triangle.vertices[2][m_axis] <= m_axisValue) {
           leftTriangles->push_back(triangle);
+          leftBox.addTriangle(triangle);
       }
 
       if (triangle.vertices[0][m_axis] > m_axisValue
           || triangle.vertices[1][m_axis] > m_axisValue
           || triangle.vertices[2][m_axis] > m_axisValue) {
           rightTriangles->push_back(triangle);
+          rightBox.addTriangle(triangle);
       }
   }
 
-  // Split bounding box to get child boxes
-  std::vector<BBox*> boxes = bBox->split(m_axis, m_axisValue);
-  if (boxes.size() != 2) {
-      std::cerr << "Error: Splitting returned invalid size!";
-      exit(1);
-    }
   // If all in one node
   if( leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size() ){
 	  m_leftChild = new KDTreeLeaf(triangles, depth + 1);
@@ -61,14 +58,14 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox* bBox, h
   }
   // Determine whether to set an inner node or leaf for each child
   if (leftTriangles->size() > maxTrianglesPerBox ) {
-      m_leftChild = new KDTreeInnerNode(leftTriangles, boxes[0], depth + 1, maxTrianglesPerBox);
+      m_leftChild = new KDTreeInnerNode(leftTriangles, leftBox, depth + 1, maxTrianglesPerBox);
       delete leftTriangles;
   } else {
       m_leftChild = new KDTreeLeaf(leftTriangles, depth + 1);
   }
 
   if (rightTriangles->size() > maxTrianglesPerBox) {
-      m_rightChild = new KDTreeInnerNode(rightTriangles, boxes[1], depth + 1, maxTrianglesPerBox);
+      m_rightChild = new KDTreeInnerNode(rightTriangles, rightBox, depth + 1, maxTrianglesPerBox);
       delete rightTriangles;
   } else {
       m_rightChild = new KDTreeLeaf(rightTriangles, depth + 1);
@@ -80,9 +77,9 @@ KDTreeInnerNode::~KDTreeInnerNode(){
 	delete m_rightChild;
 }
 
-bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth) {
+bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, int depth) {
 
-  if (intersectorBox->intersects(m_bBox)) {
+  if (intersectorBox.intersects(m_bBox)) {
 
       // Continue with respective child node
       bool intersectA = false;
@@ -98,7 +95,7 @@ bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResul
 }
 
 hpreal KDTreeInnerNode::intersectFirst(Ray& intersector, hpreal maxLength){
-	if( intersector.intersects(*m_bBox, maxLength)){
+	if( intersector.intersects(m_bBox, maxLength)){
 		maxLength = std::min(maxLength, m_leftChild->intersectFirst(intersector, maxLength));
 		maxLength = std::min(maxLength, m_rightChild->intersectFirst(intersector, maxLength));
 	}

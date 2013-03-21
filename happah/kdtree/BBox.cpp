@@ -2,10 +2,24 @@
 
 #include "happah/kdtree/BBox.h"
 
+
+BBox::BBox() {
+	m_min = hpvec3(INFINITY, INFINITY, INFINITY);
+	m_max = hpvec3(-INFINITY, -INFINITY, -INFINITY);
+}
 BBox::BBox(glm::vec3 min, glm::vec3 max)
 {
   m_min = min;
   m_max = max;
+}
+
+void BBox::addTriangle(Triangle& t){
+	for( int i = 0; i < 3; i++){
+		for( int j = 0; j < 3; j++){
+			m_min[j] = glm::min(m_min[j], t.vertices[i][j]);
+			m_max[j] = glm::max(m_max[j], t.vertices[i][j]);
+		}
+	}
 }
 
 glm::vec3* BBox::getMin() {
@@ -24,12 +38,13 @@ void BBox::setMax(glm::vec3 max) {
   m_max = max;
 }
 
-bool BBox::intersects(BBox* other) {
-  return !((m_max.x < other->getMin()->x || m_min.x > other->getMax()->x)
-      || (m_max.y < other->getMin()->y || m_min.y > other->getMax()->y)
-      || (m_max.z < other->getMin()->z || m_min.z > other->getMax()->z));
+bool BBox::intersects(BBox& other) {
+  return !((m_max.x < other.getMin()->x || m_min.x > other.getMax()->x)
+      || (m_max.y < other.getMin()->y || m_min.y > other.getMax()->y)
+      || (m_max.z < other.getMin()->z || m_min.z > other.getMax()->z));
 }
 
+/*
 // Splits the current box into 2 boxes along the specified axis
 std::vector<BBox*> BBox::split(int axis, float axisValue) {
   glm::vec3 minMiddle, maxMiddle;
@@ -69,3 +84,4 @@ std::vector<BBox*> BBox::split(int axis, float axisValue) {
 
   return boxes;
 }
+*/

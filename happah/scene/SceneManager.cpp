@@ -1,6 +1,7 @@
 #include <ctime>
 #include <iostream>
 
+#include "happah/scene/BSplineCurveNode.h"
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/PlaneNode.h"
 #include "happah/scene/PointCloudNode.h"
@@ -137,6 +138,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 	triggerSubtreeInsertedEvent(root);
 }
+
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation){
 	Node_ptr node = findChildContaining(geometry);
@@ -171,6 +173,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 }
 
 template<class G, class N>
+
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color){
 	Node_ptr node = findChildContaining(geometry);
 
@@ -201,6 +204,14 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 	pointCloudNode->insertChild(pointCloudRenderStateNode);
 
 	triggerSubtreeInsertedEvent(root);
+}
+
+void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
+	doInsert<BSplineCurve, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
+}
+
+void SceneManager::insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color) {
+	doInsert<BSplineCurve, BSplineCurveNode>(curve, pointCloud, color);
 }
 
 

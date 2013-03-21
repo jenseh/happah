@@ -9,6 +9,9 @@ using namespace std;
 class GUIStateNode;
 typedef shared_ptr<GUIStateNode> GUIStateNode_ptr;
 
+class BSplineCurveGUIStateNode;
+typedef shared_ptr<BSplineCurveGUIStateNode> BSplineCurveGUIStateNode_ptr;
+
 class InvoluteGearGUIStateNode;
 typedef shared_ptr<InvoluteGearGUIStateNode> InvoluteGearGUIStateNode_ptr;
 
@@ -53,6 +56,20 @@ private:
 
 };
 
+#include "happah/geometries/BSplineCurve.h"
+#include "happah/gui/forms/BSplineCurveForm.h"
+
+class BSplineCurveGUIStateNode : public GUIStateNode {
+public:
+	BSplineCurveGUIStateNode( BSplineCurve_ptr curve, BSplineCurveForm* bSplineCurveForm, string name);
+	~BSplineCurveGUIStateNode();
+	
+	shared_ptr<void> getData() const;
+	Form* getForm();
+private:
+	BSplineCurve_ptr m_curve;
+	BSplineCurveForm* m_bSplineCurveForm;
+};
 
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/gui/context-menus/InvoluteGearContextMenu.h"

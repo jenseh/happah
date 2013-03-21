@@ -34,6 +34,33 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
+// BSplineCurve
+
+BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(
+		BSplineCurve_ptr curve,
+		BSplineCurveForm* bSplineCurveForm,
+		string name )
+	: GUIStateNode(name), m_curve(curve), m_bSplineCurveForm(bSplineCurveForm)
+{}
+
+BSplineCurveGUIStateNode::~BSplineCurveGUIStateNode()
+{
+	if(m_bSplineCurveForm->getCurve() == m_curve) {
+		m_bSplineCurveForm->reset();
+	}
+}
+
+shared_ptr<void> BSplineCurveGUIStateNode::getData() const {
+	return m_curve;
+}
+
+Form* BSplineCurveGUIStateNode::getForm() {
+	m_bSplineCurveForm->setCurve(m_curve);
+	return m_bSplineCurveForm;
+}
+
+// InvoluteGear
+
 InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(
 	InvoluteGear_ptr involuteGear,
 	InvoluteGearForm* involuteGearForm, 
@@ -64,6 +91,8 @@ Form* InvoluteGearGUIStateNode::getForm() {
 	m_involuteGearForm->setInvoluteGear(m_involuteGear);
 	return m_involuteGearForm;
 }
+
+// Plane
 
 PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name ) :
 	GUIStateNode(name), m_plane(plane), m_planeForm(planeForm) {

@@ -29,6 +29,7 @@ public:
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Plane_ptr plane, PointCloud_ptr pointCloud,hpcolor& color);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);

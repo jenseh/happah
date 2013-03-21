@@ -147,7 +147,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 		geometryNode = static_pointer_cast<N>(node);
 		node = node->findChildContaining(pointCloud);
 		if(node) {
-			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
 			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
 			pointCloudRenderStateNode->setColor(color);
 			triggerSubtreeUpdatedEvent(pointCloudRenderStateNode);
@@ -170,6 +170,40 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 	triggerSubtreeInsertedEvent(root);
 }
 
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color){
+	Node_ptr node = findChildContaining(geometry);
+
+	Node_ptr root;
+	shared_ptr<N> geometryNode;
+	if(node){
+		geometryNode = static_pointer_cast<N>(node);
+		node = node->findChildContaining(pointCloud);
+		if(node) {
+			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
+			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
+			pointCloudRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(pointCloudRenderStateNode);
+			return;
+		}
+	}else {
+		geometryNode = shared_ptr<N>(new N(geometry));
+		insertChild(geometryNode);
+		root = geometryNode;
+	}
+
+	PointCloudNode_ptr pointCloudNode(new PointCloudNode(pointCloud));
+	geometryNode->insertChild(pointCloudNode);
+
+	if(!root) root = pointCloudNode;
+
+	PointCloudRenderStateNode_ptr pointCloudRenderStateNode(new PointCloudRenderStateNode(pointCloud,color));
+	pointCloudNode->insertChild(pointCloudRenderStateNode);
+
+	triggerSubtreeInsertedEvent(root);
+}
+
+
 void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){
 	doInsert<SimpleGear, SimpleGearNode >(simpleGear, triangleMesh, color, transformation);
 }
@@ -188,6 +222,10 @@ void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNo
 
 void SceneManager::insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color) {
 	doInsert<Plane, PlaneNode>(plane, triangleMesh, color);
+}
+
+void SceneManager::insert(Plane_ptr plane,PointCloud_ptr pointCloud,hpcolor& color){
+	doInsert<Plane,PlaneNode>(plane,pointCloud, color);
 }
 
 void SceneManager::insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode) {

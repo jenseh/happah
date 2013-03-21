@@ -1,6 +1,7 @@
 #ifndef SCENE_VISITOR_H
 #define SCENE_VISITOR_H
 
+class BSplineCurveNode;
 class InvoluteGearNode;
 class PlaneNode;
 class TriangleMeshNode;
@@ -16,6 +17,7 @@ class SpherePatchNode;
 class SceneVisitor {
 
 public:
+	virtual void visit(BSplineCurveNode& bSplineCurveNode);
 	virtual void visit(InvoluteGearNode& involuteGearNode) = 0;
 	virtual void visit(PlaneNode& planeNode) = 0;
 	virtual void visit(TriangleMeshNode& triangleMeshNode) = 0;

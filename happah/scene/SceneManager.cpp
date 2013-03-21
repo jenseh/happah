@@ -1,6 +1,7 @@
 #include <ctime>
 #include <iostream>
 
+#include "happah/scene/BSplineCurveNode.h"
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/PlaneNode.h"
 #include "happah/scene/PointCloudNode.h"
@@ -137,6 +138,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 	triggerSubtreeInsertedEvent(root);
 }
+
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation){
 	Node_ptr node = findChildContaining(geometry);
@@ -147,7 +149,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 		geometryNode = static_pointer_cast<N>(node);
 		node = node->findChildContaining(pointCloud);
 		if(node) {
-			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
 			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
 			pointCloudRenderStateNode->setColor(color);
 			triggerSubtreeUpdatedEvent(pointCloudRenderStateNode);
@@ -168,6 +170,20 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 	pointCloudNode->insertChild(pointCloudRenderStateNode);
 
 	triggerSubtreeInsertedEvent(root);
+}
+
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color) {
+	RigidAffineTransformation transformation;
+	doInsert<G, N>(geometry, pointCloud, color, transformation);
+}
+
+void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
+	doInsert<BSplineCurve, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
+}
+
+void SceneManager::insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color) {
+	doInsert<BSplineCurve, BSplineCurveNode>(curve, pointCloud, color);
 }
 
 void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){

@@ -50,13 +50,14 @@ HEADERS += \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
 	happah/gui/context-menus/SimpleGearContextMenu.h \
 \
+	happah/gui/forms/BSplineCurveForm.h \
+	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/PlaneForm.h \
 	happah/gui/forms/SimpleGearForm.h \
-	happah/gui/forms/SpherePatchForm.h \
-	happah/gui/forms/DiscForm.h \
 	happah/gui/forms/SimulationForm.h \
+	happah/gui/forms/SpherePatchForm.h \
 	happah/gui/forms/WormForm.h \
 \
 	happah/kdtree/BBox.h \
@@ -145,13 +146,14 @@ SOURCES += \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
 	happah/gui/context-menus/SimpleGearContextMenu.cpp \
 \
+	happah/gui/forms/BSplineCurveForm.cpp \
+	happah/gui/forms/DiscForm.cpp \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
 	happah/gui/forms/PlaneForm.cpp \
 	happah/gui/forms/SimpleGearForm.cpp \
 	happah/gui/forms/SimulationForm.cpp \
 	happah/gui/forms/SpherePatchForm.cpp \
-	happah/gui/forms/DiscForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
 	happah/kdtree/BBox.cpp \
@@ -177,6 +179,7 @@ SOURCES += \
 	happah/scene/RayIntersectionVisitor.cpp \
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
+	happah/scene/SceneVisitor.cpp \
 	happah/scene/SimpleGearNode.cpp \
 	happah/scene/SpherePatchNode.cpp\
 	happah/scene/TriangleMeshNode.cpp \

@@ -239,5 +239,7 @@ glm::vec3 BSplineCurve::getValueAt( float t ) const {
 	}
 }
 
-
+PointCloud* BSplineCurve::toPointCloud() {
+	return new PointCloud(&m_controlPoints);
+}
 

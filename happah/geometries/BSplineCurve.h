@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+#include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
 
 class BSplineCurve {
@@ -46,6 +47,8 @@ public:
 	void setDegree( unsigned int degree );
 	void setPeriodic( bool periodic );
 	void setUniform( bool uniform );
+
+	PointCloud* toPointCloud();
 
 	void resetKnots();
 

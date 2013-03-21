@@ -4,7 +4,8 @@
 #include <memory>
 
 #include "happah/geometries/BSplineCurve.h"
-//#include "happah/scene/GUIStateNode.h"
+#include "happah/scene/GUIStateNode.h"
+#include "happah/scene/PointCloudNode.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGeometryNode.h"
 
@@ -14,7 +15,8 @@ public:
 	BSplineCurveNode(BSplineCurve_ptr curve);
 
 	void accept(SceneVisitor& sceneVisitor);
-//	void insertChild(BSplineCurveGUIStateNode_ptr curveGUIStateNode);
+	void insertChild(BSplineCurveGUIStateNode_ptr curveGUIStateNode);
+	void insertChild(PointCloudNode_ptr pointCloudNode);
 
 };
 

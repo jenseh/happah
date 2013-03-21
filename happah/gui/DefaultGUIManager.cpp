@@ -70,6 +70,19 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
+void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve) {
+	hpcolor color(0.0, 1.0, 0.0, 1.0);
+	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
+	m_sceneManager->insert(bSplineCurve, pointCloud, color);
+	BSplineCurveGUIStateNode_ptr guiStateNode = BSplineCurveGUIStateNode_ptr(new BSplineCurveGUIStateNode(
+				bSplineCurve, m_toolPanel->getBSplineCurveForm(), toFinalLabel("BSplineCurve") ));
+	m_sceneManager->insert(bSplineCurve, guiStateNode);
+}
+
+void DefaultGUIManager::insert(Disc_ptr disc) {
+	doInsert3D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
+}
+
 /*
 void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
@@ -83,32 +96,35 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
 		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
-void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
-	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
-}
-
 void DefaultGUIManager::insert(Plane_ptr plane) {
 	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
 //	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), oss.str()));
 //	m_sceneManager->insert(plane, planeGUIStateNode);
 }
 
-void DefaultGUIManager::insert(Disc_ptr disc) {
-	doInsert3D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
-}
-
-void DefaultGUIManager::insert(Worm_ptr worm) {
-	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
+	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
 
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch) {
 	doInsert3D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
 }
 
+void DefaultGUIManager::insert(Worm_ptr worm) {
+	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+}
+
 string DefaultGUIManager::toFinalLabel(const char* label) {
 	ostringstream oss;
 	oss << label << " " << m_counter++;
 	return oss.str();
+}
+
+void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
+}
+
+void DefaultGUIManager::update(Disc_ptr disc) {
+	doUpdate3D<Disc>(disc);
 }
 
 void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
@@ -123,23 +139,20 @@ void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate3D<InvoluteGear>(involuteGear);
 }
 
-void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
-	doUpdate3D<SimpleGear>(simpleGear);
-}
-
 void DefaultGUIManager::update(Plane_ptr plane) {
 	doUpdate3D<Plane>(plane);
 }
 
-void DefaultGUIManager::update(Disc_ptr disc) {
-	doUpdate3D<Disc>(disc);
+void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
+	doUpdate3D<SimpleGear>(simpleGear);
+}
+
+void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
+	doUpdate3D<SpherePatch>(spherePatch);
 }
 
 void DefaultGUIManager::update(Worm_ptr worm) {
 	doUpdate3D<Worm>(worm);
-}
-void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
-	doUpdate3D<SpherePatch>(spherePatch);
 }
 
 void DefaultGUIManager::useInSimulation(Disc_ptr disc, TriangleMesh_ptr discMesh) {

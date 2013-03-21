@@ -7,6 +7,7 @@ using namespace std;
 
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
+#include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
 #include "happah/math/Ray.h"
 
@@ -25,7 +26,7 @@ public:
 	Plane& operator=(const Plane& other);
 
 	TriangleMesh* toTriangleMesh();
-
+	PointCloud* toPointCloud();
 private:
 	hpvec3 m_normal;
 	hpvec3 m_origin;

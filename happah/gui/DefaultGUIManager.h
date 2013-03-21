@@ -143,6 +143,7 @@ private:
 	template<class G, class S, class F, class M>
 	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
 
+
 	template<class G>
 	void doUpdate3D(shared_ptr<G> geometry);
 

@@ -35,6 +35,7 @@ void DefaultGUIManager::doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 	m_sceneManager->insert(geometry, guiStateNode);
 }
 
+
 template<class G, class S, class F>
 void DefaultGUIManager::doInsert3D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));

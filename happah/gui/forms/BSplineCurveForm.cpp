@@ -31,7 +31,9 @@ BSplineCurveForm::~BSplineCurveForm() {}
 
 void BSplineCurveForm::addPoint() {
 	m_curve->addControlPoint( m_controlPointInput->getValue() );
-	m_guiManager.update(m_curve);
+	if( m_curveInserted ) {
+		m_guiManager.update(m_curve);
+	}
 	m_controlPointInput->setValue( hpvec3( 2.0f/(200-rand()%400), 2.0f/(200-rand()%400), 2.0f/(200-rand()%400) ));
 }
 

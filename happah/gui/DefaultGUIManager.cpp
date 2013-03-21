@@ -121,6 +121,17 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 }
 
 void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
+	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
+	if(!guiStateNode) {
+		cerr << "GUI state node not found." << endl;
+		return;
+	}
+	//m_sceneManager->removeContaining(bSplineCurve, guiStateNode->getPointCloud());
+
+	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
+	hpcolor color(0.0, 1.0, 0.0, 1.0);
+	//guiStateNode->setPointCloud( pointCloud );
+	m_sceneManager->insert(bSplineCurve, pointCloud, color);
 }
 
 void DefaultGUIManager::update(Disc_ptr disc) {

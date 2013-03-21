@@ -46,7 +46,7 @@ public:
     void runSimulation();
 
 private:
-	static const int STEP_COUNT = 20;
+	static const int STEP_COUNT = 5;
 	std::map< hpreal,DiscGearGrindResult > m_precalcResults;
 
     Disc_ptr m_disc;

@@ -34,7 +34,6 @@ void PlaneForm::createPlane() {
 	}
 	m_guiManager.insert(m_plane,17);  //TODO: 17 to test change that
 	m_planeInserted = true;
-	std::cout<<"CAME HERE , CREATED PLANE"<< std::endl;
 }
 
 Plane_ptr PlaneForm::getPlane() const {

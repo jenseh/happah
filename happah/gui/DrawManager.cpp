@@ -90,7 +90,6 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 }
 
 void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
-	cout << "CAME HERE 2" << endl;
 	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
@@ -100,7 +99,6 @@ void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, R
 	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
 	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
 	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
-	cout << "GOT HERE 3" << endl;
 	glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
 	glBindVertexArray(0);
 }
@@ -187,7 +185,6 @@ void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 
 void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNode) {
 	GLuint bufferID;
-	std::cout<<" CAME HERE" << std::endl;
 	GLint size = (pointCloudRenderStateNode.getVertexData()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
@@ -199,8 +196,8 @@ void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNod
 	pointCloudRenderStateNode.setVertexBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getVertexBufferID());
 	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
-	glEnableVertexAttribArray(m_vertexLocation);
+	glVertexAttribPointer(m_pointCloudVertexLocation, 3, GL_FLOAT, GL_FALSE,sizeof(hpvec3), 0);
+	glEnableVertexAttribArray(m_pointCloudVertexLocation);
 
 
 	// Create New Color Buffer Object
@@ -216,7 +213,6 @@ void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNod
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	pointCloudRenderStateNode.setInitialized(true);
 }
 

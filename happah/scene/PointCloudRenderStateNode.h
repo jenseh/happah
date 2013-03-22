@@ -19,6 +19,7 @@ public:
 	PointCloudRenderStateNode(PointCloud_ptr pointCloud,hpcolor& color);
 	PointCloudRenderStateNode(PointCloud_ptr pointCloud,std::vector<hpcolor>* colorVector);
 	virtual ~PointCloudRenderStateNode();
+	virtual void draw(DrawVisitor& drawVisitor,RigidAffineTransformation& rigidAffineTransformation);
 
 	hpuint getMode();
 private:

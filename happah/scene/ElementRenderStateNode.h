@@ -60,7 +60,7 @@ class LineMeshRenderStateNode : public ElementRenderStateNode {
 
 public:
 	LineMeshRenderStateNode(LineMesh_ptr lineMesh,hpcolor& color);
-	LineMeshRenderStateNode(LineMesh_ptr lineMesh,std::vector<hpcolor>* colorVector);
+	LineMeshRenderStateNode(LineMesh_ptr lineMesh, std::vector<hpcolor>* colorVector);
 	virtual ~LineMeshRenderStateNode();
 
 };

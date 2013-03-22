@@ -19,7 +19,7 @@ SceneManager::~SceneManager() {}
 
 template<class G, class N, class S>
 void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
-	Node_ptr node = findChildContaining(data);
+	Node_ptr node = findChildContainingData(data);
 
 	Node_ptr root = guiStateNode;
 	shared_ptr<N> dataNode;
@@ -42,13 +42,13 @@ void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node) {
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(triangleMesh);
+		node = node->findChildContainingData(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -75,13 +75,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 		Node_ptr root;
 		shared_ptr<N> geometryNode;
 		if(node) {
 			geometryNode = static_pointer_cast<N>(node);
-			node = node->findChildContaining(triangleMesh);
+			node = node->findChildContainingData(triangleMesh);
 			if(node) {
 				TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 				TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -108,13 +108,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node) {
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(triangleMesh);
+		node = node->findChildContainingData(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -141,13 +141,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation){
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node){
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(pointCloud);
+		node = node->findChildContainingData(pointCloud);
 		if(node) {
 			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
 			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
@@ -175,13 +175,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 template<class G, class N>
 
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color){
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node){
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(pointCloud);
+		node = node->findChildContainingData(pointCloud);
 		if(node) {
 			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
 			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
@@ -296,14 +296,14 @@ void SceneManager::remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNode
 	if(removedNodes.size() > 0) triggerSubtreesRemovedEvent(removedNodes);
 }
 
-Node_ptr SceneManager::removeChildContaining(shared_ptr<void> data) {
-	Node_ptr node = Node::removeChildContaining(data);
+Node_ptr SceneManager::removeChildContainingData(shared_ptr<void> data) {
+	Node_ptr node = Node::removeChildContainingData(data);
 	if(node) triggerSubtreeRemovedEvent(node);
 	return node;
 }
 
-Node_ptr SceneManager::removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData) {
-	Node_ptr node = Node::removeContaining(parentData, childData);
+Node_ptr SceneManager::removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData) {
+	Node_ptr node = Node::removeContainingData(parentData, childData);
 	if(node) triggerSubtreeRemovedEvent(node);
 	return node;
 }

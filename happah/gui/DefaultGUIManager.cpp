@@ -47,9 +47,10 @@ void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F*
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, toFinalLabel(label)));
 	doInsert2D(geometry, guiStateNode);
 }
+
 template<class G, class S>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode){
-	PointCloud_ptr pointCloud = TriangleMesh_ptr(geometry->toPointCloud());
+	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
 	hpcolor color(0.0f,1.0f,0.0f,1.0f);
 	m_sceneManager->insert(geometry,pointCloud,color);
 	guiStateNode->setPointCloud(pointCloud);
@@ -59,10 +60,8 @@ void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 template<class G, class S, class F>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
-	doInsert2D(geometry, guiStateNode);
+	doInsert0D(geometry, guiStateNode);
 }
-
-
 
 template<class G>
 void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
@@ -71,7 +70,7 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 		cerr << "GUI state node not found." << endl;
 		return;
 	}
-	m_sceneManager->removeContaining(geometry, guiStateNode->getTriangleMesh());
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getTriangleMesh());
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setTriangleMesh(triangleMesh);
@@ -117,8 +116,9 @@ void DefaultGUIManager::insert(Plane_ptr plane,hpuint drawMode) {
 	// TODO : RECOGNIZE ALL FLAGS PARALLEL
 	if (drawMode == HAPPAH_TRIANGLE_MESH)
 		doInsert2D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
-	if (drawMode == 17)
+	if (drawMode == 17){
 		doInsert0D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
+	}
 }
 
 void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
@@ -147,9 +147,9 @@ void DefaultGUIManager::update(Disc_ptr disc) {
 }
 
 void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
-	m_sceneManager->removeContaining(simulationResult.m_gear, simulationResult.m_gearMesh);
+	m_sceneManager->removeContainingData(simulationResult.m_gear, simulationResult.m_gearMesh);
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	m_sceneManager->removeContaining(simulationResult.m_tool, simulationResult.m_toolMesh);
+	m_sceneManager->removeContainingData(simulationResult.m_tool, simulationResult.m_toolMesh);
 	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 }
@@ -229,6 +229,7 @@ void DefaultGUIManager::DefaultSceneListener::handleSubtreesRemovedEvent(vector<
 
 void DefaultGUIManager::DefaultSceneListener::handleSubtreeUpdatedEvent(Node_ptr root) {
 	root->accept(m_defaultGUIManager.m_subtreesUpdatedEventHandler);
+
 }
 
 void DefaultGUIManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {

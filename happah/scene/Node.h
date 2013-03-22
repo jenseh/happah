@@ -25,16 +25,22 @@ public:
 	virtual void accept(SceneVisitor& sceneVisitor);
 	virtual bool contains(shared_ptr<void> data) const;
 	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
-	Node_ptr findChildContaining(shared_ptr<void> data) const;
-	Node_ptr findContaining(shared_ptr<void> data) const;
+	Node_ptr findChildContainingData(shared_ptr<void> data) const;
+//	template<class T>
+//	Node_ptr findChildContainingDataOfType() const;
+	Node_ptr findContainingData(shared_ptr<void> data) const;
 	Node_ptr getParent();
 	Node_ptr getptr();
 	bool hasChild(Node_ptr child) const;
 	virtual Node_ptr remove(Node_ptr node);
 	virtual void remove(vector<Node_ptr>& nodes);
 	virtual void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
-	virtual Node_ptr removeChildContaining(shared_ptr<void> data);
-	virtual Node_ptr removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
+	virtual Node_ptr removeChildContainingData(shared_ptr<void> data);
+	virtual Node_ptr removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData);
+//	template<class T>
+//	virtual void removeContainingDataOfType(shared_ptr<void> parentData);
+//	template<class T>
+//	virtual void removeContainingDataOfType(shared_ptr<void> parentData, vector<Node_ptr>& removedNodes);
 
 protected:
 	set<Node_ptr> m_children;

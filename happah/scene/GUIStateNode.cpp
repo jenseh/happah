@@ -34,6 +34,10 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
+void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){
+	m_pointCloud = pointCloud;
+}
+
 // BSplineCurve
 
 BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(

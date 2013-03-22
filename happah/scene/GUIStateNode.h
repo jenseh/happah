@@ -31,6 +31,7 @@ class SpherePatchGUIStateNode;
 typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
 
 #include "happah/geometries/Mesh.h"
+#include "happah/geometries/PointCloud.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
@@ -49,10 +50,12 @@ public:
 	TriangleMesh_ptr getTriangleMesh() const;
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
+	void setPointCloud(PointCloud_ptr pointCloud);
 
 private:
 	string m_name;
 	TriangleMesh_ptr m_triangleMesh;
+	PointCloud_ptr m_pointCloud;
 
 };
 

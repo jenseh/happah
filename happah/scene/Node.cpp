@@ -37,18 +37,18 @@ void Node::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffine
 		(*i)->draw(drawVisitor, rigidAffineTransformation);
 }
 
-Node_ptr Node::findContaining(shared_ptr<void> data) const {
+Node_ptr Node::findContainingData(shared_ptr<void> data) const {
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		Node_ptr child = *i;
 		if(child->contains(data)) return child;
-		Node_ptr node = child->findContaining(data);
+		Node_ptr node = child->findContainingData(data);
 		if(node) return node;
 	}
 
 	return Node_ptr();
 }
 
-Node_ptr Node::findChildContaining(shared_ptr<void> data) const {
+Node_ptr Node::findChildContainingData(shared_ptr<void> data) const {
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		Node_ptr child = *i;
 		if(child->contains(data)) return child;
@@ -94,13 +94,13 @@ void Node::remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes) {
 	}
 }
 
-Node_ptr Node::removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData) {
-	Node_ptr node = findContaining(parentData);
-	if(node) return node->removeChildContaining(childData);
+Node_ptr Node::removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData) {
+	Node_ptr node = findContainingData(parentData);
+	if(node) return node->removeChildContainingData(childData);
 	return Node_ptr();
 }
 
-Node_ptr Node::removeChildContaining(shared_ptr<void> data) {
+Node_ptr Node::removeChildContainingData(shared_ptr<void> data) {
 	Node_ptr child;
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		child = *i;

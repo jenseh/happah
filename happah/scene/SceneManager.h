@@ -34,7 +34,8 @@ public:
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
-	void insert(Plane_ptr plane, PointCloud_ptr pointCloud,hpcolor& color);
+	void insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
+//void insert(Plane_ptr plane, BSplineCurve<hpvec2> splineCurve, LineMesh_ptr<hpvec2> lineMesh_ptr, hpcolor& color);
 	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
@@ -46,8 +47,8 @@ public:
 	Node_ptr remove(Node_ptr node);
 	void remove(vector<Node_ptr>& nodes);
 	void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
-	Node_ptr removeChildContaining(shared_ptr<void> data);
-	Node_ptr removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
+	Node_ptr removeChildContainingData(shared_ptr<void> data);
+	Node_ptr removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData);
 	void unregisterSceneListener(SceneListener* sceneListener);
 
 private:

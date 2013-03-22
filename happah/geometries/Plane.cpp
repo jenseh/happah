@@ -86,25 +86,12 @@ PointCloud* Plane::toPointCloud() {
 	hpreal edgeLength = 1.0f;
 	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
 
-	hpvec3 normal = glm::normalize(m_normal);
-	hpvec3 a = hpvec3(1.f, 0.f, 0.f);
-	if( a == normal ) {
-		a = hpvec3(0.f, 0.f, 1.f);
-	}
-	a -= glm::dot(a,normal)*normal;
-	a = 0.5f*edgeLength*glm::normalize(a);
-	hpvec3 b = 0.5f*edgeLength*glm::normalize(glm::cross(a,normal));
+	vertexData->push_back(hpvec3(-1.0f,-1.0f,0.0f));
+	vertexData->push_back(hpvec3(1.0f,-1.0f,0.0f));
+	vertexData->push_back(hpvec3(1.0f,1.0f,0.0f));
+	vertexData->push_back(hpvec3(-1.0f,1.0f,0.0f));
 
-	float di = 0.1;
-	float dj = 0.1;
-	for (float i= 0.0f; i < 1 ; i = i+di){
-		for (float j=0.0f; j < 1 ; i = j+dj){
-			vertexData->push_back(m_origin + i*a + j*b);
-			vertexData->push_back(m_origin - i*a + j*b);
-			vertexData->push_back(m_origin - i*a - j*b);
-			vertexData->push_back(m_origin + i*a - j*b);
-		}
-	}
+
 	return new PointCloud(vertexData);
 }
 Plane& Plane::operator=(const Plane& other) {

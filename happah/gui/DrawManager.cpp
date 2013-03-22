@@ -61,7 +61,7 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix; // CHanged
+
 	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
 	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
 	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
@@ -81,9 +81,7 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 		glUniform1i(m_isColorPerVertexLocation, 0);
 		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
 	}
-	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
-	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
-	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
+
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
 	glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
@@ -92,30 +90,17 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 }
 
 void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	cout << "CAME HERE 2" << endl;
+	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-
+	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix;
 	glBindVertexArray(pointCloudRenderStateNode.getVertexArrayObjectID());
-	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
-	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
-	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
-	glUniform1f(m_ambientFactorLocation, (GLfloat)pointCloudRenderStateNode.getMaterial().getAmbientFactor());
-	glUniform1f(m_diffuseFactorLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getDiffuseFactor());
-	glUniform1f(m_specularFactorLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getSpecularFactor());
-	glUniform1f(m_phongExponentLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getPhongExponent());
-	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	if (pointCloudRenderStateNode.hasColorVector()) {
-		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-		glUniform1i(m_isColorPerVertexLocation, 1);
-		glUniform1i(m_isSkipLightingContributionComputationLocation, 1);
-	} else {
-		hpcolor color = pointCloudRenderStateNode.getColor();
-		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
-		glUniform1i(m_isColorPerVertexLocation, 0);
-		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
-	}
-
+	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
+	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
+	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
+	cout << "GOT HERE 3" << endl;
 	glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
 	glBindVertexArray(0);
 }
@@ -202,6 +187,7 @@ void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
 
 void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNode) {
 	GLuint bufferID;
+	std::cout<<" CAME HERE" << std::endl;
 	GLint size = (pointCloudRenderStateNode.getVertexData()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);

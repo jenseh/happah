@@ -57,7 +57,7 @@ void WormForm::createWorm() {
 	//TODO: create a worm here
 	if(m_wormInserted)
 		m_worm = Worm_ptr(new Worm(*m_worm));
-	m_guiManager.insert(m_worm);
+	m_guiManager.insert(m_worm,HP_TRIANGLE_MESH);
 	m_wormInserted = true;
 }
 

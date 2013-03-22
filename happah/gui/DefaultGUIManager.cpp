@@ -35,7 +35,6 @@ void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 	m_sceneManager->insert(geometry, guiStateNode);
 }
 
-
 template<class G, class S, class F>
 void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
@@ -46,6 +45,21 @@ template<class G, class S, class F, class M>
 void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, toFinalLabel(label)));
 	doInsert2D(geometry, guiStateNode);
+}
+
+template<class G, class S>
+void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
+	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	m_sceneManager->insert(geometry, lineMesh, color);
+	guiStateNode->setLineMesh(lineMesh);
+	m_sceneManager->insert(geometry, guiStateNode);
+}
+
+template<class G, class S, class F>
+void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, const char* label, F* form) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
+	doInsert1D(geometry, guiStateNode);
 }
 
 template<class G, class S>
@@ -86,7 +100,7 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve) {
+void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) {
 	hpcolor color(0.0, 1.0, 0.0, 1.0);
 	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
@@ -95,8 +109,9 @@ void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve) {
 	m_sceneManager->insert(bSplineCurve, guiStateNode);
 }
 
-void DefaultGUIManager::insert(Disc_ptr disc) {
-	doInsert2D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
+void DefaultGUIManager::insert(Disc_ptr disc,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
 }
 
 /*
@@ -107,30 +122,37 @@ void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 }
 */
 
-void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
-	doInsert2D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
-		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
+void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
+				involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
 void DefaultGUIManager::insert(Plane_ptr plane,hpuint drawMode) {
-	// TODO : RECOGNIZE ALL FLAGS PARALLEL
-	if (drawMode == HAPPAH_TRIANGLE_MESH)
+
+	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
-	if (drawMode == 17){
+	if (drawMode & HP_LINE_MESH){
+		doInsert1D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
+	}
+	if (drawMode & HP_POINT_CLOUD){
 		doInsert0D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
 	}
 }
 
-void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
-	doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
+void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
 
-void DefaultGUIManager::insert(SpherePatch_ptr spherePatch) {
-	doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
+void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
 }
 
-void DefaultGUIManager::insert(Worm_ptr worm) {
-	doInsert2D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+void DefaultGUIManager::insert(Worm_ptr worm,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }
 
 string DefaultGUIManager::toFinalLabel(const char* label) {

@@ -3,6 +3,9 @@
 LineMeshNode::LineMeshNode(LineMesh_ptr lineMesh)
 	: SimpleGeometryNode<LineMesh>(lineMesh) {}
 
+LineMeshNode::LineMeshNode(LineMesh_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation)
+	: SimpleGeometryNode<LineMesh>(lineMesh,rigidAffineTransformation) {}
+
 LineMeshNode::~LineMeshNode() {}
 
 void LineMeshNode::accept(SceneVisitor& sceneVisitor) {

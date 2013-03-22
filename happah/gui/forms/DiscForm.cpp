@@ -32,7 +32,7 @@ void DiscForm::changeRadius(hpreal radius) {
 }
 
 void DiscForm::createDisc() {
-	m_guiManager.insert(m_disc);
+	m_guiManager.insert(m_disc,HP_TRIANGLE_MESH);
 	m_discInserted = true;
 }
 

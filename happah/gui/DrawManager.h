@@ -98,21 +98,6 @@ private:
 	GLint m_pointCloudProjectionMatrixLocation;
 	GLint m_pointCloudPointRadiusLocation;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);

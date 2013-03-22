@@ -20,3 +20,7 @@ void PlaneNode::insertChild(TriangleMeshNode_ptr triangleMeshNode) {
 void PlaneNode::insertChild(PointCloudNode_ptr pointCloudNode) {
 	Node::insertChild(pointCloudNode);
 }
+
+void PlaneNode::insertChild(LineMeshNode_ptr LineMeshNode) {
+	Node::insertChild(LineMeshNode);
+}

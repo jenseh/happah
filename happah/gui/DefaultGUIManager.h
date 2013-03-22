@@ -24,14 +24,14 @@ public:
 	~DefaultGUIManager();
 
 	bool init();
-	void insert(BSplineCurve_ptr bSplineCurve);
-	void insert(Disc_ptr disc);
+	void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(Disc_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
-	void insert(InvoluteGear_ptr involuteGear);
-	void insert(Plane_ptr plane, hpuint drawMode = HAPPAH_TRIANGLE_MESH);
-	void insert(SimpleGear_ptr simpleGear);
-	void insert(SpherePatch_ptr spherePatch);
-	void insert(Worm_ptr worm);
+	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 	void update(BSplineCurve_ptr bSplineCurve);
 	void update(DiscGearGrindResult simulationResult);
 	void update(Disc_ptr disc);
@@ -142,6 +142,10 @@ private:
 	void doInsert2D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G, class S, class F, class M>
 	void doInsert2D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
+	template<class G, class S>
+	void doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	template<class G, class S, class F>
+	void doInsert1D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G, class S>
 	void doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
 	template<class G, class S, class F>

@@ -1,5 +1,5 @@
-#ifndef HAPPAH_H_
-#define HAPPAH_H_
+#ifndef HP_H_
+#define HP_H_
 
 #include <QApplication>
 

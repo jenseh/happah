@@ -34,6 +34,9 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
+void GUIStateNode::setLineMesh(LineMesh_ptr lineMesh){
+	m_lineMesh = lineMesh;
+}
 void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){
 	m_pointCloud = pointCloud;
 }

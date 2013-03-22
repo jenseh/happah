@@ -16,7 +16,7 @@ InvoluteGearContextMenu::~InvoluteGearContextMenu(){}
 
 void InvoluteGearContextMenu::createSimpleGear() {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(m_involuteGear->toSimpleGear());
-	m_guiManager.insert(simpleGear);
+	m_guiManager.insert(simpleGear,HP_TRIANGLE_MESH);
 }
 
 void InvoluteGearContextMenu::setInvoluteGear(InvoluteGear_ptr involuteGear) {

@@ -50,12 +50,16 @@ public:
 	TriangleMesh_ptr getTriangleMesh() const;
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
+	void setLineMesh(LineMesh_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
+
 
 private:
 	string m_name;
 	TriangleMesh_ptr m_triangleMesh;
+	LineMesh_ptr m_lineMesh;
 	PointCloud_ptr m_pointCloud;
+
 
 };
 

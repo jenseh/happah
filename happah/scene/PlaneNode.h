@@ -22,6 +22,7 @@ public:
 	void insertChild(PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
 	void insertChild(PointCloudNode_ptr pointCloudNode);
+	void insertChild(LineMeshNode_ptr lineMeshNode);
 
 };
 

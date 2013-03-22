@@ -35,6 +35,7 @@ public:
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
+	void insert(Plane_ptr plane, LineMesh_ptr LineMesh,hpcolor&color);
 //void insert(Plane_ptr plane, BSplineCurve<hpvec2> splineCurve, LineMesh_ptr<hpvec2> lineMesh_ptr, hpcolor& color);
 	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
@@ -66,6 +67,13 @@ private:
 	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation);
 	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
+
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);
 	void triggerSubtreesInsertedEvent(vector<Node_ptr>& roots);

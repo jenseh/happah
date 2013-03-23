@@ -101,7 +101,10 @@ HEADERS += \
 	happah/simulations/Simulation.h \
 #	happah/simulations/WormGearGrind.h \
 \
-	happah/transformations/RigidAffineTransformation.h
+	happah/transformations/RigidAffineTransformation.h \
+    happah/scene/SimulationNode.h \
+    happah/scene/SimulationVisitor.h \
+    happah/scene/DiscGearGrindNode.h
 
 #KEEP SOURCES SORTED!!!
 SOURCES += \
@@ -191,7 +194,9 @@ SOURCES += \
 	happah/simulations/Simulation.cpp \
 #	happah/simulations/WormGearGrind.cpp \
 \
-	happah/transformations/RigidAffineTransformation.cpp
+	happah/transformations/RigidAffineTransformation.cpp \
+    happah/scene/SimulationNode.cpp \
+    happah/scene/DiscGearGrindNode.cpp
 
 FORMS += 
 RESOURCES += 

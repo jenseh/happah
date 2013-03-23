@@ -20,14 +20,12 @@ private:
 public:
 
     Ray();
-    Ray(hpvec3 orig, hpvec3 dir);
-    hpvec3 getOrigin();
-    hpvec3 getDirection();
+    Ray(hpvec3 origin, hpvec3 direction);
+    const hpvec3& getOrigin()const;
+    const hpvec3& getDirection()const;
     hpreal intersectDistance(Triangle& triangle);
     bool intersects(BBox& box, hpreal length);
     void transform(hpmat4x4& matrix);
     void moveOrigin(hpreal delta);
-
-
 
 };

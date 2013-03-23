@@ -14,6 +14,12 @@ void Node::accept(SceneVisitor& sceneVisitor) {
 		(*i)->accept(sceneVisitor);
 }
 
+void Node::accept(SimulationVisitor& simulationVisitor) {
+    for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i)
+        (*i)->accept(simulationVisitor);
+}
+
+
 bool Node::contains(shared_ptr<void> data) const {
 	return false;
 }

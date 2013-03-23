@@ -9,6 +9,7 @@ using namespace std;
 
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneVisitor.h"
+#include "happah/scene/SimulationVisitor.h"
 #include "happah/transformations/RigidAffineTransformation.h"
 
 class Node;
@@ -23,6 +24,7 @@ public:
 
 	virtual void accept(GUIVisitor& guiVisitor);
 	virtual void accept(SceneVisitor& sceneVisitor);
+    virtual void accept(SimulationVisitor& simulationVisitor);
 	virtual bool contains(shared_ptr<void> data) const;
 	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
 	Node_ptr findChildContainingData(shared_ptr<void> data) const;
@@ -47,7 +49,7 @@ protected:
 	weak_ptr<Node> m_parent;
 
 	void insertChild(Node_ptr child);
-	Node_ptr removeChild(Node_ptr child);
+    Node_ptr removeChild(Node_ptr child);
 	void setParent(Node_ptr parent);
 
 private:

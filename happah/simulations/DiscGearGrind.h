@@ -18,6 +18,7 @@ public:
 	TriangleMesh_ptr m_gearMesh;
 	RigidAffineTransformation m_gearTransformation;
 	Disc_ptr m_tool;
+    hpcolor m_toolColor;
 	TriangleMesh_ptr m_toolMesh;
 	RigidAffineTransformation m_toolTransformation;
 
@@ -29,6 +30,7 @@ public:
 		m_gearMesh(gearMesh),
 		m_gearTransformation(gearTransformation),
 		m_tool(tool),
+        m_toolColor(hpvec4(0.5,0.5,0.5,1.0)),
 		m_toolMesh(toolMesh),
 		m_toolTransformation(toolTransformation){
 	}

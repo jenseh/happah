@@ -11,12 +11,12 @@ std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
 	std::vector<hpvec2>* toothProfile = getToothProfile();
 	std::vector<hpvec2>* gearProfile = new std::vector<hpvec2>();
 	int rotDirection = 1;
-	uint toothCount = getToothCount();
+	hpuint toothCount = getToothCount();
 	if (toothProfileIsInClockDirection())
 		rotDirection = -1;
-	for(uint i = 0; i < toothCount; ++i) {
+	for(hpuint i = 0; i < toothCount; ++i) {
 		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / toothCount + rotation) * 180.0f / M_PI);
-		for(uint j = 0; j < toothProfile->size() - 1; ++j) {
+		for(hpuint j = 0; j < toothProfile->size() - 1; ++j) {
 			gearProfile->push_back(glm::rotate(toothProfile->at(j), degreeRotation));
 		}
 	}
@@ -63,21 +63,21 @@ TriangleMesh* Gear::toTriangleMesh() {
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
-	uint indicesInRow = indices->size() / WIDTH_SAMPLE_SIZE;
-	uint trianglePairsInRow  = indicesInRow / 6;
+	hpuint indicesInRow = indices->size() / WIDTH_SAMPLE_SIZE;
+	hpuint trianglePairsInRow  = indicesInRow / 6;
 
 	//array steps is necessary to walk in the vertexData array to the right places
 	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
 
 	// go one step further in width direction to reach all points
-	for(uint i = 0; i <= WIDTH_SAMPLE_SIZE; ++i) {
-		for (uint j = 0; j < trianglePairsInRow; ++j) {
+	for(hpuint i = 0; i <= WIDTH_SAMPLE_SIZE; ++i) {
+		for (hpuint j = 0; j < trianglePairsInRow; ++j) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
 			//for every point of the gear profile
 			hpvec3 normal = hpvec3(0.0f);
 			int n = i * indicesInRow + j * 6;
-			for (uint k = 0; k < 6; ++k) {
+			for (hpuint k = 0; k < 6; ++k) {
 				int da, db; //distances in vertexData array to other two triangle points
 				if(k < 2) {
 					da = 2; db = 1;
@@ -87,7 +87,7 @@ TriangleMesh* Gear::toTriangleMesh() {
 					da = -1; db = -2;
 				}
 
-				//TODO: n ist int und wird mit uint verglichen! => static_cast???
+				//TODO: n ist int und wird mit hpuint verglichen! => static_cast???
 				n += steps[k];
 				if (k == 2 && j == trianglePairsInRow - 1)
 					n -= indicesInRow;
@@ -99,7 +99,7 @@ TriangleMesh* Gear::toTriangleMesh() {
 				}
 			}
 			n = i * indicesInRow + j * 6;
-			for (uint k = 0; k < 6; ++k) {
+			for (hpuint k = 0; k < 6; ++k) {
 				n += steps[k];
 				if (k == 2 && j == trianglePairsInRow - 1)
 					n -= indicesInRow;

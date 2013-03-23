@@ -47,21 +47,21 @@ TriangleMesh* Disc::toTriangleMesh(){
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
-	uint indicesInRow = indices->size() / ANGLE_DETAIL_LEVEL;
-	uint trianglePairsInRow  = indicesInRow / 6;
+	hpuint indicesInRow = indices->size() / ANGLE_DETAIL_LEVEL;
+	hpuint trianglePairsInRow  = indicesInRow / 6;
 
 	//array steps is necessary to walk in the vertexData array to the right places
 	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
 
 	// go one step further in width direction to reach all points
-	for(uint i = 0; i <= ANGLE_DETAIL_LEVEL; ++i) {
-		for (uint j = 0; j < trianglePairsInRow; ++j) {
+	for(hpuint i = 0; i <= ANGLE_DETAIL_LEVEL; ++i) {
+		for (hpuint j = 0; j < trianglePairsInRow; ++j) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
 			//for every point of the gear profile
 			hpvec3 normal = hpvec3(0.0f);
 			int n = i * indicesInRow + j * 6;
-			for (uint k = 0; k < 6; ++k) {
+			for (hpuint k = 0; k < 6; ++k) {
 				int da, db; //distances in vertexData array to other two triangle points
 				if(k < 2) {
 					da = 2; db = 1;
@@ -81,7 +81,7 @@ TriangleMesh* Disc::toTriangleMesh(){
 				}
 			}
 			n = i * indicesInRow + j * 6;
-			for (uint k = 0; k < 6; ++k) {
+			for (hpuint k = 0; k < 6; ++k) {
 				n += steps[k];
 				if (k == 2 && j == trianglePairsInRow - 1)
 					n -= indicesInRow;

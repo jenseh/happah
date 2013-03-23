@@ -23,7 +23,7 @@ HappahGlFormat::HappahGlFormat() {
 
 const HappahGlFormat DrawManager::GL_FORMAT;
 
-DrawManager::DrawManager(SceneManager_ptr sceneManager) 
+DrawManager::DrawManager(SceneManager_ptr sceneManager)
 	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
 	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
@@ -119,7 +119,8 @@ QGLContext* DrawManager::getGlContext() {
 }
 
 bool DrawManager::init() {
-	m_glContext->create();
+	if(!m_glContext->create())
+
 	m_glContext->makeCurrent();
 
 	GLenum errorCode = glewInit();
@@ -128,9 +129,12 @@ bool DrawManager::init() {
 		return false;
 	}
 
+
 	QGLFormat glFormat = m_glContext->format();
 	if (!glFormat.sampleBuffers())
 		qWarning() << "Could not enable sample buffers";
+
+
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClearDepth(1.0f);

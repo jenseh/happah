@@ -63,6 +63,7 @@ private:
 	DefaultSceneListener m_sceneListener;
 	SceneManager_ptr m_sceneManager;
 	QGLContext* m_glContext;
+	QWidget* m_parentWidget;
 
 	GLuint m_fragmentShader;
 	GLuint m_program;

@@ -45,7 +45,7 @@ public:
 	//virtual BSplineCurve* toToothProfileSystem(std::vector<hpvec4>sectionalPlane) = 0;
 
 	virtual hpreal getAngularPitch() = 0;
-	virtual uint   getToothCount() = 0;
+	virtual hpuint   getToothCount() = 0;
 	virtual hpreal getFacewidth() = 0;
 	virtual hpreal getHelixAngle() = 0;
 	virtual bool   toothProfileIsInClockDirection();
@@ -60,8 +60,8 @@ public:
 	TriangleMesh* toTriangleMesh();
 
 protected:
-	const static uint TOOTH_SAMPLE_SIZE = 100;
-	const static uint WIDTH_SAMPLE_SIZE = 10;
+	const static hpuint TOOTH_SAMPLE_SIZE = 100;
+	const static hpuint WIDTH_SAMPLE_SIZE = 10;
 
 public:
 void printVec4(hpvec4 vec) {

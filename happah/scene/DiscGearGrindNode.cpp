@@ -3,7 +3,7 @@
 DiscGearGrindNode::DiscGearGrindNode(DiscGearGrind_ptr discGearGrind):
     SimulationNode(), m_discGearGrind(discGearGrind)
 {
-    m_discGearGrind->runSimulation();
+    //m_discGearGrind->runSimulation();
     DiscGearGrindResult result = m_discGearGrind->getSimulationResult(0);
 
     m_discMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_toolMesh, result.m_toolTransformation));

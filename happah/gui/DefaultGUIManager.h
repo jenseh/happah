@@ -27,13 +27,14 @@ public:
 	void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(Disc_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
+    void insert(DiscGearGrind_ptr discGearGrind);
 	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 	void update(BSplineCurve_ptr bSplineCurve);
-	void update(DiscGearGrindResult simulationResult);
+    //void update(DiscGearGrindResult simulationResult);
 	void update(Disc_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);

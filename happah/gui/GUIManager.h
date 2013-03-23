@@ -20,13 +20,14 @@ public:
 	virtual void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) = 0;
 	virtual void insert(Disc_ptr disc,hpuint drawMode) = 0;
 	//virtual void insert(DiscGearGrindResult simulationResult) = 0;
+    virtual void insert(DiscGearGrind_ptr discGearGrind) = 0;
 	virtual void insert(InvoluteGear_ptr involuteGear,hpuint drawMode) = 0;
 	virtual void insert(Plane_ptr plane,hpuint drawMode) = 0;
 	virtual void insert(SimpleGear_ptr simpleGear, hpuint drawMode) = 0;
 	virtual void insert(SpherePatch_ptr spherePatch, hpuint drawMode) = 0;
 	virtual void insert(Worm_ptr worm, hpuint drawMode) = 0;
 	virtual void update(BSplineCurve_ptr bSplienCurve) = 0;
-	virtual void update(DiscGearGrindResult simulationResult) = 0;
+    //virtual void update(DiscGearGrindResult simulationResult) = 0;
 	virtual void update(Disc_ptr disc) = 0;
 	virtual void update(InvoluteGear_ptr involuteGear) = 0;
 	virtual void update(Plane_ptr plane) = 0;

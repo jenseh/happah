@@ -27,7 +27,8 @@ void SimulationForm::createSimulation() {
 	}
 	if(!m_simulationInserted){
 		m_simulation->runSimulation();
-		m_guiManager.update(m_simulation->getSimulationResult(0.0f));
+        m_guiManager.insert(m_simulation);
+        //m_guiManager.update(m_simulation->getSimulationResult(0.0f));
 		m_simulationInserted = true;
 	}
 }
@@ -58,6 +59,6 @@ void SimulationForm::setSimulation(DiscGearGrind_ptr simulation) {
 }
 
 void SimulationForm::updateSimulation(hpreal time) {
-	if(m_simulationInserted)
-		m_guiManager.update(m_simulation->getSimulationResult(time));
+    //if(m_simulationInserted)
+        //m_guiManager.update(m_simulation->getSimulationResult(time));
 }

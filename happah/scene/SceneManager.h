@@ -14,7 +14,9 @@ class SceneManager;
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Worm.h"
+#include "happah/simulations/DiscGearGrind.h"
 #include "happah/scene/GUIStateNode.h"
+#include "happah/scene/DiscGearGrindNode.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
 #include "happah/scene/PointCloudNode.h"
@@ -30,6 +32,7 @@ public:
 	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
 	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Disc_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+    void insert(DiscGearGrind_ptr);
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
@@ -73,6 +76,8 @@ private:
 	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
+    template<class S, class N>
+    void doInsert(shared_ptr<S> simulation);
 
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);

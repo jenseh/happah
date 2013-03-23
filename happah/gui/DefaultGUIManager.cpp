@@ -122,6 +122,10 @@ void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 }
 */
 
+void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
+    m_sceneManager->insert(discGearGrind);
+}
+
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
@@ -168,13 +172,14 @@ void DefaultGUIManager::update(Disc_ptr disc) {
 	doUpdate2D<Disc>(disc);
 }
 
+/*
 void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
 	m_sceneManager->removeContainingData(simulationResult.m_gear, simulationResult.m_gearMesh);
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
 	m_sceneManager->removeContainingData(simulationResult.m_tool, simulationResult.m_toolMesh);
 	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
-}
+} */
 
 void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate2D<InvoluteGear>(involuteGear);

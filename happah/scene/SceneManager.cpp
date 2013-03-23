@@ -305,6 +305,10 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 
 	triggerSubtreeInsertedEvent(root);
 }
+template<class S, class N>
+void SceneManager::doInsert(shared_ptr<S> simulation) {
+
+}
 
 void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
 	doInsert<BSplineCurve, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
@@ -361,6 +365,10 @@ void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor&
 
 void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
 	doInsert<Disc, DiscNode >(disc, triangleMesh, color, transformation);
+}
+
+void SceneManager::insert(DiscGearGrind_ptr discGearGrind) {
+    doInsert<DiscGearGrind, DiscGearGrindNode>(discGearGrind);
 }
 
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {

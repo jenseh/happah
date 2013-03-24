@@ -3,10 +3,14 @@
 #include "happah/scene/Node.h"
 #include "happah/scene/SimulationVisitor.h"
 
+class SceneManager;
+
 class SimulationNode : public Node
 {
+    SceneManager* m_sceneManager;
 public:
-    SimulationNode();
+    SimulationNode(SceneManager* sceneManager);
+    virtual ~SimulationNode();
 
     void accept(SimulationVisitor& simulationVisitor);
     virtual void update(hpreal currentTime)= 0;

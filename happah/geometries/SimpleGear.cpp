@@ -92,6 +92,10 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	m_toothProfile = curve;
 }
 
+void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
+    //TODO: implement method
+}
+
 std::vector<hpvec2>* SimpleGear::getToothProfile() {
 	std::vector<hpvec2> *points = new std::vector<hpvec2>;
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();

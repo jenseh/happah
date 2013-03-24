@@ -18,7 +18,7 @@ void DiscContextMenu::useDiscInSumulation() {
 
 }
 
-void DiscContextMenu::setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh) {
+void DiscContextMenu::setDisc(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
 	m_disc = disc;
 	m_discMesh = discMesh;
 }

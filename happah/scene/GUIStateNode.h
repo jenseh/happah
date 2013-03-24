@@ -133,13 +133,13 @@ private:
 
 };
 
-#include "happah/geometries/Disc.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/forms/DiscForm.h"
 #include "happah/gui/context-menus/DiscContextMenu.h"
 
 class DiscGUIStateNode : public GUIStateNode {
 public:
-	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
+    DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
 	~DiscGUIStateNode();
 
 	ContextMenu* getContextMenu() const;
@@ -147,7 +147,7 @@ public:
 	Form* getForm();
 
 private:
-	Disc_ptr m_disc;
+    SurfaceOfRevolution_ptr m_disc;
 	DiscForm* m_discForm;
 	DiscContextMenu* m_discContextMenu;
 

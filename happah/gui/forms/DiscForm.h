@@ -1,7 +1,9 @@
 #ifndef DISCFORM_H_
 #define DISCFORM_H_
 
-#include "happah/geometries/StandardProfileDisc.h"
+#include "happah/geometries/DiscGenerator.h"
+#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
@@ -13,12 +15,12 @@ public:
 	DiscForm(GUIManager& guiManager, QWidget* parent = 0);
 	~DiscForm();
 
-	Disc_ptr getDisc() const;
+	SurfaceOfRevolution_ptr getDisc() const;
 	void reset();
-	void setDisc(Disc_ptr disc);
+	void setDisc(SurfaceOfRevolution_ptr disc);
 
 private:
-	Disc_ptr m_disc;
+	SurfaceOfRevolution_ptr m_disc;
 	bool m_discInserted;
 	GUIManager& m_guiManager;
 	Slider* m_radiusSlider;

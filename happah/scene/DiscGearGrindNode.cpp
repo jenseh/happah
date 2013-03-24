@@ -1,7 +1,7 @@
 #include "DiscGearGrindNode.h"
 
-DiscGearGrindNode::DiscGearGrindNode(DiscGearGrind_ptr discGearGrind):
-    SimulationNode(), m_discGearGrind(discGearGrind)
+DiscGearGrindNode::DiscGearGrindNode(SceneManager* sceneManager, DiscGearGrind_ptr discGearGrind):
+    SimulationNode(sceneManager), m_discGearGrind(discGearGrind)
 {
     //m_discGearGrind->runSimulation();
     DiscGearGrindResult result = m_discGearGrind->getSimulationResult(0);

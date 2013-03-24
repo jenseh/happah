@@ -16,8 +16,7 @@ public:
 
 	hpreal getHeight(hpreal x) const;
 
-	void getProfilePartition(std::vector<glm::vec2>& partition,
-			int numberSamples);
+    void getProfilePartition(std::vector<glm::vec2>& partition);
 
 private:
     hpreal m_module;

@@ -9,13 +9,13 @@ using namespace std;
 
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneVisitor.h"
-#include "happah/scene/SimulationVisitor.h"
 #include "happah/transformations/RigidAffineTransformation.h"
 
 class Node;
 typedef shared_ptr<Node> Node_ptr;
 
 class GUIVisitor;
+class SimulationVisitor;
 class Node : public enable_shared_from_this<Node> {
 
 public:

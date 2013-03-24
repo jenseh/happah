@@ -15,11 +15,11 @@ class GeometryFindVisitor: public SceneVisitor {
 	vector<InvoluteGear_ptr > involuteGears;
 	vector<Plane_ptr> planes;
 	vector<SimpleGear_ptr> simpleGears;
-	vector<Disc_ptr> discs;
+	vector<SurfaceOfRevolution_ptr> discs;
 	vector<Worm_ptr> worms;
 	vector<SpherePatch_ptr> spherePatches;
 
-	vector<Disc_ptr> getDiscs(){
+	vector<SurfaceOfRevolution_ptr> getDiscs(){
 		return discs;
 	}
 	vector<SimpleGear_ptr> getSimpleGears() {

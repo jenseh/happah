@@ -89,8 +89,8 @@ hpreal StandardProfile::getHeight(hpreal x) const {
 		return -m_module - m_bottomClearance;
 }
 
-void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition,
-		int numberSamples) {
+void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition) {
+    int numberSamples = partition.capacity();
 	for (int i = 0; i < numberSamples; i++) {
 		hpreal x = ((hpreal) i / (hpreal) numberSamples) * m_module * M_PI;
 		hpreal y = getHeight(x);

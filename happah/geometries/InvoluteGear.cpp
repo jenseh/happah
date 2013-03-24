@@ -262,6 +262,10 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 	return minmax;
 }
 
+void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
+    //TODO: implement method
+}
+
 std::vector<hpvec2>* InvoluteGear::getToothProfile() {
 
 	std::vector<hpvec2>* profile = new std::vector<hpvec2>(TOOTH_SAMPLE_SIZE);

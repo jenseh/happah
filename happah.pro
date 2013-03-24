@@ -15,9 +15,8 @@ HEADERS += \
 	happah/geometries/BSplineGearCurve.h \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
-	happah/geometries/Disc.h \
+        happah/geometries/DiscGenerator.h \
 	happah/geometries/Gear.h \
-	happah/geometries/GearProfileDisc.h \
 	happah/geometries/Geometry.h \ 
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
@@ -28,7 +27,7 @@ HEADERS += \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
-	happah/geometries/StandardProfileDisc.h \
+        happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/Worm.h \
 #	happah/geometries/ZCircleCloud.h \
@@ -71,9 +70,10 @@ HEADERS += \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
-	happah/scene/BSplineCurveNode.h \
+        happah/scene/BSplineCurveNode.h \
 	happah/scene/DiscNode.h \
 	happah/scene/DrawVisitor.h \
+        happah/scene/DiscGearGrindNode.h \
 	happah/scene/ElementRenderStateNode.h\
 	happah/scene/GeometryFindVisitor.h \
 	happah/scene/GUIStateNode.h \
@@ -86,11 +86,13 @@ HEADERS += \
 	happah/scene/PointCloudRenderStateNode.h\
 	happah/scene/RayIntersectionVisitor.h \
 	happah/scene/RenderStateNode.h\
+        happah/scene/SimulationNode.h \
+        happah/scene/SimulationVisitor.h \
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGearNode.h \
-	happah/scene/SimpleGeometryNode.h \
+        happah/scene/SimpleGeometryNode.h \
 	happah/scene/SpherePatchNode.h\
 	happah/scene/TriangleMeshNode.h \
 	happah/scene/WormNode.h \
@@ -101,10 +103,8 @@ HEADERS += \
 	happah/simulations/Simulation.h \
 #	happah/simulations/WormGearGrind.h \
 \
-	happah/transformations/RigidAffineTransformation.h \
-    happah/scene/SimulationNode.h \
-    happah/scene/SimulationVisitor.h \
-    happah/scene/DiscGearGrindNode.h
+        happah/transformations/RigidAffineTransformation.h \
+
 
 #KEEP SOURCES SORTED!!!
 SOURCES += \
@@ -116,9 +116,8 @@ SOURCES += \
 	happah/geometries/BSplineGearCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
-	happah/geometries/Disc.cpp \
+        happah/geometries/DiscGenerator.cpp \
 	happah/geometries/Gear.cpp \
-	happah/geometries/GearProfileDisc.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
@@ -129,7 +128,7 @@ SOURCES += \
 #	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
 	happah/geometries/StandardProfile.cpp \
-	happah/geometries/StandardProfileDisc.cpp \
+        happah/geometries/SurfaceOfRevolution.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/Worm.cpp \
 #	happah/geometries/ZCircleCloud.cpp \
@@ -169,7 +168,8 @@ SOURCES += \
 	happah/math/Ray.cpp \
 \
 	happah/scene/BSplineCurveNode.cpp \
-	happah/scene/DiscNode.cpp \
+        happah/scene/DiscNode.cpp \
+        happah/scene/DiscGearGrindNode.cpp \
 	happah/scene/ElementRenderStateNode.cpp\
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
@@ -182,7 +182,8 @@ SOURCES += \
 	happah/scene/RayIntersectionVisitor.cpp \
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
-	happah/scene/SceneVisitor.cpp \
+        happah/scene/SceneVisitor.cpp \
+        happah/scene/SimulationNode.cpp \
 	happah/scene/SimpleGearNode.cpp \
 	happah/scene/SpherePatchNode.cpp\
 	happah/scene/TriangleMeshNode.cpp \
@@ -195,8 +196,6 @@ SOURCES += \
 #	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
-    happah/scene/SimulationNode.cpp \
-    happah/scene/DiscGearGrindNode.cpp
 
 FORMS += 
 RESOURCES += 

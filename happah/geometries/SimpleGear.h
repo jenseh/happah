@@ -37,6 +37,7 @@ public:
 	virtual void setToothProfile(BSplineGearCurve* curve);
 	virtual void setRadius(hpreal radius);
 
+    virtual void getToothSpaceProfile(vector<hpvec2> &profile)const;
 	virtual std::vector<hpvec2>* getToothProfile();
 
 };

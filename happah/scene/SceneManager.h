@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class SceneManager;
+//class SceneManager;
 
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/Plane.h"
@@ -15,9 +15,8 @@ class SceneManager;
 #include "happah/geometries/Disc.h"
 #include "happah/geometries/Worm.h"
 #include "happah/simulations/DiscGearGrind.h"
-#include "happah/scene/GUIStateNode.h"
 #include "happah/scene/DiscGearGrindNode.h"
-#include "happah/scene/Node.h"
+#include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SceneListener.h"
 #include "happah/scene/PointCloudNode.h"
 

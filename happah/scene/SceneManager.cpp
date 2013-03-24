@@ -307,7 +307,7 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 }
 template<class S, class N>
 void SceneManager::doInsert(shared_ptr<S> simulation) {
-    shared_ptr<N> simulationNode = shared_ptr<N>(new N(simulation));
+    shared_ptr<N> simulationNode = shared_ptr<N>(new N(this, simulation));
     insertChild(simulationNode);
     triggerSubtreeInsertedEvent(simulationNode);
 }

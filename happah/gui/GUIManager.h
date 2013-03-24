@@ -10,9 +10,8 @@
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/Worm.h"
-#include "happah/simulations/Simulation.h"
-#include "happah/simulations/DiscGearGrind.h"
 #include "happah/scene/SceneVisitor.h"
+#include "happah/simulations/DiscGearGrind.h"
 
 
 class GUIManager {

@@ -109,9 +109,9 @@ void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) {
 	m_sceneManager->insert(bSplineCurve, guiStateNode);
 }
 
-void DefaultGUIManager::insert(Disc_ptr disc,hpuint drawMode) {
+void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
-		doInsert2D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
+		doInsert2D<SurfaceOfRevolution, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
 }
 
 /*
@@ -168,8 +168,8 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 }
 
-void DefaultGUIManager::update(Disc_ptr disc) {
-	doUpdate2D<Disc>(disc);
+void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
+	doUpdate2D<SurfaceOfRevolution>(disc);
 }
 
 /*
@@ -201,7 +201,7 @@ void DefaultGUIManager::update(Worm_ptr worm) {
 	doUpdate2D<Worm>(worm);
 }
 
-void DefaultGUIManager::useInSimulation(Disc_ptr disc, TriangleMesh_ptr discMesh) {
+void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
 	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
 }
 

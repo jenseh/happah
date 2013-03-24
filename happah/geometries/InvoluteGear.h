@@ -88,6 +88,7 @@ public:
     bool setFilletRadius(hpreal filletRadius);
     bool setHelixAngle(hpreal helixAngle);
 
+    void getToothSpaceProfile(vector<hpvec2> &profile) const;
     std::vector<hpvec2>* getToothProfile();
     TriangleMesh* toTriangleMesh();
 //    ZCircleCloud* toZCircleCloud();

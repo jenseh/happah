@@ -25,7 +25,7 @@ public:
 
 	bool init();
 	void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode = HP_TRIANGLE_MESH);
-	void insert(Disc_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
+    void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
     void insert(DiscGearGrind_ptr discGearGrind);
 	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
@@ -35,13 +35,13 @@ public:
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 	void update(BSplineCurve_ptr bSplineCurve);
     //void update(DiscGearGrindResult simulationResult);
-	void update(Disc_ptr disc);
+    void update(SurfaceOfRevolution_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
 	void update(SpherePatch_ptr spherePatch);
 	void update(Worm_ptr worm);
-	void useInSimulation(Disc_ptr disc,TriangleMesh_ptr discMesh);
+    void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
 	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
 

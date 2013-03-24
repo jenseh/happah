@@ -357,16 +357,16 @@ void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMe
 	doInsert<SimpleGear, SimpleGearNode>(simpleGear, triangleMesh, color);
 }
 
-void SceneManager::insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode) {
-	doInsert<Disc, DiscNode, DiscGUIStateNode>(disc, discGUIStateNode);
+void SceneManager::insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode) {
+    doInsert<SurfaceOfRevolution, DiscNode, DiscGUIStateNode>(disc, discGUIStateNode);
 }
 
-void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	doInsert<Disc, DiscNode>(disc, triangleMesh, color);
+void SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+    doInsert<SurfaceOfRevolution, DiscNode>(disc, triangleMesh, color);
 }
 
-void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
-	doInsert<Disc, DiscNode >(disc, triangleMesh, color, transformation);
+void SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
+    doInsert<SurfaceOfRevolution, DiscNode >(disc, triangleMesh, color, transformation);
 }
 
 void SceneManager::insert(DiscGearGrind_ptr discGearGrind) {

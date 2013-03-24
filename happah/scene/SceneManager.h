@@ -12,7 +12,7 @@ using namespace std;
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/SpherePatch.h"
-#include "happah/geometries/Disc.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/geometries/Worm.h"
 #include "happah/simulations/DiscGearGrind.h"
 #include "happah/scene/DiscGearGrindNode.h"
@@ -28,9 +28,9 @@ public:
 
 	void insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode);
 	void insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color);
-	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
-	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
-	void insert(Disc_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+    void insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
+    void insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
+    void insert(SurfaceOfRevolution_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
     void insert(DiscGearGrind_ptr);
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);

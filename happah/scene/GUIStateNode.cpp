@@ -142,7 +142,7 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
-DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
+DiscGUIStateNode::DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
 	: GUIStateNode(name), m_disc(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
 
 DiscGUIStateNode::~DiscGUIStateNode() {

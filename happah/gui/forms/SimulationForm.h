@@ -1,10 +1,9 @@
 #ifndef SIMULATIONFORM_H_
 #define SIMULATIONFORM_H_
 
-#include "happah/geometries/Disc.h"
-#include "happah/geometries/GearProfileDisc.h"
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
@@ -26,12 +25,12 @@ public:
 	DiscGearGrind_ptr getSimulation() const;
 	void reset();
 	void setSimulation(DiscGearGrind_ptr simulation);
-	void setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh);
+	void setDisc(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh);
 	void setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 
 private:
 
-	Disc_ptr m_disc;
+	SurfaceOfRevolution_ptr m_disc;
 	TriangleMesh_ptr m_discMesh;
 	SimpleGear_ptr m_gear;
 	TriangleMesh_ptr m_gearMesh;

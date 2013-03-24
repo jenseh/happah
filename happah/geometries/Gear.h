@@ -52,6 +52,7 @@ public:
 	//getToothProfile should return all points of one tooth,
 	//even the last point, which must be the same one as the
 	//first one of next tooth will be.
+    virtual void getToothSpaceProfile(std::vector<hpvec2>& profile)const = 0;
 	virtual std::vector<hpvec2>* getToothProfile() = 0;
 	//getGearProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is

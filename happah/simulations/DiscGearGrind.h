@@ -4,10 +4,10 @@
 #include <memory>
 #include <map>
 
-#include "happah/geometries/Disc.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/simulations/Simulation.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/simulations/Kinematic.h"
 
 
@@ -17,14 +17,14 @@ public:
 	vector<hpcolor>* m_gearColor;
 	TriangleMesh_ptr m_gearMesh;
 	RigidAffineTransformation m_gearTransformation;
-	Disc_ptr m_tool;
+	SurfaceOfRevolution_ptr m_tool;
     hpcolor m_toolColor;
 	TriangleMesh_ptr m_toolMesh;
 	RigidAffineTransformation m_toolTransformation;
 
 
 	DiscGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
-						Disc_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
+						SurfaceOfRevolution_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
 		m_gear(gear),
 		m_gearColor(new std::vector<hpcolor>(*gearColor) ), // Make copy !
 		m_gearMesh(gearMesh),
@@ -41,7 +41,7 @@ class DiscGearGrind : public Simulation
 {
 
 public:
-    DiscGearGrind(Disc_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+    DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
     ~DiscGearGrind();
 
     DiscGearGrindResult getSimulationResult(double time);
@@ -51,7 +51,7 @@ private:
 	static const int STEP_COUNT = 5;
 	std::map< hpreal,DiscGearGrindResult > m_precalcResults;
 
-    Disc_ptr m_disc;
+    SurfaceOfRevolution_ptr m_disc;
     SimpleGear_ptr m_gear;
 
     TriangleMesh_ptr m_discMesh;

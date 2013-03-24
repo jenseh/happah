@@ -15,9 +15,8 @@ HEADERS += \
 	happah/geometries/BSplineGearCurve.h \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
-	happah/geometries/Disc.h \
+        happah/geometries/DiscGenerator.h \
 	happah/geometries/Gear.h \
-	happah/geometries/GearProfileDisc.h \
 	happah/geometries/Geometry.h \ 
 	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
@@ -28,7 +27,7 @@ HEADERS += \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
-	happah/geometries/StandardProfileDisc.h \
+        happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/Worm.h \
 #	happah/geometries/ZCircleCloud.h \
@@ -117,9 +116,8 @@ SOURCES += \
 	happah/geometries/BSplineGearCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
-	happah/geometries/Disc.cpp \
+        happah/geometries/DiscGenerator.cpp \
 	happah/geometries/Gear.cpp \
-	happah/geometries/GearProfileDisc.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
@@ -130,7 +128,7 @@ SOURCES += \
 #	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
 	happah/geometries/StandardProfile.cpp \
-	happah/geometries/StandardProfileDisc.cpp \
+        happah/geometries/SurfaceOfRevolution.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/Worm.cpp \
 #	happah/geometries/ZCircleCloud.cpp \

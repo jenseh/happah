@@ -1,0 +1,14 @@
+#ifndef GRINDINGWHEEL_H
+#define GRINDINGWHEEL_H
+#include "happah/geometries/Gear.h"
+#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
+
+class DiscGenerator
+{
+public:
+    static SurfaceOfRevolution_ptr generateDiscFrom(Gear& gear);
+    static SurfaceOfRevolution_ptr generateDiscFrom(StandardProfile profile);
+};
+
+#endif // GRINDINGWHEEL_H

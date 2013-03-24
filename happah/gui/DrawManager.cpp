@@ -1,10 +1,9 @@
-#define GLEW_STATIC //Very important for Windows users
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <GL/glew.h>
-#include <GL/gl.h>
+# include <GL/glew.h>
+# include <GL/gl.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <QMatrix4x4>
 
@@ -119,8 +118,10 @@ QGLContext* DrawManager::getGlContext() {
 }
 
 bool DrawManager::init() {
-	if(!m_glContext->create())
-
+	if(!m_glContext->create()) {
+		fprintf(stderr, "Unable to create QGLContext! \n");
+		return false;
+	}
 	m_glContext->makeCurrent();
 
 	GLenum errorCode = glewInit();
@@ -130,10 +131,12 @@ bool DrawManager::init() {
 	}
 
 
-	QGLFormat glFormat = m_glContext->format();
-	if (!glFormat.sampleBuffers())
-		qWarning() << "Could not enable sample buffers";
 
+
+	QGLFormat glFormat = m_glContext->format();
+	if (!glFormat.sampleBuffers()) {
+		qWarning() << "Could not enable sample buffers";
+	}
 
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

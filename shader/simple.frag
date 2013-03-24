@@ -1,4 +1,4 @@
-#version 330 compatibility
+#version 330
 
 in vec4 vVertex; // interpolated position in world space           
 in vec4 vNormal; // interpolated normal in world space

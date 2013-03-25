@@ -21,7 +21,7 @@ public:
 	virtual ~SimpleGear();
 
 	BSplineCurve* toTransverseToothProfileSystem(hpreal depth);
-	BSplineGearCurve* getBSplineToothProfileInXYPlane();
+	BSplineGearCurve* getBSplineToothProfileInXYPlane()const;
 
 	//TODO: leave methods virtual????!!!!
 	virtual hpreal getAngularPitch();

@@ -33,7 +33,7 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 	return gearProfile;
 }
 
-BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane() {
+BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane()const {
 	BSplineGearCurve *toothProfileToTop = new BSplineGearCurve();
 	toothProfileToTop->setPeriodic(false);
 	toothProfileToTop->setDegree(2);
@@ -93,7 +93,16 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 }
 
 void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
-    //TODO: implement method
+    //TODO: implement method correctly
+	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
+	for (int i = profile.capacity()-1; i >= 0 ; --i) {
+		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
+		if( i < profile.capacity() / 2 ) {
+			profile.push_back(hpvec2(-point.x, point.y));
+		} else {
+			profile.push_back(hpvec2(point.x, point.y));
+		}
+	}
 }
 
 std::vector<hpvec2>* SimpleGear::getToothProfile() {

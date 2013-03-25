@@ -1,6 +1,6 @@
 #include "SimulationTimer.h"
 
-SimulationTimer::SimulationTimer(SimulationTimerListener& listener,
+SimulationTimer::SimulationTimer(GUIManager& listener,
 								hpreal minTime, hpreal maxTime,
 								int ticksPerSimulation, hpreal tickTime):
 								m_listener(listener),
@@ -31,7 +31,7 @@ SimulationTimer::~SimulationTimer() {
 
 void SimulationTimer::changeTime(hpreal time) {
 	m_currentTime = time;
-	m_listener.updateSimulation(m_currentTime);
+	m_listener.visitScene(*this);
 }
 void SimulationTimer::startStopTimer() {
 	if( m_timerIsRunning ){
@@ -51,9 +51,13 @@ void SimulationTimer::timerTick() {
 		m_currentTime = m_minTime;
 	}
 	updateSlider();
-	m_listener.updateSimulation(m_currentTime);
+	m_listener.visitScene(*this);
 }
 
 void SimulationTimer::updateSlider() {
 	m_timeSlider->setSliderValues(m_currentTime, m_minTime, m_maxTime);
+}
+
+void SimulationTimer::visit(SimulationNode& simulationNode) {
+	simulationNode.update(m_currentTime);
 }

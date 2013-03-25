@@ -15,7 +15,7 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-class SimulationForm : public Form, public SimulationTimerListener {
+class SimulationForm : public Form {
 Q_OBJECT
 
 public:

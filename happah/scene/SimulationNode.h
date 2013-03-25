@@ -7,13 +7,12 @@ class SceneManager;
 
 class SimulationNode : public Node
 {
-    SceneManager* m_sceneManager;
 public:
-    SimulationNode(SceneManager* sceneManager);
+    SimulationNode();
     virtual ~SimulationNode();
 
     void accept(SimulationVisitor& simulationVisitor);
-    virtual void addTriangleMeshes() = 0;
+    virtual void insertTriangleMeshes() = 0;
     virtual void update(hpreal currentTime)= 0;
 };
 

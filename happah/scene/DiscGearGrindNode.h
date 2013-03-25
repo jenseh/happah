@@ -13,10 +13,10 @@ class DiscGearGrindNode : public SimulationNode
     TriangleMeshRenderStateNode_ptr m_gearRenderStateNode;
 
 public:
-    DiscGearGrindNode(SceneManager* sceneManager, DiscGearGrind_ptr discGearGrind);
+    DiscGearGrindNode(DiscGearGrind_ptr discGearGrind);
     virtual ~DiscGearGrindNode();
 
-    void addTriangleMeshes();
+    void insertTriangleMeshes();
     void update(hpreal time);
 };
 

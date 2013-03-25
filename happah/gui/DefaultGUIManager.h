@@ -45,6 +45,7 @@ public:
     void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
 	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
+	void visitScene(SimulationVisitor& visitor);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {

@@ -216,7 +216,10 @@ void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr ge
 
 void DefaultGUIManager::visitScene(SceneVisitor& visitor) {
 	m_sceneManager->accept(visitor);
+}
 
+void DefaultGUIManager::visitScene(SimulationVisitor& visitor) {
+	m_sceneManager->accept(visitor);
 }
 
 DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(DefaultGUIManager& defaultGUIManager)

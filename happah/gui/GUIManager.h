@@ -11,6 +11,7 @@
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/geometries/Worm.h"
 #include "happah/scene/SceneVisitor.h"
+#include "happah/scene/SimulationVisitor.h"
 #include "happah/simulations/DiscGearGrind.h"
 
 
@@ -37,6 +38,7 @@ public:
     virtual void useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh)= 0;
 	virtual void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr simpleGearMesh)= 0;
 	virtual void visitScene(SceneVisitor& visitor)= 0;
+	virtual void visitScene(SimulationVisitor& visitor)= 0;
 
 };
 

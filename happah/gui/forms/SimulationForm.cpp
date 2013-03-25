@@ -6,7 +6,7 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	  m_guiManager(guiManager),
 	  m_simulationInserted(false) {
 
-	m_simulationTimer = new SimulationTimer(m_guiManager,0.0f, 1.0f, 20, 200);
+	m_simulationTimer = new SimulationTimer(m_guiManager,0.0f, 1.0f, 100, 50);
 
 	QPushButton* createButton = new QPushButton("create simulation");
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -15,26 +15,26 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	setLayout(layout);
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createSimulation()));
-	m_simulation = NULL;
+	m_discGearGrind = NULL;
 }
 
 SimulationForm::~SimulationForm() {}
 
 
 void SimulationForm::createSimulation() {
-	if( m_simulation == NULL ){
-		m_simulation = DiscGearGrind_ptr(new DiscGearGrind(m_disc, m_discMesh, m_gear, m_gearMesh));
+	if( m_discGearGrind == NULL ){
+		m_discGearGrind = DiscGearGrind_ptr(new DiscGearGrind(m_disc, m_discMesh, m_gear, m_gearMesh));
 	}
 	if(!m_simulationInserted){
-		m_simulation->runSimulation();
-        m_guiManager.insert(m_simulation);
+		m_discGearGrind->runSimulation();
+        m_guiManager.insert(m_discGearGrind);
         //m_guiManager.update(m_simulation->getSimulationResult(0.0f));
 		m_simulationInserted = true;
 	}
 }
 
-DiscGearGrind_ptr SimulationForm::getSimulation() const {
-	return m_simulation;
+DiscGearGrind_ptr SimulationForm::getDiscGearGrind() const {
+	return m_discGearGrind;
 }
 
 void SimulationForm::reset() {
@@ -52,11 +52,10 @@ void SimulationForm::setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
 	m_discMesh = TriangleMesh_ptr(m_disc->toTriangleMesh());
 }
 
-
-void SimulationForm::setSimulation(DiscGearGrind_ptr simulation) {
-	m_simulation = simulation;
-	m_simulationInserted = true;
+void SimulationForm::setDiscGearGrind(DiscGearGrind_ptr discGearGrind) {
+	m_discGearGrind = discGearGrind;
 }
+
 
 void SimulationForm::updateSimulation(hpreal time) {
     //if(m_simulationInserted)

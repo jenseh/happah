@@ -128,7 +128,9 @@ void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 */
 
 void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
-    m_sceneManager->insert(discGearGrind);
+    DiscGearGrindGUIStateNode_ptr guiStateNode = DiscGearGrindGUIStateNode_ptr(new DiscGearGrindGUIStateNode(
+    			discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation") ));
+    m_sceneManager->insert(discGearGrind, guiStateNode);
 }
 
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {

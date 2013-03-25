@@ -9,7 +9,7 @@
 
 #include "happah/gui/GUIManager.h"
 #include "happah/scene/SimulationNode.h"
-#include "happah/scene/SimulationVisitor.h"
+
 
 
 class SimulationTimer: public QGroupBox, public SimulationVisitor {

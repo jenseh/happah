@@ -12,7 +12,7 @@ public:
     virtual ~SimulationNode();
 
     void accept(SimulationVisitor& simulationVisitor);
-    virtual void insertTriangleMeshes() = 0;
+    virtual void buildSubtree() = 0;
     virtual void update(hpreal currentTime)= 0;
 };
 

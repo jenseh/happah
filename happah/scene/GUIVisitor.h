@@ -1,9 +1,8 @@
 #ifndef GUI_VISITOR_H
 #define GUI_VISITOR_H
 
-class GUIVisitor;
-
-#include "happah/scene/GUIStateNode.h"
+class GUIStateNode;
+typedef std::shared_ptr<GUIStateNode> GUIStateNode_ptr;
 
 class GUIVisitor {
 

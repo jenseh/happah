@@ -33,6 +33,7 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
 	m_discContextMenu = new DiscContextMenu(guiManager, this);
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
+	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
 
 	setCentralWidget(centralWidget);
 }
@@ -61,6 +62,10 @@ InvoluteGearContextMenu* MainWindow::getInvoluteGearContextMenu() {
 
 SimpleGearContextMenu* MainWindow::getSimpleGearContextMenu() {
 	return m_simpleGearContextMenu;
+}
+
+SimulationContextMenu* MainWindow::getSimulationContextMenu() {
+	return m_simulationContextMenu;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

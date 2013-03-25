@@ -1,7 +1,7 @@
 #ifndef RENDER_STATE_NODE_H_
 #define RENDER_STATE_NODE_H_
 
-
+#include <iostream>
 #include <GL/glew.h>
 #include <memory>
 #include <vector>

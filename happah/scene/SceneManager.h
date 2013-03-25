@@ -31,7 +31,7 @@ public:
     void insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
     void insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
     void insert(SurfaceOfRevolution_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
-    void insert(DiscGearGrind_ptr);
+    void insert(DiscGearGrind_ptr, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
@@ -75,8 +75,8 @@ private:
 	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
-    template<class S, class N>
-    void doInsert(shared_ptr<S> simulation);
+    template<class S, class N, class G>
+    void doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode);
 
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);

@@ -12,6 +12,9 @@ using namespace std;
 #include "happah/scene/PointCloudNode.h"
 #include "happah/scene/SceneVisitor.h"
 
+class LineMeshNode;
+typedef shared_ptr<LineMeshNode> LineMeshNode_ptr;
+
 class PlaneNode : public SimpleGeometryNode<Plane> {
 
 public:

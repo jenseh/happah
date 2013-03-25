@@ -164,6 +164,30 @@ Form* DiscGUIStateNode::getForm() {
 	return m_discForm;
 }
 
+DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name)
+	:	GUIStateNode(name), m_discGearGrind(discGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
+
+DiscGearGrindGUIStateNode::~DiscGearGrindGUIStateNode() {
+	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind)
+		m_simulationForm->reset();
+}
+
+ContextMenu* DiscGearGrindGUIStateNode::getContextMenu() const {
+	m_simulationContextMenu->setSimulation(m_discGearGrind);
+	return m_simulationContextMenu;
+}
+
+shared_ptr<void> DiscGearGrindGUIStateNode::getData() const {
+	return m_discGearGrind;
+}
+
+Form* DiscGearGrindGUIStateNode::getForm() {
+	m_simulationForm->setDiscGearGrind(m_discGearGrind);
+	return m_simulationForm;
+}
+
+
+
 // Worm
 
 WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name)

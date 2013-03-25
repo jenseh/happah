@@ -7,19 +7,23 @@ DiscGearGrindNode::DiscGearGrindNode(DiscGearGrind_ptr discGearGrind): m_discGea
 
 DiscGearGrindNode::~DiscGearGrindNode() {}
 
-void DiscGearGrindNode::insertTriangleMeshes() {
+void DiscGearGrindNode::buildSubtree() {
     DiscGearGrindResult result = m_discGearGrind->getSimulationResult(0);
 
 
     m_discMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_toolMesh, result.m_toolTransformation));
     m_discRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_toolMesh, result.m_toolColor) );
     m_discMeshNode->insertChild(m_discRenderStateNode);
-    insertChild(m_discMeshNode);
+    Node::insertChild(m_discMeshNode);
 
     m_gearMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_gearMesh, result.m_gearTransformation));
     m_gearRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_gearMesh, result.m_gearColor) );
     m_gearMeshNode->insertChild(m_gearRenderStateNode);
-    insertChild(m_gearMeshNode);
+    Node::insertChild(m_gearMeshNode);
+}
+
+void DiscGearGrindNode::insertChild(DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode) {
+	Node::insertChild(discGearGrindGUIStateNode);
 }
 
 void DiscGearGrindNode::update(hpreal time) {
@@ -31,10 +35,10 @@ void DiscGearGrindNode::update(hpreal time) {
     m_discMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_toolMesh, result.m_toolTransformation));
     m_discRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_toolMesh, result.m_toolColor) );
     m_discMeshNode->insertChild(m_discRenderStateNode);
-    insertChild(m_discMeshNode);
+    Node::insertChild(m_discMeshNode);
 
     m_gearMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_gearMesh, result.m_gearTransformation));
     m_gearRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_gearMesh, result.m_gearColor) );
     m_gearMeshNode->insertChild(m_gearRenderStateNode);
-    insertChild(m_gearMeshNode);
+    Node::insertChild(m_gearMeshNode);
 }

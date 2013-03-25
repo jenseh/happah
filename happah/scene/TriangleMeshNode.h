@@ -5,6 +5,9 @@
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/ElementRenderStateNode.h"
 
+class TriangleMeshRenderStateNode;
+typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
+
 class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
 
 public:

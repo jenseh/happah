@@ -48,6 +48,7 @@ HEADERS += \
 	happah/gui/context-menus/DiscContextMenu.h \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
 	happah/gui/context-menus/SimpleGearContextMenu.h \
+	happah/gui/context-menus/SimulationContextMenu.h \
 \
 	happah/gui/forms/BSplineCurveForm.h \
 	happah/gui/forms/DiscForm.h \
@@ -147,6 +148,7 @@ SOURCES += \
 	happah/gui/context-menus/DiscContextMenu.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
 	happah/gui/context-menus/SimpleGearContextMenu.cpp \
+	happah/gui/context-menus/SimulationContextMenu.cpp \
 \
 	happah/gui/forms/BSplineCurveForm.cpp \
 	happah/gui/forms/DiscForm.cpp \

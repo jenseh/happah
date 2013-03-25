@@ -305,11 +305,12 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 
 	triggerSubtreeInsertedEvent(root);
 }
-template<class S, class N>
-void SceneManager::doInsert(shared_ptr<S> simulation) {
+template<class S, class N, class G>
+void SceneManager::doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode) {
     shared_ptr<N> simulationNode = shared_ptr<N>(new N(simulation));
     insertChild(simulationNode);
-    simulationNode->insertTriangleMeshes();
+    simulationNode->buildSubtree();
+    simulationNode->insertChild(guiStateNode);
     triggerSubtreeInsertedEvent(simulationNode);
 }
 
@@ -370,8 +371,8 @@ void SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangl
     doInsert<SurfaceOfRevolution, DiscNode >(disc, triangleMesh, color, transformation);
 }
 
-void SceneManager::insert(DiscGearGrind_ptr discGearGrind) {
-    doInsert<DiscGearGrind, DiscGearGrindNode>(discGearGrind);
+void SceneManager::insert(DiscGearGrind_ptr discGearGrind, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode) {
+	doInsertSimulation<DiscGearGrind, DiscGearGrindNode, DiscGearGrindGUIStateNode>(discGearGrind, discGearGrindGUIStateNode);
 }
 
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {

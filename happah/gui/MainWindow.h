@@ -29,6 +29,7 @@ public:
 	DiscContextMenu* getDiscContextMenu();
 	InvoluteGearContextMenu* getInvoluteGearContextMenu();
 	SimpleGearContextMenu* getSimpleGearContextMenu();
+	SimulationContextMenu* getSimulationContextMenu();
 
 protected:
 	void keyPressEvent(QKeyEvent* event);
@@ -44,6 +45,7 @@ private:
 	DiscContextMenu* m_discContextMenu;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;
 	SimpleGearContextMenu* m_simpleGearContextMenu;
+	SimulationContextMenu* m_simulationContextMenu;
 
 
 };

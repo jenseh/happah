@@ -1,9 +1,9 @@
 #ifndef DISCFINDVISITOR_H_
 #define DISCFINDVISITOR_H_
-#include "happah/scene/SceneVisitor.h"
 #include "happah/scene/DiscNode.h"
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/PlaneNode.h"
+#include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGearNode.h"
 #include "happah/scene/SpherePatchNode.h"
 #include "happah/scene/WormNode.h"

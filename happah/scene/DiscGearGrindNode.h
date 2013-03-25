@@ -16,9 +16,8 @@ public:
     DiscGearGrindNode(SceneManager* sceneManager, DiscGearGrind_ptr discGearGrind);
     virtual ~DiscGearGrindNode();
 
+    void addTriangleMeshes();
     void update(hpreal time);
-
-
 };
 
 #endif // DISCGEARGRINDSIMULATIONNODE_H

@@ -13,6 +13,7 @@ public:
     virtual ~SimulationNode();
 
     void accept(SimulationVisitor& simulationVisitor);
+    virtual void addTriangleMeshes() = 0;
     virtual void update(hpreal currentTime)= 0;
 };
 

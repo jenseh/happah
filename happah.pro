@@ -42,7 +42,7 @@ HEADERS += \
 	happah/gui/SimulationTimer.h \
 	happah/gui/ToolPanel.h \
 	happah/gui/VectorInput.h \ 
-	happah/gui/Viewport3D.h \
+	happah/gui/Viewport.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
 	happah/gui/context-menus/DiscContextMenu.h \
@@ -142,7 +142,7 @@ SOURCES += \
 	happah/gui/SimulationTimer.cpp \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/VectorInput.cpp \
-	happah/gui/Viewport3D.cpp \
+	happah/gui/Viewport.cpp \
 \
 	happah/gui/context-menus/ContextMenu.cpp \
 	happah/gui/context-menus/DiscContextMenu.cpp \

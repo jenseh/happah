@@ -12,7 +12,7 @@ using namespace std;
 #include "happah/gui/SceneGraphExplorerListener.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/ToolPanel.h"
-#include "happah/gui/Viewport3DListener.h"
+#include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
@@ -77,10 +77,10 @@ private:
 		DefaultGUIManager& m_defaultGUIManager;
 	};
 
-	class DefaultViewport3DListener : public Viewport3DListener {
+	class DefaultViewportListener : public ViewportListener {
 	public:
-		DefaultViewport3DListener(DefaultGUIManager& defaultGUIManager);
-		~DefaultViewport3DListener();
+		DefaultViewportListener(DefaultGUIManager& defaultGUIManager);
+		~DefaultViewportListener();
 
 		void handleMouseClickEvent(Ray& ray);
 
@@ -128,7 +128,7 @@ private:
 	DrawManager m_drawManager;
 	unordered_map<shared_ptr<void>, GUIStateNode_ptr> m_guiStateNodes;
 	DefaultSceneGraphExplorerListener m_sceneGraphExplorerListener;
-	DefaultViewport3DListener m_viewport3DListener;
+	DefaultViewportListener m_viewportListener;
 	MainWindow m_mainWindow;
 	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
 	DefaultSceneListener m_sceneListener;

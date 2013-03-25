@@ -7,7 +7,7 @@
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/SceneGraphExplorerListener.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
-#include "happah/gui/Viewport3DListener.h"
+#include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/context-menus/DiscContextMenu.h"
 #include "happah/gui/context-menus/SimpleGearContextMenu.h"
@@ -19,7 +19,7 @@ class MainWindow: public QMainWindow {
 Q_OBJECT
 
 public:
-	MainWindow(GUIManager& guiManager, Viewport3DListener& viewport3DListener, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager);
+	MainWindow(GUIManager& guiManager, ViewportListener& viewportListener, SceneGraphExplorerListener& sceneGraphExplorerListener, DrawManager& drawManager);
 	virtual ~MainWindow();
 
 	SceneGraphExplorerPanel* getSceneGraphExplorerPanel();

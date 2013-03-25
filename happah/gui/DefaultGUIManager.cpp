@@ -6,8 +6,8 @@ DefaultGUIManager::DefaultGUIManager(SceneManager_ptr sceneManager)
 	  : m_counter(0),
 		m_drawManager(sceneManager),
 		m_sceneGraphExplorerListener(*this),
-		m_viewport3DListener(*this),
-		m_mainWindow(*this, m_viewport3DListener, m_sceneGraphExplorerListener, m_drawManager),
+		m_viewportListener(*this),
+		m_mainWindow(*this, m_viewportListener, m_sceneGraphExplorerListener, m_drawManager),
 		m_sceneGraphExplorerPanel(m_mainWindow.getSceneGraphExplorerPanel()),
 		m_sceneListener(*this),
 		m_sceneManager(sceneManager),
@@ -274,12 +274,12 @@ void DefaultGUIManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<
 		(*i)->accept(m_defaultGUIManager.m_subtreesUpdatedEventHandler);
 }
 
-DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener(DefaultGUIManager& defaultGUIManager)
+DefaultGUIManager::DefaultViewportListener::DefaultViewportListener(DefaultGUIManager& defaultGUIManager)
 	: m_defaultGUIManager(defaultGUIManager) {}
 
-DefaultGUIManager::DefaultViewport3DListener::~DefaultViewport3DListener() {}
+DefaultGUIManager::DefaultViewportListener::~DefaultViewportListener() {}
 
-void DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener::handleMouseClickEvent(Ray& ray) {
+void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseClickEvent(Ray& ray) {
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {

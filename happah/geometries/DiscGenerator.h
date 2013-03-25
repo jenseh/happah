@@ -6,6 +6,7 @@
 
 class DiscGenerator
 {
+	static void invertProfile(std::vector<hpvec2>& profile);
 public:
     static SurfaceOfRevolution_ptr generateDiscFrom(Gear& gear);
     static SurfaceOfRevolution_ptr generateDiscFrom(StandardProfile profile);

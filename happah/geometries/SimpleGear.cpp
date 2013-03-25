@@ -95,13 +95,13 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
     //TODO: implement method correctly
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
-	for (int i = profile.capacity()-1; i >= 0 ; --i) {
+	for (int i = profile.capacity()/2;  i >= 0; i--) {
 		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
-		if( i < profile.capacity() / 2 ) {
-			profile.push_back(hpvec2(-point.x, point.y));
-		} else {
-			profile.push_back(hpvec2(point.x, point.y));
-		}
+		profile.push_back(hpvec2(-point.x, point.y));
+	}
+	for (uint i = 0; i < profile.capacity()/2; i++) {
+		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
+		profile.push_back(hpvec2(point.x, point.y));
 	}
 }
 

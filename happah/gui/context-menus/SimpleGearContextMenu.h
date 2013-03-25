@@ -23,6 +23,7 @@ private:
 	TriangleMesh_ptr m_simpleGearMesh;
 
 private slots:
+	void generateDisc();
 	void useSimpleGearInSumulation();
 
 };

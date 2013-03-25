@@ -91,6 +91,11 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	m_sceneManager->insert(geometry, triangleMesh, color);
 }
 
+void DefaultGUIManager::generateDisc(Gear_ptr gear) {
+	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
+	insert(disc, HP_TRIANGLE_MESH);
+}
+
 bool DefaultGUIManager::init() {
 	if (!m_drawManager.init()) {
 		fprintf(stderr, "Draw manager initialization failed.\n");

@@ -21,6 +21,7 @@ private:
 
 private slots:
 	void createSimpleGear();
+	void generateDisc();
 
 };
 #endif // INVOLUTE_GEAR_CONTEXT_MENU_H

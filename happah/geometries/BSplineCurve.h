@@ -38,6 +38,7 @@ public:
 	glm::vec3 getControlPoint( unsigned int index ) const;
 	int getDegree() const;
 	unsigned int getNumberOfControlPoints() const;
+	void getParameterRange( float& t_low, float& t_high );
 	bool getPeriodic() const;
 	bool getUniform() const;
 	glm::vec3 getValueAt( float t ) const;

@@ -200,6 +200,14 @@ void BSplineCurve::getBounds( glm::vec2* min, glm::vec2* max ) const {
 	}
 }
 
+void BSplineCurve::getParameterRange( float& t_low, float& t_high ) {
+	if( m_drawKnots.size() < m_degree + 3 ) {
+		return;
+	}
+	t_low =  m_drawKnots[m_degree];
+	t_high = m_drawKnots[m_drawKnots.size()-m_degree-1];
+}
+
 glm::vec3 BSplineCurve::getValueAt( float t ) const {
 	// only for uniform, noncyclic, without end-point-interpolation
 	if( m_drawKnots.size() < m_degree + 3 ) {

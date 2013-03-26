@@ -6,8 +6,8 @@ DefaultGUIManager::DefaultGUIManager(SceneManager_ptr sceneManager)
 	  : m_counter(0),
 		m_drawManager(sceneManager),
 		m_sceneGraphExplorerListener(*this),
-		m_viewport3DListener(*this),
-		m_mainWindow(*this, m_viewport3DListener, m_sceneGraphExplorerListener, m_drawManager),
+		m_viewportListener(*this),
+		m_mainWindow(*this, m_viewportListener, m_sceneGraphExplorerListener, m_drawManager),
 		m_sceneGraphExplorerPanel(m_mainWindow.getSceneGraphExplorerPanel()),
 		m_sceneListener(*this),
 		m_sceneManager(sceneManager),
@@ -27,7 +27,7 @@ DefaultGUIManager::~DefaultGUIManager() {
 }
 
 template<class G, class S>
-void DefaultGUIManager::doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
+void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	m_sceneManager->insert(geometry, triangleMesh, color);
@@ -36,29 +36,64 @@ void DefaultGUIManager::doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 }
 
 template<class G, class S, class F>
-void DefaultGUIManager::doInsert3D(shared_ptr<G> geometry, const char* label, F* form) {
+void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
-	doInsert3D(geometry, guiStateNode);
+	doInsert2D(geometry, guiStateNode);
 }
 
 template<class G, class S, class F, class M>
-void DefaultGUIManager::doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
+void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, toFinalLabel(label)));
-	doInsert3D(geometry, guiStateNode);
+	doInsert2D(geometry, guiStateNode);
+}
+
+template<class G, class S>
+void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
+	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	m_sceneManager->insert(geometry, lineMesh, color);
+	guiStateNode->setLineMesh(lineMesh);
+	m_sceneManager->insert(geometry, guiStateNode);
+}
+
+template<class G, class S, class F>
+void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, const char* label, F* form) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
+	doInsert1D(geometry, guiStateNode);
+}
+
+template<class G, class S>
+void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode){
+	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
+	hpcolor color(0.0f,1.0f,0.0f,1.0f);
+	m_sceneManager->insert(geometry,pointCloud,color);
+	guiStateNode->setPointCloud(pointCloud);
+	m_sceneManager->insert(geometry,guiStateNode);
+}
+
+template<class G, class S, class F>
+void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
+	doInsert0D(geometry, guiStateNode);
 }
 
 template<class G>
-void DefaultGUIManager::doUpdate3D(shared_ptr<G> geometry) {
+void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
 		return;
 	}
-	m_sceneManager->removeContaining(geometry, guiStateNode->getTriangleMesh());
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getTriangleMesh());
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setTriangleMesh(triangleMesh);
 	m_sceneManager->insert(geometry, triangleMesh, color);
+}
+
+void DefaultGUIManager::generateDisc(Gear_ptr gear) {
+	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
+	insert(disc, HP_TRIANGLE_MESH);
 }
 
 bool DefaultGUIManager::init() {
@@ -70,7 +105,7 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve) {
+void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) {
 	hpcolor color(0.0, 1.0, 0.0, 1.0);
 	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
@@ -79,8 +114,9 @@ void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve) {
 	m_sceneManager->insert(bSplineCurve, guiStateNode);
 }
 
-void DefaultGUIManager::insert(Disc_ptr disc) {
-	doInsert3D<Disc, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
+void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<SurfaceOfRevolution, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
 }
 
 /*
@@ -91,27 +127,43 @@ void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
 }
 */
 
-void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear) {
-	doInsert3D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
-		involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
+void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
+    DiscGearGrindGUIStateNode_ptr guiStateNode = DiscGearGrindGUIStateNode_ptr(new DiscGearGrindGUIStateNode(
+    			discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation") ));
+    m_sceneManager->insert(discGearGrind, guiStateNode);
 }
 
-void DefaultGUIManager::insert(Plane_ptr plane) {
-	doInsert3D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
-//	PlaneGUIStateNode_ptr planeGUIStateNode = PlaneGUIStateNode_ptr(new PlaneGUIStateNode(plane, m_toolPanel->getPlaneForm(), oss.str()));
-//	m_sceneManager->insert(plane, planeGUIStateNode);
+void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
+				involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
-void DefaultGUIManager::insert(SimpleGear_ptr simpleGear) {
-	doInsert3D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
+void DefaultGUIManager::insert(Plane_ptr plane,hpuint drawMode) {
+
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
+	if (drawMode & HP_LINE_MESH){
+		doInsert1D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
+	}
+	if (drawMode & HP_POINT_CLOUD){
+		doInsert0D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
+	}
 }
 
-void DefaultGUIManager::insert(SpherePatch_ptr spherePatch) {
-	doInsert3D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
+void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
 
-void DefaultGUIManager::insert(Worm_ptr worm) {
-	doInsert3D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
+void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
+}
+
+void DefaultGUIManager::insert(Worm_ptr worm,hpuint drawMode) {
+	if (drawMode & HP_TRIANGLE_MESH)
+		doInsert2D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }
 
 string DefaultGUIManager::toFinalLabel(const char* label) {
@@ -134,39 +186,40 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
 }
 
-void DefaultGUIManager::update(Disc_ptr disc) {
-	doUpdate3D<Disc>(disc);
+void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
+	doUpdate2D<SurfaceOfRevolution>(disc);
 }
 
+/*
 void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
-	m_sceneManager->removeContaining(simulationResult.m_gear, simulationResult.m_gearMesh);
+	m_sceneManager->removeContainingData(simulationResult.m_gear, simulationResult.m_gearMesh);
 	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	m_sceneManager->removeContaining(simulationResult.m_tool, simulationResult.m_toolMesh);
+	m_sceneManager->removeContainingData(simulationResult.m_tool, simulationResult.m_toolMesh);
 	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
-}
+} */
 
 void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
-	doUpdate3D<InvoluteGear>(involuteGear);
+	doUpdate2D<InvoluteGear>(involuteGear);
 }
 
 void DefaultGUIManager::update(Plane_ptr plane) {
-	doUpdate3D<Plane>(plane);
+	doUpdate2D<Plane>(plane);
 }
 
 void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
-	doUpdate3D<SimpleGear>(simpleGear);
+	doUpdate2D<SimpleGear>(simpleGear);
 }
 
 void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
-	doUpdate3D<SpherePatch>(spherePatch);
+	doUpdate2D<SpherePatch>(spherePatch);
 }
 
 void DefaultGUIManager::update(Worm_ptr worm) {
-	doUpdate3D<Worm>(worm);
+	doUpdate2D<Worm>(worm);
 }
 
-void DefaultGUIManager::useInSimulation(Disc_ptr disc, TriangleMesh_ptr discMesh) {
+void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
 	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
 }
 
@@ -176,7 +229,10 @@ void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr ge
 
 void DefaultGUIManager::visitScene(SceneVisitor& visitor) {
 	m_sceneManager->accept(visitor);
+}
 
+void DefaultGUIManager::visitScene(SimulationVisitor& visitor) {
+	m_sceneManager->accept(visitor);
 }
 
 DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerListener(DefaultGUIManager& defaultGUIManager)
@@ -221,6 +277,7 @@ void DefaultGUIManager::DefaultSceneListener::handleSubtreesRemovedEvent(vector<
 
 void DefaultGUIManager::DefaultSceneListener::handleSubtreeUpdatedEvent(Node_ptr root) {
 	root->accept(m_defaultGUIManager.m_subtreesUpdatedEventHandler);
+
 }
 
 void DefaultGUIManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {
@@ -228,12 +285,12 @@ void DefaultGUIManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<
 		(*i)->accept(m_defaultGUIManager.m_subtreesUpdatedEventHandler);
 }
 
-DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener(DefaultGUIManager& defaultGUIManager)
+DefaultGUIManager::DefaultViewportListener::DefaultViewportListener(DefaultGUIManager& defaultGUIManager)
 	: m_defaultGUIManager(defaultGUIManager) {}
 
-DefaultGUIManager::DefaultViewport3DListener::~DefaultViewport3DListener() {}
+DefaultGUIManager::DefaultViewportListener::~DefaultViewportListener() {}
 
-void DefaultGUIManager::DefaultViewport3DListener::DefaultViewport3DListener::handleMouseClickEvent(Ray& ray) {
+void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseClickEvent(Ray& ray) {
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {

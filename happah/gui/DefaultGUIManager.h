@@ -12,7 +12,7 @@ using namespace std;
 #include "happah/gui/SceneGraphExplorerListener.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/ToolPanel.h"
-#include "happah/gui/Viewport3DListener.h"
+#include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
@@ -23,26 +23,29 @@ public:
 	DefaultGUIManager(SceneManager_ptr sceneManager);
 	~DefaultGUIManager();
 
+	void generateDisc(Gear_ptr gear);
 	bool init();
-	void insert(BSplineCurve_ptr bSplineCurve);
-	void insert(Disc_ptr disc);
+	void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode = HP_TRIANGLE_MESH);
+    void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
-	void insert(InvoluteGear_ptr involuteGear);
-	void insert(Plane_ptr plane);
-	void insert(SimpleGear_ptr simpleGear);
-	void insert(SpherePatch_ptr spherePatch);
-	void insert(Worm_ptr worm);
+    void insert(DiscGearGrind_ptr discGearGrind);
+	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 	void update(BSplineCurve_ptr bSplineCurve);
-	void update(DiscGearGrindResult simulationResult);
-	void update(Disc_ptr disc);
+    //void update(DiscGearGrindResult simulationResult);
+    void update(SurfaceOfRevolution_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
 	void update(SpherePatch_ptr spherePatch);
 	void update(Worm_ptr worm);
-	void useInSimulation(Disc_ptr disc,TriangleMesh_ptr discMesh);
+    void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
 	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
+	void visitScene(SimulationVisitor& visitor);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {
@@ -74,10 +77,10 @@ private:
 		DefaultGUIManager& m_defaultGUIManager;
 	};
 
-	class DefaultViewport3DListener : public Viewport3DListener {
+	class DefaultViewportListener : public ViewportListener {
 	public:
-		DefaultViewport3DListener(DefaultGUIManager& defaultGUIManager);
-		~DefaultViewport3DListener();
+		DefaultViewportListener(DefaultGUIManager& defaultGUIManager);
+		~DefaultViewportListener();
 
 		void handleMouseClickEvent(Ray& ray);
 
@@ -125,7 +128,7 @@ private:
 	DrawManager m_drawManager;
 	unordered_map<shared_ptr<void>, GUIStateNode_ptr> m_guiStateNodes;
 	DefaultSceneGraphExplorerListener m_sceneGraphExplorerListener;
-	DefaultViewport3DListener m_viewport3DListener;
+	DefaultViewportListener m_viewportListener;
 	MainWindow m_mainWindow;
 	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
 	DefaultSceneListener m_sceneListener;
@@ -137,15 +140,21 @@ private:
 
 
 	template<class G, class S>
-	void doInsert3D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	void doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
 	template<class G, class S, class F>
-	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form);
+	void doInsert2D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G, class S, class F, class M>
-	void doInsert3D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
-
-
+	void doInsert2D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
+	template<class G, class S>
+	void doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	template<class G, class S, class F>
+	void doInsert1D(shared_ptr<G> geometry, const char* label, F* form);
+	template<class G, class S>
+	void doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode);
+	template<class G, class S, class F>
+	void doInsert0D(shared_ptr<G> geometry, const char* label, F* form);
 	template<class G>
-	void doUpdate3D(shared_ptr<G> geometry);
+	void doUpdate2D(shared_ptr<G> geometry);
 
 	string toFinalLabel(const char* label);
 

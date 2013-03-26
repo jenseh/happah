@@ -4,10 +4,10 @@
 #include <QWidget>
 
 #include "happah/gui/MainWindow.h"
-#include "happah/gui/Viewport3D.h"
+#include "happah/gui/Viewport.h"
 
 MainWindow::MainWindow(GUIManager& guiManager, 
-	Viewport3DListener& viewport3DListener,
+	ViewportListener& viewportListener,
 	SceneGraphExplorerListener& sceneGraphExplorerListener,
 	DrawManager& drawManager
 ) : m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
@@ -26,13 +26,14 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
 	centralWidget->setLayout(centralWidgetLayout);
 	centralWidgetLayout->addWidget(m_toolPanel);
-	centralWidgetLayout->addWidget(new Viewport3D(viewport3DListener, drawManager, this), 1);
+	centralWidgetLayout->addWidget(new Viewport(viewportListener, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
 	m_defaultContextMenu = new ContextMenu(this);
 	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
 	m_discContextMenu = new DiscContextMenu(guiManager, this);
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
+	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
 
 	setCentralWidget(centralWidget);
 }
@@ -61,6 +62,10 @@ InvoluteGearContextMenu* MainWindow::getInvoluteGearContextMenu() {
 
 SimpleGearContextMenu* MainWindow::getSimpleGearContextMenu() {
 	return m_simpleGearContextMenu;
+}
+
+SimulationContextMenu* MainWindow::getSimulationContextMenu() {
+	return m_simulationContextMenu;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

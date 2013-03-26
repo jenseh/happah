@@ -5,7 +5,7 @@
 
 DiscForm::DiscForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-		m_disc(new StandardProfileDisc()),
+        m_disc(DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0))),
 		m_discInserted(false),
 		m_guiManager(guiManager),
 		m_radiusSlider(new Slider(tr("approximated radius"))) {
@@ -26,29 +26,29 @@ DiscForm::~DiscForm() {}
 
 
 void DiscForm::changeRadius(hpreal radius) {
-	m_disc->setRadius(radius);
+    //m_disc->setRadius(radius);
 	updateRanges();
 	updateDisc();
 }
 
 void DiscForm::createDisc() {
-	m_guiManager.insert(m_disc);
+	m_guiManager.insert(m_disc,HP_TRIANGLE_MESH);
 	m_discInserted = true;
 }
 
-Disc_ptr DiscForm::getDisc() const {
+SurfaceOfRevolution_ptr DiscForm::getDisc() const {
 	return m_disc;
 }
 
 void DiscForm::reset() {
-	m_disc = Disc_ptr(new StandardProfileDisc());
+    m_disc = DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0));
 	m_discInserted = false;
 
 	updateRanges();
 }
 
 
-void DiscForm::setDisc(Disc_ptr disc) {
+void DiscForm::setDisc(SurfaceOfRevolution_ptr disc) {
 	m_disc = disc;
 	m_discInserted = true;
 

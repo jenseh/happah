@@ -22,7 +22,7 @@ SpherePatchForm::~SpherePatchForm() {}
 void SpherePatchForm::createSpherePatch(){
 if(m_spherePatchInserted)
 		m_spherePatch = SpherePatch_ptr(new SpherePatch(*m_spherePatch));
-	m_guiManager.insert(m_spherePatch);
+	m_guiManager.insert(m_spherePatch,HP_TRIANGLE_MESH);
 	m_spherePatchInserted = true;
 }
 

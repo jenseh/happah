@@ -41,7 +41,7 @@ void BSplineCurveForm::createCurve() {
 	if( m_curveInserted ) {
 		m_curve = BSplineCurve_ptr(new BSplineCurve());
 	}
-	m_guiManager.insert(m_curve);
+	m_guiManager.insert(m_curve,HP_POINT_CLOUD);
 	m_curveInserted = true;
 }
 

@@ -53,7 +53,7 @@ void SimpleGearForm::changeRadius(hpreal radius) {
 void SimpleGearForm::createSimpleGear() {
 	if(m_simpleGearInserted)
 		m_simpleGear = SimpleGear_ptr(new SimpleGear(*m_simpleGear));
-	m_guiManager.insert(m_simpleGear);
+	m_guiManager.insert(m_simpleGear,HP_TRIANGLE_MESH);
 	m_simpleGearInserted = true;
 }
 

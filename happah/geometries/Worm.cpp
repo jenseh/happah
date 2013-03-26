@@ -22,7 +22,8 @@ std::vector<hpvec3>* Worm::createVertexData() {
     hpuint pointsPerTooth = 200;
     
     std::vector<hpvec2> profileTooth = std::vector<hpvec2>();
-    m_standardProfile->getProfilePartition(profileTooth, pointsPerTooth);
+    profileTooth.reserve(pointsPerTooth);
+    m_standardProfile->getProfilePartition(profileTooth);
 
     
     for(hpuint angleStep = 0; angleStep < angleResolution; angleStep++) {

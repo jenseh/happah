@@ -7,14 +7,14 @@
 #include <QTimer>
 #include <QLayout>
 
-class SimulationTimerListener {
-	public:
-	virtual void updateSimulation(hpreal time)= 0;
-};
+#include "happah/gui/GUIManager.h"
+#include "happah/scene/SimulationNode.h"
 
-class SimulationTimer: public QGroupBox {
+
+
+class SimulationTimer: public QGroupBox, public SimulationVisitor {
 	Q_OBJECT
-	SimulationTimerListener& m_listener;
+	GUIManager& m_listener;
 	hpreal m_currentTime;
 	hpreal m_deltaTick; // delta time passed per tick
 	hpreal m_minTime,m_maxTime;
@@ -27,8 +27,10 @@ class SimulationTimer: public QGroupBox {
 	void updateSlider();
 
 public:
-	SimulationTimer(SimulationTimerListener& listener, hpreal minTime, hpreal maxTime, int ticksPerSimulation, hpreal tickTime);
+	SimulationTimer(GUIManager& listener, hpreal minTime, hpreal maxTime, int ticksPerSimulation, hpreal tickTime);
 	virtual ~SimulationTimer();
+
+	void visit(SimulationNode& simulationNode);
 
 	private slots:
 		void changeTime(hpreal);

@@ -1,5 +1,5 @@
-#ifndef GLVIEWPORT3D_H_
-#define GLVIEWPORT3D_H_
+#ifndef GLVIEWPORT_H_
+#define GLVIEWPORT_H_
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
@@ -19,14 +19,14 @@
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/scene/SceneManager.h"
-#include "happah/gui/Viewport3DListener.h"
+#include "happah/gui/ViewportListener.h"
 
 using namespace std;
 
-class Viewport3D: public QGLWidget {
+class Viewport: public QGLWidget {
 
 public:
-    Viewport3D(Viewport3DListener& viewport3DListener, DrawManager& drawManager, QWidget* parent = 0);
+    Viewport(ViewportListener& viewportListener, DrawManager& drawManager, QWidget* parent = 0);
 
 protected:
 	void initializeGL();
@@ -51,9 +51,10 @@ private:
 	hpmat4x4 m_projectionMatrix;
 	hpvec3 m_camera, m_center, m_up;
 	QPoint m_mousePos;
-	Viewport3DListener& m_viewport3DListener;
-	float m_zoomRad, m_theta, m_phi; //is zoomRad german?
+	ViewportListener& m_viewportListener;
+	hpreal m_theta, m_phi;
 
+	const hpreal DISTANCE_TO_CENTER;
 	const static int WAIT_TIME = 40;
 };
 

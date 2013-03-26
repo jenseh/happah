@@ -1,9 +1,9 @@
 #ifndef DISCFINDVISITOR_H_
 #define DISCFINDVISITOR_H_
-#include "happah/scene/SceneVisitor.h"
 #include "happah/scene/DiscNode.h"
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/PlaneNode.h"
+#include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGearNode.h"
 #include "happah/scene/SpherePatchNode.h"
 #include "happah/scene/WormNode.h"
@@ -15,11 +15,11 @@ class GeometryFindVisitor: public SceneVisitor {
 	vector<InvoluteGear_ptr > involuteGears;
 	vector<Plane_ptr> planes;
 	vector<SimpleGear_ptr> simpleGears;
-	vector<Disc_ptr> discs;
+	vector<SurfaceOfRevolution_ptr> discs;
 	vector<Worm_ptr> worms;
 	vector<SpherePatch_ptr> spherePatches;
 
-	vector<Disc_ptr> getDiscs(){
+	vector<SurfaceOfRevolution_ptr> getDiscs(){
 		return discs;
 	}
 	vector<SimpleGear_ptr> getSimpleGears() {

@@ -13,3 +13,7 @@ PointCloudRenderStateNode::~PointCloudRenderStateNode() {
 hpuint PointCloudRenderStateNode::getMode(){
 	return m_mode;
 }
+
+void PointCloudRenderStateNode::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation){
+	drawVisitor.draw(*this, rigidAffineTransformation);
+}

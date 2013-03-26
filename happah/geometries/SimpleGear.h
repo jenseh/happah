@@ -21,12 +21,12 @@ public:
 	virtual ~SimpleGear();
 
 	BSplineCurve* toTransverseToothProfileSystem(hpreal depth);
-	BSplineGearCurve* getBSplineToothProfileInXYPlane();
+	BSplineGearCurve* getBSplineToothProfileInXYPlane()const;
 
 	//TODO: leave methods virtual????!!!!
 	virtual hpreal getAngularPitch();
 	virtual hpreal getBottomRadius();
-	virtual uint   getToothCount();
+	virtual hpuint   getToothCount();
 	virtual hpreal getRadius();
 	virtual hpreal getHelixAngle();
 	virtual hpreal getFacewidth();
@@ -37,6 +37,7 @@ public:
 	virtual void setToothProfile(BSplineGearCurve* curve);
 	virtual void setRadius(hpreal radius);
 
+    virtual void getToothSpaceProfile(vector<hpvec2> &profile)const;
 	virtual std::vector<hpvec2>* getToothProfile();
 
 };

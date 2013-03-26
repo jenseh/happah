@@ -26,7 +26,9 @@ public:
 	Plane& operator=(const Plane& other);
 
 	TriangleMesh* toTriangleMesh();
+	LineMesh* toLineMesh();
 	PointCloud* toPointCloud();
+
 private:
 	hpvec3 m_normal;
 	hpvec3 m_origin;

@@ -1,5 +1,5 @@
-#ifndef HAPPAH_TYPES_H
-#define HAPPAH_TYPES_H
+#ifndef HP_TYPES_H
+#define HP_TYPES_H
 
 #include <glm/glm.hpp>
 
@@ -12,4 +12,4 @@ typedef glm::vec4 hpvec4;
 typedef glm::vec4 hpcolor;
 typedef unsigned int hpuint;
 
-#endif // HAPPAH_TYPES_H
+#endif // HP_TYPES_H

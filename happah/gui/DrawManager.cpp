@@ -1,10 +1,9 @@
-#define GLEW_STATIC //Very important for Windows users
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <GL/glew.h>
-#include <GL/gl.h>
+# include <GL/glew.h>
+# include <GL/gl.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <QMatrix4x4>
 
@@ -23,7 +22,7 @@ HappahGlFormat::HappahGlFormat() {
 
 const HappahGlFormat DrawManager::GL_FORMAT;
 
-DrawManager::DrawManager(SceneManager_ptr sceneManager) 
+DrawManager::DrawManager(SceneManager_ptr sceneManager)
 	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
 	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
@@ -61,7 +60,6 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix; // CHanged
 	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
 	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
 	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
@@ -81,41 +79,23 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 		glUniform1i(m_isColorPerVertexLocation, 0);
 		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
 	}
-	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
-	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
-	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
+
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
 	glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-	//glDrawElements(GL_POINTS, size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
 void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-
+	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix;
 	glBindVertexArray(pointCloudRenderStateNode.getVertexArrayObjectID());
-	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
-	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
-	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
-	glUniform1f(m_ambientFactorLocation, (GLfloat)pointCloudRenderStateNode.getMaterial().getAmbientFactor());
-	glUniform1f(m_diffuseFactorLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getDiffuseFactor());
-	glUniform1f(m_specularFactorLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getSpecularFactor());
-	glUniform1f(m_phongExponentLocation, (GLfloat) pointCloudRenderStateNode.getMaterial().getPhongExponent());
-	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	if (pointCloudRenderStateNode.hasColorVector()) {
-		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
-		glUniform1i(m_isColorPerVertexLocation, 1);
-		glUniform1i(m_isSkipLightingContributionComputationLocation, 1);
-	} else {
-		hpcolor color = pointCloudRenderStateNode.getColor();
-		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
-		glUniform1i(m_isColorPerVertexLocation, 0);
-		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
-	}
-
+	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
+	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
+	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
 	glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
 	glBindVertexArray(0);
 }
@@ -138,7 +118,10 @@ QGLContext* DrawManager::getGlContext() {
 }
 
 bool DrawManager::init() {
-	m_glContext->create();
+	if(!m_glContext->create()) {
+		fprintf(stderr, "Unable to create QGLContext! \n");
+		return false;
+	}
 	m_glContext->makeCurrent();
 
 	GLenum errorCode = glewInit();
@@ -147,9 +130,14 @@ bool DrawManager::init() {
 		return false;
 	}
 
+
+
+
 	QGLFormat glFormat = m_glContext->format();
-	if (!glFormat.sampleBuffers())
+	if (!glFormat.sampleBuffers()) {
 		qWarning() << "Could not enable sample buffers";
+	}
+
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClearDepth(1.0f);
@@ -213,8 +201,8 @@ void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNod
 	pointCloudRenderStateNode.setVertexBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getVertexBufferID());
 	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
-	glEnableVertexAttribArray(m_vertexLocation);
+	glVertexAttribPointer(m_pointCloudVertexLocation, 3, GL_FLOAT, GL_FALSE,sizeof(hpvec3), 0);
+	glEnableVertexAttribArray(m_pointCloudVertexLocation);
 
 
 	// Create New Color Buffer Object
@@ -230,7 +218,6 @@ void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNod
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	pointCloudRenderStateNode.setInitialized(true);
 }
 

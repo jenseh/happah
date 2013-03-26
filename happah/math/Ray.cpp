@@ -3,10 +3,8 @@
 Ray::Ray() {
 
 }
-Ray::Ray(hpvec3 orig, hpvec3 dir){
-	m_origin = orig;
-	m_direction = dir;
-	if( dir == hpvec3(0) )
+Ray::Ray(hpvec3 origin, hpvec3 direction):m_origin(origin), m_direction(direction){
+    if( m_direction == hpvec3(0) )
 		throw;
 	m_direction = glm::normalize(m_direction);
 }
@@ -31,11 +29,11 @@ void Ray::transform(hpmat4x4& matrix){
 	m_direction = glm::normalize(m_direction);
 }
 
-hpvec3 Ray::getOrigin() {
+const hpvec3& Ray::getOrigin()const {
 	return m_origin;
 }
 
-hpvec3 Ray::getDirection() {
+const hpvec3& Ray::getDirection()const {
 	return m_direction;
 }
 

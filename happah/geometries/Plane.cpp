@@ -83,8 +83,35 @@ TriangleMesh* Plane::toTriangleMesh() {
 }
 
 PointCloud* Plane::toPointCloud() {
+
+	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpuint>* indices = new std::vector<hpuint>;
+
+	for (hpreal edgeLength=0.0f;edgeLength < 5.0f; edgeLength = edgeLength+0.3f){
+	hpvec3 normal = glm::normalize(m_normal);
+	hpvec3 a = hpvec3(1.f, 0.f, 0.f);
+	if( a == normal ) {
+		a = hpvec3(0.f, 0.f, 1.f);
+	}
+	a -= glm::dot(a,normal)*normal;
+	a = 0.5f*edgeLength*glm::normalize(a);
+	hpvec3 b = 0.5f*edgeLength*glm::normalize(glm::cross(a,normal));
+
+
+	vertexData->push_back(m_origin + a + b);
+	vertexData->push_back(m_origin - a + b);
+	vertexData->push_back(m_origin - a - b);
+	vertexData->push_back(m_origin + a - b);
+
+	}
+
+	return new PointCloud(vertexData);
+}
+
+LineMesh* Plane::toLineMesh() {
 	hpreal edgeLength = 1.0f;
 	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 	hpvec3 normal = glm::normalize(m_normal);
 	hpvec3 a = hpvec3(1.f, 0.f, 0.f);
@@ -95,17 +122,25 @@ PointCloud* Plane::toPointCloud() {
 	a = 0.5f*edgeLength*glm::normalize(a);
 	hpvec3 b = 0.5f*edgeLength*glm::normalize(glm::cross(a,normal));
 
-	float di = 0.1;
-	float dj = 0.1;
-	for (float i= 0.0f; i < 1 ; i = i+di){
-		for (float j=0.0f; j < 1 ; i = j+dj){
-			vertexData->push_back(m_origin + i*a + j*b);
-			vertexData->push_back(m_origin - i*a + j*b);
-			vertexData->push_back(m_origin - i*a - j*b);
-			vertexData->push_back(m_origin + i*a - j*b);
-		}
-	}
-	return new PointCloud(vertexData);
+//	std::cout << a.x << a.y << a.z << std::endl;
+//	std::cout << b.x << b.y << b.z << std::endl;
+
+	vertexData->push_back((m_origin + a + b)*2.0f);
+	vertexData->push_back(m_normal);
+	vertexData->push_back((m_origin - a + b)*2.0f);
+	vertexData->push_back(m_normal);
+	vertexData->push_back((m_origin - a - b)*2.0f);
+	vertexData->push_back(m_normal);
+	vertexData->push_back((m_origin + a - b)*2.0f);
+	vertexData->push_back(m_normal);
+
+	indices->push_back(0);
+	indices->push_back(2);
+	indices->push_back(1);
+	indices->push_back(0);
+	indices->push_back(2);
+	indices->push_back(3);
+	return new LineMesh(vertexData, indices);
 }
 Plane& Plane::operator=(const Plane& other) {
 	if(this != &other) {
@@ -114,4 +149,5 @@ Plane& Plane::operator=(const Plane& other) {
 	}
 	return *this;
 }
+
 

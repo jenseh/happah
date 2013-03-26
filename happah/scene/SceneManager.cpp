@@ -3,6 +3,7 @@
 
 #include "happah/scene/BSplineCurveNode.h"
 #include "happah/scene/InvoluteGearNode.h"
+#include "happah/scene/LineMeshNode.h"
 #include "happah/scene/PlaneNode.h"
 #include "happah/scene/PointCloudNode.h"
 #include "happah/scene/SceneManager.h"
@@ -19,7 +20,7 @@ SceneManager::~SceneManager() {}
 
 template<class G, class N, class S>
 void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
-	Node_ptr node = findChildContaining(data);
+	Node_ptr node = findChildContainingData(data);
 
 	Node_ptr root = guiStateNode;
 	shared_ptr<N> dataNode;
@@ -42,13 +43,13 @@ void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node) {
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(triangleMesh);
+		node = node->findChildContainingData(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -75,13 +76,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 		Node_ptr root;
 		shared_ptr<N> geometryNode;
 		if(node) {
 			geometryNode = static_pointer_cast<N>(node);
-			node = node->findChildContaining(triangleMesh);
+			node = node->findChildContainingData(triangleMesh);
 			if(node) {
 				TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 				TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -108,13 +109,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node) {
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(triangleMesh);
+		node = node->findChildContainingData(triangleMesh);
 		if(node) {
 			TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
 			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
@@ -138,16 +139,115 @@ void SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMes
 
 	triggerSubtreeInsertedEvent(root);
 }
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color) {
+	Node_ptr node = findChildContainingData(geometry);
+
+	Node_ptr root;
+	shared_ptr<N> geometryNode;
+	if(node) {
+		geometryNode = static_pointer_cast<N>(node);
+		node = node->findChildContainingData(lineMesh);
+		if(node) {
+			LineMeshNode_ptr lineMeshNode = dynamic_pointer_cast<LineMeshNode>(node);
+			LineMeshRenderStateNode_ptr lineMeshRenderStateNode = lineMeshNode->getLineMeshRenderStateNode();
+			lineMeshRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(lineMeshRenderStateNode);
+			return;
+		}
+	} else {
+		geometryNode = shared_ptr<N>(new N(geometry));
+		insertChild(geometryNode);
+		root = geometryNode;
+	}
+
+	LineMeshNode_ptr lineMeshNode(new LineMeshNode(lineMesh));
+	geometryNode->insertChild(lineMeshNode);
+
+	if(!root) root = lineMeshNode;
+
+	LineMeshRenderStateNode_ptr lineMeshRenderStateNode(new LineMeshRenderStateNode(lineMesh, color));
+	lineMeshNode->insertChild(lineMeshRenderStateNode);
+
+	triggerSubtreeInsertedEvent(root);
+}
+
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
+	Node_ptr node = findChildContainingData(geometry);
+
+		Node_ptr root;
+		shared_ptr<N> geometryNode;
+		if(node) {
+			geometryNode = static_pointer_cast<N>(node);
+			node = node->findChildContainingData(lineMesh);
+			if(node) {
+				LineMeshNode_ptr lineMeshNode = dynamic_pointer_cast<LineMeshNode>(node);
+				LineMeshRenderStateNode_ptr lineMeshRenderStateNode = lineMeshNode->getLineMeshRenderStateNode();
+				lineMeshRenderStateNode->setColorVector(color);
+				triggerSubtreeUpdatedEvent(lineMeshRenderStateNode);
+				return;
+			}
+		} else {
+			geometryNode = shared_ptr<N>(new N(geometry));
+			insertChild(geometryNode);
+			root = geometryNode;
+		}
+
+		LineMeshNode_ptr lineMeshNode(new LineMeshNode(lineMesh, transformation));
+		geometryNode->insertChild(lineMeshNode);
+
+		if(!root) root = lineMeshNode;
+
+		LineMeshRenderStateNode_ptr lineMeshRenderStateNode(new LineMeshRenderStateNode(lineMesh, color));
+		lineMeshNode->insertChild(lineMeshRenderStateNode);
+
+		triggerSubtreeInsertedEvent(root);
+}
+
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation) {
+	Node_ptr node = findChildContainingData(geometry);
+
+	Node_ptr root;
+	shared_ptr<N> geometryNode;
+	if(node) {
+		geometryNode = static_pointer_cast<N>(node);
+		node = node->findChildContainingData(lineMesh);
+		if(node) {
+			LineMeshNode_ptr lineMeshNode = dynamic_pointer_cast<LineMeshNode>(node);
+			LineMeshRenderStateNode_ptr lineMeshRenderStateNode = lineMeshNode->getLineMeshRenderStateNode();
+			lineMeshRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(lineMeshRenderStateNode);
+			return;
+		}
+	} else {
+		geometryNode = shared_ptr<N>(new N(geometry));
+		insertChild(geometryNode);
+		root = geometryNode;
+	}
+
+	LineMeshNode_ptr lineMeshNode(new LineMeshNode(lineMesh, transformation));
+	geometryNode->insertChild(lineMeshNode);
+
+	if(!root) root = lineMeshNode;
+
+	LineMeshRenderStateNode_ptr lineMeshRenderStateNode(new LineMeshRenderStateNode(lineMesh, color));
+	lineMeshNode->insertChild(lineMeshRenderStateNode);
+
+	triggerSubtreeInsertedEvent(root);
+}
+
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation){
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node){
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(pointCloud);
+		node = node->findChildContainingData(pointCloud);
 		if(node) {
 			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
 			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
@@ -175,13 +275,13 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 template<class G, class N>
 
 void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color){
-	Node_ptr node = findChildContaining(geometry);
+	Node_ptr node = findChildContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node){
 		geometryNode = static_pointer_cast<N>(node);
-		node = node->findChildContaining(pointCloud);
+		node = node->findChildContainingData(pointCloud);
 		if(node) {
 			PointCloudNode_ptr pointCloudNode = dynamic_pointer_cast<PointCloudNode>(node);
 			PointCloudRenderStateNode_ptr pointCloudRenderStateNode = pointCloudNode->getPointCloudRenderStateNode();
@@ -204,6 +304,14 @@ void SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, h
 	pointCloudNode->insertChild(pointCloudRenderStateNode);
 
 	triggerSubtreeInsertedEvent(root);
+}
+template<class S, class N, class G>
+void SceneManager::doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode) {
+    shared_ptr<N> simulationNode = shared_ptr<N>(new N(simulation));
+    insertChild(simulationNode);
+    simulationNode->buildSubtree();
+    simulationNode->insertChild(guiStateNode);
+    triggerSubtreeInsertedEvent(simulationNode);
 }
 
 void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
@@ -235,6 +343,10 @@ void SceneManager::insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolo
 	doInsert<Plane, PlaneNode>(plane, triangleMesh, color);
 }
 
+void SceneManager::insert(Plane_ptr plane, LineMesh_ptr lineMesh, hpcolor& color) {
+	doInsert<Plane, PlaneNode>(plane, lineMesh, color);
+}
+
 void SceneManager::insert(Plane_ptr plane,PointCloud_ptr pointCloud,hpcolor& color){
 	doInsert<Plane,PlaneNode>(plane,pointCloud, color);
 }
@@ -247,16 +359,20 @@ void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMe
 	doInsert<SimpleGear, SimpleGearNode>(simpleGear, triangleMesh, color);
 }
 
-void SceneManager::insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode) {
-	doInsert<Disc, DiscNode, DiscGUIStateNode>(disc, discGUIStateNode);
+void SceneManager::insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode) {
+    doInsert<SurfaceOfRevolution, DiscNode, DiscGUIStateNode>(disc, discGUIStateNode);
 }
 
-void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	doInsert<Disc, DiscNode>(disc, triangleMesh, color);
+void SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+    doInsert<SurfaceOfRevolution, DiscNode>(disc, triangleMesh, color);
 }
 
-void SceneManager::insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
-	doInsert<Disc, DiscNode >(disc, triangleMesh, color, transformation);
+void SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
+    doInsert<SurfaceOfRevolution, DiscNode >(disc, triangleMesh, color, transformation);
+}
+
+void SceneManager::insert(DiscGearGrind_ptr discGearGrind, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode) {
+	doInsertSimulation<DiscGearGrind, DiscGearGrindNode, DiscGearGrindGUIStateNode>(discGearGrind, discGearGrindGUIStateNode);
 }
 
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {
@@ -296,14 +412,14 @@ void SceneManager::remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNode
 	if(removedNodes.size() > 0) triggerSubtreesRemovedEvent(removedNodes);
 }
 
-Node_ptr SceneManager::removeChildContaining(shared_ptr<void> data) {
-	Node_ptr node = Node::removeChildContaining(data);
+Node_ptr SceneManager::removeChildContainingData(shared_ptr<void> data) {
+	Node_ptr node = Node::removeChildContainingData(data);
 	if(node) triggerSubtreeRemovedEvent(node);
 	return node;
 }
 
-Node_ptr SceneManager::removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData) {
-	Node_ptr node = Node::removeContaining(parentData, childData);
+Node_ptr SceneManager::removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData) {
+	Node_ptr node = Node::removeContainingData(parentData, childData);
 	if(node) triggerSubtreeRemovedEvent(node);
 	return node;
 }

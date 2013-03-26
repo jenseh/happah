@@ -1,6 +1,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include "happah/HappahConstants.h"
 #include "happah/gui/forms/PlaneForm.h"
 
 PlaneForm::PlaneForm(GUIManager& guiManager, QWidget* parent)
@@ -31,7 +32,7 @@ void PlaneForm::createPlane() {
 	if( m_planeInserted ) {
 		m_plane = Plane_ptr(new Plane(m_originInput->getValue(), m_normalInput->getValue()));
 	}
-	m_guiManager.insert(m_plane);
+	m_guiManager.insert(m_plane,HP_LINE_MESH|HP_TRIANGLE_MESH|HP_POINT_CLOUD);
 	m_planeInserted = true;
 }
 

@@ -63,6 +63,7 @@ private:
 	DefaultSceneListener m_sceneListener;
 	SceneManager_ptr m_sceneManager;
 	QGLContext* m_glContext;
+	QWidget* m_parentWidget;
 
 	GLuint m_fragmentShader;
 	GLuint m_program;
@@ -97,21 +98,6 @@ private:
 	GLint m_pointCloudModelViewMatrixLocation;
 	GLint m_pointCloudProjectionMatrixLocation;
 	GLint m_pointCloudPointRadiusLocation;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);

@@ -34,6 +34,13 @@ void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
+void GUIStateNode::setLineMesh(LineMesh_ptr lineMesh){
+	m_lineMesh = lineMesh;
+}
+void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){
+	m_pointCloud = pointCloud;
+}
+
 // BSplineCurve
 
 BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(
@@ -135,7 +142,7 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
-DiscGUIStateNode::DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
+DiscGUIStateNode::DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
 	: GUIStateNode(name), m_disc(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
 
 DiscGUIStateNode::~DiscGUIStateNode() {
@@ -156,6 +163,30 @@ Form* DiscGUIStateNode::getForm() {
 	m_discForm->setDisc(m_disc);
 	return m_discForm;
 }
+
+DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name)
+	:	GUIStateNode(name), m_discGearGrind(discGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
+
+DiscGearGrindGUIStateNode::~DiscGearGrindGUIStateNode() {
+	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind)
+		m_simulationForm->reset();
+}
+
+ContextMenu* DiscGearGrindGUIStateNode::getContextMenu() const {
+	m_simulationContextMenu->setSimulation(m_discGearGrind);
+	return m_simulationContextMenu;
+}
+
+shared_ptr<void> DiscGearGrindGUIStateNode::getData() const {
+	return m_discGearGrind;
+}
+
+Form* DiscGearGrindGUIStateNode::getForm() {
+	m_simulationForm->setDiscGearGrind(m_discGearGrind);
+	return m_simulationForm;
+}
+
+
 
 // Worm
 

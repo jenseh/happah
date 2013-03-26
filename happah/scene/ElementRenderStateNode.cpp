@@ -37,7 +37,9 @@ vector<hpuint>* ElementRenderStateNode::getIndices(){
 }
 
 TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, hpcolor& color)
-	: ElementRenderStateNode(GL_TRIANGLES,triangleMesh->getVertexData(),triangleMesh->getIndices(),color){}
+	: ElementRenderStateNode(GL_TRIANGLES,triangleMesh->getVertexData(),triangleMesh->getIndices(),color){
+
+}
 
 TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, std::vector<hpcolor>* colorVector)
 	: ElementRenderStateNode(GL_TRIANGLES,triangleMesh->getVertexData(),triangleMesh->getIndices(),colorVector) {}
@@ -47,7 +49,9 @@ TriangleMeshRenderStateNode::~TriangleMeshRenderStateNode() {
 }
 
 LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, hpcolor& color)
-	: ElementRenderStateNode(GL_LINES,lineMesh->getVertexData(),lineMesh->getIndices(),color){}
+	: ElementRenderStateNode(GL_LINES,lineMesh->getVertexData(),lineMesh->getIndices(),color){
+
+}
 
 LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, std::vector<hpcolor>* colorVector)
 	: ElementRenderStateNode(GL_LINES,lineMesh->getVertexData(),lineMesh->getIndices(),colorVector) {}

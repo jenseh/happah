@@ -7,8 +7,8 @@
 
 #include "DiscNode.h"
 
-DiscNode::DiscNode(Disc_ptr disc)
-	: SimpleGeometryNode<Disc>(disc) {}
+DiscNode::DiscNode(SurfaceOfRevolution_ptr disc)
+	: SimpleGeometryNode<SurfaceOfRevolution>(disc) {}
 
 DiscNode::~DiscNode() {}
 

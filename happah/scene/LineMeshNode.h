@@ -10,6 +10,7 @@ class LineMeshNode : public SimpleGeometryNode<LineMesh>  {
 
 public:
 	LineMeshNode(LineMesh_ptr lineMesh);
+	LineMeshNode(LineMesh_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation);
 	virtual ~LineMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
@@ -20,7 +21,7 @@ private:
 	LineMeshRenderStateNode_ptr m_lineMeshRenderStateNode;
 };
 
-typedef shared_ptr<TriangleMeshNode> TriangleMeshNode_ptr;
+typedef shared_ptr<LineMeshNode> LineMeshNode_ptr;
 
 
 #endif /* LINE_MESH_NODE_H_ */

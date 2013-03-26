@@ -93,7 +93,7 @@ void InvoluteGearForm::changeToothCount(hpreal toothCount) {
 void InvoluteGearForm::createInvoluteGear() {
 	if(m_involuteGearInserted)
 		m_involuteGear = InvoluteGear_ptr(new InvoluteGear(*m_involuteGear));
-	m_guiManager.insert(m_involuteGear);
+	m_guiManager.insert(m_involuteGear,HP_TRIANGLE_MESH);
 	m_involuteGearInserted = true;
 }
 

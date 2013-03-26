@@ -24,6 +24,9 @@ typedef shared_ptr<SimpleGearGUIStateNode> SimpleGearGUIStateNode_ptr;
 class DiscGUIStateNode;
 typedef shared_ptr<DiscGUIStateNode> DiscGUIStateNode_ptr;
 
+class DiscGearGrindGUIStateNode;
+typedef shared_ptr<DiscGearGrindGUIStateNode> DiscGearGrindGUIStateNode_ptr;
+
 class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
@@ -31,6 +34,7 @@ class SpherePatchGUIStateNode;
 typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
 
 #include "happah/geometries/Mesh.h"
+#include "happah/geometries/PointCloud.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
@@ -49,10 +53,16 @@ public:
 	TriangleMesh_ptr getTriangleMesh() const;
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
+	void setLineMesh(LineMesh_ptr lineMesh);
+	void setPointCloud(PointCloud_ptr pointCloud);
+
 
 private:
 	string m_name;
 	TriangleMesh_ptr m_triangleMesh;
+	LineMesh_ptr m_lineMesh;
+	PointCloud_ptr m_pointCloud;
+
 
 };
 
@@ -126,13 +136,34 @@ private:
 
 };
 
-#include "happah/geometries/Disc.h"
+#include "happah/gui/context-menus/SimulationContextMenu.h"
+#include "happah/gui/forms/SimulationForm.h"
+#include "happah/simulations/DiscGearGrind.h"
+
+
+class DiscGearGrindGUIStateNode : public GUIStateNode {
+public:
+	DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name);
+	~DiscGearGrindGUIStateNode();
+
+	ContextMenu* getContextMenu() const;
+	shared_ptr<void> getData() const;
+	Form* getForm();
+
+private:
+	DiscGearGrind_ptr m_discGearGrind;
+	SimulationForm* m_simulationForm;
+	SimulationContextMenu* m_simulationContextMenu;
+};
+
+
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/forms/DiscForm.h"
 #include "happah/gui/context-menus/DiscContextMenu.h"
 
 class DiscGUIStateNode : public GUIStateNode {
 public:
-	DiscGUIStateNode(Disc_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
+    DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
 	~DiscGUIStateNode();
 
 	ContextMenu* getContextMenu() const;
@@ -140,11 +171,12 @@ public:
 	Form* getForm();
 
 private:
-	Disc_ptr m_disc;
+    SurfaceOfRevolution_ptr m_disc;
 	DiscForm* m_discForm;
 	DiscContextMenu* m_discContextMenu;
 
 };
+
 
 #include "happah/geometries/Worm.h"
 #include "happah/gui/forms/WormForm.h"

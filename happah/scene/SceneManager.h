@@ -6,16 +6,17 @@
 
 using namespace std;
 
-class SceneManager;
+//class SceneManager;
 
 #include "happah/geometries/InvoluteGear.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/SpherePatch.h"
-#include "happah/geometries/Disc.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/geometries/Worm.h"
+#include "happah/simulations/DiscGearGrind.h"
+#include "happah/scene/DiscGearGrindNode.h"
 #include "happah/scene/GUIStateNode.h"
-#include "happah/scene/Node.h"
 #include "happah/scene/SceneListener.h"
 #include "happah/scene/PointCloudNode.h"
 
@@ -27,14 +28,17 @@ public:
 
 	void insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode);
 	void insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color);
-	void insert(Disc_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
-	void insert(Disc_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
-	void insert(Disc_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+    void insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
+    void insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
+    void insert(SurfaceOfRevolution_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+    void insert(DiscGearGrind_ptr, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
-	void insert(Plane_ptr plane, PointCloud_ptr pointCloud,hpcolor& color);
+	void insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
+	void insert(Plane_ptr plane, LineMesh_ptr LineMesh,hpcolor&color);
+//void insert(Plane_ptr plane, BSplineCurve<hpvec2> splineCurve, LineMesh_ptr<hpvec2> lineMesh_ptr, hpcolor& color);
 	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
@@ -46,8 +50,8 @@ public:
 	Node_ptr remove(Node_ptr node);
 	void remove(vector<Node_ptr>& nodes);
 	void remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes);
-	Node_ptr removeChildContaining(shared_ptr<void> data);
-	Node_ptr removeContaining(shared_ptr<void> parentData, shared_ptr<void> childData);
+	Node_ptr removeChildContainingData(shared_ptr<void> data);
+	Node_ptr removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData);
 	void unregisterSceneListener(SceneListener* sceneListener);
 
 private:
@@ -65,6 +69,15 @@ private:
 	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation);
 	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
+    template<class S, class N, class G>
+    void doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode);
+
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);
 	void triggerSubtreesInsertedEvent(vector<Node_ptr>& roots);

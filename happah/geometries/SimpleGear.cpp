@@ -22,9 +22,9 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 
 	hpreal rotation = glm::tan(m_helixAngle) * depth;
 
-	for (uint tooth = 0; tooth < getToothCount(); ++tooth) {
+	for (hpuint tooth = 0; tooth < getToothCount(); ++tooth) {
 		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
-		for (uint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
+		for (hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
 			hpvec3 controlPoint = m_toothProfile->getControlPoint(i);
 			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
 			gearProfile->addControlPoint(turnedPoint);
@@ -33,7 +33,7 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 	return gearProfile;
 }
 
-BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane() {
+BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane()const {
 	BSplineGearCurve *toothProfileToTop = new BSplineGearCurve();
 	toothProfileToTop->setPeriodic(false);
 	toothProfileToTop->setDegree(2);
@@ -45,7 +45,7 @@ BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane() {
 	hpmat3x3 goalMatrix = hpmat3x3(hpvec3(1, 0, 0), hpvec3(0, 1, 0), hpvec3(0, 0, 1));
 	hpmat3x3 transformation = goalMatrix * glm::inverse(toothPMatrix);
 
-		for (uint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
+		for (hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
 			hpvec3 turnedPoint = transformation * m_toothProfile->getControlPoint(i);
 			toothProfileToTop->addControlPoint(turnedPoint);
 		}
@@ -60,7 +60,7 @@ hpreal SimpleGear::getBottomRadius() {
 	return m_toothProfile->getMinLength();
 }
 
-uint SimpleGear::getToothCount() {
+hpuint SimpleGear::getToothCount() {
 	return m_toothProfile->getToothCount();
 }
 
@@ -92,10 +92,23 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	m_toothProfile = curve;
 }
 
+void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
+    //TODO: implement method correctly
+	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
+	for (int i = profile.capacity()/2;  i >= 0; i--) {
+		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
+		profile.push_back(hpvec2(-point.x, point.y));
+	}
+	for (uint i = 0; i < profile.capacity()/2; i++) {
+		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
+		profile.push_back(hpvec2(point.x, point.y));
+	}
+}
+
 std::vector<hpvec2>* SimpleGear::getToothProfile() {
 	std::vector<hpvec2> *points = new std::vector<hpvec2>;
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
-	for (uint i = 0; i <= TOOTH_SAMPLE_SIZE; ++i) { //"<=" to get the whole tooth
+	for (hpuint i = 0; i <= TOOTH_SAMPLE_SIZE; ++i) { //"<=" to get the whole tooth
 		hpvec3 point = splineXY->getValueAt((hpreal) i / TOOTH_SAMPLE_SIZE);
 		points->push_back(hpvec2(point.x, point.y));
 	}

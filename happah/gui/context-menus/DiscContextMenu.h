@@ -2,7 +2,7 @@
 #define DISCCONTEXTMENU_H_
 
 #include <QAction>
-#include "happah/geometries/Disc.h"
+#include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 
@@ -13,11 +13,11 @@ public:
 	DiscContextMenu(GUIManager& guiManager, QWidget* parent);
 	~DiscContextMenu();
 
-	void setDisc(Disc_ptr disc, TriangleMesh_ptr discMesh);
+	void setDisc(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh);
 
 private:
 	GUIManager& m_guiManager;
-	Disc_ptr m_disc;
+	SurfaceOfRevolution_ptr m_disc;
 	TriangleMesh_ptr m_discMesh;
 
 private slots:

@@ -93,21 +93,27 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 }
 
 void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
-    //TODO: implement method correctly
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
-	for (int i = profile.capacity()/2;  i >= 0; i--) {
-		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
+	hpreal low,high;
+	splineXY->getParameterRange(low, high);
+	hpreal delta = (high - low) / (hpreal)(profile.capacity() - 1); // -1 so whole thooth is sampled
+	for (int i = profile.capacity()/2-1;  i >= 0; i--) {
+		hpvec3 point = splineXY->getValueAt(low + i*delta);
 		profile.push_back(hpvec2(-point.x, point.y));
 	}
 	for (uint i = 0; i < profile.capacity()/2; i++) {
-		hpvec3 point = splineXY->getValueAt((hpreal) i / (profile.capacity() - 1));
+		hpvec3 point = splineXY->getValueAt(low + i*delta);
 		profile.push_back(hpvec2(point.x, point.y));
 	}
 }
 
+
 std::vector<hpvec2>* SimpleGear::getToothProfile() {
 	std::vector<hpvec2> *points = new std::vector<hpvec2>;
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
+	hpreal low,high;
+	splineXY->getParameterRange(low, high);
+	hpreal delta = (high - low) / (hpreal)(TOOTH_SAMPLE_SIZE - 1); // -1 so whole thooth is sampled
 	for (hpuint i = 0; i <= TOOTH_SAMPLE_SIZE; ++i) { //"<=" to get the whole tooth
 		hpvec3 point = splineXY->getValueAt((hpreal) i / TOOTH_SAMPLE_SIZE);
 		points->push_back(hpvec2(point.x, point.y));

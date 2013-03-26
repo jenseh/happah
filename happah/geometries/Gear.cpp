@@ -98,6 +98,8 @@ TriangleMesh* Gear::toTriangleMesh() {
 					normal = normal + (hpvec3(glm::cross(a, b)));
 				}
 			}
+			// TODO Something is still worng with the normals
+			//std::cout<<normal.x<<" "<<normal.y<<" "<<normal.z<<std::endl;
 			n = i * indicesInRow + j * 6;
 			for (hpuint k = 0; k < 6; ++k) {
 				n += steps[k];

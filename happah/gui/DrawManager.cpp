@@ -23,9 +23,10 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager)
-	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
+	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager),m_selectionVisitor(*this), m_glContext(new QGLContext(GL_FORMAT)) {
 	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
+
 }
 
 DrawManager::~DrawManager() {}
@@ -54,7 +55,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection) {
 	// CHanged for geometry Shader Test ... reverse after successfull test
 	glUseProgram(m_program);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
@@ -82,11 +83,16 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+	if(doSelection){
+		glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+		glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER,0);
+	}
 	glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
-void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection){
 	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
@@ -96,13 +102,18 @@ void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, R
 	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
 	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
 	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
+	if(doSelection){
+		glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+		glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
+		glBindFramebuffer(GL_FRAMEBUFFER,0);
+	}
 	glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
 	glBindVertexArray(0);
 }
 
 void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(m_program);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	m_modelMatrix = hpmat4x4(1.0f);
 	m_viewMatrix = viewMatrix;
@@ -111,8 +122,65 @@ void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3&
 
 	RigidAffineTransformation identityTransformation;
 	m_sceneManager->draw(m_drawVisitor, identityTransformation);
+	//TODO: this is just debug output , remove when selection works
+	glUseProgram(0);
+	int dimensions[4];
+	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+	int width = dimensions[2];
+	int height = dimensions[3];
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,m_selectorTexture);
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glBegin(GL_QUADS);
+	//TL
+	glTexCoord2f(0,1);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.05f,-1.0f+0.35f);
+	//TR
+	glTexCoord2f(1,1);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.35f,-1.0f+0.35f);
+	//BR
+	glTexCoord2f(1,0);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.35f,-1.0f+0.05f);
+	//BL
+	glTexCoord2f(0,0);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.05f,-1.0f+0.05f);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	// TODO :: REMOVE DEBUG OUTPUT
 }
 
+void DrawManager::select(int x, int y){
+	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+	glClearColor(0.3f,0.3f,0.3f,0.0f);
+	glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+
+	RigidAffineTransformation identityTransformation;
+	m_sceneManager->draw(m_selectionVisitor, identityTransformation);
+//	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+	hpcolor pixel[1];	int dimensions[4];
+	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+	int width = dimensions[2];
+	int height = dimensions[3];
+	glReadPixels(x,height-y,1,1,GL_RGBA,GL_FLOAT,&pixel[0]);
+	cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
+//	glBindFramebuffer(GL_FRAMEBUFFER,0);
+}
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
 }
@@ -144,7 +212,11 @@ bool DrawManager::init() {
 	glEnable(GL_DEPTH_TEST);
 	if (!initShaderPrograms())
 		return false;
+	if (!enableFrameBuffer())
+		return false;
 	return true;
+
+
 }
 
 void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
@@ -327,6 +399,49 @@ bool DrawManager::initShaderPrograms() {
 	return true;
 }
 
+bool DrawManager::enableFrameBuffer(){
+	int dimensions[4];
+	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+	int width = dimensions[2];
+	int height = dimensions[3];
+
+	glGenFramebuffers(1, &m_frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+
+	glGenTextures(1,&m_selectorTexture);
+	glBindTexture(GL_TEXTURE_2D,m_selectorTexture);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glGenRenderbuffers(1,&m_depthRenderBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER,m_depthRenderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height); //TODO: adjust to viewport size
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,m_depthRenderBuffer);
+
+	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,m_selectorTexture,0);
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE )
+		return false;
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	return true;
+}
+
+void DrawManager::resizeSelectorTexture(){
+	int dimensions[4];
+		glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+		int width = dimensions[2];
+		int height = dimensions[3];
+	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+	glBindTexture(GL_TEXTURE_2D,m_selectorTexture);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+	glBindRenderbuffer(GL_RENDERBUFFER,m_depthRenderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height);
+	glBindRenderbuffer(GL_RENDERBUFFER,0);
+	glBindTexture(GL_TEXTURE_2D,0);
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+
+}
+
 DrawManager::DefaultDrawVisitor::DefaultDrawVisitor(DrawManager& drawManager)
 	: m_drawManager(drawManager) {}
 
@@ -336,14 +451,33 @@ void DrawManager::DefaultDrawVisitor::draw(ElementRenderStateNode& elementRender
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!elementRenderStateNode.isInitialized())
 		m_drawManager.initialize(elementRenderStateNode);
-	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation);
+	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation,false);
 }
 
 void DrawManager::DefaultDrawVisitor::draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
 	if (!pointCloudRenderStateNode.isInitialized())
 		m_drawManager.initialize(pointCloudRenderStateNode);
-	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation);
+	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation,false);
 }
+
+DrawManager::SelectionVisitor::SelectionVisitor(DrawManager& drawManager)
+	: m_drawManager(drawManager) {}
+
+DrawManager::SelectionVisitor::~SelectionVisitor() {}
+
+void DrawManager::SelectionVisitor::draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+	// If no Buffer has been assigned, assign one, and write Data into it
+	if (!elementRenderStateNode.isInitialized())
+		m_drawManager.initialize(elementRenderStateNode);
+	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation,true);
+}
+
+void DrawManager::SelectionVisitor::draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	if (!pointCloudRenderStateNode.isInitialized())
+		m_drawManager.initialize(pointCloudRenderStateNode);
+	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation,true);
+}
+
 
 DrawManager::DefaultSceneListener::DefaultSceneListener(DrawManager& drawManager)
 	: m_drawManager(drawManager) {}
@@ -366,3 +500,4 @@ void DrawManager::DefaultSceneListener::handleSubtreeUpdatedEvent(Node_ptr root)
 
 void DrawManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {}
 
+GLenum DrawManager::m_drawBuffers[] = {GL_FRONT,GL_COLOR_ATTACHMENT0};

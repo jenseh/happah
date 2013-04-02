@@ -25,6 +25,8 @@ public:
 	void draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition);
 	QGLContext* getGlContext();
 	bool init();
+	void resizeSelectorTexture();
+	void select(int x,int y);
 
 private:
 	class DefaultDrawVisitor : public DrawVisitor {
@@ -42,6 +44,8 @@ private:
 	};
 
 	class DefaultSceneListener : public SceneListener {
+
+
 	public:
 		DefaultSceneListener(DrawManager& drawManager);
 		~DefaultSceneListener();
@@ -57,11 +61,24 @@ private:
 		DrawManager& m_drawManager;
 	};
 
+	class SelectionVisitor : public DrawVisitor{
+	public:
+		SelectionVisitor(DrawManager& drawManager);
+		~SelectionVisitor();
+
+		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffinaTransformation);
+
+	private:
+		DrawManager& m_drawManager;
+	};
+
 	const static HappahGlFormat GL_FORMAT;
 
 	DefaultDrawVisitor m_drawVisitor;
 	DefaultSceneListener m_sceneListener;
 	SceneManager_ptr m_sceneManager;
+	SelectionVisitor m_selectionVisitor;
 	QGLContext* m_glContext;
 	QWidget* m_parentWidget;
 
@@ -70,6 +87,10 @@ private:
 	GLuint m_pointCloudProgram;
 	GLuint m_vertexShader;
 	GLuint m_geometryShader;
+	GLuint m_frameBuffer;
+	GLuint m_depthRenderBuffer;
+	GLuint m_selectorTexture;
+	static GLenum m_drawBuffers[];
 
 	GLint m_vertexLocation;
 	GLint m_normalLocation;
@@ -100,8 +121,9 @@ private:
 	GLint m_pointCloudPointRadiusLocation;
 
 	void compileShader(GLuint shader, const char* filePath);
-	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
+	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
+	bool enableFrameBuffer();
 	void initialize(ElementRenderStateNode& elementRenderStateNode);
 	void initialize(PointCloudRenderStateNode& elementRenderStateNode);
 	bool initShaderPrograms();

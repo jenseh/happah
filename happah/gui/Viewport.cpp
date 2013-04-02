@@ -53,12 +53,15 @@ void Viewport::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	m_projectionMatrix = glm::perspective(45.0f, ratio, 0.1f, 100.0f);
+	m_drawManager.resizeSelectorTexture();
+
 }
 
 void Viewport::paintGL() {
 	updateView();
 
 	m_drawManager.draw(m_projectionMatrix, m_viewMatrix, m_camera);
+
 }
 
 void Viewport::updateView() {
@@ -116,6 +119,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
 	Ray ray(getMouseRay());
 	m_viewportListener.handleMouseClickEvent(ray);
+	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
 }
 
 void Viewport::wheelEvent(QWheelEvent *event) {

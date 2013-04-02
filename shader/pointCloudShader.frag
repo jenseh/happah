@@ -1,4 +1,4 @@
-#version 330
+#version 330 compatibility
 
 in vec4 gVertex;
 in vec4 gColor;

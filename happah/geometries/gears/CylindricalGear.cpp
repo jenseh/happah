@@ -1,21 +1,21 @@
-#include "happah/geometries/Gear.h"
+#include "happah/geometries/gears/CylindricalGear.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include <iostream>
 
-Gear::Gear() : Geometry() {}
-Gear::~Gear() {}
+CylindricalGear::CylindricalGear() : Geometry() {}
+CylindricalGear::~CylindricalGear() {}
 
-std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
+vector<hpvec2>* CylindricalGear::getGearProfile(hpreal depth) {
 	hpreal rotation = glm::tan(getHelixAngle()) * depth;
 
-	std::vector<hpvec2>* toothProfile = getToothProfile();
-	std::vector<hpvec2>* gearProfile = new std::vector<hpvec2>();
+	vector<hpvec2>* toothProfile = getToothProfile();
+	vector<hpvec2>* gearProfile = new vector<hpvec2>();
 	int rotDirection = 1;
-	hpuint toothCount = getToothCount();
+	hpuint nTeeth = getNumberOfTeeth();
 	if (toothProfileIsInClockDirection())
 		rotDirection = -1;
-	for(hpuint i = 0; i < toothCount; ++i) {
-		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / toothCount + rotation) * 180.0f / M_PI);
+	for(hpuint i = 0; i < nTeeth; ++i) {
+		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / nTeeth + rotation) * 180.0f / M_PI);
 		for(hpuint j = 0; j < toothProfile->size() - 1; ++j) {
 			gearProfile->push_back(glm::rotate(toothProfile->at(j), degreeRotation));
 		}
@@ -23,18 +23,18 @@ std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
 	return gearProfile;
 }
 
-bool Gear::toothProfileIsInClockDirection() {
-	std::vector<hpvec2>* toothProfile = getToothProfile();
+bool CylindricalGear::toothProfileIsInClockDirection() {
+	vector<hpvec2>* toothProfile = getToothProfile();
 	hpvec2 first = toothProfile->at(0);
 	hpvec2 last = toothProfile->back();
 	return (first[0] * last[1] - first[1] * last[0]) < 0;
 }
 
-TriangleMesh* Gear::toTriangleMesh() {
+TriangleMesh* CylindricalGear::toTriangleMesh() {
 	// Create vector for the result
-	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
-	std::vector<hpuint>* indices = new std::vector<hpuint>;
-	std::vector<hpvec2>* profile;
+	vector<hpvec3>* vertexData = new vector<hpvec3>;
+	vector<hpuint>* indices = new vector<hpuint>;
+	vector<hpvec2>* profile;
 	hpvec3 wildcardNormal = hpvec3(0.0f, 0.0f, 0.0f);
 
 	hpreal dz = getFacewidth() / WIDTH_SAMPLE_SIZE;
@@ -99,7 +99,7 @@ TriangleMesh* Gear::toTriangleMesh() {
 				}
 			}
 			// TODO Something is still worng with the normals
-			//std::cout<<normal.x<<" "<<normal.y<<" "<<normal.z<<std::endl;
+			//cout<<normal.x<<" "<<normal.y<<" "<<normal.z<<endl;
 			n = i * indicesInRow + j * 6;
 			for (hpuint k = 0; k < 6; ++k) {
 				n += steps[k];

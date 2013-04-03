@@ -1,7 +1,7 @@
 #ifndef INVOLUTE_GEAR_NODE_H
 #define INVOLUTE_GEAR_NODE_H
 
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"

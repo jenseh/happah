@@ -1,5 +1,6 @@
-#include "happah/geometries/SimpleGear.h"
 #include "glm/gtx/rotate_vector.hpp"
+#include "happah/geometries/gears/SimpleGear.h"
+
 
 SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :
 	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_facewidth(facewidth) {
@@ -22,7 +23,7 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 
 	hpreal rotation = glm::tan(m_helixAngle) * depth;
 
-	for (hpuint tooth = 0; tooth < getToothCount(); ++tooth) {
+	for (hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
 		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
 		for (hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
 			hpvec3 controlPoint = m_toothProfile->getControlPoint(i);
@@ -60,8 +61,8 @@ hpreal SimpleGear::getBottomRadius() {
 	return m_toothProfile->getMinLength();
 }
 
-hpuint SimpleGear::getToothCount() {
-	return m_toothProfile->getToothCount();
+hpuint SimpleGear::getNumberOfTeeth() {
+	return m_toothProfile->getNumberOfTeeth();
 }
 
 hpreal SimpleGear::getRadius() {
@@ -108,8 +109,8 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
 }
 
 
-std::vector<hpvec2>* SimpleGear::getToothProfile() {
-	std::vector<hpvec2> *points = new std::vector<hpvec2>;
+vector<hpvec2>* SimpleGear::getToothProfile() {
+	vector<hpvec2> *points = new vector<hpvec2>;
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);

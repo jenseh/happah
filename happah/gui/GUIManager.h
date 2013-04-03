@@ -3,10 +3,10 @@
 
 #include "happah/HappahConstants.h"
 #include "happah/geometries/BSplineCurve.h"
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/Plane.h"
-#include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/geometries/Worm.h"
@@ -17,7 +17,7 @@
 
 class GUIManager {
 public:
-	virtual void generateDisc(Gear_ptr gear) = 0;
+	virtual void generateDisc(CylindricalGear_ptr cylindricalGear) = 0;
 	virtual void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) = 0;
     virtual void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) = 0;
 	//virtual void insert(DiscGearGrindResult simulationResult) = 0;

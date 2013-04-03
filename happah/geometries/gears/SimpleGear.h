@@ -5,10 +5,10 @@
 
 using namespace std;
 
-#include "happah/geometries/Gear.h"
-#include "happah/geometries/BSplineGearCurve.h"
+#include "happah/geometries/gears/BSplineGearCurve.h"
+#include "happah/geometries/gears/CylindricalGear.h"
 
-class SimpleGear : public Gear {
+class SimpleGear : public CylindricalGear {
 
 private:
 	BSplineGearCurve* m_toothProfile;
@@ -26,7 +26,7 @@ public:
 	//TODO: leave methods virtual????!!!!
 	virtual hpreal getAngularPitch();
 	virtual hpreal getBottomRadius();
-	virtual hpuint   getToothCount();
+	virtual hpuint getNumberOfTeeth();
 	virtual hpreal getRadius();
 	virtual hpreal getHelixAngle();
 	virtual hpreal getFacewidth();
@@ -38,7 +38,7 @@ public:
 	virtual void setRadius(hpreal radius);
 
     virtual void getToothSpaceProfile(vector<hpvec2> &profile)const;
-	virtual std::vector<hpvec2>* getToothProfile();
+	virtual vector<hpvec2>* getToothProfile();
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

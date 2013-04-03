@@ -81,7 +81,7 @@ private:
 	BSplineCurveForm* m_bSplineCurveForm;
 };
 
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/gui/context-menus/InvoluteGearContextMenu.h"
 #include "happah/gui/forms/InvoluteGearForm.h"
 
@@ -117,7 +117,7 @@ private:
 };
 
 #include "happah/gui/context-menus/SimpleGearContextMenu.h"
-#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/gui/forms/SimpleGearForm.h"
 
 class SimpleGearGUIStateNode : public GUIStateNode {

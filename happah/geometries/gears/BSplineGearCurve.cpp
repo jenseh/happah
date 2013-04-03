@@ -1,4 +1,4 @@
-#include "happah/geometries/BSplineGearCurve.h"
+#include "happah/geometries/gears/BSplineGearCurve.h"
 #include "glm/gtx/rotate_vector.hpp"
 
 BSplineGearCurve::BSplineGearCurve() {}
@@ -15,7 +15,7 @@ hpreal BSplineGearCurve::getAngularPitch() const {
 	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
 }
 
-unsigned int BSplineGearCurve::getToothCount() const {
+unsigned int BSplineGearCurve::getNumberOfTeeth() const {
 	return (unsigned int) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
 }
 
@@ -58,8 +58,8 @@ BSplineCurve* BSplineGearCurve::getEntireGear() const {
 	gearProfile->setPeriodic(true);
 	gearProfile->setDegree(m_degree);
 
-	for (unsigned int tooth = 0; tooth < getToothCount(); ++tooth) {
-		hpreal degreeRotation = -(M_PI * 2.0f * tooth / getToothCount()) * 180.0f / M_PI;
+	for (unsigned int tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
+		hpreal degreeRotation = -(M_PI * 2.0f * tooth / getNumberOfTeeth()) * 180.0f / M_PI;
 		for (unsigned int i = 0; i < getNumberOfControlPoints(); ++i) {
 			hpvec3 controlPoint = getControlPoint(i);
 			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;

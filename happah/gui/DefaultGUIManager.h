@@ -23,7 +23,7 @@ public:
 	DefaultGUIManager(SceneManager_ptr sceneManager);
 	~DefaultGUIManager();
 
-	void generateDisc(Gear_ptr gear);
+	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	bool init();
 	void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode = HP_TRIANGLE_MESH);
     void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);

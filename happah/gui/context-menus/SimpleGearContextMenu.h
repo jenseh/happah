@@ -2,7 +2,7 @@
 #define SIMPLEGEARCONTEXTMENU_H_
 
 #include <QAction>
-#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 

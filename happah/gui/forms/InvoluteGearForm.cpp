@@ -14,11 +14,11 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 		m_helixAngleSlider(new Slider(tr("helix angle"))),
 		m_moduleSlider(new Slider(tr("module"))),
 		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
-		m_toothCountSlider(new Slider(tr("number of teeth"), false)) {
+		m_nTeethSlider(new Slider(tr("number of teeth"), false)) {
 	QPushButton* createButton  = new QPushButton("create gear");
 
 	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(m_toothCountSlider);
+	layout->addWidget(m_nTeethSlider);
 	layout->addWidget(m_moduleSlider);
 	layout->addWidget(m_faceWidthSlider);
 	layout->addWidget(m_pressureAngleSlider);
@@ -35,7 +35,7 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	connect(m_helixAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 	connect(m_moduleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
 	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
-	connect(m_toothCountSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeToothCount(hpreal)));
+	connect(m_nTeethSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeNumberOfTeeth(hpreal)));
 
 	updateRanges();
 }
@@ -83,8 +83,8 @@ void InvoluteGearForm::changePressureAngle(hpreal angle) {
 	}
 }
 
-void InvoluteGearForm::changeToothCount(hpreal toothCount) {
-	if (m_involuteGear->setToothCount(toothCount)) {
+void InvoluteGearForm::changeNumberOfTeeth(hpreal nTeeth) {
+	if (m_involuteGear->setNumberOfTeeth(nTeeth)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
@@ -121,14 +121,14 @@ void InvoluteGearForm::updateInvoluteGear() {
 }
 
 void InvoluteGearForm::updateRanges() {
-	uint* toothCounts = m_involuteGear->getPossibleToothCounts();
+	hpuint* nTeeth = m_involuteGear->getPossibleNumbersOfTeeth();
 	hpreal* modules = m_involuteGear->getPossibleModules();
 	hpreal* pressureAngles = m_involuteGear->getPossiblePressureAngles();
 	hpreal* bottomClearances = m_involuteGear->getPossibleBottomClearances();
 	hpreal* filletRadien = m_involuteGear->getPossibleFilletRadien();
 	hpreal epsilon = 0.0001f;
 
-	m_toothCountSlider->setSliderValues(m_involuteGear->getToothCount(), toothCounts[0], toothCounts[1]);
+	m_nTeethSlider->setSliderValues(m_involuteGear->getNumberOfTeeth(), nTeeth[0], nTeeth[1]);
 	m_moduleSlider->setSliderValues(m_involuteGear->getModule(), modules[0], modules[1]);
 	m_faceWidthSlider->setSliderValues(m_involuteGear->getFacewidth(), 0.0f, m_involuteGear->getReferenceRadius() * 2.0f);
 	m_pressureAngleSlider->setSliderValues(m_involuteGear->getPressureAngle(), pressureAngles[0], pressureAngles[1]);

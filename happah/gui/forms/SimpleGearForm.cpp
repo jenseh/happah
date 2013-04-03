@@ -1,7 +1,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/gui/forms/SimpleGearForm.h"
 
 SimpleGearForm::SimpleGearForm(GUIManager& guiManager, QWidget* parent)

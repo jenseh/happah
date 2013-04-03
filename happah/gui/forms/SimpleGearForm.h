@@ -1,10 +1,10 @@
 #ifndef SIMPLE_GEAR_FORM_H
 #define SIMPLE_GEAR_FORM_H
 
-#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
+#include "happah/gui/forms/Form.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
-#include "happah/gui/forms/Form.h"
 
 class SimpleGearForm : public Form {
 Q_OBJECT

@@ -166,12 +166,9 @@ void DrawManager::select(int x, int y){
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
-
 	RigidAffineTransformation identityTransformation;
 	m_sceneManager->draw(m_selectionVisitor, identityTransformation);
-//	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 	hpcolor pixel[1];	int dimensions[4];
 	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
@@ -179,7 +176,7 @@ void DrawManager::select(int x, int y){
 	int height = dimensions[3];
 	glReadPixels(x,height-y,1,1,GL_RGBA,GL_FLOAT,&pixel[0]);
 	cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
-//	glBindFramebuffer(GL_FRAMEBUFFER,0);
+
 }
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;

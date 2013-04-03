@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "happah/geometries/gears/BSplineGearCurve.h"
-#include "happah/geometries/gears/Gear.h"
+#include "happah/geometries/gears/CylindricalGear.h"
 #include "happah/geometries/gears/SimpleGear.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
@@ -35,7 +35,7 @@ using namespace std;
 class InvoluteGear;
 typedef shared_ptr<InvoluteGear> InvoluteGear_ptr;
 
-class InvoluteGear : public Gear {
+class InvoluteGear : public CylindricalGear {
 public:
 	InvoluteGear(hpuint nTeeth = 15,
 			hpreal module = 0.13,

@@ -1,11 +1,11 @@
-#include "happah/geometries/gears/Gear.h"
+#include "happah/geometries/gears/CylindricalGear.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include <iostream>
 
-Gear::Gear() : Geometry() {}
-Gear::~Gear() {}
+CylindricalGear::CylindricalGear() : Geometry() {}
+CylindricalGear::~CylindricalGear() {}
 
-vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
+vector<hpvec2>* CylindricalGear::getGearProfile(hpreal depth) {
 	hpreal rotation = glm::tan(getHelixAngle()) * depth;
 
 	vector<hpvec2>* toothProfile = getToothProfile();
@@ -23,14 +23,14 @@ vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
 	return gearProfile;
 }
 
-bool Gear::toothProfileIsInClockDirection() {
+bool CylindricalGear::toothProfileIsInClockDirection() {
 	vector<hpvec2>* toothProfile = getToothProfile();
 	hpvec2 first = toothProfile->at(0);
 	hpvec2 last = toothProfile->back();
 	return (first[0] * last[1] - first[1] * last[0]) < 0;
 }
 
-TriangleMesh* Gear::toTriangleMesh() {
+TriangleMesh* CylindricalGear::toTriangleMesh() {
 	// Create vector for the result
 	vector<hpvec3>* vertexData = new vector<hpvec3>;
 	vector<hpuint>* indices = new vector<hpuint>;

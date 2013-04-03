@@ -6,9 +6,9 @@
 using namespace std;
 
 #include "happah/geometries/gears/BSplineGearCurve.h"
-#include "happah/geometries/gears/Gear.h"
+#include "happah/geometries/gears/CylindricalGear.h"
 
-class SimpleGear : public Gear {
+class SimpleGear : public CylindricalGear {
 
 private:
 	BSplineGearCurve* m_toothProfile;

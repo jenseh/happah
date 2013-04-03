@@ -23,13 +23,13 @@ HEADERS += \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/StandardProfile.h \
-        happah/geometries/SurfaceOfRevolution.h \
+	happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/Worm.h \
 #	happah/geometries/ZCircleCloud.h \
 \
 	happah/geometries/gears/BSplineGearCurve.h \
-	happah/geometries/gears/Gear.h \
+	happah/geometries/gears/CylindricalGear.h \
 	happah/geometries/gears/InvoluteGear.h \
 	happah/geometries/gears/SimpleGear.h \
 \
@@ -132,7 +132,7 @@ SOURCES += \
 #	happah/geometries/ZCircleCloud.cpp \
 \
 	happah/geometries/gears/BSplineGearCurve.cpp \
-	happah/geometries/gears/Gear.cpp \
+	happah/geometries/gears/CylindricalGear.cpp \
 	happah/geometries/gears/InvoluteGear.cpp \
 	happah/geometries/gears/SimpleGear.cpp \
 \

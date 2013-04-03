@@ -1,5 +1,5 @@
-#ifndef GEAR_H
-#define GEAR_H
+#ifndef CYLINDRICALGEAR_H
+#define CYLINDRICALGEAR_H
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -11,7 +11,7 @@ using namespace std;
 #include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
 
-/** @class Gear
+/** @class CylindricalGear
  * @brief Simplest Gear class
  *
  * This class is only for gears with finite radius and therefore it differs
@@ -29,11 +29,11 @@ using namespace std;
  * Besides it implements the toTriangleMesh() method as this will be the
  * same for most Gears.
  */
-class Gear: public Geometry {
+class CylindricalGear: public Geometry {
 
 public:
-	Gear();
-	~Gear();
+	CylindricalGear();
+	~CylindricalGear();
 	/** @brief Get a 2D representation of the transverse profile (Stirnprofil)
 	 *
 	 * @param z cut is made at depth z of the gear
@@ -41,7 +41,7 @@ public:
 	//virtual BSlineCurve* toTransverseToothProfileSystem(hpreal z) = 0;
 	
 	//Following would be nice for the future
-	/** @brief Get a 2D representation of the Gear cut at sectionalPlane
+	/** @brief Get a 2D representation of the CylindricalGear cut at sectionalPlane
 	 */
 	//virtual BSplineCurve* toToothProfileSystem(vector<hpvec4>sectionalPlane) = 0;
 
@@ -67,6 +67,6 @@ protected:
 
 };
 
-typedef shared_ptr<Gear> Gear_ptr;
+typedef shared_ptr<CylindricalGear> CylindricalGear_ptr;
 
-#endif //GEAR_H
+#endif //CYLINDRICALGEAR_H

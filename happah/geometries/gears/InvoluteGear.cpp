@@ -5,13 +5,13 @@
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteGear::InvoluteGear(hpuint nTeeth, hpreal module, hpreal facewidth, hpreal pressureAngle,
-					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : Gear(),
+					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : CylindricalGear(),
 					m_nTeeth(nTeeth), m_module(module), m_facewidth(facewidth),
 					m_pressureAngle(pressureAngle),
 					m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), m_helixAngle(helixAngle) {
 }
 
-InvoluteGear::InvoluteGear(const InvoluteGear& other) : Gear(),
+InvoluteGear::InvoluteGear(const InvoluteGear& other) : CylindricalGear(),
 				m_nTeeth(other.m_nTeeth), m_module(other.m_module), m_facewidth(other.m_facewidth),
 				m_pressureAngle(other.m_pressureAngle), m_bottomClearance(other.m_bottomClearance),
 				m_filletRadius(other.m_filletRadius), m_helixAngle(other.m_helixAngle) {
@@ -362,7 +362,7 @@ hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle
 }
 TriangleMesh* InvoluteGear::toTriangleMesh() {
 
-	TriangleMesh* mesh = Gear::toTriangleMesh();
+	TriangleMesh* mesh = CylindricalGear::toTriangleMesh();
 	//TODO: replace following two lines with good value for innerGearRadius
 	vector<hpvec2>* profile = getGearProfile(0);
 	hpreal innerGearRadius = glm::length(profile->at(0)) / 2.0f;

@@ -1,10 +1,10 @@
 #ifndef INVOLUTE_GEAR_FORM_H
 #define INVOLUTE_GEAR_FORM_H
 
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/gui/forms/Form.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
-#include "happah/gui/forms/Form.h"
 
 class InvoluteGearForm : public Form {
 Q_OBJECT

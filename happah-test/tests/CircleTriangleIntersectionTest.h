@@ -2,7 +2,7 @@
 #define CIRCLETRIANGLEINTERSECTIONTEST_H
 
 #include "../core/simulations/WormGearGrind.h"
-#include "../core/geometries/InvoluteGear.h"
+#include "../core/geometries/gears/InvoluteGear.h"
 #include "../core/primitives/Circle.h"
 #include "../core/primitives/Triangle.h"
 

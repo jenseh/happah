@@ -1,6 +1,6 @@
 #ifndef GRINDINGWHEEL_H
 #define GRINDINGWHEEL_H
-#include "happah/geometries/Gear.h"
+#include "happah/geometries/gears/Gear.h"
 #include "happah/geometries/StandardProfile.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 

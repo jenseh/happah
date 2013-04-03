@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "happah/HappahTypes.h"
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/geometries/Worm.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/kdtree/KDTree.h"

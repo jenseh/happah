@@ -4,11 +4,12 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
-//#include <cstdlib>
-#include <iostream>
+
+using namespace std;
+
 #include "happah/geometries/Geometry.h"
-#include "happah/HappahTypes.h"
 #include "happah/geometries/Mesh.h"
+#include "happah/HappahTypes.h"
 
 /** @class Gear
  * @brief Simplest Gear class
@@ -25,8 +26,8 @@
  * parameters (module, radius, number of teeth,...) or with point clouds,
  * this class holds only the few methods which all representations have.
  * 
- * Besides that it implements the toTriangleMesh() and toQuadMesh() methods,
- * as these will be the same for most Gears.
+ * Besides it implements the toTriangleMesh() method as this will be the
+ * same for most Gears.
  */
 class Gear: public Geometry {
 
@@ -42,7 +43,7 @@ public:
 	//Following would be nice for the future
 	/** @brief Get a 2D representation of the Gear cut at sectionalPlane
 	 */
-	//virtual BSplineCurve* toToothProfileSystem(std::vector<hpvec4>sectionalPlane) = 0;
+	//virtual BSplineCurve* toToothProfileSystem(vector<hpvec4>sectionalPlane) = 0;
 
 	virtual hpreal getAngularPitch() = 0;
 	virtual hpuint getNumberOfTeeth() = 0;
@@ -52,12 +53,12 @@ public:
 	//getToothProfile should return all points of one tooth,
 	//even the last point, which must be the same one as the
 	//first one of next tooth will be.
-    virtual void getToothSpaceProfile(std::vector<hpvec2>& profile)const = 0;
-	virtual std::vector<hpvec2>* getToothProfile() = 0;
+	virtual void getToothSpaceProfile(vector<hpvec2>& profile)const = 0;
+	virtual vector<hpvec2>* getToothProfile() = 0;
 	//getGearProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
-	virtual std::vector<hpvec2>* getGearProfile(hpreal depth);
+	virtual vector<hpvec2>* getGearProfile(hpreal depth);
 	TriangleMesh* toTriangleMesh();
 
 protected:
@@ -66,6 +67,6 @@ protected:
 
 };
 
-typedef std::shared_ptr<Gear> Gear_ptr;
+typedef shared_ptr<Gear> Gear_ptr;
 
 #endif //GEAR_H

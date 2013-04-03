@@ -2,7 +2,7 @@
 #define SIMULATIONFORM_H_
 
 #include "happah/geometries/DiscGenerator.h"
-#include "happah/geometries/Gear.h"
+#include "happah/geometries/gears/Gear.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"

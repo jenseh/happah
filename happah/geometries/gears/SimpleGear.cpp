@@ -1,5 +1,6 @@
-#include "happah/geometries/SimpleGear.h"
 #include "glm/gtx/rotate_vector.hpp"
+#include "happah/geometries/gears/SimpleGear.h"
+
 
 SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :
 	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_facewidth(facewidth) {
@@ -108,8 +109,8 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
 }
 
 
-std::vector<hpvec2>* SimpleGear::getToothProfile() {
-	std::vector<hpvec2> *points = new std::vector<hpvec2>;
+vector<hpvec2>* SimpleGear::getToothProfile() {
+	vector<hpvec2> *points = new vector<hpvec2>;
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);

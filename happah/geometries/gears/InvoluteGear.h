@@ -1,18 +1,18 @@
 #ifndef INVOLUTEGEAR_H
 #define INVOLUTEGEAR_H
 
+#include <cstring>
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
-#include <cstring>
 
-#include "happah/HappahTypes.h"
-#include "happah/geometries/Gear.h"
+using namespace std;
+
+#include "happah/geometries/gears/BSplineGearCurve.h"
+#include "happah/geometries/gears/Gear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/geometries/Mesh.h"
-#include "happah/geometries/SimpleGear.h"
-#include "happah/geometries/BSplineGearCurve.h"
-
-//#include "happah/geometries/ZCircleCloud.h"
+#include "happah/HappahTypes.h"
 
 /** @class InvoluteGear
  * @brief Involute gear without a helix angle and with the right-hand flank
@@ -31,8 +31,6 @@
  * to use other getToothProfile() and getGearProfile() methods, as both use
  * the reflection property.
  */
-
-using namespace std;
 
 class InvoluteGear;
 typedef shared_ptr<InvoluteGear> InvoluteGear_ptr;
@@ -89,12 +87,11 @@ public:
     bool setHelixAngle(hpreal helixAngle);
 
     void getToothSpaceProfile(vector<hpvec2> &profile) const;
-    std::vector<hpvec2>* getToothProfile();
+    vector<hpvec2>* getToothProfile();
     TriangleMesh* toTriangleMesh();
-//    ZCircleCloud* toZCircleCloud();
     SimpleGear* toSimpleGear();
 
-    std::string toString();
+    string toString();
 
 private:
     hpuint m_nTeeth;
@@ -108,7 +105,7 @@ private:
     template <class T> T *getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize);
 
     bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern überhaupt erstellbar ist
-    bool verifyAndLog(bool condition, std::string message);
+    bool verifyAndLog(bool condition, string message);
     hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Größe Zahnlücke = Größe Zahnbreite
     hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fußrundung endet/in Evolvente übergeht
     hpreal getStartFilletAngle(); //Winkel, an dem Fußrundung startet
@@ -117,13 +114,13 @@ private:
     hpvec2 mirrorPoint(const hpvec2 &point, const hpvec2 &axis);
 
     hpvec2 pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, const hpreal &angle);
-    void insertCirclePoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
-                                                    const hpreal &sampleAngleSize,
-                                                    const hpreal &radius);
-    void insertFilletPoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
+    void insertCirclePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
+                                            const hpreal &sampleAngleSize,
+                                                const hpreal &radius);
+    void insertFilletPoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
                                                     const hpreal &sampleAngleSize,
                                                     const hpreal &angle);
-    void insertInvolutePoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
+    void insertInvolutePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
                                                     const hpreal &startInvAngle, const hpreal &stopInvAngle);
 };
 

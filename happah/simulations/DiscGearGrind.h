@@ -4,7 +4,7 @@
 #include <memory>
 #include <map>
 
-#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/simulations/Simulation.h"
 #include "happah/geometries/SurfaceOfRevolution.h"

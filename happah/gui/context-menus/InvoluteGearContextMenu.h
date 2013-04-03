@@ -2,9 +2,10 @@
 #define INVOLUTE_GEAR_CONTEXT_MENU_H
 
 #include <QAction>
-#include "happah/geometries/InvoluteGear.h"
-#include "happah/gui/GUIManager.h"
+
+#include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/gui/context-menus/ContextMenu.h"
+#include "happah/gui/GUIManager.h"
 
 class InvoluteGearContextMenu : public ContextMenu {
 Q_OBJECT

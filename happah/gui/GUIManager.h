@@ -3,10 +3,10 @@
 
 #include "happah/HappahConstants.h"
 #include "happah/geometries/BSplineCurve.h"
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/Plane.h"
-#include "happah/geometries/SimpleGear.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/geometries/Worm.h"

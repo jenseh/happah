@@ -5,8 +5,8 @@
 
 using namespace std;
 
-#include "happah/geometries/Gear.h"
-#include "happah/geometries/BSplineGearCurve.h"
+#include "happah/geometries/gears/BSplineGearCurve.h"
+#include "happah/geometries/gears/Gear.h"
 
 class SimpleGear : public Gear {
 
@@ -38,7 +38,7 @@ public:
 	virtual void setRadius(hpreal radius);
 
     virtual void getToothSpaceProfile(vector<hpvec2> &profile)const;
-	virtual std::vector<hpvec2>* getToothProfile();
+	virtual vector<hpvec2>* getToothProfile();
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

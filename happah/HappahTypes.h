@@ -12,4 +12,16 @@ typedef glm::vec4 hpvec4;
 typedef glm::vec4 hpcolor;
 typedef unsigned int hpuint;
 
+struct hpcolorRedHash{
+	size_t operator()(const hpcolor &color) const{
+		return (size_t)color.r*256;  //TODO : find a proper hash;
+	}
+};
+
+struct hpcolorEqual{
+	bool operator()(hpcolor a, hpcolor b) const{
+		return a == b;
+	}
+};
+
 #endif // HP_TYPES_H

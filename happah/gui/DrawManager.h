@@ -5,17 +5,22 @@
 #include <QGLContext>
 #include <QGLFormat>
 #include <vector>
+#include <unordered_map>
 
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/ElementRenderStateNode.h"
 #include "happah/scene/PointCloudRenderStateNode.h"
 
+using namespace std;
 class HappahGlFormat : public QGLFormat {
 public:
 	HappahGlFormat();
 };
 
 #include "happah/scene/SceneManager.h"
+
+typedef unordered_map<hpcolor,ElementRenderStateNode&,hpcolorRedHash,hpcolorEqual> ElementsColorMap;
+typedef ElementsColorMap::value_type ValuePair;
 
 class DrawManager {
 public:
@@ -68,9 +73,14 @@ private:
 
 		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffinaTransformation);
-
+		ElementRenderStateNode& findElementRenderStateNodeOfColor(hpcolor color);
+		hpcolor getCurrentSelectionColor();
+		void setCurrentSelectionColor(hpcolor color);
 	private:
 		DrawManager& m_drawManager;
+		ElementsColorMap m_colorMap;
+		hpcolor m_currentSelectionColor;
+
 	};
 
 	const static HappahGlFormat GL_FORMAT;
@@ -106,6 +116,8 @@ private:
 	GLint m_isSkipLightingContributionComputationLocation;
 	GLint m_phongExponentLocation;
 	GLint m_cameraPositionLocation;
+	GLint m_drawSelectionColors;
+	GLint m_selectedLocation;
 	hpmat4x4 m_modelMatrix;
 	hpmat4x4 m_viewMatrix;
 	hpmat4x4 m_projectionMatrix;
@@ -119,7 +131,7 @@ private:
 	GLint m_pointCloudModelViewMatrixLocation;
 	GLint m_pointCloudProjectionMatrixLocation;
 	GLint m_pointCloudPointRadiusLocation;
-
+	GLint m_pointCloudDrawSelectionColors;
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
 	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);

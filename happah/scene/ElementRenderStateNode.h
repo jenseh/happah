@@ -24,7 +24,8 @@ public:
 
 
 	void					setIndexBufferID(GLuint id);
-
+	void 					setSelected(int selected);
+	int						getSelected();
 	GLuint 					getIndexBufferID();
 	GLuint 					getMode();
 	vector<hpuint>* 		getIndices();
@@ -33,6 +34,7 @@ private:
 	vector<hpuint>*			m_indices;
 	GLuint 					m_indexBufferID;
 	GLuint 					m_mode;
+	int						m_selected;
 };
 
 class TriangleMeshRenderStateNode;

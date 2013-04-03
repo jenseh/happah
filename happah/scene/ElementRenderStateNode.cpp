@@ -5,7 +5,7 @@
 
 using namespace std;
 ElementRenderStateNode::ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, hpcolor& color)
-	: RenderStateNode(vertexData, color), m_mode(mode), m_indices(indices), m_indexBufferID(0) {
+	: RenderStateNode(vertexData, color), m_mode(mode), m_indices(indices), m_indexBufferID(0),m_selected(0) {
 }
 
 ElementRenderStateNode::ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, vector<hpcolor>* colorVector)
@@ -34,6 +34,14 @@ GLuint ElementRenderStateNode::getMode() {
 
 vector<hpuint>* ElementRenderStateNode::getIndices(){
 	return m_indices;
+}
+
+void ElementRenderStateNode::setSelected(int selected){
+	m_selected = selected;
+}
+
+int ElementRenderStateNode::getSelected(){
+	return m_selected;
 }
 
 TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, hpcolor& color)

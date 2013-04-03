@@ -263,15 +263,15 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 }
 
 void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
-    //TODO: implement method
+	//TODO: implement method
 }
 
-vector<hpvec2>* InvoluteGear::getToothProfile(hpuint toothSampleSize) {
+void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {
 
-	vector<hpvec2>* profile = new vector<hpvec2>(toothSampleSize);
+	hpuint toothSampleSize = toothProfile.size();
 
 	if (!verifyConstraints()) {
-		return profile;
+		return;
 	}
 
 	//angles of important locations of the toothprofile
@@ -298,12 +298,11 @@ vector<hpvec2>* InvoluteGear::getToothProfile(hpuint toothSampleSize) {
 		&& sampleBeta3 >= sampleBeta2
 		&& sampleBeta4 >= sampleBeta3);
 
-	insertCirclePoints(  *profile,           0, sampleBeta1, sampleAngleSize, getRootRadius());
-	insertFilletPoints(  *profile, sampleBeta1, sampleBeta2, sampleAngleSize, alpha2);
-	insertInvolutePoints(*profile, sampleBeta2, sampleBeta3, alpha2, alpha3);
-	insertCirclePoints(  *profile, sampleBeta3, sampleBeta4, sampleAngleSize, getTipRadius());
+	insertCirclePoints(  toothProfile,           0, sampleBeta1, sampleAngleSize, getRootRadius());
+	insertFilletPoints(  toothProfile, sampleBeta1, sampleBeta2, sampleAngleSize, alpha2);
+	insertInvolutePoints(toothProfile, sampleBeta2, sampleBeta3, alpha2, alpha3);
+	insertCirclePoints(  toothProfile, sampleBeta3, sampleBeta4, sampleAngleSize, getTipRadius());
 
-	return profile;
 }
 
 void InvoluteGear::insertCirclePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
@@ -360,29 +359,30 @@ hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle
 	point.y = radius * glm::cos(involuteStartAngle + angle) + radius * angle * glm::sin(involuteStartAngle + angle);
 	return point;
 }
-TriangleMesh* InvoluteGear::toTriangleMesh() {
+TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
 
-	TriangleMesh* mesh = CylindricalGear::toTriangleMesh();
+	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
+	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
 	//TODO: replace following two lines with good value for innerGearRadius
-	vector<hpvec2>* profile = getGearProfile(0);
-	hpreal innerGearRadius = glm::length(profile->at(0)) / 2.0f;
+	getGearProfile(0, profile);
+	hpreal innerGearRadius = glm::length(profile[0]) / 2.0f;
 	vector<hpvec3>* vertexData = mesh->getVertexData();
 	vector<hpuint>* indices = mesh->getIndices();
 
 	for(hpuint side = 0; side < 2; ++side) {
-		profile = getGearProfile(side * getFacewidth());
-		hpreal depth = side * getFacewidth();
+		getGearProfile(side * getFacewidth(), profile);
+		hpreal z = side * getFacewidth();
 		hpuint startIndex = vertexData->size() / 2;
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
 		if (side == 1)
 			normal *= -1.0f;
-		for(hpuint i = 0; i < profile->size(); ++i) {
-			hpvec2 currentProfilePoint = profile->at(i);
+		for(vector<hpvec2>::iterator it = profile.begin(), end = profile.end(); it != end; ++it) {
+			hpvec2 currentProfilePoint = *it;
 			hpvec2 currentInnerPoint = glm::normalize(currentProfilePoint) * innerGearRadius;
 
-			vertexData->push_back(hpvec3(currentInnerPoint, depth));
+			vertexData->push_back(hpvec3(currentInnerPoint, z));
 			vertexData->push_back(normal);
-			vertexData->push_back(hpvec3(currentProfilePoint, depth));
+			vertexData->push_back(hpvec3(currentProfilePoint, z));
 			vertexData->push_back(normal);
 		}
 
@@ -407,11 +407,13 @@ TriangleMesh* InvoluteGear::toTriangleMesh() {
 	return mesh;
 }
 
-SimpleGear* InvoluteGear::toSimpleGear() {
-	BSplineGearCurve *toothProfile = new BSplineGearCurve();
-	toothProfile->setDegree(1);
-	toothProfile->setPeriodic(false);
-	toothProfile->approximatePoints(getToothProfile(), 20);
-	SimpleGear *simpleGear = new SimpleGear(toothProfile, m_helixAngle, m_facewidth);
+SimpleGear* InvoluteGear::toSimpleGear(hpuint toothSampleSize) {
+	BSplineGearCurve *toothProfileCurve = new BSplineGearCurve();
+	toothProfileCurve->setDegree(1);
+	toothProfileCurve->setPeriodic(false);
+	vector<hpvec2> toothProfilePoints(toothSampleSize);
+	getToothProfile(toothProfilePoints);
+	toothProfileCurve->approximatePoints(&toothProfilePoints, toothSampleSize);
+	SimpleGear *simpleGear = new SimpleGear(toothProfileCurve, m_helixAngle, m_facewidth);
 	return simpleGear;
 }

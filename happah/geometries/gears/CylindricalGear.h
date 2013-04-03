@@ -49,16 +49,22 @@ public:
 	virtual hpuint getNumberOfTeeth() = 0;
 	virtual hpreal getFacewidth() = 0;
 	virtual hpreal getHelixAngle() = 0;
-	virtual bool   toothProfileIsInClockDirection();
 	//getToothProfile should return all points of one tooth,
 	//even the last point, which must be the same one as the
-	//first one of next tooth will be.
-	virtual void getToothSpaceProfile(vector<hpvec2>& profile)const = 0;
-	virtual vector<hpvec2>* getToothProfile(hpuint toothSampleSize) = 0;
+	//first one of next tooth.
+	virtual void getToothSpaceProfile(vector<hpvec2>& profile) const = 0;
+	virtual void getToothProfile(vector<hpvec2>& toothProfile) = 0;
 	//getGearProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
-	virtual vector<hpvec2>* getGearProfile(hpreal depth, hpuint toothSampleSize = 100);
+	virtual void getGearProfile(hpreal z, vector<hpvec2>& gearProfile);
+	//toothSampleSize is the number of points used to sample one tooth
+	//in such a way, that one whole tooth will consist of toothSampleSize + 1
+	//points (as last points equals first point of next tooth) and the whole
+	//gear will consist of toothSampleSize * getNumberOfTeeth() points.
+	//zSampleSize is the number of samples used to sample along the z axis
+	//whereas zSampleSize = 10 means, that the TriangleMesh will consist of
+	//11 gear profiles with 10 intervals ??????? TODO: is that right?
 	TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
 
 };

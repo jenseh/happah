@@ -75,9 +75,11 @@ hpreal SimpleGear::getHelixAngle() {
 hpreal SimpleGear::getFacewidth() {
 	return m_facewidth;
 }
-bool SimpleGear::toothProfileIsInClockDirection() {
-	return true; //no calculation needed as bspline is oriented in a way that this is always true
+
+BSplineGearCurve SimpleGear::getToothProfile() {
+	return *m_toothProfile;
 }
+
 void SimpleGear::setHelixAngle(hpreal angle) {
 	m_helixAngle = angle;
 }
@@ -93,7 +95,7 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	m_toothProfile = curve;
 }
 
-void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
+void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
@@ -108,16 +110,15 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
 	}
 }
 
-
-vector<hpvec2>* SimpleGear::getToothProfile(hpuint toothSampleSize) {
-	vector<hpvec2> *points = new vector<hpvec2>;
+void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
+	hpuint toothSampleSize = toothProfile.size();
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSampleSize - 1); // -1 so whole thooth is sampled
-	for (hpuint i = 0; i <= toothSampleSize; ++i) { //"<=" to get the whole tooth
-		hpvec3 point = splineXY->getValueAt((hpreal) i / toothSampleSize);
-		points->push_back(hpvec2(point.x, point.y));
+	for (hpuint i = 0; i < toothSampleSize; ++i) { //"<=" to get the whole tooth
+		hpvec3 point = splineXY->getValueAt(low + (hpreal) (i * delta));
+		toothProfile[i] = hpvec2(point.x, point.y);
 	}
-	return points;
 }
+

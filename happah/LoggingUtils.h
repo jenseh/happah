@@ -9,6 +9,7 @@ using namespace std;
 
 #include "glm/glm.hpp"
 #include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/HappahTypes.h"
 
 class LoggingUtils
@@ -28,6 +29,7 @@ public:
 	static void printVec(glm::vec4& vector);
 
 	static void print(InvoluteGear& involuteGear);
+	static void print(SimpleGear& simpleGear);
 };
 
 #endif // LOGGINGUTILS_H

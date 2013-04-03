@@ -57,7 +57,7 @@ hpreal SimpleGear::getAngularPitch() {
 	return m_toothProfile->getAngularPitch();
 }
 
-hpreal SimpleGear::getBottomRadius() {
+hpreal SimpleGear::getRootRadius() {
 	return m_toothProfile->getMinLength();
 }
 
@@ -116,7 +116,7 @@ void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSampleSize - 1); // -1 so whole thooth is sampled
-	for (hpuint i = 0; i < toothSampleSize; ++i) { //"<=" to get the whole tooth
+	for (hpuint i = 0; i < toothSampleSize; ++i) {
 		hpvec3 point = splineXY->getValueAt(low + (hpreal) (i * delta));
 		toothProfile[i] = hpvec2(point.x, point.y);
 	}

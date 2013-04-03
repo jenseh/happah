@@ -1,5 +1,6 @@
 #include "happah/geometries/gears/BSplineGearCurve.h"
 #include "glm/gtx/rotate_vector.hpp"
+#include <vector>
 
 BSplineGearCurve::BSplineGearCurve() {}
 
@@ -15,8 +16,8 @@ hpreal BSplineGearCurve::getAngularPitch() const {
 	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
 }
 
-unsigned int BSplineGearCurve::getNumberOfTeeth() const {
-	return (unsigned int) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
+hpuint BSplineGearCurve::getNumberOfTeeth() const {
+	return (hpuint) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
 }
 
 hpreal BSplineGearCurve::getMiddleLength() const {
@@ -25,7 +26,7 @@ hpreal BSplineGearCurve::getMiddleLength() const {
 
 hpreal BSplineGearCurve::getMaxLength() const {
 	hpreal max = glm::length(getValueAt(0));
-	for (unsigned int i = 1; i <= 100; ++i) {
+	for(unsigned int i = 1; i <= 100; ++i) {
 		hpreal value = glm::length(getValueAt((1.0f / 100) * i));
 		if (value > max)
 			max = value;
@@ -35,7 +36,7 @@ hpreal BSplineGearCurve::getMaxLength() const {
 
 hpreal BSplineGearCurve::getMinLength() const {
 	hpreal min = glm::length(getValueAt(0));
-	for (unsigned int i = 1; i <= 100; ++i) {
+	for(unsigned int i = 1; i <= 100; ++i) {
 		hpreal value = glm::length(getValueAt((1.0f / 100) * i));
 		if (value < min)
 			min = value;
@@ -57,12 +58,13 @@ BSplineCurve* BSplineGearCurve::getEntireGear() const {
 	BSplineCurve *gearProfile = new BSplineCurve();
 	gearProfile->setPeriodic(true);
 	gearProfile->setDegree(m_degree);
+	std::vector<hpvec3> copiedControlPoints = m_controlPoints; //to be able to use the iterator. TODO: should we do it like this?
 
-	for (unsigned int tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
-		hpreal degreeRotation = -(M_PI * 2.0f * tooth / getNumberOfTeeth()) * 180.0f / M_PI;
-		for (unsigned int i = 0; i < getNumberOfControlPoints(); ++i) {
-			hpvec3 controlPoint = getControlPoint(i);
-			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
+	hpuint nTeeth = getNumberOfTeeth();
+	for(unsigned int tooth = 0; tooth < nTeeth; ++tooth) {
+		hpreal degreeRotation = -(M_PI * 2.0f * tooth / nTeeth) * 180.0f / M_PI;
+		for(std::vector<hpvec3>::iterator it = copiedControlPoints.begin(), end = copiedControlPoints.end(); it != end; ++it) {
+			hpvec3 turnedPoint = hpvec3(glm::rotate(*it, degreeRotation, hpvec3(0,0,1)));;
 			gearProfile->addControlPoint(turnedPoint);
 		}
 	}

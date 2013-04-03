@@ -12,7 +12,7 @@ public:
 
 	BSplineCurve* getEntireGear() const;
 	hpreal getAngularPitch() const;
-	unsigned int getNumberOfTeeth() const;
+	hpuint getNumberOfTeeth() const;
 	hpreal getMiddleLength() const;
 	hpreal getMinLength() const;
 	hpreal getMaxLength() const;

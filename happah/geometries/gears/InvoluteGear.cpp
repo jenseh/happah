@@ -386,7 +386,8 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 			vertexData->push_back(normal);
 		}
 
-		for(hpuint i = startIndex, g = 0; i < vertexData->size() / 2 - 2; ++i, ++g) {
+		hpuint nNewIndices = vertexData->size() / 2 - 2;
+		for(hpuint i = startIndex, g = 0; i < nNewIndices; ++i, ++g) {
 			indices->push_back(i);
 			if(g % 2 == 0) {
 				indices->push_back(i + 1);

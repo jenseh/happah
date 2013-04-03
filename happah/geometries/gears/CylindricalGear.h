@@ -54,16 +54,12 @@ public:
 	//even the last point, which must be the same one as the
 	//first one of next tooth will be.
 	virtual void getToothSpaceProfile(vector<hpvec2>& profile)const = 0;
-	virtual vector<hpvec2>* getToothProfile() = 0;
+	virtual vector<hpvec2>* getToothProfile(hpuint toothSampleSize) = 0;
 	//getGearProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
-	virtual vector<hpvec2>* getGearProfile(hpreal depth);
-	TriangleMesh* toTriangleMesh();
-
-protected:
-	const static hpuint TOOTH_SAMPLE_SIZE = 100;
-	const static hpuint WIDTH_SAMPLE_SIZE = 10;
+	virtual vector<hpvec2>* getGearProfile(hpreal depth, hpuint toothSampleSize = 100);
+	TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
 
 };
 

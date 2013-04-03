@@ -87,7 +87,7 @@ public:
     bool setHelixAngle(hpreal helixAngle);
 
     void getToothSpaceProfile(vector<hpvec2> &profile) const;
-    vector<hpvec2>* getToothProfile();
+    vector<hpvec2>* getToothProfile(hpuint toothSampleSize = 100);
     TriangleMesh* toTriangleMesh();
     SimpleGear* toSimpleGear();
 

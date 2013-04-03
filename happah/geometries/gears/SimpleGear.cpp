@@ -109,14 +109,14 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
 }
 
 
-vector<hpvec2>* SimpleGear::getToothProfile() {
+vector<hpvec2>* SimpleGear::getToothProfile(hpuint toothSampleSize) {
 	vector<hpvec2> *points = new vector<hpvec2>;
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
-	hpreal delta = (high - low) / (hpreal)(TOOTH_SAMPLE_SIZE - 1); // -1 so whole thooth is sampled
-	for (hpuint i = 0; i <= TOOTH_SAMPLE_SIZE; ++i) { //"<=" to get the whole tooth
-		hpvec3 point = splineXY->getValueAt((hpreal) i / TOOTH_SAMPLE_SIZE);
+	hpreal delta = (high - low) / (hpreal)(toothSampleSize - 1); // -1 so whole thooth is sampled
+	for (hpuint i = 0; i <= toothSampleSize; ++i) { //"<=" to get the whole tooth
+		hpvec3 point = splineXY->getValueAt((hpreal) i / toothSampleSize);
 		points->push_back(hpvec2(point.x, point.y));
 	}
 	return points;

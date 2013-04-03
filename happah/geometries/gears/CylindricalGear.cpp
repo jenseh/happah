@@ -5,10 +5,10 @@
 CylindricalGear::CylindricalGear() : Geometry() {}
 CylindricalGear::~CylindricalGear() {}
 
-vector<hpvec2>* CylindricalGear::getGearProfile(hpreal depth) {
+vector<hpvec2>* CylindricalGear::getGearProfile(hpreal depth, hpuint toothSampleSize) {
 	hpreal rotation = glm::tan(getHelixAngle()) * depth;
 
-	vector<hpvec2>* toothProfile = getToothProfile();
+	vector<hpvec2>* toothProfile = getToothProfile(toothSampleSize);
 	vector<hpvec2>* gearProfile = new vector<hpvec2>();
 	int rotDirection = 1;
 	hpuint nTeeth = getNumberOfTeeth();
@@ -24,28 +24,28 @@ vector<hpvec2>* CylindricalGear::getGearProfile(hpreal depth) {
 }
 
 bool CylindricalGear::toothProfileIsInClockDirection() {
-	vector<hpvec2>* toothProfile = getToothProfile();
+	vector<hpvec2>* toothProfile = getToothProfile(10);
 	hpvec2 first = toothProfile->at(0);
 	hpvec2 last = toothProfile->back();
 	return (first[0] * last[1] - first[1] * last[0]) < 0;
 }
 
-TriangleMesh* CylindricalGear::toTriangleMesh() {
+TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
 	// Create vector for the result
 	vector<hpvec3>* vertexData = new vector<hpvec3>;
 	vector<hpuint>* indices = new vector<hpuint>;
 	vector<hpvec2>* profile;
 	hpvec3 wildcardNormal = hpvec3(0.0f, 0.0f, 0.0f);
 
-	hpreal dz = getFacewidth() / WIDTH_SAMPLE_SIZE;
+	hpreal dz = getFacewidth() / zSampleSize;
 
-	for (hpuint i = 0; i <= WIDTH_SAMPLE_SIZE; ++i) {
-		profile = getGearProfile(i * dz);
+	for (hpuint i = 0; i <= zSampleSize; ++i) {
+		profile = getGearProfile(i * dz, toothSampleSize);
 		for (hpuint j = 0; j < profile->size(); ++j) {
 			vertexData->push_back(hpvec3(profile->at(j).x, profile->at(j).y, i * dz));
 			vertexData->push_back(wildcardNormal);
 
-			if(i != WIDTH_SAMPLE_SIZE) {
+			if(i != zSampleSize) {
 				hpuint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
 
 				indices->push_back(i * profile->size() + jNext);		//0
@@ -63,14 +63,14 @@ TriangleMesh* CylindricalGear::toTriangleMesh() {
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices
-	hpuint indicesInRow = indices->size() / WIDTH_SAMPLE_SIZE;
+	hpuint indicesInRow = indices->size() / zSampleSize;
 	hpuint trianglePairsInRow  = indicesInRow / 6;
 
 	//array steps is necessary to walk in the vertexData array to the right places
 	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
 
 	// go one step further in width direction to reach all points
-	for(hpuint i = 0; i <= WIDTH_SAMPLE_SIZE; ++i) {
+	for(hpuint i = 0; i <= zSampleSize; ++i) {
 		for (hpuint j = 0; j < trianglePairsInRow; ++j) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area

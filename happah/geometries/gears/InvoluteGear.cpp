@@ -266,9 +266,9 @@ void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
     //TODO: implement method
 }
 
-vector<hpvec2>* InvoluteGear::getToothProfile() {
+vector<hpvec2>* InvoluteGear::getToothProfile(hpuint toothSampleSize) {
 
-	vector<hpvec2>* profile = new vector<hpvec2>(TOOTH_SAMPLE_SIZE);
+	vector<hpvec2>* profile = new vector<hpvec2>(toothSampleSize);
 
 	if (!verifyConstraints()) {
 		return profile;
@@ -286,11 +286,11 @@ vector<hpvec2>* InvoluteGear::getToothProfile() {
 	alpha3 = involuteAngleOfIntersectionWithCircle(getTipRadius());
 	beta3  = getShiftAngle() + involuteToCircleAngle(alpha3);
 
-	hpreal sampleAngleSize = getAngularPitch() / TOOTH_SAMPLE_SIZE;
+	hpreal sampleAngleSize = getAngularPitch() / toothSampleSize;
 	int sampleBeta1 = static_cast<hpuint>(beta1 / sampleAngleSize + 0.5);
 	int sampleBeta2 = static_cast<hpuint>(beta2 / sampleAngleSize + 0.5);
 	int sampleBeta3 = static_cast<hpuint>(beta3 / sampleAngleSize + 0.5);
-	int sampleBeta4 = (TOOTH_SAMPLE_SIZE % 2 == 0) ? TOOTH_SAMPLE_SIZE / 2 : TOOTH_SAMPLE_SIZE / 2 + 1;
+	int sampleBeta4 = (toothSampleSize % 2 == 0) ? toothSampleSize / 2 : toothSampleSize / 2 + 1;
 
 	//if assertion fails, values haven't been possible for involute gear and construction would fail!
 	assert(sampleBeta1 >= 0

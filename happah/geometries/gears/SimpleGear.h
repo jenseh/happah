@@ -38,7 +38,7 @@ public:
 	virtual void setRadius(hpreal radius);
 
     virtual void getToothSpaceProfile(vector<hpvec2> &profile)const;
-	virtual vector<hpvec2>* getToothProfile();
+	virtual vector<hpvec2>* getToothProfile(hpuint toothSampleSize = 100);
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

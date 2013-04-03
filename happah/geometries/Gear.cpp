@@ -11,11 +11,11 @@ std::vector<hpvec2>* Gear::getGearProfile(hpreal depth) {
 	std::vector<hpvec2>* toothProfile = getToothProfile();
 	std::vector<hpvec2>* gearProfile = new std::vector<hpvec2>();
 	int rotDirection = 1;
-	hpuint toothCount = getToothCount();
+	hpuint nTeeth = getNumberOfTeeth();
 	if (toothProfileIsInClockDirection())
 		rotDirection = -1;
-	for(hpuint i = 0; i < toothCount; ++i) {
-		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / toothCount + rotation) * 180.0f / M_PI);
+	for(hpuint i = 0; i < nTeeth; ++i) {
+		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / nTeeth + rotation) * 180.0f / M_PI);
 		for(hpuint j = 0; j < toothProfile->size() - 1; ++j) {
 			gearProfile->push_back(glm::rotate(toothProfile->at(j), degreeRotation));
 		}

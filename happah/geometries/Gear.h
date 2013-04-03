@@ -22,7 +22,7 @@
  * at (x, y) = (0, 0)
  * 
  * As there are different possibilities to define a gear, like with
- * parameters (module, radius, toothcount,...) or with point clouds,
+ * parameters (module, radius, number of teeth,...) or with point clouds,
  * this class holds only the few methods which all representations have.
  * 
  * Besides that it implements the toTriangleMesh() and toQuadMesh() methods,
@@ -45,7 +45,7 @@ public:
 	//virtual BSplineCurve* toToothProfileSystem(std::vector<hpvec4>sectionalPlane) = 0;
 
 	virtual hpreal getAngularPitch() = 0;
-	virtual hpuint   getToothCount() = 0;
+	virtual hpuint getNumberOfTeeth() = 0;
 	virtual hpreal getFacewidth() = 0;
 	virtual hpreal getHelixAngle() = 0;
 	virtual bool   toothProfileIsInClockDirection();
@@ -63,14 +63,6 @@ public:
 protected:
 	const static hpuint TOOTH_SAMPLE_SIZE = 100;
 	const static hpuint WIDTH_SAMPLE_SIZE = 10;
-
-public:
-void printVec4(hpvec4 vec) {
-	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << " ]" << std::endl;
-}
-void printVec3(hpvec3 vec) {
-	std::cerr << "[ " << vec.x << ", " << vec.y << ", " << vec.z << " ]" << std::endl;
-}
 
 };
 

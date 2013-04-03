@@ -27,7 +27,7 @@ private:
 	Slider* m_helixAngleSlider;
 	Slider* m_moduleSlider;
 	Slider* m_pressureAngleSlider;
-	Slider* m_toothCountSlider;
+	Slider* m_nTeethSlider;
 
 	void updateInvoluteGear();
 
@@ -38,7 +38,7 @@ private slots:
 	void changeHelixAngle(hpreal angle);
 	void changeModule(hpreal module);
 	void changePressureAngle(hpreal angle);
-	void changeToothCount(hpreal toothCount);
+	void changeNumberOfTeeth(hpreal nTeeth);
 	void createInvoluteGear();
 	void updateRanges();
 

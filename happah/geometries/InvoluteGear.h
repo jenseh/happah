@@ -39,7 +39,7 @@ typedef shared_ptr<InvoluteGear> InvoluteGear_ptr;
 
 class InvoluteGear : public Gear {
 public:
-	InvoluteGear(hpuint toothCount = 15,
+	InvoluteGear(hpuint nTeeth = 15,
 			hpreal module = 0.13,
 			hpreal facewidth = 0.2f,
 			hpreal pressureAngle = M_PI / 6.0f,
@@ -53,16 +53,16 @@ public:
 
 	InvoluteGear& operator=(const InvoluteGear& other);
 
-    hpuint getToothCount();
+    hpuint getNumberOfTeeth();
     hpreal getModule();
     hpreal getFacewidth(); //Zahnradbreite
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
-    hpreal getBottomClearance(); //Kopfspielh�he
-    hpreal getFilletRadius(); //Fu�rundungsradius
-    hpreal getHelixAngle(); //Schr�gungswinkel beta
+    hpreal getBottomClearance(); //Kopfspielhöhe
+    hpreal getFilletRadius(); //Fußrundungsradius
+    hpreal getHelixAngle(); //Schrägungswinkel beta
     hpreal getReferenceRadius(); //Teilkreisradius
     hpreal getTipRadius(); //Kopfkreisradius
-    hpreal getRootRadius(); //Fu�kreisradius
+    hpreal getRootRadius(); //Fußkreisradius
     hpreal getBaseRadius(); //Grundkreisradius
     hpreal getAngularPitch(); //Teilungswinkel
 
@@ -72,7 +72,7 @@ public:
      * If minimum > maximum no value is found.
      * methods start from the promise that current gear is a valid gear
      */
-    hpuint* getPossibleToothCounts();
+    hpuint* getPossibleNumbersOfTeeth();
     hpreal* getPossibleModules();
     hpreal* getPossiblePressureAngles();
     hpreal* getPossibleBottomClearances();
@@ -80,7 +80,7 @@ public:
 
     // Values are only set, if they would produce proper gear.
     // The bool returned shows if value could be set.
-    bool setToothCount(hpuint toothCount);
+    bool setNumberOfTeeth(hpuint nTeeth);
     bool setModule(hpreal module);
     bool setFacewidth(hpreal facewidth);
     bool setPressureAngle(hpreal pressureAngle);
@@ -97,7 +97,7 @@ public:
     std::string toString();
 
 private:
-    hpuint m_toothCount;
+    hpuint m_nTeeth;
     hpreal m_module;
     hpreal m_facewidth;
     hpreal m_pressureAngle;
@@ -107,11 +107,11 @@ private:
 
     template <class T> T *getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize);
 
-    bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern �berhaupt erstellbar ist
+    bool verifyConstraints(bool print = false); //Testet ob Evolventenzahnrad mit gegebenen Parametern überhaupt erstellbar ist
     bool verifyAndLog(bool condition, std::string message);
-    hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Gr��e Zahnl�cke = Gr��e Zahnbreite
-    hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fu�rundung endet/in Evolvente �bergeht
-    hpreal getStartFilletAngle(); //Winkel, an dem Fu�rundung startet
+    hpreal getShiftAngle(); //Winkel, um den Evolvente verschoben wird, damit auf dem Teilkreis gilt: Größe Zahnlücke = Größe Zahnbreite
+    hpreal getStopFilletInvoluteAngle(); //Evolventenwinkel, an dem Fußrundung endet/in Evolvente übergeht
+    hpreal getStartFilletAngle(); //Winkel, an dem Fußrundung startet
     hpreal involuteToCircleAngle(const hpreal &involuteAngle); //calculates the normal angle, one would expect in a cirle, out of the involute angle, which is used to construct the involute
     hpreal involuteAngleOfIntersectionWithCircle(const hpreal &radius);
     hpvec2 mirrorPoint(const hpvec2 &point, const hpvec2 &axis);

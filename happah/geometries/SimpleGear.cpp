@@ -22,7 +22,7 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
 
 	hpreal rotation = glm::tan(m_helixAngle) * depth;
 
-	for (hpuint tooth = 0; tooth < getToothCount(); ++tooth) {
+	for (hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
 		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
 		for (hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
 			hpvec3 controlPoint = m_toothProfile->getControlPoint(i);
@@ -60,8 +60,8 @@ hpreal SimpleGear::getBottomRadius() {
 	return m_toothProfile->getMinLength();
 }
 
-hpuint SimpleGear::getToothCount() {
-	return m_toothProfile->getToothCount();
+hpuint SimpleGear::getNumberOfTeeth() {
+	return m_toothProfile->getNumberOfTeeth();
 }
 
 hpreal SimpleGear::getRadius() {

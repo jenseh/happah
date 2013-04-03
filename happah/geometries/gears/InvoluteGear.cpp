@@ -364,13 +364,13 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
 	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
 	//TODO: replace following two lines with good value for innerGearRadius
-	getGearProfile(0, profile);
+	getTraverseProfile(0, profile);
 	hpreal innerGearRadius = glm::length(profile[0]) / 2.0f;
 	vector<hpvec3>* vertexData = mesh->getVertexData();
 	vector<hpuint>* indices = mesh->getIndices();
 
 	for(hpuint side = 0; side < 2; ++side) {
-		getGearProfile(side * getFacewidth(), profile);
+		getTraverseProfile(side * getFacewidth(), profile);
 		hpreal z = side * getFacewidth();
 		hpuint startIndex = vertexData->size() / 2;
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);

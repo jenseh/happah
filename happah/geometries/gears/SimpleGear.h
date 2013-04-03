@@ -20,7 +20,7 @@ public:
 	SimpleGear(const SimpleGear& other);
 	virtual ~SimpleGear();
 
-	BSplineCurve* toTransverseToothProfileSystem(hpreal depth);
+	BSplineCurve* toTransverseToothProfileSystem(hpreal z);
 	BSplineGearCurve* getBSplineToothProfileInXYPlane() const;
 
 	//TODO: leave methods virtual????!!!!

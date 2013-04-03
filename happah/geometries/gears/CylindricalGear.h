@@ -54,10 +54,10 @@ public:
 	//first one of next tooth.
 	virtual void getToothSpaceProfile(vector<hpvec2>& profile) const = 0;
 	virtual void getToothProfile(vector<hpvec2>& toothProfile) = 0;
-	//getGearProfile can use getToothProfile but has to bear in mind
+	//getTraverseProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
-	virtual void getGearProfile(hpreal z, vector<hpvec2>& gearProfile);
+	virtual void getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile);
 	//toothSampleSize is the number of points used to sample one tooth
 	//in such a way, that one whole tooth will consist of toothSampleSize + 1
 	//points (as last points equals first point of next tooth) and the whole

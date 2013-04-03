@@ -5,7 +5,7 @@
 CylindricalGear::CylindricalGear() : Geometry() {}
 CylindricalGear::~CylindricalGear() {}
 
-void CylindricalGear::getGearProfile(hpreal z, vector<hpvec2>& gearProfile) {
+void CylindricalGear::getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile) {
 	hpuint toothSampleSize = gearProfile.size() / getNumberOfTeeth();
 	hpreal rotation = glm::tan(getHelixAngle()) * z;
 
@@ -38,7 +38,7 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSa
 	hpreal dz = getFacewidth() / zSampleSize;
 
 	for (hpuint i = 0; i <= zSampleSize; ++i) {
-		getGearProfile(i * dz, profile);
+		getTraverseProfile(i * dz, profile);
 		hpuint pointIndex = 0;
 		for(vector<hpvec2>::iterator j = profile.begin(), end = profile.end(); j != end; ++j) {
 			vertexData->push_back(hpvec3(j->x, j->y, i * dz));

@@ -91,8 +91,6 @@ public:
     TriangleMesh* toTriangleMesh();
     SimpleGear* toSimpleGear();
 
-    string toString();
-
 private:
     hpuint m_nTeeth;
     hpreal m_module;

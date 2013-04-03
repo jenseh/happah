@@ -415,20 +415,3 @@ SimpleGear* InvoluteGear::toSimpleGear() {
 	SimpleGear *simpleGear = new SimpleGear(toothProfile, m_helixAngle, m_facewidth);
 	return simpleGear;
 }
-
-string InvoluteGear::toString() {
-	stringstream info;
-	info << "Gear:" << endl;
-	info << "tooth count      = " << getNumberOfTeeth()<< endl;
-	info << "module           = " << m_module << endl;
-	info << "pressure angle   = " << m_pressureAngle << endl;
-	info << "tip radius       = " << getTipRadius() << endl;
-	info << "ref. radius      = " << getReferenceRadius() << endl;
-	info << "base radius      = " << getBaseRadius() << endl;
-	info << "root radius      = " << getRootRadius() << endl;
-	info << "fillet radius    = " << m_filletRadius << endl;
-	info << "bottom clearance = " << m_bottomClearance << endl;
-	info << "helix angle      = " << m_helixAngle << endl;
-	info << "angular pitch    = " << getAngularPitch() << endl;
-	return info.str();
-}

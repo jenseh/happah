@@ -4,15 +4,15 @@
 #include <iostream>
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-InvoluteGear::InvoluteGear(hpuint nTeeth, hpreal module, hpreal facewidth, hpreal pressureAngle,
+InvoluteGear::InvoluteGear(hpuint nTeeth, hpreal module, hpreal faceWidth, hpreal pressureAngle,
 					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : CylindricalGear(),
-					m_nTeeth(nTeeth), m_module(module), m_facewidth(facewidth),
+					m_nTeeth(nTeeth), m_module(module), m_faceWidth(faceWidth),
 					m_pressureAngle(pressureAngle),
 					m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), m_helixAngle(helixAngle) {
 }
 
 InvoluteGear::InvoluteGear(const InvoluteGear& other) : CylindricalGear(),
-				m_nTeeth(other.m_nTeeth), m_module(other.m_module), m_facewidth(other.m_facewidth),
+				m_nTeeth(other.m_nTeeth), m_module(other.m_module), m_faceWidth(other.m_faceWidth),
 				m_pressureAngle(other.m_pressureAngle), m_bottomClearance(other.m_bottomClearance),
 				m_filletRadius(other.m_filletRadius), m_helixAngle(other.m_helixAngle) {
 }
@@ -24,7 +24,7 @@ InvoluteGear& InvoluteGear::operator=(const InvoluteGear& other) {
 	if(this != &other) {
 		m_nTeeth = other.m_nTeeth;
 		m_module = other.m_module;
-		m_facewidth = other.m_facewidth;
+		m_faceWidth = other.m_faceWidth;
 		m_pressureAngle = other.m_pressureAngle;
 		m_bottomClearance = other.m_bottomClearance;
 		m_filletRadius = other.m_filletRadius;
@@ -71,7 +71,7 @@ bool InvoluteGear::verifyConstraints(bool print) {
 
 hpuint InvoluteGear::getNumberOfTeeth() { return m_nTeeth; }
 hpreal InvoluteGear::getModule() { return m_module; }
-hpreal InvoluteGear::getFacewidth() { return m_facewidth; }
+hpreal InvoluteGear::getFaceWidth() { return m_faceWidth; }
 hpreal InvoluteGear::getPressureAngle() { return m_pressureAngle; }
 hpreal InvoluteGear::getBottomClearance() { return m_bottomClearance; }
 hpreal InvoluteGear::getFilletRadius() { return m_filletRadius; }
@@ -175,11 +175,11 @@ bool InvoluteGear::setModule(hpreal module) {
 	return true;
 }
 //Actually there is not constraint concerning the facewidth at the moment. But maybe there will be one in the future. Therefore constraints are tested anyway.
-bool InvoluteGear::setFacewidth(hpreal facewidth) {
-	hpreal oldValue = m_facewidth;
-	m_facewidth = facewidth;
+bool InvoluteGear::setFaceWidth(hpreal faceWidth) {
+	hpreal oldValue = m_faceWidth;
+	m_faceWidth = faceWidth;
 	if(!verifyConstraints()) {
-		m_facewidth = oldValue;
+		m_faceWidth = oldValue;
 		return false;
 	}
 	return true;
@@ -370,8 +370,8 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 	vector<hpuint>* indices = mesh->getIndices();
 
 	for(hpuint side = 0; side < 2; ++side) {
-		getTraverseProfile(side * getFacewidth(), profile);
-		hpreal z = side * getFacewidth();
+		getTraverseProfile(side * getFaceWidth(), profile);
+		hpreal z = side * getFaceWidth();
 		hpuint startIndex = vertexData->size() / 2;
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
 		if (side == 1)
@@ -414,6 +414,6 @@ SimpleGear* InvoluteGear::toSimpleGear(hpuint toothSampleSize) {
 	vector<hpvec2> toothProfilePoints(toothSampleSize);
 	getToothProfile(toothProfilePoints);
 	toothProfileCurve->approximatePoints(&toothProfilePoints, toothSampleSize);
-	SimpleGear *simpleGear = new SimpleGear(toothProfileCurve, m_helixAngle, m_facewidth);
+	SimpleGear *simpleGear = new SimpleGear(toothProfileCurve, m_helixAngle, m_faceWidth);
 	return simpleGear;
 }

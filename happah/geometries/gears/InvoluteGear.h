@@ -35,7 +35,7 @@ class InvoluteGear : public CylindricalGear {
 public:
 	InvoluteGear(hpuint nTeeth = 15,
 			hpreal module = 0.13,
-			hpreal facewidth = 0.2f,
+			hpreal faceWidth = 0.2f,
 			hpreal pressureAngle = M_PI / 6.0f,
 			hpreal bottomClearance = 0.0002f,
 			hpreal filletRadius = 0.0f,
@@ -49,7 +49,7 @@ public:
 
     hpuint getNumberOfTeeth();
     hpreal getModule();
-    hpreal getFacewidth(); //Zahnradbreite
+    hpreal getFaceWidth(); //Zahnradbreite
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
     hpreal getBottomClearance(); //Kopfspielhöhe
     hpreal getFilletRadius(); //Fußrundungsradius
@@ -76,7 +76,7 @@ public:
     // The bool returned shows if value could be set.
     bool setNumberOfTeeth(hpuint nTeeth);
     bool setModule(hpreal module);
-    bool setFacewidth(hpreal facewidth);
+    bool setFaceWidth(hpreal faceWidth);
     bool setPressureAngle(hpreal pressureAngle);
     bool setBottomClearance(hpreal bottomClearance);
     bool setFilletRadius(hpreal filletRadius);
@@ -90,7 +90,7 @@ public:
 private:
     hpuint m_nTeeth;
     hpreal m_module;
-    hpreal m_facewidth;
+    hpreal m_faceWidth;
     hpreal m_pressureAngle;
     hpreal m_bottomClearance;
     hpreal m_filletRadius;

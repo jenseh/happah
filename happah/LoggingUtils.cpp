@@ -55,7 +55,7 @@ void LoggingUtils::print(InvoluteGear& involuteGear) {
 void LoggingUtils::print(SimpleGear& simpleGear) {
   cout << "SimpleGear:" << endl;
   cout << "helix angle = " << simpleGear.getHelixAngle() << endl;
-  cout << "face width  = " << simpleGear.getFacewidth() << endl;
+  cout << "face width  = " << simpleGear.getFaceWidth() << endl;
   cout << "controlpoints: " << endl;
   BSplineCurve toothProfile = simpleGear.getToothProfile();
   for(hpuint i = 0; i < toothProfile.getNumberOfControlPoints(); ++i) {

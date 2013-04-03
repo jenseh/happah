@@ -35,7 +35,7 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSa
 	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
 	hpvec3 wildcardNormal = hpvec3(0.0f, 0.0f, 0.0f);
 
-	hpreal dz = getFacewidth() / zSampleSize;
+	hpreal dz = getFaceWidth() / zSampleSize;
 
 	for (hpuint i = 0; i <= zSampleSize; ++i) {
 		getTraverseProfile(i * dz, profile);

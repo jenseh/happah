@@ -13,10 +13,10 @@ class SimpleGear : public CylindricalGear {
 private:
 	BSplineGearCurve* m_toothProfile;
 	hpreal m_helixAngle;
-	hpreal m_facewidth;
+	hpreal m_faceWidth;
 
 public:
-	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth);
+	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
 	virtual ~SimpleGear();
 
@@ -29,11 +29,11 @@ public:
 	virtual hpuint getNumberOfTeeth();
 	virtual hpreal getRadius();
 	virtual hpreal getHelixAngle();
-	virtual hpreal getFacewidth();
+	virtual hpreal getFaceWidth();
 	virtual BSplineGearCurve getToothProfile();
 
 	virtual void setHelixAngle(hpreal angle);
-	virtual void setFacewidth(hpreal facewidth);
+	virtual void setFaceWidth(hpreal faceWidth);
 	virtual void setToothProfile(BSplineGearCurve* curve);
 	virtual void setRadius(hpreal radius);
 

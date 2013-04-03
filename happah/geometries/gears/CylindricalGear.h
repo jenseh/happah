@@ -47,7 +47,7 @@ public:
 
 	virtual hpreal getAngularPitch() = 0;
 	virtual hpuint getNumberOfTeeth() = 0;
-	virtual hpreal getFacewidth() = 0;
+	virtual hpreal getFaceWidth() = 0;
 	virtual hpreal getHelixAngle() = 0;
 	//getToothProfile should return all points of one tooth,
 	//even the last point, which must be the same one as the

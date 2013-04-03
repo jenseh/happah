@@ -33,7 +33,7 @@ private:
 
 private slots:
 	void changeBottomClearance(hpreal bottomClearance);
-	void changeFacewidth(hpreal facewidth);
+	void changeFaceWidth(hpreal faceWidth);
 	void changeFilletRadius(hpreal radius);
 	void changeHelixAngle(hpreal angle);
 	void changeModule(hpreal module);

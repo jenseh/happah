@@ -35,7 +35,7 @@ SimpleGearForm::SimpleGearForm(GUIManager& guiManager, QWidget* parent)
 SimpleGearForm::~SimpleGearForm() {}
 
 void SimpleGearForm::changeFaceWidth(hpreal faceWidth) {
-	m_simpleGear->setFacewidth(faceWidth);
+	m_simpleGear->setFaceWidth(faceWidth);
 	updateSimpleGear();
 }
 
@@ -85,7 +85,7 @@ void SimpleGearForm::updateSimpleGear() {
 void SimpleGearForm::updateRanges() {
 	hpreal epsilon = 0.0001f;
 	m_helixAngleSlider->setSliderValues(m_simpleGear->getHelixAngle(), -(epsilon + M_PI / 2.0f), epsilon + M_PI / 2.0f );
-	m_faceWidthSlider->setSliderValues(m_simpleGear->getFacewidth(), 0.0f, 2.0f);
+	m_faceWidthSlider->setSliderValues(m_simpleGear->getFaceWidth(), 0.0f, 2.0f);
 	m_radiusSlider->setSliderValues(m_simpleGear->getRadius(), m_simpleGear->getRadius() / 2.0f, m_simpleGear->getRadius() * 2.0f);
 }
 

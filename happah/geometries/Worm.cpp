@@ -142,7 +142,7 @@ ZCircleCloud* Worm::toZCircleCloud() {
 //
 //
 //	for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-//		hpreal posZValue = 1.0;//m_facewidth / resolutionZ; //TODO:Implement
+//		hpreal posZValue = 1.0;//m_faceWidth / resolutionZ; //TODO:Implement
 //		posZ->push_back(posZValue);
 //	}
 //

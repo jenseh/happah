@@ -2,12 +2,12 @@
 #include "happah/geometries/gears/SimpleGear.h"
 
 
-SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :
-	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_facewidth(facewidth) {
+SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal faceWidth) :
+	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
 SimpleGear::SimpleGear(const SimpleGear& other)
-	: m_toothProfile(new BSplineGearCurve(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_facewidth(other.m_facewidth) {}
+	: m_toothProfile(new BSplineGearCurve(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_faceWidth(other.m_faceWidth) {}
 
 SimpleGear::~SimpleGear(){
 	delete m_toothProfile; //TODO is this correct here?
@@ -72,8 +72,8 @@ hpreal SimpleGear::getRadius() {
 hpreal SimpleGear::getHelixAngle() {
 	return m_helixAngle;
 }
-hpreal SimpleGear::getFacewidth() {
-	return m_facewidth;
+hpreal SimpleGear::getFaceWidth() {
+	return m_faceWidth;
 }
 
 BSplineGearCurve SimpleGear::getToothProfile() {
@@ -83,8 +83,8 @@ BSplineGearCurve SimpleGear::getToothProfile() {
 void SimpleGear::setHelixAngle(hpreal angle) {
 	m_helixAngle = angle;
 }
-void SimpleGear::setFacewidth(hpreal facewidth) {
-	m_facewidth = facewidth;
+void SimpleGear::setFaceWidth(hpreal faceWidth) {
+	m_faceWidth = faceWidth;
 }
 void SimpleGear::setRadius(hpreal radius) {
 	m_toothProfile->scale(radius / m_toothProfile->getMiddleLength());

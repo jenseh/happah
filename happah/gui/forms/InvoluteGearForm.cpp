@@ -6,7 +6,7 @@
 InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), 
 		m_bottomClearanceSlider(new Slider(tr("bottom clearance"))),
-		m_faceWidthSlider(new Slider(tr("facewidth"))),
+		m_faceWidthSlider(new Slider(tr("face width"))),
 		m_filletRadiusSlider(new Slider(tr("fillet radius"))),
 		m_guiManager(guiManager),
 		m_involuteGear(new InvoluteGear()), 
@@ -30,7 +30,7 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createInvoluteGear()));
 	connect(m_bottomClearanceSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBottomClearance(hpreal)));
-	connect(m_faceWidthSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFacewidth(hpreal)));
+	connect(m_faceWidthSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFaceWidth(hpreal)));
 	connect(m_filletRadiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
 	connect(m_helixAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 	connect(m_moduleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
@@ -49,8 +49,8 @@ void InvoluteGearForm::changeBottomClearance(hpreal bottomClearance) {
 	}
 }
 
-void InvoluteGearForm::changeFacewidth(hpreal facewidth) {
-	if (m_involuteGear->setFacewidth(facewidth)) {
+void InvoluteGearForm::changeFaceWidth(hpreal faceWidth) {
+	if (m_involuteGear->setFaceWidth(faceWidth)) {
 		updateInvoluteGear();
 	}
 }
@@ -130,7 +130,7 @@ void InvoluteGearForm::updateRanges() {
 
 	m_nTeethSlider->setSliderValues(m_involuteGear->getNumberOfTeeth(), nTeeth[0], nTeeth[1]);
 	m_moduleSlider->setSliderValues(m_involuteGear->getModule(), modules[0], modules[1]);
-	m_faceWidthSlider->setSliderValues(m_involuteGear->getFacewidth(), 0.0f, m_involuteGear->getReferenceRadius() * 2.0f);
+	m_faceWidthSlider->setSliderValues(m_involuteGear->getFaceWidth(), 0.0f, m_involuteGear->getReferenceRadius() * 2.0f);
 	m_pressureAngleSlider->setSliderValues(m_involuteGear->getPressureAngle(), pressureAngles[0], pressureAngles[1]);
 	m_bottomClearanceSlider->setSliderValues(m_involuteGear->getBottomClearance(), bottomClearances[0], bottomClearances[1]);
 	m_filletRadiusSlider->setSliderValues(m_involuteGear->getFilletRadius(), filletRadien[0], filletRadien[1]);

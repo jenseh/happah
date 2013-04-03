@@ -4,9 +4,9 @@
 
 BSplineCurve::BSplineCurve() {
 	m_degree = 3;
+	m_clampedEnds = false;
+	m_periodic = true;
 	m_uniformKnots = true;
-	m_interpolateEnds = false;
-	m_cyclic = true;
 	m_knots.push_back( 0.0f );
 	for( int i = 1; i < m_degree; i++ ) {
 		m_knots.push_back( i*(1.0f/((float) m_degree)) );
@@ -17,26 +17,41 @@ BSplineCurve::BSplineCurve() {
 BSplineCurve::~BSplineCurve() {
 }
 
-void BSplineCurve::addControlPoint( glm::vec3 newPoint ) {
+void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 	m_controlPoints.push_back(newPoint);
 
-	float scaleFact = 1 - 1.0f/(m_knots.size());
-	for( unsigned int i = 1; i < m_knots.size(); i++ ) {
-		m_knots[i] *= scaleFact;
+	if( m_uniformKnots ) {
+		float scaleFact = 1.0f - 1.0f/(m_knots.size());
+		m_knots[0] = 0.0f;
+		for( unsigned int i = 1; i < m_knots.size(); i++ ) {
+			m_knots[i] *= scaleFact;
+		}
+		m_knots.push_back( 1.0f );
+	/*	// not normalized version, not tested!
+		float scaleFact = (m_knots.back() - m_knots.front()) / m_knots.size();
+		m_knots.push_back( m_knots.back() );
+		for( unsigned int i = 1; i < m_knots.size()-1; i++ ) {
+			 m_knots[i] = m_knots[0] + scaleFact*i;
+		}
+	*/
 	}
-	m_knots.push_back( 1.0f );
+	else {
+		float stepSize = ( m_knots.back() - m_knots.front() ) / (m_knots.size() - 1);
+		m_knots.push_back( m_knots.back() + stepSize );
+	}
 
-	calculateDrawingData();
+	calculateNormalization();
 }
 
-void BSplineCurve::addControlPoint( float x, float y, float z ) {
-	addControlPoint( glm::vec3(x,y,z) );
-}
-
-//TODO: single insertion is not a good idea here. But as knots have similar weights at the moment, I'll leave it like that.
-void BSplineCurve::addCurve( BSplineCurve *curve ) {
-	for( unsigned int i = 0; i < curve->getNumberOfControlPoints(); ++i ) {
-		addControlPoint( curve->getControlPoint( i ));
+void BSplineCurve::addControlPoint( hpvec3 newPoint, float distanceFromLast ) {
+	if( m_uniformKnots ) {
+		this->addControlPoint( newPoint );
+	}
+	else {
+		m_controlPoints.push_back(newPoint);
+		if( distanceFromLast < 0 ) distanceFromLast = 0.0f;
+		m_knots.push_back( m_knots.back() + distanceFromLast );
+		calculateNormalization();
 	}
 }
 
@@ -48,24 +63,156 @@ void BSplineCurve::approximatePoints( std::vector<hpvec2>* points, unsigned int 
 	}
 	addControlPoint( hpvec3(points->back(), 0.0f));
 }
+
+void BSplineCurve::calculateNormalization() {
+	m_normalizedKnots = m_knots;
+	m_normalizedPoints = m_controlPoints;
+	if(m_periodic && m_controlPoints.size() >= m_degree) {
+		// Calculate circular control points array
+		int sizePoints = m_controlPoints.size()+m_degree-1;
+		m_normalizedPoints.resize(sizePoints);
+		std::copy(m_controlPoints.begin(), m_controlPoints.begin()+m_degree, m_normalizedPoints.end()-m_degree);
+		// Resize (& unify) knots array
+		int sizeKnots = m_knots.size()+m_degree-1;
+		m_normalizedKnots.resize(sizeKnots);
+		for( int i = 0; i < sizeKnots; i++ ) {
+			m_normalizedKnots[i] = i*( 1.0f/((float) sizeKnots-1) );
+		}
+	}
+	else if(m_clampedEnds && m_normalizedKnots.size()>2*m_degree) {
+		for( int i = 0; i < m_degree+1; i++ ) {
+			m_normalizedKnots[i] = 0.0f;
+			m_normalizedKnots[m_normalizedKnots.size()-i-1] = 1.0f;
+		}
+		for( int i = 0; i < m_normalizedKnots.size() - 2*m_degree; i++ ) {
+			m_normalizedKnots[i+m_degree] = i*( 1.0f/((float) m_normalizedKnots.size() - 2*m_degree) );
+		}
+	}
+	else if(m_uniformKnots) {
+		float fract = 1.0f/((float) m_normalizedKnots.size() - 1);
+		for( int i = 0; i < m_normalizedKnots.size(); i++ ) {
+			m_normalizedKnots[i] = i*fract;
+		}
+	}
+}
+
+bool BSplineCurve::check( bool debugOutput ) const {
+	m_controlPoints.size() == m_degree + 1; // Bezier-curve property per segment
+	if( debugOutput ) {
+		std::cout << "BSplineCurve checking routine\n";
+		std::cout << "degree:\t " << m_degree << " \t control points:\t " << m_controlPoints.size() << std::endl;
+		std::cout << "knots :\t " << m_knots.size() << " (" << m_knots.size()-1 << " knot spans)" << std::endl;
+		std::cout << "number of segments (degree & coefficients):\t " << m_controlPoints.size() - m_degree << std::endl;
+		std::cout << "number of segments (breakpoints / knots)  :\t " << m_knots.size() -1 << std::endl;
+		std::cout << "valid configuration:\t " << ( m_controlPoints.size() == m_knots.size() - 1 - m_degree ) << std::endl << std::endl;
+	}
+	if( m_controlPoints.size() != m_knots.size() - 1 - m_degree ) {
+		return false;
+	}
+	for( int i = 1; i < m_knots.size(); i++ ) {
+		if( m_knots[i-1] > m_knots[i] ) {
+			if( debugOutput ) {
+				std::cout << "Non monotone knot vector at " << i-1 << "!" << std::endl;
+			}
+			return false;
+		}
+	}
+	return true;
+}
+
+void BSplineCurve::getBounds( hpvec2* min, hpvec2* max ) const {
+	if( m_controlPoints.size() > 0 ) {
+		// TODO: Use iterator
+		min->x = m_controlPoints[0].x - 5;
+		max->x = m_controlPoints[0].x + 5;
+		min->y = m_controlPoints[0].y - 5;
+		max->y = m_controlPoints[0].y + 5;
+		for( unsigned int i = 1; i < m_controlPoints.size(); i++ ) {
+			if( m_controlPoints[i].x < min->x )
+				min->x = m_controlPoints[i].x - 5;
+			if( m_controlPoints[i].x > max->x )
+				max->x = m_controlPoints[i].x + 5;
+			if( m_controlPoints[i].y < min->y )
+				min->y = m_controlPoints[i].y - 5;
+			if( m_controlPoints[i].y > max->y )
+				max->y = m_controlPoints[i].y + 5;
+		}
+
+	}
+}
+
+bool BSplineCurve::getClamped() const {
+	return m_clampedEnds;
+}
+
+hpvec3 BSplineCurve::getControlPoint( unsigned int index ) const {
+	if( index < m_controlPoints.size() ) {
+		return m_controlPoints[index];
+	}
+	return hpvec3(0, 0, 0);
+}
+
+int BSplineCurve::getDegree() const {
+	return m_degree;
+}
+
 unsigned int BSplineCurve::getNumberOfControlPoints() const {
 	return m_controlPoints.size();
 }
 
-bool BSplineCurve::check( bool debugOutput ) const {
-		m_controlPoints.size() == m_degree + 1; // Bezier-curve property per segment
-		if( debugOutput ) {
-			std::cout << "BSplineCurve checking routine\n";
-			std::cout << "degree:\t " << m_degree << " \t control points:\t " << m_controlPoints.size() << std::endl;
-			std::cout << "knots :\t " << m_knots.size() << " (" << m_knots.size()-1 << " knot spans)" << std::endl;
-			std::cout << "number of segments (degree & coefficients):\t " << m_controlPoints.size() - m_degree << std::endl;
-			std::cout << "number of segments (breakpoints / knots)  :\t " << m_knots.size() -1 << std::endl;
-			std::cout << "valid configuration:\t " << ( m_controlPoints.size() == m_knots.size() - 1 - m_degree ) << std::endl << std::endl;
+void BSplineCurve::getParameterRange( float& t_low, float& t_high ) {
+	if( m_normalizedKnots.size() < m_degree + 3 ) {
+		return;
+	}
+	t_low =  m_normalizedKnots[m_degree];
+	t_high = m_normalizedKnots[m_normalizedKnots.size()-m_degree-1];
+}
+
+bool BSplineCurve::getPeriodic() const {
+	return m_periodic;
+}
+
+bool BSplineCurve::getUniform() const {
+	return m_uniformKnots;
+}
+
+hpvec3 BSplineCurve::getValueAt( float t ) const {
+	// only for uniform, noncyclic, without end-point-interpolation
+	if( m_normalizedKnots.size() < m_degree + 3 ) {
+		return hpvec3(0,0,0);
+	}
+	if( t < m_normalizedKnots[m_degree] ) {
+		return getValueAt( m_normalizedKnots[m_degree] );
+	}
+	else if( t > m_normalizedKnots[m_normalizedKnots.size()-m_degree-1] ) {
+		return getValueAt( m_normalizedKnots[m_normalizedKnots.size()-m_degree-1] );
+	}
+	else {
+		int l;
+		for( int i = m_degree; i < m_normalizedKnots.size()-m_degree-1; i++ ) {
+			if( m_normalizedKnots[i] <= t ) {
+				l = i;
+			}
 		}
-		if( m_controlPoints.size() != m_knots.size() - 1 - m_degree ) {
-			return false;
+
+//		std::cout << "#knts: " << m_normalizedKnots.size() << " > take [" << l-m_degree << ", " << l+m_degree << "] " << std::endl;
+//		std::cout << "#pts:  " << m_normalizedPoints.size() << " (last idx: " << m_normalizedPoints.size() - 1 << ") ";
+//		std::cout << "> take [" << l-m_degree << ", " << l << "] " << std::endl;
+//		std::cout << std::endl;
+
+		std::vector<float> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
+		std::vector<hpvec3> output (m_normalizedPoints.begin()+l-m_degree,m_normalizedPoints.begin()+l+1);
+		std::vector<hpvec3> old (output);
+
+		for( int k = 1; k < m_degree+1; k++) {
+			for( int i = k; i < m_degree+1; i++) {
+				float alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
+				output[i] = (1-alpha)*old[i-1] + alpha*old[i];
+			}
+			old = output;
 		}
-		return true;
+		return output[m_degree];
+	}
 }
 
 void BSplineCurve::resetKnots() {
@@ -77,53 +224,19 @@ void BSplineCurve::resetKnots() {
 			m_knots[i] = i*( 1.0f/((float) num-1) );
 		}
 	}
-	calculateDrawingData();
+	calculateNormalization();
 }
 
-void BSplineCurve::calculateDrawingData() {
-	m_drawKnots = m_knots;
-	m_drawPoints = m_controlPoints;
-	if(m_cyclic && m_controlPoints.size() >= m_degree) {
-		// Calculate circular control points array
-		int sizePoints = m_controlPoints.size()+m_degree-1;
-		m_drawPoints.resize(sizePoints);
-		std::copy(m_controlPoints.begin(), m_controlPoints.begin()+m_degree, m_drawPoints.end()-m_degree);
-		// Resize (& unify) knots array
-		int sizeKnots = m_knots.size()+m_degree-1;
-		m_drawKnots.resize(sizeKnots);
-		for( int i = 0; i < sizeKnots; i++ ) {
-			m_drawKnots[i] = i*( 1.0f/((float) sizeKnots-1) );
-		}
-	}
-	else if(m_interpolateEnds && m_drawKnots.size()>2*m_degree) {
-		for( int i = 0; i < m_degree+1; i++ ) {
-			m_drawKnots[i] = 0.0f;
-			m_drawKnots[m_drawKnots.size()-i-1] = 1.0f;
-		}
-		for( int i = 0; i < m_drawKnots.size() - 2*m_degree; i++ ) {
-			m_drawKnots[i+m_degree] = i*( 1.0f/((float) m_drawKnots.size() - 2*m_degree) );
-		}
-	}
-	else if(m_uniformKnots) {
-		float fract = 1.0f/((float) m_drawKnots.size() - 1);
-		for( int i = 0; i < m_drawKnots.size(); i++ ) {
-			m_drawKnots[i] = i*fract;
-		}
-	}
+void BSplineCurve::setClamped( bool clamped ) {
+	m_clampedEnds = clamped;
+	calculateNormalization();
 }
 
-void BSplineCurve::setControlPoint( unsigned int index, glm::vec3 newValue ) {
+void BSplineCurve::setControlPoint( unsigned int index, hpvec3 newValue ) {
 	if( index < m_controlPoints.size() ) {
 		m_controlPoints[index] = newValue;
 	}
-	calculateDrawingData();
-}
-
-glm::vec3 BSplineCurve::getControlPoint( unsigned int index ) const {
-	if( index < m_controlPoints.size() ) {
-		return m_controlPoints[index];
-	}
-	return glm::vec3(0, 0, 0);
+	calculateNormalization();
 }
 
 void BSplineCurve::setDegree( unsigned int degree ) {
@@ -145,106 +258,29 @@ void BSplineCurve::setDegree( unsigned int degree ) {
 		}
 	}
 	m_degree = degree;
-	calculateDrawingData();
-}
-
-int BSplineCurve::getDegree() const {
-	return m_degree;
+	calculateNormalization();
 }
 
 void BSplineCurve::setUniform( bool uniform ) {
 	m_uniformKnots = uniform;
-	calculateDrawingData();
-}
-
-bool BSplineCurve::getUniform() const {
-	return m_uniformKnots;
+	if( m_uniformKnots ) {
+		float scaleFact = 1.0f/(m_knots.size()-1);
+		for( unsigned int i = 0; i < m_knots.size(); i++ ) {
+			m_knots[i] = scaleFact*i;
+		}
+	/*	// not normalized version, not tested!
+		float scaleFact = (m_knots.back() - m_knots.front()) / (m_knots.size()-1);
+		for( unsigned int i = 0; i < m_knots.size(); i++ ) {
+			m_knots[i] = m_knots[0] + scaleFact*i;
+		}
+	*/
+	}
+	calculateNormalization();
 }
 
 void BSplineCurve::setPeriodic( bool periodic ) {
-	m_cyclic = periodic;
-	calculateDrawingData();
-}
-
-bool BSplineCurve::getPeriodic() const {
-	return m_cyclic;
-}
-
-void BSplineCurve::setClamped( bool clamped ) {
-	m_interpolateEnds = clamped;
-	calculateDrawingData();
-}
-
-bool BSplineCurve::getClamped() const {
-	return m_interpolateEnds;
-}
-
-void BSplineCurve::getBounds( glm::vec2* min, glm::vec2* max ) const {
-	if( m_controlPoints.size() > 0 ) {
-		// TODO: Use iterator
-		min->x = m_controlPoints[0].x - 5;
-		max->x = m_controlPoints[0].x + 5;
-		min->y = m_controlPoints[0].y - 5;
-		max->y = m_controlPoints[0].y + 5;
-		for( unsigned int i = 1; i < m_controlPoints.size(); i++ ) {
-			if( m_controlPoints[i].x < min->x )
-				min->x = m_controlPoints[i].x - 5;
-			if( m_controlPoints[i].x > max->x )
-				max->x = m_controlPoints[i].x + 5;
-			if( m_controlPoints[i].y < min->y )
-				min->y = m_controlPoints[i].y - 5;
-			if( m_controlPoints[i].y > max->y )
-				max->y = m_controlPoints[i].y + 5;
-		}
-
-	}
-}
-
-void BSplineCurve::getParameterRange( float& t_low, float& t_high ) {
-	if( m_drawKnots.size() < m_degree + 3 ) {
-		return;
-	}
-	t_low =  m_drawKnots[m_degree];
-	t_high = m_drawKnots[m_drawKnots.size()-m_degree-1];
-}
-
-glm::vec3 BSplineCurve::getValueAt( float t ) const {
-	// only for uniform, noncyclic, without end-point-interpolation
-	if( m_drawKnots.size() < m_degree + 3 ) {
-		return glm::vec3(0,0,0);
-	}
-	if( t < m_drawKnots[m_degree] ) {
-		return getValueAt( m_drawKnots[m_degree] );
-	}
-	else if( t > m_drawKnots[m_drawKnots.size()-m_degree-1] ) {
-		return getValueAt( m_drawKnots[m_drawKnots.size()-m_degree-1] );
-	}
-	else {
-		int l;
-		for( int i = m_degree; i < m_drawKnots.size()-m_degree-1; i++ ) {
-			if( m_drawKnots[i] <= t ) {
-				l = i;
-			}
-		}
-
-//		std::cout << "#knts: " << m_drawKnots.size() << " > take [" << l-m_degree << ", " << l+m_degree << "] " << std::endl;
-//		std::cout << "#pts:  " << m_drawPoints.size() << " (last idx: " << m_drawPoints.size() - 1 << ") ";
-//		std::cout << "> take [" << l-m_degree << ", " << l << "] " << std::endl;
-//		std::cout << std::endl;
-
-		std::vector<float> knots (m_drawKnots.begin()+l-m_degree,m_drawKnots.begin()+l+m_degree+1);
-		std::vector<glm::vec3> output (m_drawPoints.begin()+l-m_degree,m_drawPoints.begin()+l+1);
-		std::vector<glm::vec3> old (output);
-
-		for( int k = 1; k < m_degree+1; k++) {
-			for( int i = k; i < m_degree+1; i++) {
-				float alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
-				output[i] = (1-alpha)*old[i-1] + alpha*old[i];
-			}
-			old = output;
-		}
-		return output[m_degree];
-	}
+	m_periodic = periodic;
+	calculateNormalization();
 }
 
 PointCloud* BSplineCurve::toPointCloud() {

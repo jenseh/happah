@@ -37,9 +37,9 @@ void LoggingUtils::printVec(glm::vec4& vector) {
   cout << "[" << vector.x << ", " << vector.y << ", " << vector.z << ", " << vector.w << "]" << std::endl;
 }
 
-void LoggingUtils::print(InvoluteGear &involuteGear) {
-  cout << "Gear:" << endl;
-  cout << "number of teeth  = " << involuteGear.getNumberOfTeeth << endl;
+void LoggingUtils::print(InvoluteGear& involuteGear) {
+  cout << "InvoluteGear:" << endl;
+  cout << "number of teeth  = " << involuteGear.getNumberOfTeeth() << endl;
   cout << "module           = " << involuteGear.getModule() << endl;
   cout << "pressure angle   = " << involuteGear.getPressureAngle() << endl;
   cout << "tip radius       = " << involuteGear.getTipRadius() << endl;
@@ -50,4 +50,17 @@ void LoggingUtils::print(InvoluteGear &involuteGear) {
   cout << "bottom clearance = " << involuteGear.getBottomClearance() << endl;
   cout << "helix angle      = " << involuteGear.getHelixAngle() << endl;
   cout << "angular pitch    = " << involuteGear.getAngularPitch() << endl;
+}
+
+void LoggingUtils::print(SimpleGear& simpleGear) {
+  cout << "SimpleGear:" << endl;
+  cout << "helix angle = " << simpleGear.getHelixAngle() << endl;
+  cout << "face width  = " << simpleGear.getFaceWidth() << endl;
+  cout << "controlpoints: " << endl;
+  BSplineCurve toothProfile = simpleGear.getToothProfile();
+  for(hpuint i = 0; i < toothProfile.getNumberOfControlPoints(); ++i) {
+    hpvec3 point = toothProfile.getControlPoint(i);
+    LoggingUtils::printVec(point);
+  }
+  cout << endl;
 }

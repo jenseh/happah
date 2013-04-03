@@ -9,6 +9,7 @@ QT += core \
 HEADERS += \
 	happah/Happah.h \
 	happah/HappahTypes.h \
+	happah/LoggingUtils.h \
 \
 #	happah/geometries/BasicRack.h \
 	happah/geometries/BSplineCurve.h \
@@ -112,6 +113,7 @@ HEADERS += \
 SOURCES += \
 	happah/main.cpp \
 	happah/Happah.cpp \
+	happah/LoggingUtils.cpp \
 \
 #	happah/geometries/BasicRack.cpp \
 	happah/geometries/BSplineCurve.cpp \

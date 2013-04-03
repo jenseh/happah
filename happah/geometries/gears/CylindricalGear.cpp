@@ -5,61 +5,59 @@
 CylindricalGear::CylindricalGear() : Geometry() {}
 CylindricalGear::~CylindricalGear() {}
 
-vector<hpvec2>* CylindricalGear::getGearProfile(hpreal depth, hpuint toothSampleSize) {
-	hpreal rotation = glm::tan(getHelixAngle()) * depth;
+void CylindricalGear::getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile) {
+	hpuint toothSampleSize = gearProfile.size() / getNumberOfTeeth();
+	hpreal rotation = glm::tan(getHelixAngle()) * z;
 
-	vector<hpvec2>* toothProfile = getToothProfile(toothSampleSize);
-	vector<hpvec2>* gearProfile = new vector<hpvec2>();
-	int rotDirection = 1;
+	vector<hpvec2> toothProfile(toothSampleSize + 1); //TODO: Change the "+1" and let toothProfile return the points only until next tooth starts
+	getToothProfile(toothProfile);
 	hpuint nTeeth = getNumberOfTeeth();
-	if (toothProfileIsInClockDirection())
+
+	//Test if the points of the toothProfile are given in clockwise or counterclockwise direction
+	hpvec2 first = toothProfile[0];
+	hpvec2 last = toothProfile[toothSampleSize];
+	int rotDirection = 1;
+	if ((first[0] * last[1] - first[1] * last[0]) < 0)
 		rotDirection = -1;
 	for(hpuint i = 0; i < nTeeth; ++i) {
 		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / nTeeth + rotation) * 180.0f / M_PI);
-		for(hpuint j = 0; j < toothProfile->size() - 1; ++j) {
-			gearProfile->push_back(glm::rotate(toothProfile->at(j), degreeRotation));
+		for(hpuint j = 0; j < toothSampleSize; ++j) {
+			assert(i * toothSampleSize + j < gearProfile.size()); //TODO: remove this line.
+			gearProfile[i * toothSampleSize + j] = glm::rotate(toothProfile[j], degreeRotation);
 		}
 	}
-	return gearProfile;
-}
-
-bool CylindricalGear::toothProfileIsInClockDirection() {
-	vector<hpvec2>* toothProfile = getToothProfile(10);
-	hpvec2 first = toothProfile->at(0);
-	hpvec2 last = toothProfile->back();
-	return (first[0] * last[1] - first[1] * last[0]) < 0;
 }
 
 TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
 	// Create vector for the result
-	vector<hpvec3>* vertexData = new vector<hpvec3>;
-	vector<hpuint>* indices = new vector<hpuint>;
-	vector<hpvec2>* profile;
+	vector<hpvec3>* vertexData = new vector<hpvec3>; //TODO: initialize vetexData => how many do I need?
+	vector<hpuint>* indices = new vector<hpuint>; //TODO initialize indices => how many do I need?
+	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
 	hpvec3 wildcardNormal = hpvec3(0.0f, 0.0f, 0.0f);
 
-	hpreal dz = getFacewidth() / zSampleSize;
+	hpreal dz = getFaceWidth() / zSampleSize;
 
 	for (hpuint i = 0; i <= zSampleSize; ++i) {
-		profile = getGearProfile(i * dz, toothSampleSize);
-		for (hpuint j = 0; j < profile->size(); ++j) {
-			vertexData->push_back(hpvec3(profile->at(j).x, profile->at(j).y, i * dz));
+		getTraverseProfile(i * dz, profile);
+		hpuint pointIndex = 0;
+		for(vector<hpvec2>::iterator j = profile.begin(), end = profile.end(); j != end; ++j) {
+			vertexData->push_back(hpvec3(j->x, j->y, i * dz));
 			vertexData->push_back(wildcardNormal);
 
 			if(i != zSampleSize) {
-				hpuint jNext = (j == profile->size() - 1) ? 0 : (j + 1);
+				hpuint nextPointIndex = ((*j) == profile.back()) ? 0 : (pointIndex + 1);
 
-				indices->push_back(i * profile->size() + jNext);		//0
-				indices->push_back(i * profile->size() + j);			//1
-				indices->push_back((i + 1) * profile->size() + j);	//2
+				indices->push_back(i * profile.size() + nextPointIndex);		//0
+				indices->push_back(i * profile.size() + pointIndex);			//1
+				indices->push_back((i + 1) * profile.size() + pointIndex);	//2
 				
-				indices->push_back(i * profile->size() + jNext);		//0
-				indices->push_back((i + 1) * profile->size() + j);	//2
-				indices->push_back((i + 1) * profile->size() + jNext);//3
+				indices->push_back(i * profile.size() + nextPointIndex);		//0
+				indices->push_back((i + 1) * profile.size() + pointIndex);	//2
+				indices->push_back((i + 1) * profile.size() + nextPointIndex);//3
 			}
+			++pointIndex;
 		}
-		delete profile;
 	}
-
 	//insert correct smoothed normals:
 
 	//6 entries per two triangles in indices

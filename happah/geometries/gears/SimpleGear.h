@@ -13,32 +13,31 @@ class SimpleGear : public CylindricalGear {
 private:
 	BSplineGearCurve* m_toothProfile;
 	hpreal m_helixAngle;
-	hpreal m_facewidth;
+	hpreal m_faceWidth;
 
 public:
-	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth);
+	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
-	virtual ~SimpleGear();
+	~SimpleGear();
 
-	BSplineCurve* toTransverseToothProfileSystem(hpreal depth);
-	BSplineGearCurve* getBSplineToothProfileInXYPlane()const;
+	BSplineCurve* toTransverseToothProfileSystem(hpreal z);
+	BSplineGearCurve* getBSplineToothProfileInXYPlane() const;
 
-	//TODO: leave methods virtual????!!!!
-	virtual hpreal getAngularPitch();
-	virtual hpreal getBottomRadius();
-	virtual hpuint getNumberOfTeeth();
-	virtual hpreal getRadius();
-	virtual hpreal getHelixAngle();
-	virtual hpreal getFacewidth();
-	virtual bool   toothProfileIsInClockDirection();
+	hpreal getAngularPitch();
+	hpreal getRootRadius();
+	hpuint getNumberOfTeeth();
+	hpreal getRadius();
+	hpreal getHelixAngle();
+	hpreal getFaceWidth();
+	BSplineGearCurve getToothProfile();
 
-	virtual void setHelixAngle(hpreal angle);
-	virtual void setFacewidth(hpreal facewidth);
-	virtual void setToothProfile(BSplineGearCurve* curve);
-	virtual void setRadius(hpreal radius);
+	void setHelixAngle(hpreal angle);
+	void setFaceWidth(hpreal faceWidth);
+	void setToothProfile(BSplineGearCurve* curve);
+	void setRadius(hpreal radius);
 
-    virtual void getToothSpaceProfile(vector<hpvec2> &profile)const;
-	virtual vector<hpvec2>* getToothProfile(hpuint toothSampleSize = 100);
+	void getToothSpaceProfile(vector<hpvec2>& profile) const;
+	void getToothProfile(vector<hpvec2>& points);
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

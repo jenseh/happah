@@ -133,7 +133,7 @@ TriangleMesh* Worm::toTriangleMesh() {
 
 ZCircleCloud* Worm::toZCircleCloud() {
 //	// Create the profile given the current gear settings
-//	std::vector<hpvec2>* profile = new std::vector<hpvec2>(); //getGearProfile(0); //TODO:Implement
+//	std::vector<hpvec2>* profile = new std::vector<hpvec2>(); //getTraverseProfile(0); //TODO:Implement
 //	std::vector<hpreal>* posZ = new std::vector<hpreal>;
 //
 //	// Determine resolution (important for following simulations)
@@ -142,7 +142,7 @@ ZCircleCloud* Worm::toZCircleCloud() {
 //
 //
 //	for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-//		hpreal posZValue = 1.0;//m_facewidth / resolutionZ; //TODO:Implement
+//		hpreal posZValue = 1.0;//m_faceWidth / resolutionZ; //TODO:Implement
 //		posZ->push_back(posZValue);
 //	}
 //

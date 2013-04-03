@@ -15,8 +15,7 @@ using namespace std;
 #include "happah/HappahTypes.h"
 
 /** @class InvoluteGear
- * @brief Involute gear without a helix angle and with the right-hand flank
- * being an reflection of the left-hand flank.
+ * @brief Simple cylindrical involute gear
  *
  * The values given in the constructor are based on the parameters specified
  * in the DIN 3960
@@ -27,9 +26,6 @@ using namespace std;
  * Besides the "getPossibleXXX()" methods allow to calculate the range for
  * other suitable values for XXX, so that an involute gear can be constructed.
  *
- * Gears whose right-hand flank isn't a reflection to the left-hand one, have
- * to use other getToothProfile() and getGearProfile() methods, as both use
- * the reflection property.
  */
 
 class InvoluteGear;
@@ -39,7 +35,7 @@ class InvoluteGear : public CylindricalGear {
 public:
 	InvoluteGear(hpuint nTeeth = 15,
 			hpreal module = 0.13,
-			hpreal facewidth = 0.2f,
+			hpreal faceWidth = 0.2f,
 			hpreal pressureAngle = M_PI / 6.0f,
 			hpreal bottomClearance = 0.0002f,
 			hpreal filletRadius = 0.0f,
@@ -53,7 +49,7 @@ public:
 
     hpuint getNumberOfTeeth();
     hpreal getModule();
-    hpreal getFacewidth(); //Zahnradbreite
+    hpreal getFaceWidth(); //Zahnradbreite
     hpreal getPressureAngle(); //Eingriffswinkel - Winkel an Flanke
     hpreal getBottomClearance(); //Kopfspielhöhe
     hpreal getFilletRadius(); //Fußrundungsradius
@@ -80,21 +76,21 @@ public:
     // The bool returned shows if value could be set.
     bool setNumberOfTeeth(hpuint nTeeth);
     bool setModule(hpreal module);
-    bool setFacewidth(hpreal facewidth);
+    bool setFaceWidth(hpreal faceWidth);
     bool setPressureAngle(hpreal pressureAngle);
     bool setBottomClearance(hpreal bottomClearance);
     bool setFilletRadius(hpreal filletRadius);
     bool setHelixAngle(hpreal helixAngle);
 
     void getToothSpaceProfile(vector<hpvec2> &profile) const;
-    vector<hpvec2>* getToothProfile(hpuint toothSampleSize = 100);
-    TriangleMesh* toTriangleMesh();
-    SimpleGear* toSimpleGear();
+    void getToothProfile(vector<hpvec2>& toothProfile);
+    TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
+    SimpleGear* toSimpleGear(hpuint toothSampleSize = 100);
 
 private:
     hpuint m_nTeeth;
     hpreal m_module;
-    hpreal m_facewidth;
+    hpreal m_faceWidth;
     hpreal m_pressureAngle;
     hpreal m_bottomClearance;
     hpreal m_filletRadius;

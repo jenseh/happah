@@ -2,12 +2,12 @@
 #include "happah/geometries/gears/SimpleGear.h"
 
 
-SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal facewidth) :
-	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_facewidth(facewidth) {
+SimpleGear::SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal faceWidth) :
+	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
 SimpleGear::SimpleGear(const SimpleGear& other)
-	: m_toothProfile(new BSplineGearCurve(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_facewidth(other.m_facewidth) {}
+	: m_toothProfile(new BSplineGearCurve(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_faceWidth(other.m_faceWidth) {}
 
 SimpleGear::~SimpleGear(){
 	delete m_toothProfile; //TODO is this correct here?
@@ -15,13 +15,13 @@ SimpleGear::~SimpleGear(){
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal depth){
+BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z){
 
 	BSplineCurve *gearProfile = new BSplineCurve();
 	gearProfile->setPeriodic(true);
 	gearProfile->setDegree(2);
 
-	hpreal rotation = glm::tan(m_helixAngle) * depth;
+	hpreal rotation = glm::tan(m_helixAngle) * z;
 
 	for (hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
 		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
@@ -57,7 +57,7 @@ hpreal SimpleGear::getAngularPitch() {
 	return m_toothProfile->getAngularPitch();
 }
 
-hpreal SimpleGear::getBottomRadius() {
+hpreal SimpleGear::getRootRadius() {
 	return m_toothProfile->getMinLength();
 }
 
@@ -72,17 +72,19 @@ hpreal SimpleGear::getRadius() {
 hpreal SimpleGear::getHelixAngle() {
 	return m_helixAngle;
 }
-hpreal SimpleGear::getFacewidth() {
-	return m_facewidth;
+hpreal SimpleGear::getFaceWidth() {
+	return m_faceWidth;
 }
-bool SimpleGear::toothProfileIsInClockDirection() {
-	return true; //no calculation needed as bspline is oriented in a way that this is always true
+
+BSplineGearCurve SimpleGear::getToothProfile() {
+	return *m_toothProfile;
 }
+
 void SimpleGear::setHelixAngle(hpreal angle) {
 	m_helixAngle = angle;
 }
-void SimpleGear::setFacewidth(hpreal facewidth) {
-	m_facewidth = facewidth;
+void SimpleGear::setFaceWidth(hpreal faceWidth) {
+	m_faceWidth = faceWidth;
 }
 void SimpleGear::setRadius(hpreal radius) {
 	m_toothProfile->scale(radius / m_toothProfile->getMiddleLength());
@@ -93,7 +95,7 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	m_toothProfile = curve;
 }
 
-void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
+void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
@@ -108,16 +110,15 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile)const{
 	}
 }
 
-
-vector<hpvec2>* SimpleGear::getToothProfile(hpuint toothSampleSize) {
-	vector<hpvec2> *points = new vector<hpvec2>;
+void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
+	hpuint toothSampleSize = toothProfile.size();
 	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSampleSize - 1); // -1 so whole thooth is sampled
-	for (hpuint i = 0; i <= toothSampleSize; ++i) { //"<=" to get the whole tooth
-		hpvec3 point = splineXY->getValueAt((hpreal) i / toothSampleSize);
-		points->push_back(hpvec2(point.x, point.y));
+	for (hpuint i = 0; i < toothSampleSize; ++i) {
+		hpvec3 point = splineXY->getValueAt(low + (hpreal) (i * delta));
+		toothProfile[i] = hpvec2(point.x, point.y);
 	}
-	return points;
 }
+

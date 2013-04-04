@@ -1,4 +1,6 @@
 #include "happah/scene/RenderStateNode.h"
+#include "happah/scene/DrawVisitor.h"
+#include "happah/scene/SceneVisitor.h"
 #include <exception>
 
 
@@ -108,6 +110,23 @@ vector<hpvec4>* RenderStateNode::getColorVector(){
 	return m_colorVector;
 }
 
+void RenderStateNode::registerSelectListener(SelectListener* selectListener){
+	m_selectListeners.push_back(selectListener);
+}
+
+void RenderStateNode::triggerSelectEvent(){
+		for(list<SelectListener*>::iterator i = m_selectListeners.begin(), end = m_selectListeners.end(); i != end; ++i)
+			(*i)->handleSelectEvent();
+}
+
+void RenderStateNode::triggerDeselectEvent(){
+	for(list<SelectListener*>::iterator i = m_selectListeners.begin(), end = m_selectListeners.end(); i != end; ++i)
+		(*i)->handleDeselectEvent();
+}
+
+void RenderStateNode::removeSelectListener(SelectListener* selectListener){
+	m_selectListeners.remove(selectListener);
+}
 
 
 

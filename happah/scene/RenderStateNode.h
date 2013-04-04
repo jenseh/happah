@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <memory>
 #include <vector>
+#include <list>
 #include "happah/scene/Node.h"
 #include "happah/scene/Material.h"
 #include "happah/scene/SelectListener.h"
@@ -31,8 +32,9 @@ public:
 	void 	setMaterial(Material& material);
 	void 	setInitialized(bool isInitialized);
 	void 	triggerSelectEvent();
+	void	triggerDeselectEvent();
 	void 	registerSelectListener(SelectListener* selectListener);
-
+	void	removeSelectListener(SelectListener* selectListener);
 
 	GLuint 					getVertexArrayObjectID();
 	GLuint 					getVertexBufferID();
@@ -63,7 +65,7 @@ private:
 	Material 				m_material;
 	bool 					m_initialized;
 	bool 					m_hasColorVector;
-	SelectListener*			m_selectListener;
+	list<SelectListener*>	m_selectListeners;
 };
 
 /*

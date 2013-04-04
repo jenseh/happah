@@ -1,5 +1,7 @@
 #include "happah/scene/ElementRenderStateNode.h"
 #include "happah/scene/RenderStateNode.h"
+#include "happah/scene/DrawVisitor.h"
+#include "happah/scene/SceneVisitor.h"
 #include <exception>
 
 
@@ -9,7 +11,7 @@ ElementRenderStateNode::ElementRenderStateNode(hpuint mode, vector<hpvec3>* vert
 }
 
 ElementRenderStateNode::ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, vector<hpcolor>* colorVector)
-	: RenderStateNode(vertexData, colorVector), m_mode(mode), m_indices(indices), m_indexBufferID(0) {
+	: RenderStateNode(vertexData, colorVector), m_mode(mode), m_indices(indices), m_indexBufferID(0),m_selected(0) {
 }
 
 ElementRenderStateNode::~ElementRenderStateNode() {

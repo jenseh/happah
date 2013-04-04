@@ -170,7 +170,7 @@ void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3&
 
 void DrawManager::select(int x, int y){
 	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
-	glClearColor(0.3f,0.3f,0.3f,0.0f);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
@@ -191,6 +191,7 @@ void DrawManager::select(int x, int y){
 
 	ElementRenderStateNode& foundNode = m_selectionVisitor.findElementRenderStateNodeOfColor(pixel[0]);
 		foundNode.setSelected(1);
+		foundNode.triggerSelectEvent();
 	cout << "Selected Node ArrayBufferID "<< foundNode.getVertexArrayObjectID() << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	m_selectionVisitor.setCurrentSelectionIndex(100);

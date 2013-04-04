@@ -6,6 +6,7 @@
 
 #include "happah/geometries/BSplineCurve.h"
 #include "happah/scene/GUIStateNode.h"
+#include "happah/scene/LineMeshNode.h"
 #include "happah/scene/PointCloudNode.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGeometryNode.h"
@@ -19,6 +20,7 @@ public:
 	void accept(SceneVisitor& sceneVisitor);
 	void insertChild(BSplineCurveGUIStateNode_ptr curveGUIStateNode);
 	void insertChild(PointCloudNode_ptr pointCloudNode);
+	void insertChild(LineMeshNode_ptr lineMeshNode);
 
 };
 

@@ -1,4 +1,5 @@
 #include "happah/geometries/BSplineCurve.h"
+#include "happah/HappahConstants.h"
 
 #include <iostream>
 
@@ -283,7 +284,29 @@ void BSplineCurve::setPeriodic( bool periodic ) {
 	calculateNormalization();
 }
 
+LineMesh* BSplineCurve::toLineMesh() {
+	hpreal tBegin = 0.0f, tEnd = 0.0f;
+	getParameterRange(tBegin, tEnd);
+	if( tEnd - tBegin > EPSILON ) {
+		std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+		vertexData->resize(400);
+		std::vector<hpuint>* indices = new std::vector<hpuint>;
+		indices->resize(100);
+
+		hpreal stepSize = (tEnd - tBegin) / 99;
+		for( hpuint i = 1; i < 100; i++ ) {
+			(*vertexData)[4*i] = getValueAt(tBegin+(i-1)*stepSize);
+			(*vertexData)[4*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*vertexData)[4*i+2] = getValueAt(tBegin+i*stepSize);
+			(*vertexData)[4*i+3] = hpvec3(1.0f,0.0f,0.0f);
+			(*indices)[i] = i;
+		}
+		return new LineMesh(vertexData, indices);
+	}
+
+	return NULL;
+}
+
 PointCloud* BSplineCurve::toPointCloud() {
 	return new PointCloud(&m_controlPoints);
 }
-

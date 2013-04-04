@@ -16,3 +16,7 @@ void BSplineCurveNode::insertChild(BSplineCurveGUIStateNode_ptr curveGUIStateNod
 void BSplineCurveNode::insertChild(PointCloudNode_ptr pointCloudNode) {
 	Node::insertChild(pointCloudNode);
 }
+
+void BSplineCurveNode::insertChild(LineMeshNode_ptr lineMeshNode) {
+	Node::insertChild(lineMeshNode);
+}

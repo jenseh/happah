@@ -18,8 +18,12 @@ public:
 	void setCurve(BSplineCurve_ptr curve);
 
 private slots:
-	void createCurve();
 	void addPoint();
+	void changePeriodic(int state);
+	void changeUniform(int state);
+	void changeClamped(int state);
+	void changeDegree(int value);
+	void createCurve();
 
 private:
 	GUIManager& m_guiManager;

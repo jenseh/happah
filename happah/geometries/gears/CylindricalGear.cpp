@@ -17,7 +17,7 @@ void CylindricalGear::getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile) 
 	hpvec2 first = toothProfile[0];
 	hpvec2 last = toothProfile[toothSampleSize];
 	int rotDirection = 1;
-	if ((first[0] * last[1] - first[1] * last[0]) < 0)
+	if((first[0] * last[1] - first[1] * last[0]) < 0)
 		rotDirection = -1;
 	for(hpuint i = 0; i < nTeeth; ++i) {
 		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / nTeeth + rotation) * 180.0f / M_PI);
@@ -37,7 +37,7 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSa
 
 	hpreal dz = getFaceWidth() / zSampleSize;
 
-	for (hpuint i = 0; i <= zSampleSize; ++i) {
+	for(hpuint i = 0; i <= zSampleSize; ++i) {
 		getTraverseProfile(i * dz, profile);
 		hpuint pointIndex = 0;
 		for(vector<hpvec2>::iterator j = profile.begin(), end = profile.end(); j != end; ++j) {
@@ -69,13 +69,13 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSa
 
 	// go one step further in width direction to reach all points
 	for(hpuint i = 0; i <= zSampleSize; ++i) {
-		for (hpuint j = 0; j < trianglePairsInRow; ++j) {
+		for(hpuint j = 0; j < trianglePairsInRow; ++j) {
 			//calculate not normalized normals of the 6
 			//surrounding triangles and sum their area
 			//for every point of the gear profile
 			hpvec3 normal = hpvec3(0.0f);
 			int n = i * indicesInRow + j * 6;
-			for (hpuint k = 0; k < 6; ++k) {
+			for(hpuint k = 0; k < 6; ++k) {
 				int da, db; //distances in vertexData array to other two triangle points
 				if(k < 2) {
 					da = 2; db = 1;
@@ -87,10 +87,10 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSa
 
 				//TODO: n ist int und wird mit hpuint verglichen! => static_cast???
 				n += steps[k];
-				if (k == 2 && j == trianglePairsInRow - 1)
+				if(k == 2 && j == trianglePairsInRow - 1)
 					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
-				if (n >= 0 && n < indices->size()) {
+				if(n >= 0 && n < indices->size()) {
 					hpvec3 a = vertexData->at(2 * indices->at(n + da)) - vertexData->at(2 * indices->at(n));
 					hpvec3 b = vertexData->at(2 * indices->at(n + db)) - vertexData->at(2 * indices->at(n));
 					normal = normal + (hpvec3(glm::cross(a, b)));
@@ -99,12 +99,12 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSa
 			// TODO Something is still worng with the normals
 			//cout<<normal.x<<" "<<normal.y<<" "<<normal.z<<endl;
 			n = i * indicesInRow + j * 6;
-			for (hpuint k = 0; k < 6; ++k) {
+			for(hpuint k = 0; k < 6; ++k) {
 				n += steps[k];
-				if (k == 2 && j == trianglePairsInRow - 1)
+				if(k == 2 && j == trianglePairsInRow - 1)
 					n -= indicesInRow;
 				//not every point has 6 surrounding triangles. Use only the ones available:
-				if (n >= 0 && n < indices->size())
+				if(n >= 0 && n < indices->size())
 					vertexData->at(2 * indices->at(n) + 1) = -glm::normalize(normal); //insert the normal in the cell after the vertex
 			}
 		}

@@ -232,7 +232,7 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 	bool rangeFound = false;
 	bool suitableRangeFound = false;
 
-	for (hpuint i = 0; i < steps && !suitableRangeFound; ++i) {
+	for(hpuint i = 0; i < steps && !suitableRangeFound; ++i) {
 		T test = minSize + sampleSize * i;
 		testParameter = test;
 		if (verifyConstraints()) {
@@ -251,7 +251,7 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 			}
 		}
 	}
-	if (min > max) {
+	if(min > max) {
 		min = savedParameter;
 		max = savedParameter;
 	}
@@ -270,7 +270,7 @@ void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {
 
 	hpuint toothSampleSize = toothProfile.size();
 
-	if (!verifyConstraints()) {
+	if(!verifyConstraints()) {
 		return;
 	}
 
@@ -307,7 +307,8 @@ void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {
 
 void InvoluteGear::insertCirclePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
 		const hpreal &sampleAngleSize, const hpreal &radius) {
-	for (hpuint i = start; i < stopBefore; ++i) {
+
+	for(hpuint i = start; i < stopBefore; ++i) {
 		v[i].x = radius * glm::sin(sampleAngleSize * i);
 		v[i].y = radius * glm::cos(sampleAngleSize * i);
 		hpuint j = v.size() - 1 - i; //mirrored side
@@ -315,6 +316,7 @@ void InvoluteGear::insertCirclePoints(vector<hpvec2> &v, const hpuint &start, co
 		v[j].y = radius * glm::cos(sampleAngleSize * j);
 	}
 }
+
 void InvoluteGear::insertFilletPoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
 		const hpreal &sampleAngleSize, const hpreal &touchEvolvAngle) {
 
@@ -326,7 +328,7 @@ void InvoluteGear::insertFilletPoints(vector<hpvec2> &v, const hpuint &start, co
 	hpreal mirrorAngle = getAngularPitch() / 2.0f;
 	hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 
-	for (hpuint i = start; i < stopBefore; ++i) {
+	for(hpuint i = start; i < stopBefore; ++i) {
 		hpvec2 direction;
 		direction.x = glm::sin(i * sampleAngleSize);
 		direction.y = glm::cos(i * sampleAngleSize);
@@ -346,7 +348,7 @@ void InvoluteGear::insertInvolutePoints(vector<hpvec2> &v, const hpuint &start, 
 	hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 	hpreal angleStep = (stopInvAngle - startInvAngle) / (stopBefore - start);
 
-	for (hpuint i = start; i < stopBefore; ++i) {
+	for(hpuint i = start; i < stopBefore; ++i) {
 		v[i] = pointOnRightTurnedInvolute(getShiftAngle(), startInvAngle + (i - start) * angleStep);
 		v[v.size() - 1 - i] = mirrorPoint(v[i], mirrorAxis);
 	}
@@ -359,6 +361,7 @@ hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle
 	point.y = radius * glm::cos(involuteStartAngle + angle) + radius * angle * glm::sin(involuteStartAngle + angle);
 	return point;
 }
+
 TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
 
 	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
@@ -374,7 +377,7 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 		hpreal z = side * getFaceWidth();
 		hpuint startIndex = vertexData->size() / 2;
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
-		if (side == 1)
+		if(side == 1)
 			normal *= -1.0f;
 		for(vector<hpvec2>::iterator it = profile.begin(), end = profile.end(); it != end; ++it) {
 			hpvec2 currentProfilePoint = *it;

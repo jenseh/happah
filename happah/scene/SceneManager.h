@@ -14,11 +14,11 @@ using namespace std;
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/geometries/Worm.h"
-#include "happah/simulations/DiscGearGrind.h"
 #include "happah/scene/DiscGearGrindNode.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SceneListener.h"
 #include "happah/scene/PointCloudNode.h"
+#include "happah/simulations/DiscGearGrind.h"
 
 
 class SceneManager : public Node {
@@ -27,11 +27,12 @@ public:
 	~SceneManager();
 
 	void insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode);
+	void insert(BSplineCurve_ptr curve, LineMesh_ptr LineMesh, hpcolor&color);
 	void insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color);
-    void insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
-    void insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
-    void insert(SurfaceOfRevolution_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
-    void insert(DiscGearGrind_ptr, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode);
+	void insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
+	void insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(SurfaceOfRevolution_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+	void insert(DiscGearGrind_ptr, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);

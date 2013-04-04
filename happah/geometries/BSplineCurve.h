@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+#include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
 
@@ -64,6 +65,7 @@ public:
 	void setUniform( bool uniform );
 
 	PointCloud* toPointCloud();
+	LineMesh* toLineMesh();
 
 
 };

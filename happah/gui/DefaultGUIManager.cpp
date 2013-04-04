@@ -106,12 +106,24 @@ bool DefaultGUIManager::init() {
 }
 
 void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) {
+
+	if( drawMode & HP_LINE_MESH ) {
+		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
+				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
+	}
+
+	if( drawMode & HP_POINT_CLOUD ) {
+		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
+				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
+	}
+/*
 	hpcolor color(0.0, 1.0, 0.0, 1.0);
 	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
 	BSplineCurveGUIStateNode_ptr guiStateNode = BSplineCurveGUIStateNode_ptr(new BSplineCurveGUIStateNode(
 				bSplineCurve, m_toolPanel->getBSplineCurveForm(), toFinalLabel("BSplineCurve") ));
 	m_sceneManager->insert(bSplineCurve, guiStateNode);
+*/
 }
 
 void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
@@ -178,6 +190,7 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 		cerr << "GUI state node not found." << endl;
 		return;
 	}
+	// FIXME : old point cloud needs to be deleted
 	//m_sceneManager->removeContaining(bSplineCurve, guiStateNode->getPointCloud());
 
 	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());

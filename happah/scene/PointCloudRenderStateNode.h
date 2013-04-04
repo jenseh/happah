@@ -7,9 +7,7 @@
 
 using namespace std;
 
-class PointCloudRenderStateNode;
-typedef shared_ptr<PointCloudRenderStateNode> PointCloudRenderStateNode_ptr;
-
+#include "happah/HappahTypes.h"
 #include "happah/scene/RenderStateNode.h"
 #include "happah/scene/PointCloudNode.h"
 
@@ -20,7 +18,7 @@ public:
 	PointCloudRenderStateNode(PointCloud_ptr pointCloud,std::vector<hpcolor>* colorVector);
 	virtual ~PointCloudRenderStateNode();
 	virtual void draw(DrawVisitor& drawVisitor,RigidAffineTransformation& rigidAffineTransformation);
-
+	PointCloudRenderStateNode_ptr getPtr(){return dynamic_pointer_cast<PointCloudRenderStateNode>(shared_from_this());}
 	hpuint getMode();
 private:
 	hpuint m_mode;

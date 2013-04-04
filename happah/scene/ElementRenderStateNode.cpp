@@ -19,7 +19,7 @@ ElementRenderStateNode::~ElementRenderStateNode() {
 }
 
 void ElementRenderStateNode::draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation) {
-	drawVisitor.draw(*this, rigidAffineTransformation);
+	drawVisitor.draw(getPtr(), rigidAffineTransformation);
 }
 
 void ElementRenderStateNode::setIndexBufferID(GLuint id) {

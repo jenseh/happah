@@ -6,7 +6,7 @@
 #include <QGLFormat>
 #include <vector>
 #include <unordered_map>
-
+#include <happah/HappahTypes.h>
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/ElementRenderStateNode.h"
 #include "happah/scene/PointCloudRenderStateNode.h"
@@ -20,8 +20,10 @@ public:
 #include "happah/scene/SceneManager.h"
 
 //typedef unordered_map<hpcolor,ElementRenderStateNode&,hpcolorRedHash,hpcolorEqual> ElementsColorMap;
-typedef unordered_map<int,ElementRenderStateNode&>ElementsColorMap;
+typedef unordered_map<int,ElementRenderStateNode_ptr>ElementsColorMap;
+typedef unordered_map<int,PointCloudRenderStateNode_ptr>PointCloudColorMap;
 typedef ElementsColorMap::value_type ValuePair;
+typedef PointCloudColorMap::value_type PCValuePair;
 
 class DrawManager {
 public:
@@ -40,8 +42,8 @@ private:
 		DefaultDrawVisitor(DrawManager& drawManager);
 		~DefaultDrawVisitor();
 		
-		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		void draw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		void draw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		
 
 	private:
@@ -72,15 +74,17 @@ private:
 		SelectionVisitor(DrawManager& drawManager);
 		~SelectionVisitor();
 
-		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
-		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffinaTransformation);
-		ElementRenderStateNode& findElementRenderStateNodeOfColor(hpcolor color);
+		void draw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
+		void draw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffinaTransformation);
+		ElementRenderStateNode_ptr findElementRenderStateNodeOfColor(hpcolor color);
+		PointCloudRenderStateNode_ptr findPointCloudRenderStateNodeOfColor(hpcolor color);
 		int getCurrentSelectionIndex();
 		void setCurrentSelectionIndex(int index);
 		void clearColorMap();
 	private:
 		DrawManager& m_drawManager;
 		ElementsColorMap m_colorMap;
+		PointCloudColorMap m_pointCloudColorMap;
 		int m_currentSelectionIndex;
 
 	};
@@ -134,12 +138,13 @@ private:
 	GLint m_pointCloudProjectionMatrixLocation;
 	GLint m_pointCloudPointRadiusLocation;
 	GLint m_pointCloudDrawSelectionColors;
+	GLint m_pointCloudSelectionColorLocation;
 	void compileShader(GLuint shader, const char* filePath);
-	void doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
-	void doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
+	void doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
+	void doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
 	bool enableFrameBuffer();
-	void initialize(ElementRenderStateNode& elementRenderStateNode);
-	void initialize(PointCloudRenderStateNode& elementRenderStateNode);
+	void initialize(ElementRenderStateNode_ptr elementRenderStateNode);
+	void initialize(PointCloudRenderStateNode_ptr elementRenderStateNode);
 	bool initShaderPrograms();
 
 };

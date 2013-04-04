@@ -8,6 +8,7 @@ in vec4 camPosition;
 uniform mat4 projectionMatrix;
 uniform float pointRadius;	
 uniform int drawSelectionColors;
+uniform vec4 selectionColor;
 	
 layout (location = 0) out vec4 fragmentColor;
 
@@ -34,6 +35,6 @@ void main(){
 	//gl_FragDepth = (pos.z / pos.w+1.0f) / 2.0f;
 	fragmentColor = gColor * diffuseIntensity;
 	if(drawSelectionColors != 0)
-		fragmentColor = vec4(0.0f,1.0f,0.0f,1.0f);	
+		fragmentColor = selectionColor;	
 
 }

@@ -2,7 +2,8 @@
 #define HP_TYPES_H
 
 #include <glm/glm.hpp>
-
+#include <memory>
+#include <vector>
 typedef glm::mat3x3 hpmat3x3;
 typedef glm::mat4x4 hpmat4x4;
 typedef glm::mediump_float hpreal;
@@ -12,16 +13,9 @@ typedef glm::vec4 hpvec4;
 typedef glm::vec4 hpcolor;
 typedef unsigned int hpuint;
 
-struct hpcolorRedHash{
-	size_t operator()(const hpcolor &color) const{
-		return (size_t)color.r*265;  //TODO : find a proper hash;
-	}
-};
-
-struct hpcolorEqual{
-	bool operator()(hpcolor a, hpcolor b) const{
-		return a == b;
-	}
-};
+class ElementRenderStateNode;
+typedef std::shared_ptr<ElementRenderStateNode> ElementRenderStateNode_ptr;
+class PointCloudRenderStateNode;
+typedef std::shared_ptr<PointCloudRenderStateNode> PointCloudRenderStateNode_ptr;
 
 #endif // HP_TYPES_H

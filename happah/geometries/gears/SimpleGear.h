@@ -21,7 +21,7 @@ public:
 	~SimpleGear();
 
 	BSplineCurve* toTransverseToothProfileSystem(hpreal z);
-	BSplineGearCurve* getBSplineToothProfileInXYPlane() const;
+	BSplineGearCurve* getCopyWithBeginOfToothAtTop() const;
 
 	hpreal getAngularPitch();
 	hpreal getRootRadius();
@@ -36,8 +36,8 @@ public:
 	void setToothProfile(BSplineGearCurve* curve);
 	void setRadius(hpreal radius);
 
-	void getToothSpaceProfile(vector<hpvec2>& profile) const;
-	void getToothProfile(vector<hpvec2>& points);
+	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) const;
+	void getToothProfile(vector<hpvec2>& toothProfile);
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

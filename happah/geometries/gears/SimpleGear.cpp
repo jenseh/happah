@@ -34,22 +34,31 @@ BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z){
 	return gearProfile;
 }
 
-BSplineGearCurve* SimpleGear::getBSplineToothProfileInXYPlane()const {
+//TODO: This method doesn't suit in here! Move it to BSplineGear or somewhere else!!!
+BSplineGearCurve* SimpleGear::getCopyWithBeginOfToothAtTop() const {
+	// We assume, that the given Curve lies only in the XY-Plane,
+	// and we turn it in a way, that the curve starts at the positive y-axis
+	// and turns in the direction to the positiv x-axis.
+	// (Considered a right-hand coordinate system with the z-axis pointing
+	// towards the observer it turns clockwise.)
 	BSplineGearCurve *toothProfileToTop = new BSplineGearCurve();
 	toothProfileToTop->setPeriodic(false);
-	toothProfileToTop->setDegree(2);
+	toothProfileToTop->setDegree(m_toothProfile->getDegree());
 
 	hpvec3 stop = glm::normalize(m_toothProfile->getValueAt(1.0f));
 	hpvec3 start = glm::normalize(m_toothProfile->getValueAt(0.0f));
-	hpvec3 facesTo = glm::normalize(glm::cross(stop, start));
-	hpmat3x3 toothPMatrix = hpmat3x3(glm::normalize(glm::cross(start, facesTo)), start, facesTo);
-	hpmat3x3 goalMatrix = hpmat3x3(hpvec3(1, 0, 0), hpvec3(0, 1, 0), hpvec3(0, 0, 1));
-	hpmat3x3 transformation = goalMatrix * glm::inverse(toothPMatrix);
-
-		for (hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
-			hpvec3 turnedPoint = transformation * m_toothProfile->getControlPoint(i);
-			toothProfileToTop->addControlPoint(turnedPoint);
-		}
+	hpvec2 startX = hpvec2(start.y, -start.x);    //facesTo = [0,0,+1]
+	if(stop.x * start.y - stop.y * start.x < 0) { //facesTo = [0,0,-1]
+		startX = hpvec2(-start.y, start.x);
+	}
+	hpreal c = 1.0f / (start.x * start.x + start.y * start.y);
+	for(hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
+		hpvec3 controlPoint = m_toothProfile->getControlPoint(i);
+		hpvec3 turnedPoint = hpvec3(startX.x * controlPoint.x + start.x * controlPoint.y,
+									startX.y * controlPoint.x + start.y * controlPoint.y,
+									0) * c;
+		toothProfileToTop->addControlPoint(turnedPoint);
+	}
 	return toothProfileToTop;
 }
 
@@ -95,24 +104,25 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	m_toothProfile = curve;
 }
 
-void SimpleGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
-	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
+void SimpleGear::getToothSpaceProfile(vector<hpvec2> &toothSpaceProfile) const {
+	BSplineCurve* splineXY = getCopyWithBeginOfToothAtTop();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
-	hpreal delta = (high - low) / (hpreal)(profile.capacity() - 1); // -1 so whole thooth is sampled
-	for (int i = profile.capacity()/2-1;  i >= 0; i--) {
+	hpreal delta = (high - low) / (hpreal)(toothSpaceProfile.capacity() - 1); // -1 so whole thooth is sampled
+	for (int i = toothSpaceProfile.capacity()/2-1;  i >= 0; i--) {
 		hpvec3 point = splineXY->getValueAt(low + i*delta);
-		profile.push_back(hpvec2(-point.x, point.y));
+		toothSpaceProfile.push_back(hpvec2(-point.x, point.y));
 	}
-	for (uint i = 0; i < profile.capacity()/2; i++) {
+	for (uint i = 0; i < toothSpaceProfile.capacity()/2; i++) {
 		hpvec3 point = splineXY->getValueAt(low + i*delta);
-		profile.push_back(hpvec2(point.x, point.y));
+		toothSpaceProfile.push_back(hpvec2(point.x, point.y));
 	}
+	delete splineXY;
 }
 
 void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 	hpuint toothSampleSize = toothProfile.size();
-	BSplineCurve* splineXY = getBSplineToothProfileInXYPlane();
+	BSplineCurve* splineXY = getCopyWithBeginOfToothAtTop();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSampleSize - 1); // -1 so whole thooth is sampled
@@ -120,5 +130,6 @@ void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 		hpvec3 point = splineXY->getValueAt(low + (hpreal) (i * delta));
 		toothProfile[i] = hpvec2(point.x, point.y);
 	}
+	delete splineXY;
 }
 

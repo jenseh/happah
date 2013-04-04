@@ -7,6 +7,7 @@
 #include <vector>
 #include "happah/scene/Node.h"
 #include "happah/scene/Material.h"
+#include "happah/scene/SelectListener.h"
 
 class RenderStateNode;
 typedef shared_ptr<RenderStateNode> RenderStateNode_ptr;
@@ -29,7 +30,8 @@ public:
 	void 	setColorVector(std::vector<hpcolor>* colorVector);
 	void 	setMaterial(Material& material);
 	void 	setInitialized(bool isInitialized);
-
+	void 	triggerSelectEvent();
+	void 	registerSelectListener(SelectListener* selectListener);
 
 
 	GLuint 					getVertexArrayObjectID();
@@ -61,7 +63,7 @@ private:
 	Material 				m_material;
 	bool 					m_initialized;
 	bool 					m_hasColorVector;
-
+	SelectListener*			m_selectListener;
 };
 
 /*

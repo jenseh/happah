@@ -84,7 +84,9 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
 	if(doSelection){
-		hpcolor color = m_selectionVisitor.getCurrentSelectionColor();
+		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex()/100.0f;
+		cout << "colorIndex: " << colorIndex << endl;
+		hpcolor color = hpvec4(colorIndex,0.0f,0.0f,0.0f);
 		glUniform1i(m_drawSelectionColors,1);
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_isColorPerVertexLocation, 0);
@@ -189,9 +191,10 @@ void DrawManager::select(int x, int y){
 
 	ElementRenderStateNode& foundNode = m_selectionVisitor.findElementRenderStateNodeOfColor(pixel[0]);
 		foundNode.setSelected(1);
-
+	cout << "Selected Node ArrayBufferID "<< foundNode.getVertexArrayObjectID() << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
-	m_selectionVisitor.setCurrentSelectionColor(hpvec4(1.0f,0.0f,0.0f,0.0f));
+	m_selectionVisitor.setCurrentSelectionIndex(100);
+	m_selectionVisitor.clearColorMap();
 }
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
@@ -479,7 +482,7 @@ void DrawManager::DefaultDrawVisitor::draw(PointCloudRenderStateNode& pointCloud
 }
 
 DrawManager::SelectionVisitor::SelectionVisitor(DrawManager& drawManager)
-	: m_drawManager(drawManager),m_currentSelectionColor(hpvec4(1.0f,0.0f,0.0f,0.0f)) {}
+	: m_drawManager(drawManager),m_currentSelectionIndex(100) {}
 
 DrawManager::SelectionVisitor::~SelectionVisitor() {}
 
@@ -487,9 +490,13 @@ void DrawManager::SelectionVisitor::draw(ElementRenderStateNode& elementRenderSt
 	// If no Buffer has been assigned, assign one, and write Data into it
 	if (!elementRenderStateNode.isInitialized())
 		m_drawManager.initialize(elementRenderStateNode);
-	m_currentSelectionColor.r = m_currentSelectionColor.r-(1.0f/256.0f);
-	cout << "selectionColor: " << m_currentSelectionColor.r << endl;
-	m_colorMap.insert(ValuePair(m_currentSelectionColor,elementRenderStateNode));
+	m_currentSelectionIndex = m_currentSelectionIndex-1;
+	if (m_currentSelectionIndex < 0 ){
+		cerr << "To many Objects ";
+		return;
+	}
+	cout << "selectionIndex: " << m_currentSelectionIndex << endl;
+	m_colorMap.insert(ValuePair((int)(m_currentSelectionIndex),elementRenderStateNode));
 	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation,true);
 }
 void DrawManager::SelectionVisitor::draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
@@ -499,27 +506,29 @@ void DrawManager::SelectionVisitor::draw(PointCloudRenderStateNode& pointCloudRe
 }
 
 
-hpcolor DrawManager::SelectionVisitor::getCurrentSelectionColor(){
-	return m_currentSelectionColor;
+int DrawManager::SelectionVisitor::getCurrentSelectionIndex(){
+	return m_currentSelectionIndex;
 }
 
-void DrawManager::SelectionVisitor::setCurrentSelectionColor(hpcolor color){
-	m_currentSelectionColor = color;
+void DrawManager::SelectionVisitor::setCurrentSelectionIndex(int index){
+	m_currentSelectionIndex = index;
 }
 
 ElementRenderStateNode& DrawManager::SelectionVisitor::findElementRenderStateNodeOfColor(hpcolor color){
 	ElementsColorMap::const_iterator iter = m_colorMap.begin();
-	while(iter != m_colorMap.end()) {
-		if (color.r> (*iter).first.r-0.0009f && color.r < (*iter).first.r+0.0009f)
-		{
-			cout<< "Gefunden: " << (*iter).first.r<< endl;
-			return (*iter).second;
-		}
-		iter++;
+	int index = (int)(color.r*100+0.5f);
+	cout << "Clicked Index: " << index << endl;
+	   iter = m_colorMap.find(index);
+	if(iter != m_colorMap.end()){
+       cout << "Gefunden !"  << endl;
+       return (*iter).second;
 	}
-      cout << "Nicht gefunden!" << endl;
+    else
+       cout << "Nicht gefunden!" << endl;
 
-
+}
+void DrawManager::SelectionVisitor::clearColorMap(){
+	m_colorMap.clear();
 }
 
 

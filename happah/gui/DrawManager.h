@@ -19,7 +19,8 @@ public:
 
 #include "happah/scene/SceneManager.h"
 
-typedef unordered_map<hpcolor,ElementRenderStateNode&,hpcolorRedHash,hpcolorEqual> ElementsColorMap;
+//typedef unordered_map<hpcolor,ElementRenderStateNode&,hpcolorRedHash,hpcolorEqual> ElementsColorMap;
+typedef unordered_map<int,ElementRenderStateNode&>ElementsColorMap;
 typedef ElementsColorMap::value_type ValuePair;
 
 class DrawManager {
@@ -74,12 +75,13 @@ private:
 		void draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation);
 		void draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffinaTransformation);
 		ElementRenderStateNode& findElementRenderStateNodeOfColor(hpcolor color);
-		hpcolor getCurrentSelectionColor();
-		void setCurrentSelectionColor(hpcolor color);
+		int getCurrentSelectionIndex();
+		void setCurrentSelectionIndex(int index);
+		void clearColorMap();
 	private:
 		DrawManager& m_drawManager;
 		ElementsColorMap m_colorMap;
-		hpcolor m_currentSelectionColor;
+		int m_currentSelectionIndex;
 
 	};
 

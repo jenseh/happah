@@ -16,7 +16,7 @@
 
 class Worm : public Geometry {
 public:
-  Worm(hpuint toothCount = 16,
+  Worm(hpuint toothCount = 4,
       hpreal module = 0.02 * M_PI,
       hpreal pressureAngle = 20.0 / 360.0 * 2.0 * M_PI,
       hpuint rotations = 1);
@@ -28,10 +28,12 @@ public:
   hpreal getToothCount();
   hpreal getModule();
   hpreal getPressureAngle();
+  hpreal getRotations();
 
   void setToothCount(hpreal toothCount);
   void setModule(hpreal module);
   void setPressureAngle(hpreal pressureAngle);
+  void setRotations(hpreal rotations);
 
   TriangleMesh* toTriangleMesh();
   ZCircleCloud* toZCircleCloud();

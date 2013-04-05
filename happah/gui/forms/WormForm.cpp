@@ -10,6 +10,7 @@ WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 		m_moduleSlider(new Slider(tr("module"))),
 		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
 		m_toothCountSlider(new Slider(tr("tooth count"))),
+		m_rotationsSlider(new Slider(tr("rotations"))),
 		m_wormInserted(false) {
 	QPushButton* createButton = new QPushButton("create worm");
 
@@ -17,6 +18,7 @@ WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 	layout->addWidget(m_toothCountSlider);
 	layout->addWidget(m_moduleSlider);
 	layout->addWidget(m_pressureAngleSlider);
+	layout->addWidget(m_rotationsSlider);
 	layout->addWidget(createButton);
 	setLayout(layout);
 
@@ -24,6 +26,7 @@ WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 	connect(m_toothCountSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeToothCount(hpreal)));
 	connect(m_moduleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
 	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
+	connect(m_rotationsSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeRotations(hpreal)));
 
 	m_worm = Worm_ptr(new Worm());
 	updateRanges();
@@ -33,6 +36,7 @@ WormForm::~WormForm() {
 	delete m_toothCountSlider;
 	delete m_moduleSlider;
 	delete m_pressureAngleSlider;
+	delete m_rotationsSlider;
 }
 
 void WormForm::changeToothCount(hpreal toothCount) {
@@ -49,6 +53,12 @@ void WormForm::changeModule(hpreal module) {
 
 void WormForm::changePressureAngle(hpreal pressureAngle) {
 	m_worm->setPressureAngle(pressureAngle);
+	updateRanges();
+	updateWorm();
+}
+
+void WormForm::changeRotations(hpreal rotations) {
+	m_worm->setRotations(rotations);
 	updateRanges();
 	updateWorm();
 }
@@ -88,8 +98,10 @@ void WormForm::updateRanges() {
 	hpreal toothCount = (hpreal) m_worm->getToothCount();
 	hpreal module = m_worm->getModule();
 	hpreal pressureAngle = m_worm->getPressureAngle();
+	hpreal rotations = m_worm->getRotations();
 
 	m_toothCountSlider->setSliderValues((hpreal) m_worm->getToothCount(), 1, 100);
-	m_moduleSlider->setSliderValues(m_worm->getModule(), 0.001 * M_PI, 20.0 * M_PI);
+	m_moduleSlider->setSliderValues(m_worm->getModule(), 0.002 * M_PI, 0.1 * M_PI);
 	m_pressureAngleSlider->setSliderValues(m_worm->getPressureAngle(), 10.0 / 360.0 * 2.0 * M_PI, 90.0 / 360.0 * 2.0 * M_PI);
+	m_rotationsSlider->setSliderValues(m_worm->getRotations(), 0.0, 20.0);
 }

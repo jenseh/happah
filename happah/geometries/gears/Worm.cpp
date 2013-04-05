@@ -37,8 +37,8 @@ std::vector<hpvec3>* Worm::createVertexData() {
 //          hpreal pointRatio     = (hpreal) posZIdx       / m_pointsPerTooth;
           hpreal nextPointRatio = (hpreal) (posZIdx + 1) / m_pointsPerTooth;
           
-          hpuint angleOffset     = angleRatio     * m_pointsPerTooth;
-          hpuint nextAngleOffset = nextAngleRatio * m_pointsPerTooth;
+          hpuint angleOffset     = angleRatio     * m_pointsPerTooth * m_rotations;
+          hpuint nextAngleOffset = nextAngleRatio * m_pointsPerTooth * m_rotations;
         
           hpvec2 profilePointRZ = profileTooth.at((posZIdx + angleOffset) % m_pointsPerTooth);
           hpvec2 profilePointRN = profileTooth.at((posZIdx + angleOffset + 1) % m_pointsPerTooth);
@@ -103,6 +103,10 @@ hpreal Worm::getPressureAngle() {
 	return m_pressureAngle;
 }
 
+hpreal Worm::getRotations() {
+	return m_rotations;
+}
+
 void Worm::setToothCount(hpreal toothCount) {
 	m_toothCount = toothCount;
 	updateValues();
@@ -113,6 +117,11 @@ void Worm::setModule(hpreal module) {
 }
 void Worm::setPressureAngle(hpreal pressureAngle) {
 	m_pressureAngle = pressureAngle;
+	updateValues();
+}
+
+void Worm::setRotations(hpreal rotations) {
+	m_rotations = rotations;
 	updateValues();
 }
 

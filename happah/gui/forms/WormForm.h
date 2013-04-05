@@ -21,6 +21,7 @@ private:
 	Slider* m_moduleSlider;
 	Slider* m_pressureAngleSlider;
 	Slider* m_toothCountSlider;
+	Slider* m_rotationsSlider;
 	Worm_ptr m_worm;
 	bool m_wormInserted;
 
@@ -31,6 +32,7 @@ private slots:
 	void changeModule(hpreal);
 	void changePressureAngle(hpreal);
 	void changeToothCount(hpreal); //TODO: Change to hpuint
+	void changeRotations(hpreal);
 	void createWorm();
 
 };

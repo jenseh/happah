@@ -119,7 +119,7 @@ hpvec3 inline WormGearGrind::transformVector(hpvec3& vector, hpmat4x4& transform
   return hpvec3(result.x, result.y, result.z); //TODO: does this make sense?
 }
 hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformation) {
-  hpvec4 result = transformation * hpvec4(point.x, point.y, point.z, 1.0f);
+  hpvec4 result = transformation * hpvec4(point.x, point.y, point.z, 1.0);
   return hpvec3(result.x, result.y, result.z); //TODO: does this make sense?
 }
 

@@ -5,7 +5,7 @@
 
 #include "happah/HappahTypes.h"
 #include "happah/geometries/gears/InvoluteGear.h"
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/math/Circle.h"
@@ -41,7 +41,7 @@ private:
   hpmat4x4 m_wormModelMatrix;
   hpmat4x4 m_gearModelMatrix;
 
-  constexpr static hpreal MAX_DIST = 1.0f;
+  constexpr static hpreal MAX_DIST = 1.0;
 };
 
 #endif // WORMGEARGRIND_H

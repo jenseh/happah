@@ -27,7 +27,7 @@ HEADERS += \
 	happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/gears/Worm.h \
-#	happah/geometries/ZCircleCloud.h \
+	happah/geometries/ZCircleCloud.h \
 \
 	happah/geometries/gears/BSplineGearCurve.h \
 	happah/geometries/gears/CylindricalGear.h \
@@ -104,9 +104,11 @@ HEADERS += \
 	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
 	happah/simulations/Simulation.h \
-#	happah/simulations/WormGearGrind.h \
+	happah/simulations/WormGearGrind.h \
 \
 	happah/transformations/RigidAffineTransformation.h \
+\	
+	happah-test/simulations/WormGearGrindTest.h
 
 
 #KEEP SOURCES SORTED!!!
@@ -131,7 +133,7 @@ SOURCES += \
 	happah/geometries/SurfaceOfRevolution.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/gears/Worm.cpp \
-#	happah/geometries/ZCircleCloud.cpp \
+	happah/geometries/ZCircleCloud.cpp \
 \
 	happah/geometries/gears/BSplineGearCurve.cpp \
 	happah/geometries/gears/CylindricalGear.cpp \
@@ -199,10 +201,12 @@ SOURCES += \
 	happah/simulations/DiscGearGrind.cpp \
 	happah/simulations/Kinematic.cpp \
 	happah/simulations/Simulation.cpp \
-#	happah/simulations/WormGearGrind.cpp \
+	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
-
+\	
+	happah-test/simulations/WormGearGrindTest.cpp
+	
 FORMS += 
 RESOURCES += 
 

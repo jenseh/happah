@@ -85,7 +85,10 @@ private:
 		PointCloudRenderStateNode_ptr getCurrentSelectedPointCloudRenderStateNode();
 		void setCurrentSelectedPointCloudRenderStateNode(PointCloudRenderStateNode_ptr pointCloudRenderStateNode);
 		void clearColorMap();
+		vector<hpcolor>* getPointSelectionColors();
+		int findPointIndexFromColor(hpcolor color);
 	private:
+		vector<hpcolor>* m_pointSelectionColors;
 		DrawManager& m_drawManager;
 		ElementsColorMap m_colorMap;
 		PointCloudColorMap m_pointCloudColorMap;
@@ -140,6 +143,7 @@ private:
 
 	GLint m_pointCloudVertexLocation;
 	GLint m_pointCloudColorLocation;
+	GLint m_pointCloudSinglePointSelectionColorLocation;
 	GLint m_pointCloudModelViewMatrixLocation;
 	GLint m_pointCloudProjectionMatrixLocation;
 	GLint m_pointCloudPointRadiusLocation;

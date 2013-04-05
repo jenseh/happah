@@ -39,10 +39,12 @@ vector<Triangle>* TriangleMesh::toTriangles(){
 
 	vector<Triangle>* result = new vector<Triangle>();
 	result->reserve(indices->size() / 3);
-	for( size_t i = 0; i < indices->size() / 3; i+=3){
-		result->push_back( Triangle(vertexData->at(2 * indices->at(i)),
-									vertexData->at(2 * indices->at(i+1)),
-									vertexData->at(2 * indices->at(i+2))));
+	for(size_t i = 0; i < indices->size(); i += 3){
+		Triangle t = Triangle(vertexData->at(2 * indices->at(i)),
+							  vertexData->at(2 * indices->at(i+1)),
+							  vertexData->at(2 * indices->at(i+2)));
+
+		result->push_back(t);
 	}
 	return result;
 }

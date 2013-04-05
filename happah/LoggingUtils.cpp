@@ -12,6 +12,10 @@ void LoggingUtils::printVal(const char* name, hpreal& value) {
   cout << name << ": " << value << std::endl;
 }
 
+void LoggingUtils::printVal(const char* name, bool& value) {
+  cout << name << ": " << value << std::endl;
+}
+
 void LoggingUtils::printVec(const char* name, glm::vec2& vector) {
   cout << name << ": ";
   printVec(vector);

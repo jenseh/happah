@@ -89,6 +89,10 @@ hpreal StandardProfile::getHeight(hpreal x) const {
 		return -m_module - m_bottomClearance;
 }
 
+hpreal StandardProfile::getMaxHeight() const {
+	return m_module;
+}
+
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition) {
     int numberSamples = partition.capacity();
 	for (int i = 0; i < numberSamples; i++) {

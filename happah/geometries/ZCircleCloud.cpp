@@ -1,25 +1,11 @@
 #include "happah/geometries/ZCircleCloud.h"
 
-ZCircleCloud::ZCircleCloud(std::vector<hpvec2>* points, std::vector<hpreal>* posZ, hpuint resolutionXY, hpuint resolutionZ, hpvec3& referenceDir)
-  : m_points(points), m_posZ(posZ), m_resolutionXY(resolutionXY), m_resolutionZ(resolutionZ), m_referenceDir(referenceDir) {
-  m_modelMatrix = hpmat4x4(); //TODO: check whether this is the identity matrix
-}
-
-
-hpuint ZCircleCloud::getResolutionXY() {
-  return m_resolutionXY;
+ZCircleCloud::ZCircleCloud(hpreal maxRadius, hpreal startZ, hpreal endZ, hpuint resolutionZ, hpvec3& referenceDir)
+  : m_maxRadius(maxRadius), m_startZ(startZ), m_endZ(endZ), m_resolutionZ(resolutionZ), m_referenceDir(referenceDir) {
 }
 
 hpuint ZCircleCloud::getResolutionZ() {
   return m_resolutionZ;
-}
-
-hpmat4x4* ZCircleCloud::getModelMatrix() {
-    return &m_modelMatrix;
-}
-
-void ZCircleCloud::setModelMatrix(hpmat4x4& modelMatrix) {
-    m_modelMatrix = modelMatrix;
 }
 
 hpvec3& ZCircleCloud::getReferenceDir() {
@@ -47,16 +33,11 @@ std::vector<hpvec3*>* ZCircleCloud::getClosestPoints(hpvec3 hitPoint) {
 //                m_points->at(radiusIdx).radius);
 //}
 
-hpvec3 ZCircleCloud::getPoint(hpuint posXYIdx, hpuint posZIdx) {
-  hpvec2 point2D = m_points->at(posXYIdx);
-  return hpvec3(point2D.x, point2D.y, m_posZ->at(posZIdx));
-}
-
 Circle ZCircleCloud::computeOuterCircle(hpuint posZIdx) {
-  hpvec3 center = hpvec3(0.0f, 0.0f, m_posZ->at(posZIdx));
-  hpvec3 point = getPoint(m_resolutionXY - 1, posZIdx);
+  hpreal posZ = m_startZ + posZIdx * (m_endZ - m_startZ) / m_resolutionZ;
+  hpvec3 center = hpvec3(0.0, 0.0, posZ);
 
   return Circle(center,
                 hpvec3(0.0, 0.0, 1.0),
-                2.0);//glm::distance(point, center)
+                m_maxRadius);
 }

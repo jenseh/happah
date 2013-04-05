@@ -2,7 +2,7 @@
 
 WormGearGrind::WormGearGrind(Worm& worm, InvoluteGear& gear, RigidAffineTransformation& wormTransformation, RigidAffineTransformation& gearTransformation) {
     m_worm = worm.toZCircleCloud();
-    m_gear = gear.toTriangleMesh();
+    m_gearMesh = gear.toTriangleMesh();
 
     m_wormModelMatrix = wormTransformation.toMatrix4x4();
     m_gearModelMatrix = gearTransformation.toMatrix4x4();
@@ -13,25 +13,31 @@ WormGearGrind::~WormGearGrind() {}
 
 void WormGearGrind::calculateGrindingDepth(){
    std::cout << "Starting simulation:" << std::endl;
-   std::vector<Triangle>* triangles = m_gear->toTriangles();
 
-//   for (int i = 0; i < triangles->size(); i++) {
-//         Triangle* triangle = triangles->at(i);
-//         std::cout << "EtriangleA: " << triangle->vertices[0].x << ", " << triangle->vertices[0].y << ", " << triangle->vertices[0].z << std::endl;
-//         std::cout << "EtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
-//         std::cout << "EtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
+//   for (hpuint i = 0; i < m_gearMesh->getIndices()->size(); i++) {
+//	   hpuint index = m_gearMesh->getIndices()->at(i);
+//	   LoggingUtils::printVec("Vertex", m_gearMesh->getVertexData()->at(index));
+//   }
+
+   std::vector<Triangle>* triangles = m_gearMesh->toTriangles();
+
+//   for (hpuint i = 0; i < triangles->size(); i++) {
+//         Triangle triangle = triangles->at(i);
+//         LoggingUtils::printVec("EtriangleA", triangle.vertices[0]);
+//         LoggingUtils::printVec("EtriangleB", triangle.vertices[1]);
+//         LoggingUtils::printVec("EtriangleC", triangle.vertices[2]);
 //   }
    KDTree tree = KDTree(triangles);
    size_t resolutionZ = m_worm->getResolutionZ();
 
-   size_t resultAngleSlotCount = 100;
-   CircularSimulationResult simResult = CircularSimulationResult(resultAngleSlotCount, resolutionZ);
+
+   CircularSimulationResult simResult = CircularSimulationResult(m_resultAngleSlotCount, resolutionZ);
 
    clock_t start, end;
 //   clock_t startZ, endZ;
 
    start = clock();
-   // Compute the distance for between every circle and triangle
+   // Compute the distance between every circle and triangle
    // TODO: Optimize this using spatial data structures
    for (size_t z = 0; z < resolutionZ; z++) {
 //       startZ = clock();
@@ -51,21 +57,17 @@ void WormGearGrind::calculateGrindingDepth(){
            simResult.addItem(hitResult->hitPointB, z);
 
           //TODO: Implement this function
-//           std::vector<hpvec3*>* closestPoints = m_worm->getClosestPoints(hitResult->hitPoint);
-//           std::cout << "CP size: " << closestPoints->size() << std::endl;
+           std::vector<hpvec3*>* closestPoints = m_worm->getClosestPoints(hitResult->hitPointA);
+           std::cout << "CP size: " << closestPoints->size() << std::endl;
 
-//           std::vector<hpvec3*>::iterator posCP = closestPoints->begin();
-//           std::vector<hpvec3*>::iterator endCP = closestPoints->end();
-//           for (; posCP != endCP; posCP++) {
-//              hpvec3* closestPoint = *posCP;
-//              std::cout << "HitPoint: " << hitResult->hitPoint.x << ", " << hitResult->hitPoint.y << " : " << hitResult->hitPoint.z << std::endl;
-//              std::cout << "   ClosestPoint: " << closestPoint->x << ", " << closestPoint->y << " : " << closestPoint->z << std::endl;
-//           }
-
-
-
-
-//           delete closestPoints;
+           std::vector<hpvec3*>::iterator posCP = closestPoints->begin();
+           std::vector<hpvec3*>::iterator endCP = closestPoints->end();
+           for (; posCP != endCP; posCP++) {
+              hpvec3* closestPoint = *posCP;
+              std::cout << "HitPoint: " << hitResult->hitPointA.x << ", " << hitResult->hitPointA.y << " : " << hitResult->hitPointA.z << std::endl;
+              std::cout << "   ClosestPoint: " << closestPoint->x << ", " << closestPoint->y << " : " << closestPoint->z << std::endl;
+           }
+           delete closestPoints;
        }
 
        // Check whether
@@ -91,10 +93,10 @@ void WormGearGrind::calculateGrindingDepth(){
 
    // Print out results
    for (size_t z = 0; z < resolutionZ; z++) {
-     for (size_t angleSlot = 0; angleSlot < resultAngleSlotCount; angleSlot++) {
+     for (size_t angleSlot = 0; angleSlot < m_resultAngleSlotCount; angleSlot++) {
          float radius = simResult.getItem(angleSlot, z);
          if (radius != INFINITY) {
-          std::cout << "angleSlot: " << angleSlot << ", posZ: " << z << ", radius: " << radius << std::endl;
+         	std::cout << "angleSlot: " << angleSlot << ", posZ: " << z << ", radius: " << radius << std::endl;
          }
      }
    }
@@ -102,7 +104,7 @@ void WormGearGrind::calculateGrindingDepth(){
 
 
    end = clock();
-   std::cout << "Time required for execution: " << (double)(end-start) / CLOCKS_PER_SEC << " seconds." << std::endl << std::endl;
+   std::cout << "Time required for execution: " << (hpreal) (end-start) / CLOCKS_PER_SEC << " seconds." << std::endl << std::endl;
    return;
 }
 

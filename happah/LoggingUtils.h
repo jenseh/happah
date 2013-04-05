@@ -19,6 +19,7 @@ public:
 
 	static void printVal(const char* name, hpuint& value);
 	static void printVal(const char* name, hpreal& value);
+	static void printVal(const char* name, bool& value);
 
 	static void printVec(const char* name, glm::vec2& vector);
 	static void printVec(const char* name, glm::vec3& vector);

@@ -1,4 +1,5 @@
 #include "KDTreeInnerNode.h"
+#include "happah/LoggingUtils.h"
 
 template <class T>
 class TriangleSorter {
@@ -77,8 +78,7 @@ KDTreeInnerNode::~KDTreeInnerNode(){
 	delete m_rightChild;
 }
 
-bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, int depth) {
-
+bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth) {
   if (intersectorBox.intersects(m_bBox)) {
 
       // Continue with respective child node
@@ -87,6 +87,9 @@ bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResul
 
       intersectA = m_leftChild->intersectAll(intersector, hitResults, intersectorBox, depth + 1);
       intersectB = m_rightChild->intersectAll(intersector, hitResults, intersectorBox, depth + 1);
+
+      LoggingUtils::printVal("intersectA", intersectA);
+      LoggingUtils::printVal("intersectB", intersectB);
 
       return (intersectA || intersectB);
     } else {

@@ -36,11 +36,12 @@ public:
 
 private:
   ZCircleCloud* m_worm;
-  TriangleMesh* m_gear;
+  TriangleMesh* m_gearMesh;
 
   hpmat4x4 m_wormModelMatrix;
   hpmat4x4 m_gearModelMatrix;
 
+  constexpr static size_t m_resultAngleSlotCount = 100;
   constexpr static hpreal MAX_DIST = 1.0;
 };
 

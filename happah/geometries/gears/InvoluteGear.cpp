@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "happah/LoggingUtils.h"
+
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 InvoluteGear::InvoluteGear(hpuint nTeeth, hpreal module, hpreal faceWidth, hpreal pressureAngle,
 					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : CylindricalGear(),

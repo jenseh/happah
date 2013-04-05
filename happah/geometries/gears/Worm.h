@@ -44,6 +44,10 @@ private:
   
   hpreal m_radius;
 
+  // TODO: Where should resolution attributes go?
+  constexpr static hpuint m_angleResolution = 200;
+  constexpr static hpuint m_pointsPerTooth = 200;
+
   StandardProfile* m_standardProfile;
 
   void updateValues();

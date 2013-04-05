@@ -6,7 +6,7 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	  m_guiManager(guiManager),
 	  m_simulationInserted(false) {
 
-	m_simulationTimer = new SimulationTimer(m_guiManager,0.0f, 1.0f, 100, 50);
+	m_simulationTimer = new SimulationTimer(m_guiManager, 0.0f, 1.0, 100, 50);
 
 	QPushButton* createButton = new QPushButton("create simulation");
 	QVBoxLayout* layout = new QVBoxLayout();

@@ -9,28 +9,21 @@
 class ZCircleCloud
 {
 public:
-  ZCircleCloud(std::vector<hpvec2>* points, std::vector<hpreal>* posZ, hpuint resolutionXY, hpuint resolutionZ, hpvec3& referenceDir);
+  ZCircleCloud(hpreal maxRadius, hpreal startZ, hpreal endZ, hpuint resolutionZ, hpvec3& referenceDir);
 
-  hpuint getResolutionXY();
   hpuint getResolutionZ();
-  hpmat4x4* getModelMatrix();
-  void setModelMatrix(hpmat4x4& modelMatrix);
   hpvec3& getReferenceDir();
   std::vector<hpvec3*>* getClosestPoints(hpvec3 hitPoint);
 
-  hpvec3 getPoint(hpuint posXYIdx, hpuint posZIdx);
 //  Circle computeCircle(hpuint posZIdx, hpuint radiusIdx);
   Circle computeOuterCircle(hpuint posZIdx);
 
 private:
-  std::vector<hpvec2>* m_points;
-  std::vector<hpreal>* m_posZ;
-
-  hpvec3& m_referenceDir;
-
-  hpuint m_resolutionXY;
+  hpreal m_maxRadius;
+  hpreal m_startZ;
+  hpreal m_endZ;
   hpuint m_resolutionZ;
 
-  hpmat4x4 m_modelMatrix;
+  hpvec3& m_referenceDir;
 };
 #endif // ZCIRCLECLOUD_H

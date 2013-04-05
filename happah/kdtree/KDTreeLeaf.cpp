@@ -10,7 +10,7 @@ KDTreeLeaf::~KDTreeLeaf(){
 }
 
 
-bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox* intersectorBox, int depth) {
+bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth) {
 		// Leaf node
       std::vector<Triangle>::iterator pos = m_triangles->begin();
       std::vector<Triangle>::iterator end = m_triangles->end();
@@ -30,5 +30,9 @@ hpreal KDTreeLeaf::intersectFirst(Ray& intersector, hpreal maxLength){
 		maxLength = std::min(maxLength, intersector.intersectDistance(*pos));
 	}
 	return maxLength;
+}
+
+hpuint KDTreeLeaf::countTriangles() {
+	return m_triangles->size();
 }
 

@@ -178,7 +178,7 @@ private:
 };
 
 
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/gui/forms/WormForm.h"
 
 class WormGUIStateNode : public GUIStateNode {

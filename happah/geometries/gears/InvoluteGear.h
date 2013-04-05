@@ -35,11 +35,11 @@ class InvoluteGear : public CylindricalGear {
 public:
 	InvoluteGear(hpuint nTeeth = 15,
 			hpreal module = 0.13,
-			hpreal faceWidth = 0.2f,
-			hpreal pressureAngle = M_PI / 6.0f,
-			hpreal bottomClearance = 0.0002f,
-			hpreal filletRadius = 0.0f,
-			hpreal helixAngle = 0.0f);
+			hpreal faceWidth = 0.2,
+			hpreal pressureAngle = M_PI / 6.0,
+			hpreal bottomClearance = 0.0002,
+			hpreal filletRadius = 0.0,
+			hpreal helixAngle = 0.0);
 
 	InvoluteGear(const InvoluteGear& other);
 

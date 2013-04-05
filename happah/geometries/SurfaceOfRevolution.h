@@ -4,14 +4,12 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <math.h>
-#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/gears/StandardProfile.h"
 #include "happah/geometries/Geometry.h"
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "glm/gtx/rotate_vector.hpp"
-
-using namespace std;
 
 
 class SurfaceOfRevolution : public Geometry {

@@ -15,6 +15,7 @@ public:
 			hpreal bottomClearance);                     // bottomClearance = Kopfspiel
 
 	hpreal getHeight(hpreal x) const;
+	hpreal getMaxHeight() const;
 
     void getProfilePartition(std::vector<glm::vec2>& partition);
 

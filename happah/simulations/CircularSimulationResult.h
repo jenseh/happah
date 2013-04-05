@@ -1,7 +1,7 @@
 #ifndef CIRCULARSIMULATIONRESULT_H
 #define CIRCULARSIMULATIONRESULT_H
 
-#include <ext/hash_map>
+#include <ext/hash_map> //TODO:replace by newer version
 #include <glm/glm.hpp>
 #include <math.h>
 

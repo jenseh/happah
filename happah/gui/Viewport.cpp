@@ -119,7 +119,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
 	Ray ray(getMouseRay());
 	m_viewportListener.handleMouseClickEvent(ray);
-	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
+
 }
 
 void Viewport::wheelEvent(QWheelEvent *event) {
@@ -135,19 +135,8 @@ void Viewport::wheelEvent(QWheelEvent *event) {
 
 //TODO: Adapt to new achitecture
 void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
-	/*float x = (float) event->pos().x();
-	float y = (float) event->pos().y();
-	float width = (float) this->width();
-	float height = (float) this->height();
-
-	// Create 2World Matrix
-	QMatrix4x4 VP = m_projectionMatrix * m_viewMatrix;
-	float VPFloats[16];
-	const qreal* VPQreals = VP.constData();
-	glm::mat4 toWorld = glm::make_mat4(VPFloats);
-	Picker* picker = new Picker();
-	bool hit = picker->select(x, y, width, height, &toWorld, m_sceneManager);*/
-
+	m_mousePos = event->pos();
+	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
 }
 
 void Viewport::keyPressEvent(QKeyEvent* event) {}

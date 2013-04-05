@@ -21,3 +21,7 @@ bool KDTree::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitR
 hpreal KDTree::intersectFirst(Ray& intersector, hpreal maxLength){
 	return m_root->intersectFirst(intersector, maxLength);
 }
+
+hpuint KDTree::countTriangles() {
+	return m_root->countTriangles();
+}

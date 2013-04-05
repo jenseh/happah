@@ -4,36 +4,41 @@ LoggingUtils::LoggingUtils()
 {
 }
 
-void LoggingUtils::printVal(const char* name, hpuint& value) {
+void LoggingUtils::printVal(const char* name, hpuint value) {
   cout << name << ": " << value << std::endl;
 }
 
-void LoggingUtils::printVal(const char* name, hpreal& value) {
+void LoggingUtils::printVal(const char* name, hpreal value) {
   cout << name << ": " << value << std::endl;
 }
 
-void LoggingUtils::printVec(const char* name, glm::vec2& vector) {
+void LoggingUtils::printVal(const char* name, bool& value) {
+  cout << name << ": " << value << std::endl;
+}
+
+
+void LoggingUtils::printVec(const char* name, hpvec2& vector) {
   cout << name << ": ";
   printVec(vector);
 }
 
-void LoggingUtils::printVec(const char* name, glm::vec3& vector) {
+void LoggingUtils::printVec(const char* name, hpvec3& vector) {
   cout << name << ": ";
   printVec(vector);
 }
 
-void LoggingUtils::printVec(const char* name, glm::vec4& vector) {
+void LoggingUtils::printVec(const char* name, hpvec4& vector) {
   cout << name << ": ";
   printVec(vector);
 }
 
-void LoggingUtils::printVec(glm::vec2& vector) {
+void LoggingUtils::printVec(hpvec2& vector) {
   cout << "[" << vector.x << ", " << vector.y << "]" << std::endl;
 }
-void LoggingUtils::printVec(glm::vec3& vector) {
+void LoggingUtils::printVec(hpvec3& vector) {
   cout << "[" << vector.x << ", " << vector.y << ", " << vector.z << "]" <<  std::endl;
 }
-void LoggingUtils::printVec(glm::vec4& vector) {
+void LoggingUtils::printVec(hpvec4& vector) {
   cout << "[" << vector.x << ", " << vector.y << ", " << vector.z << ", " << vector.w << "]" << std::endl;
 }
 

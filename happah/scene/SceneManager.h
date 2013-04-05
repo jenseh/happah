@@ -35,6 +35,7 @@ public:
 	void insert(DiscGearGrind_ptr, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNode_ptr involuteGearGUIStateNode);
 	void insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(Plane_ptr plane);
 	void insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
@@ -58,6 +59,8 @@ public:
 private:
 	list<SceneListener*> m_listeners;
 
+	template<class G, class N>
+	void doInsert(shared_ptr<G> geometry);
 	template<class G, class N, class S> 
 	void doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode);
 	template<class G, class N>

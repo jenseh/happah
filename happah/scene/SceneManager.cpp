@@ -18,6 +18,15 @@ SceneManager::SceneManager() {}
 
 SceneManager::~SceneManager() {}
 
+template<class G, class N>
+void SceneManager::doInsert(shared_ptr<G> geometry) {
+	Node_ptr node = findChildContainingData(geometry);
+	if(!node){
+		shared_ptr<N> geometryNode = shared_ptr<N>(new N(geometry));
+		insertChild( geometryNode );
+	}
+}
+
 template<class G, class N, class S>
 void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 	Node_ptr node = findChildContainingData(data);
@@ -338,6 +347,10 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 	doInsert<InvoluteGear, InvoluteGearNode>(involuteGear, triangleMesh, color);
 }
 
+void SceneManager::insert(Plane_ptr plane) {
+	doInsert<Plane, PlaneNode>(plane);
+}
+
 void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode) {
 	doInsert<Plane, PlaneNode, PlaneGUIStateNode>(plane, planeGUIStateNode);
 }
@@ -350,8 +363,8 @@ void SceneManager::insert(Plane_ptr plane, LineMesh_ptr lineMesh, hpcolor& color
 	doInsert<Plane, PlaneNode>(plane, lineMesh, color);
 }
 
-void SceneManager::insert(Plane_ptr plane,PointCloud_ptr pointCloud,hpcolor& color){
-	doInsert<Plane,PlaneNode>(plane,pointCloud, color);
+void SceneManager::insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color){
+	doInsert<Plane,PlaneNode>(plane, pointCloud, color);
 }
 
 void SceneManager::insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode) {

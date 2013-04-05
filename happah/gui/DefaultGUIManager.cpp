@@ -96,12 +96,31 @@ void DefaultGUIManager::generateDisc(CylindricalGear_ptr cylindricalGear) {
 	insert(disc, HP_TRIANGLE_MESH);
 }
 
+Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve_ptr bSplineCurve ) {
+	Node_ptr parent = m_sceneManager->findContainingData(bSplineCurve)->getParent();
+	
+	PlaneNode_ptr planeNode = dynamic_pointer_cast<PlaneNode>(parent);
+	if( planeNode ) {
+		Plane_ptr plane = static_pointer_cast<Plane>(planeNode->getGeometry());
+		return plane;
+	}
+
+	return Plane_ptr();
+}
+
+const SceneManager_ptr DefaultGUIManager::getSceneManager() {
+	return m_sceneManager;
+}
+
 bool DefaultGUIManager::init() {
 	if (!m_drawManager.init()) {
 		fprintf(stderr, "Draw manager initialization failed.\n");
 		return false;
 	}
 	m_mainWindow.show();
+
+	Plane_ptr plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+	m_sceneManager->insert(plane);
 	return true;
 }
 
@@ -197,6 +216,9 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 	hpcolor color(0.0, 1.0, 0.0, 1.0);
 	//guiStateNode->setPointCloud( pointCloud );
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
+
+	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
+	m_sceneManager->insert(bSplineCurve, lineMesh, color);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
@@ -304,6 +326,7 @@ DefaultGUIManager::DefaultViewportListener::DefaultViewportListener(DefaultGUIMa
 DefaultGUIManager::DefaultViewportListener::~DefaultViewportListener() {}
 
 void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseClickEvent(Ray& ray) {
+	m_defaultGUIManager.m_toolPanel->handleMouseClickEvent(ray);
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {

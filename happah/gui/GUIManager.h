@@ -27,7 +27,7 @@ public:
 	virtual void insert(SimpleGear_ptr simpleGear, hpuint drawMode) = 0;
 	virtual void insert(SpherePatch_ptr spherePatch, hpuint drawMode) = 0;
 	virtual void insert(Worm_ptr worm, hpuint drawMode) = 0;
-	virtual void update(BSplineCurve_ptr bSplienCurve) = 0;
+	virtual void update(BSplineCurve_ptr bSplineCurve) = 0;
     //virtual void update(DiscGearGrindResult simulationResult) = 0;
     virtual void update(SurfaceOfRevolution_ptr disc) = 0;
 	virtual void update(InvoluteGear_ptr involuteGear) = 0;
@@ -39,6 +39,7 @@ public:
 	virtual void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr simpleGearMesh)= 0;
 	virtual void visitScene(SceneVisitor& visitor)= 0;
 	virtual void visitScene(SimulationVisitor& visitor)= 0;
+	virtual Plane_ptr getParentPlane(BSplineCurve_ptr bSplineCurve) = 0;
 
 };
 

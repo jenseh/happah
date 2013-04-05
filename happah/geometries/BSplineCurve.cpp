@@ -285,12 +285,13 @@ void BSplineCurve::setPeriodic( bool periodic ) {
 }
 
 LineMesh* BSplineCurve::toLineMesh() {
+	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpuint>* indices = new std::vector<hpuint>;
+
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
 	if( tEnd - tBegin > EPSILON ) {
-		std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
 		vertexData->resize(400);
-		std::vector<hpuint>* indices = new std::vector<hpuint>;
 		indices->resize(100);
 
 		hpreal stepSize = (tEnd - tBegin) / 99;
@@ -301,12 +302,29 @@ LineMesh* BSplineCurve::toLineMesh() {
 			(*vertexData)[4*i+3] = hpvec3(1.0f,0.0f,0.0f);
 			(*indices)[i] = i;
 		}
-		return new LineMesh(vertexData, indices);
+	}
+	else {
+		// TODO remove workaround and find bug when adding empty LineMesh
+		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		indices->push_back( 0 );
 	}
 
-	return NULL;
+	return new LineMesh(vertexData, indices);
 }
 
 PointCloud* BSplineCurve::toPointCloud() {
-	return new PointCloud(&m_controlPoints);
+	if(m_controlPoints.size() == 0) {
+		std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		return new PointCloud(vertexData);
+	}
+	else {
+		// TODO remove workaround and find bug when adding empty PointCloud
+		std::vector<hpvec3>* vertexData = new std::vector<hpvec3>(m_controlPoints);
+		return new PointCloud(vertexData);
+	}
 }
+

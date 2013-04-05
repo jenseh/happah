@@ -1,6 +1,6 @@
 #include "happah/geometries/gears/Worm.h"
 
-Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations)
+Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal faceWidth)
 	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations)
 {
   m_standardProfile = NULL;

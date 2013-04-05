@@ -12,7 +12,8 @@ public:
   ZCircleCloud(hpreal maxRadius, hpreal startZ, hpreal endZ, hpuint resolutionZ, hpvec3& referenceDir);
 
   hpuint getResolutionZ();
-  hpvec3& getReferenceDir();
+  hpvec3 getReferenceDir();
+  hpreal getMaxRadius();
   std::vector<hpvec3*>* getClosestPoints(hpvec3 hitPoint);
 
 //  Circle computeCircle(hpuint posZIdx, hpuint radiusIdx);

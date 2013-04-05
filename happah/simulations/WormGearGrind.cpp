@@ -5,6 +5,7 @@ WormGearGrind::WormGearGrind(Worm& worm, InvoluteGear& gear, RigidAffineTransfor
     m_worm = worm.toZCircleCloud();
     m_gearMesh = gear.toTriangleMesh();
 
+    m_maxDistance = m_worm->getMaxRadius() * 2.0;
     m_wormModelMatrix = wormTransformation.toMatrix4x4();
     m_gearModelMatrix = gearTransformation.toMatrix4x4();
 }
@@ -92,9 +93,11 @@ void WormGearGrind::calculateGrindingDepth(){
    for (size_t z = 0; z < resolutionZ; z++) {
      for (size_t angleSlot = 0; angleSlot < m_resultAngleSlotCount; angleSlot++) {
          float radius = simResult.getItem(angleSlot, z);
-         if (radius != INFINITY) {
-         	std::cout << "angleSlot: " << angleSlot << ", posZ: " << z << ", radius: " << radius << std::endl;
+         if (radius == INFINITY) {
+        	 radius = m_maxDistance;
          }
+
+         std::cout << "angleSlot: " << angleSlot << ", posZ: " << z << ", radius: " << radius << std::endl;
      }
    }
 

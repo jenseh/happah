@@ -8,8 +8,12 @@ hpuint ZCircleCloud::getResolutionZ() {
   return m_resolutionZ;
 }
 
-hpvec3& ZCircleCloud::getReferenceDir() {
+hpvec3 ZCircleCloud::getReferenceDir() {
   return m_referenceDir;
+}
+
+hpreal ZCircleCloud::getMaxRadius() {
+	return m_maxRadius;
 }
 
 std::vector<hpvec3*>* ZCircleCloud::getClosestPoints(hpvec3 hitPoint) {

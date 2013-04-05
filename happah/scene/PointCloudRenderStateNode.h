@@ -20,8 +20,12 @@ public:
 	virtual void draw(DrawVisitor& drawVisitor,RigidAffineTransformation& rigidAffineTransformation);
 	PointCloudRenderStateNode_ptr getPtr(){return dynamic_pointer_cast<PointCloudRenderStateNode>(shared_from_this());}
 	hpuint getMode();
+	void setSelected(int selected);
+	int  getSelected();
+
 private:
 	hpuint m_mode;
+	int m_selected;
 
 };
 #endif /* POINT_CLOUD_RENDER_STATE_NODE_H_ */

@@ -80,12 +80,18 @@ private:
 		PointCloudRenderStateNode_ptr findPointCloudRenderStateNodeOfColor(hpcolor color);
 		int getCurrentSelectionIndex();
 		void setCurrentSelectionIndex(int index);
+		ElementRenderStateNode_ptr getCurrentSelectedElementRenderStateNode();
+		void setCurrentSelectedElementRenderStateNode(ElementRenderStateNode_ptr elementRenderStateNode);
+		PointCloudRenderStateNode_ptr getCurrentSelectedPointCloudRenderStateNode();
+		void setCurrentSelectedPointCloudRenderStateNode(PointCloudRenderStateNode_ptr pointCloudRenderStateNode);
 		void clearColorMap();
 	private:
 		DrawManager& m_drawManager;
 		ElementsColorMap m_colorMap;
 		PointCloudColorMap m_pointCloudColorMap;
 		int m_currentSelectionIndex;
+		ElementRenderStateNode_ptr m_currentSelectedElementRenderStateNode;
+		PointCloudRenderStateNode_ptr m_currentSelectedPointCloudRenderStateNode;
 
 	};
 
@@ -139,6 +145,7 @@ private:
 	GLint m_pointCloudPointRadiusLocation;
 	GLint m_pointCloudDrawSelectionColors;
 	GLint m_pointCloudSelectionColorLocation;
+	GLint m_pointCloudSelectedLocation;
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
 	void doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);

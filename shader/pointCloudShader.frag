@@ -4,11 +4,13 @@ in vec4 gVertex;
 in vec4 gColor;
 in vec3 vertexLightPosition;
 in vec4 camPosition;
+in vec4 gPointSelectionColor;
 
 uniform mat4 projectionMatrix;
 uniform float pointRadius;	
 uniform int drawSelectionColors;
 uniform vec4 selectionColor;
+uniform int selected;
 	
 layout (location = 0) out vec4 fragmentColor;
 
@@ -33,8 +35,12 @@ void main(){
 	pos = projectionMatrix * pos;
 	
 	//gl_FragDepth = (pos.z / pos.w+1.0f) / 2.0f;
-	fragmentColor = gColor * diffuseIntensity;
+	vec4 selectColor = vec4(0.0f,0.0f,0.0f,0.0f);
+	if(selected != 0)
+		selectColor = vec4(0.0f,1.0f,0.0f,0.0f);
+	//fragmentColor = (gColor + selectColor) * diffuseIntensity;
+	fragmentColor = gPointSelectionColor* diffuseIntensity;
 	if(drawSelectionColors != 0)
-		fragmentColor = selectionColor;	
-
+		fragmentColor = vec4(selectionColor.r,gPointSelectionColor.g,gPointSelectionColor.b,selectionColor.a);	
+		
 }

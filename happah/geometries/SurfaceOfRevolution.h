@@ -11,8 +11,6 @@
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "glm/gtx/rotate_vector.hpp"
 
-using namespace std;
-
 
 class SurfaceOfRevolution : public Geometry {
 public:

@@ -18,6 +18,7 @@ public:
 
   virtual bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth) = 0;
   virtual hpreal intersectFirst(Ray& intersector, hpreal maxLength) = 0;
+  virtual hpuint countTriangles() = 0;
 };
 
 #endif // KDTREENODE_H

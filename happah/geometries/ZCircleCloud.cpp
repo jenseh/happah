@@ -36,8 +36,9 @@ std::vector<hpvec3*>* ZCircleCloud::getClosestPoints(hpvec3 hitPoint) {
 Circle ZCircleCloud::computeOuterCircle(hpuint posZIdx) {
   hpreal posZ = m_startZ + posZIdx * (m_endZ - m_startZ) / m_resolutionZ;
   hpvec3 center = hpvec3(0.0, 0.0, posZ);
+  hpvec3 normal = hpvec3(0.0, 0.0, 1.0);
 
   return Circle(center,
-                hpvec3(0.0, 0.0, 1.0),
+                normal,
                 m_maxRadius);
 }

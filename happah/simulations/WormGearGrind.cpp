@@ -1,4 +1,5 @@
 #include "happah/simulations/WormGearGrind.h"
+#include <glm/glm.hpp>
 
 WormGearGrind::WormGearGrind(Worm& worm, InvoluteGear& gear, RigidAffineTransformation& wormTransformation, RigidAffineTransformation& gearTransformation) {
     m_worm = worm.toZCircleCloud();
@@ -21,15 +22,11 @@ void WormGearGrind::calculateGrindingDepth(){
 
    std::vector<Triangle>* triangles = m_gearMesh->toTriangles();
 
-//   for (hpuint i = 0; i < triangles->size(); i++) {
-//         Triangle triangle = triangles->at(i);
-//         LoggingUtils::printVec("EtriangleA", triangle.vertices[0]);
-//         LoggingUtils::printVec("EtriangleB", triangle.vertices[1]);
-//         LoggingUtils::printVec("EtriangleC", triangle.vertices[2]);
-//   }
+   LoggingUtils::printVal("triangles->size()", (hpuint) triangles->size());
    KDTree tree = KDTree(triangles);
    size_t resolutionZ = m_worm->getResolutionZ();
 
+   LoggingUtils::printVal("countTriangles", (hpuint) tree.countTriangles());
 
    CircularSimulationResult simResult = CircularSimulationResult(m_resultAngleSlotCount, resolutionZ);
 
@@ -58,7 +55,7 @@ void WormGearGrind::calculateGrindingDepth(){
 
           //TODO: Implement this function
            std::vector<hpvec3*>* closestPoints = m_worm->getClosestPoints(hitResult->hitPointA);
-           std::cout << "CP size: " << closestPoints->size() << std::endl;
+//           std::cout << "CP size: " << closestPoints->size() << std::endl;
 
            std::vector<hpvec3*>::iterator posCP = closestPoints->begin();
            std::vector<hpvec3*>::iterator endCP = closestPoints->end();

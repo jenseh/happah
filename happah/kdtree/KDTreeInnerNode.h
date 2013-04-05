@@ -3,7 +3,6 @@
 
 #include "happah/math/Ray.h"
 #include "happah/kdtree/KDTreeNode.h"
-#include "happah/kdtree/KDTreeInnerNode.h"
 #include "happah/kdtree/KDTreeLeaf.h"
 
 
@@ -15,6 +14,8 @@ public:
 
   bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);
+  hpuint countTriangles();
+
 private:
   KDTreeNode* m_leftChild;
   KDTreeNode* m_rightChild;

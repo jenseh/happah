@@ -32,3 +32,7 @@ hpreal KDTreeLeaf::intersectFirst(Ray& intersector, hpreal maxLength){
 	return maxLength;
 }
 
+hpuint KDTreeLeaf::countTriangles() {
+	return m_triangles->size();
+}
+

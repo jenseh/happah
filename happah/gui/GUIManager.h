@@ -9,7 +9,7 @@
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimulationVisitor.h"
 #include "happah/simulations/DiscGearGrind.h"

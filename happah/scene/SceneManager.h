@@ -13,7 +13,7 @@ using namespace std;
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/scene/DiscGearGrindNode.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SceneListener.h"

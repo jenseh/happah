@@ -1,7 +1,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/gui/forms/WormForm.h"
 
 WormForm::WormForm(GUIManager& guiManager, QWidget* parent)

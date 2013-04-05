@@ -1,7 +1,7 @@
 #ifndef WORMNODE_H_
 #define WORMNODE_H_
 
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"

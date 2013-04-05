@@ -9,7 +9,7 @@
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/Mesh.h"
-#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/gears/StandardProfile.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/LoggingUtils.h"
 

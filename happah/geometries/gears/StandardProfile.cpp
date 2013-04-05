@@ -1,4 +1,4 @@
-#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/gears/StandardProfile.h"
 
 StandardProfile::StandardProfile(hpreal module, hpreal pressureAngle, // pressureAngle = Profilwinkel
 		hpreal filletRadius,                                          // filletRadius = Fußrundungsradius

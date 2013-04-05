@@ -2,7 +2,7 @@
 #define DISCFORM_H_
 
 #include "happah/geometries/DiscGenerator.h"
-#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/gears/StandardProfile.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"

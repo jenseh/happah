@@ -39,8 +39,10 @@ public:
 			: m_simpleGeometryNode(simpleGeometryNode){}
 			~DefaultSelectListener(){}
 
-			void handleSelectEvent(){}
+            void handleSelectEvent(){m_simpleGeometryNode.getGeometry()->handleSelection();}
+            void handleSelectEvent(int pointIndex){m_simpleGeometryNode.getGeometry()->handleSelection(pointIndex);}
 			void handleDeselectEvent(){}
+
 
 		private:
 			SimpleGeometryNode& m_simpleGeometryNode;

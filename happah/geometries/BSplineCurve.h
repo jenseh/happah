@@ -63,7 +63,8 @@ public:
 	void setDegree( unsigned int degree );
 	void setPeriodic( bool periodic );
 	void setUniform( bool uniform );
-
+    void handleSelection(){}
+    void handleSelection(int pointIndex){}
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
 

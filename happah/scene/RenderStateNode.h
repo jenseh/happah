@@ -32,6 +32,7 @@ public:
 	void 	setMaterial(Material& material);
 	void 	setInitialized(bool isInitialized);
 	void 	triggerSelectEvent();
+    void    triggerSelectEvent(int pointIndex);
 	void	triggerDeselectEvent();
 	void 	registerSelectListener(SelectListener* selectListener);
 	void	removeSelectListener(SelectListener* selectListener);

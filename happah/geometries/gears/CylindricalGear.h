@@ -66,7 +66,8 @@ public:
 	//whereas zSampleSize = 10 means, that the TriangleMesh will consist of
 	//11 gear profiles with 10 intervals ??????? TODO: is that right?
 	TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
-
+    void handleSelection(){}
+    void handleSelection(int pointIndex){}
 };
 
 typedef shared_ptr<CylindricalGear> CylindricalGear_ptr;

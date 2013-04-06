@@ -94,6 +94,7 @@ HEADERS += \
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
+        happah/scene/SelectVisitor.h\
 	happah/scene/SimpleGearNode.h \
 	happah/scene/SimpleGeometryNode.h \
 	happah/scene/SpherePatchNode.h\

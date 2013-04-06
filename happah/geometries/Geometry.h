@@ -7,6 +7,8 @@ class Geometry {
 public:
     Geometry();
     virtual ~Geometry();
+    virtual void handleSelection() = 0;
+    virtual void handleSelection(int pointIndex)= 0;
 
 };
 

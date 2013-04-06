@@ -6,6 +6,7 @@ class SelectListener {
 
 public:
 	virtual void handleSelectEvent() = 0;
+	virtual void handleSelectEvent(int pointIndex) = 0;
 	virtual void handleDeselectEvent() = 0;
 
 

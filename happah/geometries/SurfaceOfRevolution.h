@@ -19,6 +19,8 @@ public:
     hpreal getRadius();
 
     TriangleMesh_ptr toTriangleMesh(uint nWedges = 60);
+    void handleSelection(){}
+    void handleSelection(int pointIndex){}
 private:
     std::vector<hpvec2> m_heightProfile;
     hpreal m_radius;

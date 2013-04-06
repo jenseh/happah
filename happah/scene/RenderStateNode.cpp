@@ -119,6 +119,11 @@ void RenderStateNode::triggerSelectEvent(){
 			(*i)->handleSelectEvent();
 }
 
+void RenderStateNode::triggerSelectEvent(int pointIndex){
+    for(list<SelectListener*>::iterator i = m_selectListeners.begin(), end = m_selectListeners.end(); i != end; ++i)
+        (*i)->handleSelectEvent(pointIndex);
+}
+
 void RenderStateNode::triggerDeselectEvent(){
 	for(list<SelectListener*>::iterator i = m_selectListeners.begin(), end = m_selectListeners.end(); i != end; ++i)
 		(*i)->handleDeselectEvent();

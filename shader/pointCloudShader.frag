@@ -38,8 +38,7 @@ void main(){
 	vec4 selectColor = vec4(0.0f,0.0f,0.0f,0.0f);
 	if(selected != 0)
 		selectColor = vec4(0.0f,1.0f,0.0f,0.0f);
-	//fragmentColor = (gColor + selectColor) * diffuseIntensity;
-	fragmentColor = gPointSelectionColor* diffuseIntensity;
+	fragmentColor = (gColor + selectColor) * diffuseIntensity;
 	if(drawSelectionColors != 0)
 		fragmentColor = vec4(selectionColor.r,gPointSelectionColor.g,gPointSelectionColor.b,selectionColor.a);	
 		

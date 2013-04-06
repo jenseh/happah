@@ -34,3 +34,4 @@ moc_*
 #Gedit temp files
 *~
 /include
+/includes

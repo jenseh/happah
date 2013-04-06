@@ -221,7 +221,7 @@ void DrawManager::select(int x, int y){
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	m_selectionVisitor.setCurrentSelectionIndex(100);
-	m_selectionVisitor.clearColorMap();
+    m_selectionVisitor.clearColorMaps();
 }
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
@@ -525,9 +525,9 @@ void DrawManager::DefaultDrawVisitor::draw(PointCloudRenderStateNode_ptr pointCl
 DrawManager::SelectionVisitor::SelectionVisitor(DrawManager& drawManager)
 	: m_drawManager(drawManager),m_currentSelectionIndex(100) {
 	m_pointSelectionColors = new vector<hpcolor>;
-	for (int g=100; g > 0 ;g--){
+    for (int g=99; g >= 0 ;g--){
 		float gComponent = (float)g/100.0f;
-		for(int b=100;b > 0; b--){
+        for(int b=99;b >= 0; b--){
 			float bComponent = (float)b/100.0f;
 			m_pointSelectionColors->push_back(hpcolor(0.0f,gComponent,bComponent,0.0f));
 			//cout << "Point Colors: 0.0f "<< gComponent << " " << bComponent << endl;
@@ -621,11 +621,15 @@ vector<hpcolor>* DrawManager::SelectionVisitor::getPointSelectionColors(){
 	return m_pointSelectionColors;
 }
 
-void DrawManager::SelectionVisitor::clearColorMap(){
+void DrawManager::SelectionVisitor::clearColorMaps(){
 	m_colorMap.clear();
+    m_pointCloudColorMap.clear();
 }
 int DrawManager::SelectionVisitor::findPointIndexFromColor(hpcolor color){
-	return 5;
+    int gIndex = (int)(color.g*100.5f);
+    int bIndex = (int)(color.b*100.5f);
+    int index = 9999-((gIndex*100)+bIndex);
+    cout << "Point index: "<< index << endl;
 }
 
 

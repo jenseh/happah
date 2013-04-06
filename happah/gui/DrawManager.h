@@ -84,7 +84,7 @@ private:
 		void setCurrentSelectedElementRenderStateNode(ElementRenderStateNode_ptr elementRenderStateNode);
 		PointCloudRenderStateNode_ptr getCurrentSelectedPointCloudRenderStateNode();
 		void setCurrentSelectedPointCloudRenderStateNode(PointCloudRenderStateNode_ptr pointCloudRenderStateNode);
-		void clearColorMap();
+        void clearColorMaps();
 		vector<hpcolor>* getPointSelectionColors();
 		int findPointIndexFromColor(hpcolor color);
 	private:

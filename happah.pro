@@ -219,7 +219,8 @@ win32 {
 unix {
 	QMAKE_CXXFLAGS += -std=c++0x
 	LIBS += -lGLEW
-	INCLUDEPATH += /usr/include $$system(pwd)
+        INCLUDEPATH += /usr/include $$system(pwd)\
+        INCLUDEPATH += /home/stud/s_sauer/happah/includes
 }
 
 CONFIG(debug) {

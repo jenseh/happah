@@ -18,6 +18,7 @@ public:
 	void setInvoluteGear(InvoluteGear_ptr involuteGear);
 
 private:
+	Slider* m_boreRadiusSlider;
 	Slider* m_bottomClearanceSlider;
 	Slider* m_faceWidthSlider;
 	Slider* m_filletRadiusSlider;
@@ -32,6 +33,7 @@ private:
 	void updateInvoluteGear();
 
 private slots:
+	void changeBoreRadius(hpreal boreRadius);
 	void changeBottomClearance(hpreal bottomClearance);
 	void changeFaceWidth(hpreal faceWidth);
 	void changeFilletRadius(hpreal radius);

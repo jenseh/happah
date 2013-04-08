@@ -26,13 +26,14 @@ DefaultGUIManager::~DefaultGUIManager() {
 	m_sceneManager->remove(guiStateNodes);
 }
 
-void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh) {
+void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr gear) {
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(gear->toTriangleMesh());
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
 	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, gear, gearMesh));
 
 	QThread* thread = new QThread();
-	DiscGearGrindWorkerListener listener(this);
+	DiscGearGrindWorkerListener* listener = new DiscGearGrindWorkerListener(this);
 	DiscGearGrindWorker* discGearGrindWorker = new DiscGearGrindWorker(simulation, thread, listener);
 	thread->start();
 }

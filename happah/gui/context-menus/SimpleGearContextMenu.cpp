@@ -23,7 +23,9 @@ void SimpleGearContextMenu::generateDisc() {
 }
 
 void SimpleGearContextMenu::createDiscGearGrind() {
-	m_guiManager.createDiscGearGrind(SimpleGear_ptr(m_simpleGear), TriangleMesh_ptr(m_simpleGear->toTriangleMesh()));
+	// Make a copy for both threads
+	SimpleGear_ptr simpleGear = SimpleGear_ptr(new SimpleGear(*m_simpleGear));
+	m_guiManager.createDiscGearGrind(simpleGear);
 }
 
 void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh) {

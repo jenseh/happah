@@ -34,7 +34,6 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	m_discContextMenu = new DiscContextMenu(guiManager, this);
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
 	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
-
 	setCentralWidget(centralWidget);
 }
 

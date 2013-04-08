@@ -25,7 +25,7 @@ public:
 	DefaultGUIManager(SceneManager_ptr sceneManager);
 	~DefaultGUIManager();
 
-	void createDiscGearGrind(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+	void createDiscGearGrind(SimpleGear_ptr gear);
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	bool init();
 	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);

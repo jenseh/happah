@@ -21,9 +21,10 @@ public:
 class DiscGearGrindWorker: public Worker {
 	Q_OBJECT
 	DiscGearGrind_ptr m_discGearGrind;
-	DiscGearGrindWorkerListener& m_listener;
+	DiscGearGrindWorkerListener* m_listener;
 public:
-	DiscGearGrindWorker(DiscGearGrind_ptr discGearGrind, QThread* thread, DiscGearGrindWorkerListener& discGearGrindWorkerListener);
+	DiscGearGrindWorker(DiscGearGrind_ptr discGearGrind, QThread* thread, DiscGearGrindWorkerListener* discGearGrindWorkerListener);
+	~DiscGearGrindWorker();
 	public slots:
 	    void process();
 

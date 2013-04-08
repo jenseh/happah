@@ -1,5 +1,5 @@
-#ifndef GEARSLIDER_H
-#define GEARSLIDER_H
+#ifndef LABELEDREALVALUEDSLIDER_H
+#define LABELEDREALVALUEDSLIDER_H
 
 #include <QGroupBox>
 #include <QLabel>
@@ -8,11 +8,11 @@
 
 #include "happah/HappahTypes.h"
 
-class Slider: public QGroupBox {
+class LabeledRealValuedSlider: public QGroupBox {
     Q_OBJECT
 
 public:
-    Slider(const QString &title, bool smoothValues = true, QWidget *parent = 0);
+    LabeledRealValuedSlider(const QString &title, bool smoothValues = true, QWidget *parent = 0);
 
     void setSliderValues(hpreal value, hpreal min, hpreal max);
     void setRange(hpreal min, hpreal max);
@@ -29,8 +29,8 @@ private slots:
     void valueChanged(int value);
 
 private:
-    QSlider *m_slider;
-    QLabel *m_minLabel, *m_maxLabel, *m_valueLabel;
+    QSlider* m_slider;
+    QLabel* m_minLabel, * m_maxLabel, * m_valueLabel;
     hpreal  m_minValue,  m_maxValue,  m_value;
     bool m_smoothValues;
 
@@ -39,4 +39,4 @@ private:
     hpreal getValueFromSlider(int value);
 };
 
-#endif // GEARSLIDER_H
+#endif // LABELEDREALVALUEDSLIDER_H

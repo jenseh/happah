@@ -5,16 +5,17 @@
 
 InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), 
-		m_bottomClearanceSlider(new Slider(tr("bottom clearance"))),
-		m_faceWidthSlider(new Slider(tr("face width"))),
-		m_filletRadiusSlider(new Slider(tr("fillet radius"))),
+		m_boreRadiusSlider(new LabeledRealValuedSlider(tr("bore radius"))),
+		m_bottomClearanceSlider(new LabeledRealValuedSlider(tr("bottom clearance"))),
+		m_faceWidthSlider(new LabeledRealValuedSlider(tr("face width"))),
+		m_filletRadiusSlider(new LabeledRealValuedSlider(tr("fillet radius"))),
 		m_guiManager(guiManager),
 		m_involuteGear(new InvoluteGear()), 
 		m_involuteGearInserted(false), 
-		m_helixAngleSlider(new Slider(tr("helix angle"))),
-		m_moduleSlider(new Slider(tr("module"))),
-		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
-		m_nTeethSlider(new Slider(tr("number of teeth"), false)) {
+		m_helixAngleSlider(new LabeledRealValuedSlider(tr("helix angle"))),
+		m_moduleSlider(new LabeledRealValuedSlider(tr("module"))),
+		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))),
+		m_nTeethSlider(new LabeledRealValuedSlider(tr("number of teeth"), false)) {
 	QPushButton* createButton  = new QPushButton("create gear");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -25,66 +26,75 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	layout->addWidget(m_bottomClearanceSlider);
 	layout->addWidget(m_filletRadiusSlider);
 	layout->addWidget(m_helixAngleSlider);
+	layout->addWidget(m_boreRadiusSlider);
 	layout->addWidget(createButton);
 	setLayout(layout);
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createInvoluteGear()));
+	connect(m_boreRadiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBoreRadius(hpreal)));
 	connect(m_bottomClearanceSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBottomClearance(hpreal)));
 	connect(m_faceWidthSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFaceWidth(hpreal)));
 	connect(m_filletRadiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
 	connect(m_helixAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
 	connect(m_moduleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
-	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 	connect(m_nTeethSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeNumberOfTeeth(hpreal)));
+	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 
 	updateRanges();
 }
 
 InvoluteGearForm::~InvoluteGearForm() {}
 
+void InvoluteGearForm::changeBoreRadius(hpreal boreRadius) {
+	if(m_involuteGear->setBoreRadius(boreRadius)) {
+		updateRanges();
+		updateInvoluteGear();
+	}
+}
+
 void InvoluteGearForm::changeBottomClearance(hpreal bottomClearance) {
-	if (m_involuteGear->setBottomClearance(bottomClearance)) {
+	if(m_involuteGear->setBottomClearance(bottomClearance)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
 }
 
 void InvoluteGearForm::changeFaceWidth(hpreal faceWidth) {
-	if (m_involuteGear->setFaceWidth(faceWidth)) {
+	if(m_involuteGear->setFaceWidth(faceWidth)) {
 		updateInvoluteGear();
 	}
 }
 
 void InvoluteGearForm::changeFilletRadius(hpreal radius) {
-	if (m_involuteGear->setFilletRadius(radius)) {
+	if(m_involuteGear->setFilletRadius(radius)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
 }
 
 void InvoluteGearForm::changeHelixAngle(hpreal angle) {
-	if (m_involuteGear->setHelixAngle(angle)) {
+	if(m_involuteGear->setHelixAngle(angle)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
 }
 
 void InvoluteGearForm::changeModule(hpreal module) {
-	if (m_involuteGear->setModule(module)) {
+	if(m_involuteGear->setModule(module)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
 }
 
 void InvoluteGearForm::changePressureAngle(hpreal angle) {
-	if (m_involuteGear->setPressureAngle(angle)) {
+	if(m_involuteGear->setPressureAngle(angle)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
 }
 
 void InvoluteGearForm::changeNumberOfTeeth(hpreal nTeeth) {
-	if (m_involuteGear->setNumberOfTeeth(nTeeth)) {
+	if(m_involuteGear->setNumberOfTeeth(nTeeth)) {
 		updateRanges();
 		updateInvoluteGear();
 	}
@@ -125,7 +135,8 @@ void InvoluteGearForm::updateRanges() {
 	hpreal* modules = m_involuteGear->getPossibleModules();
 	hpreal* pressureAngles = m_involuteGear->getPossiblePressureAngles();
 	hpreal* bottomClearances = m_involuteGear->getPossibleBottomClearances();
-	hpreal* filletRadien = m_involuteGear->getPossibleFilletRadii();
+	hpreal* filletRadii = m_involuteGear->getPossibleFilletRadii();
+	hpreal* boreRadii = m_involuteGear->getPossibleBoreRadii();
 	hpreal epsilon = 0.0001f;
 
 	m_nTeethSlider->setSliderValues(m_involuteGear->getNumberOfTeeth(), nTeeth[0], nTeeth[1]);
@@ -133,7 +144,8 @@ void InvoluteGearForm::updateRanges() {
 	m_faceWidthSlider->setSliderValues(m_involuteGear->getFaceWidth(), 0.0f, m_involuteGear->getReferenceRadius() * 2.0f);
 	m_pressureAngleSlider->setSliderValues(m_involuteGear->getPressureAngle(), pressureAngles[0], pressureAngles[1]);
 	m_bottomClearanceSlider->setSliderValues(m_involuteGear->getBottomClearance(), bottomClearances[0], bottomClearances[1]);
-	m_filletRadiusSlider->setSliderValues(m_involuteGear->getFilletRadius(), filletRadien[0], filletRadien[1]);
+	m_filletRadiusSlider->setSliderValues(m_involuteGear->getFilletRadius(), filletRadii[0], filletRadii[1]);
 	m_helixAngleSlider->setSliderValues(m_involuteGear->getHelixAngle(), -(epsilon + M_PI / 2.0f), epsilon + M_PI / 2.0f );
+	m_boreRadiusSlider->setSliderValues(m_involuteGear->getBoreRadius(), boreRadii[0], boreRadii[1]);
 }
 

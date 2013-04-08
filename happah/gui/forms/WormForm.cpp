@@ -7,10 +7,10 @@
 WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
 		m_guiManager(guiManager),
-		m_moduleSlider(new Slider(tr("module"))),
-		m_pressureAngleSlider(new Slider(tr("pressure angle"))),
-		m_toothCountSlider(new Slider(tr("tooth count"))),
-		m_rotationsSlider(new Slider(tr("rotations"))),
+		m_moduleSlider(new LabeledRealValuedSlider(tr("module"))),
+		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))),
+		m_toothCountSlider(new LabeledRealValuedSlider(tr("tooth count"))),
+		m_rotationsSlider(new LabeledRealValuedSlider(tr("rotations"))),
 		m_wormInserted(false) {
 	QPushButton* createButton = new QPushButton("create worm");
 

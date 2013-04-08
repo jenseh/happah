@@ -415,22 +415,22 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 
 	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
 	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
-	vector<hpvec3>* vertexData = mesh->getVertexData();
+	vector<hpvec3>* verticesAndNormals = mesh->getVertexData();
 	vector<hpuint>* indices = mesh->getIndices();
 
-	vertexData->reserve(vertexData->size() + 2 * (profile.size() * 6)); //avoid reallocation in for loop which would cause iterator invalidity
+	verticesAndNormals->reserve(verticesAndNormals->size() + 2 * (profile.size() * 6)); //avoid reallocation in for loop which would cause iterator invalidity
 	indices->reserve(indices->size() + 3 * (profile.size() * 2 * 3));
 
-	hpuint startNewIndices = vertexData->size() / 2;
+	hpuint startNewIndices = verticesAndNormals->size() / 2;
 	for(hpuint side = 0; side < 2; ++side) {
 		getTraverseProfile(side * getFaceWidth(), profile);
 		hpreal z = side * getFaceWidth();
 		
-		hpuint startIndex = vertexData->size() / 2;
+		hpuint startIndex = verticesAndNormals->size() / 2;
 		hpuint stopIndex = startIndex + profile.size() * 3;
 
-		vector<hpvec3>::iterator vertexDataIterator = --(vertexData->end()); //points to last element of vertexData
-		vertexData->resize(vertexData->size() + profile.size() * 6);
+		vector<hpvec3>::iterator verticesAndNormalsIterator = --(verticesAndNormals->end()); //points to last element of verticesAndNormals
+		verticesAndNormals->resize(verticesAndNormals->size() + profile.size() * 6);
 
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
 		if(side == 1)
@@ -439,14 +439,14 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 			hpvec2 currentProfilePoint = *it;
 			hpvec2 currentInnerPoint = glm::normalize(currentProfilePoint) * m_boreRadius;
 
-			*(++vertexDataIterator) = hpvec3(currentInnerPoint, z);
-			*(++vertexDataIterator) = normal;
-			*(++vertexDataIterator) = hpvec3(currentProfilePoint, z);
-			*(++vertexDataIterator) = normal;
+			*(++verticesAndNormalsIterator) = hpvec3(currentInnerPoint, z);
+			*(++verticesAndNormalsIterator) = normal;
+			*(++verticesAndNormalsIterator) = hpvec3(currentProfilePoint, z);
+			*(++verticesAndNormalsIterator) = normal;
 
 			//point for bore surface
-			*(++vertexDataIterator) = hpvec3(currentInnerPoint, z);
-			*(++vertexDataIterator) = glm::normalize(hpvec3(-currentInnerPoint.x, -currentInnerPoint.y, 0.0f));
+			*(++verticesAndNormalsIterator) = hpvec3(currentInnerPoint, z);
+			*(++verticesAndNormalsIterator) = glm::normalize(hpvec3(-currentInnerPoint.x, -currentInnerPoint.y, 0.0f));
 		}
 
 		vector<hpuint>::iterator indicesIterator = --(indices->end()); //points to last element of indices

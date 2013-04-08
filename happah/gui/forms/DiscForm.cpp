@@ -5,10 +5,10 @@
 
 DiscForm::DiscForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-        m_disc(DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0))),
+		m_disc(DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0))),
 		m_discInserted(false),
 		m_guiManager(guiManager),
-		m_radiusSlider(new Slider(tr("approximated radius"))) {
+		m_radiusSlider(new LabeledRealValuedSlider(tr("approximated radius"))) {
 	QPushButton* createButton = new QPushButton("create disc");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -26,7 +26,7 @@ DiscForm::~DiscForm() {}
 
 
 void DiscForm::changeRadius(hpreal radius) {
-    //m_disc->setRadius(radius);
+	//m_disc->setRadius(radius);
 	updateRanges();
 	updateDisc();
 }
@@ -41,7 +41,7 @@ SurfaceOfRevolution_ptr DiscForm::getDisc() const {
 }
 
 void DiscForm::reset() {
-    m_disc = DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0));
+	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0));
 	m_discInserted = false;
 
 	updateRanges();

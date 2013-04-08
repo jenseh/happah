@@ -20,6 +20,7 @@ public:
 	SimpleGear(const SimpleGear& other);
 	~SimpleGear();
 
+	void getTraverseProfile(hpreal z, BSplineCurve* gearProfile);
 	BSplineCurve* toTransverseToothProfileSystem(hpreal z);
 	BSplineGearCurve* getCopyWithBeginOfToothAtTop() const;
 

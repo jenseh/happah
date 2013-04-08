@@ -58,14 +58,14 @@ public:
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
 	virtual void getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile);
-	//toothSampleSize is the number of points used to sample one tooth
-	//in such a way, that one whole tooth will consist of toothSampleSize + 1
+	//nPointsPerTooth is the number of points used to sample one tooth
+	//in such a way, that one whole tooth will consist of nPointsPerTooth + 1
 	//points (as last points equals first point of next tooth) and the whole
-	//gear will consist of toothSampleSize * getNumberOfTeeth() points.
-	//zSampleSize is the number of samples used to sample along the z axis
-	//whereas zSampleSize = 10 means, that the TriangleMesh will consist of
+	//gear will consist of nPointsPerTooth * getNumberOfTeeth() points.
+	//nTraverseProfiles is the number of samples used to sample along the z axis
+	//whereas nTraverseProfiles = 10 means, that the TriangleMesh will consist of
 	//11 gear profiles with 10 intervals ??????? TODO: is that right?
-	TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
+	TriangleMesh* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
     void handleSelection(){}
     void handleSelection(int pointIndex){}
 };

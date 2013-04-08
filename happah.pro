@@ -37,7 +37,7 @@ HEADERS += \
 	happah/gui/DefaultGUIManager.h \
 	happah/gui/DiscGearGrindWorker.h \
 	happah/gui/DrawManager.h \
-	happah/gui/Slider.h \
+	happah/gui/widgets/LabeledRealValuedSlider.h \
 	happah/gui/GUIManager.h \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerListener.h \
@@ -147,7 +147,7 @@ SOURCES += \
 	happah/gui/DefaultGUIManager.cpp \
 	happah/gui/DiscGearGrindWorker.cpp \
 	happah/gui/DrawManager.cpp \
-	happah/gui/Slider.cpp \
+	happah/gui/widgets/LabeledRealValuedSlider.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
 	happah/gui/SimulationTimer.cpp \

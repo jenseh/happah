@@ -15,23 +15,21 @@ SimpleGear::~SimpleGear(){
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z){
+void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve* gearProfile) {
+//BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z) {
 
-	BSplineCurve *gearProfile = new BSplineCurve();
+	//gearProfile->resetPoints(); or something like that. TODO: insert this!!!
 	gearProfile->setPeriodic(true);
-	gearProfile->setDegree(2);
-
 	hpreal rotation = glm::tan(m_helixAngle) * z;
 
-	for (hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
+	for(hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
 		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
-		for (hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
+		for(hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
 			hpvec3 controlPoint = m_toothProfile->getControlPoint(i);
 			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
 			gearProfile->addControlPoint(turnedPoint);
 		}
 	}
-	return gearProfile;
 }
 
 //TODO: This method doesn't suit in here! Move it to BSplineGear or somewhere else!!!
@@ -109,11 +107,11 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSpaceProfile.capacity() - 1); // -1 so whole thooth is sampled
-	for (int i = toothSpaceProfile.capacity()/2-1;  i >= 0; i--) {
+	for(int i = toothSpaceProfile.capacity()/2-1;  i >= 0; i--) {
 		hpvec3 point = splineXY->getValueAt(low + i*delta);
 		toothSpaceProfile.push_back(hpvec2(-point.x, point.y));
 	}
-	for (uint i = 0; i < toothSpaceProfile.capacity()/2; i++) {
+	for(uint i = 0; i < toothSpaceProfile.capacity()/2; i++) {
 		hpvec3 point = splineXY->getValueAt(low + i*delta);
 		toothSpaceProfile.push_back(hpvec2(point.x, point.y));
 	}
@@ -121,12 +119,12 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {
 }
 
 void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
-	hpuint toothSampleSize = toothProfile.size();
+	hpuint nPointsPerTooth = toothProfile.size();
 	BSplineCurve* splineXY = getCopyWithBeginOfToothAtTop();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);
-	hpreal delta = (high - low) / (hpreal)(toothSampleSize - 1); // -1 so whole thooth is sampled
-	for (hpuint i = 0; i < toothSampleSize; ++i) {
+	hpreal delta = (high - low) / (hpreal)(nPointsPerTooth - 1); // -1 so whole thooth is sampled
+	for(hpuint i = 0; i < nPointsPerTooth; ++i) {
 		hpvec3 point = splineXY->getValueAt(low + (hpreal) (i * delta));
 		toothProfile[i] = hpvec2(point.x, point.y);
 	}

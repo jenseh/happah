@@ -5,7 +5,7 @@
 #include "happah/geometries/gears/StandardProfile.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
 #include "happah/gui/GUIManager.h"
-#include "happah/gui/Slider.h"
+#include "happah/gui/widgets/LabeledRealValuedSlider.h"
 #include "happah/gui/forms/Form.h"
 
 class DiscForm : public Form {
@@ -23,7 +23,7 @@ private:
 	SurfaceOfRevolution_ptr m_disc;
 	bool m_discInserted;
 	GUIManager& m_guiManager;
-	Slider* m_radiusSlider;
+	LabeledRealValuedSlider* m_radiusSlider;
 
 	void updateDisc();
 	void updateRanges();

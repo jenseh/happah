@@ -7,7 +7,7 @@ CylindricalGear::~CylindricalGear() {}
 
 void CylindricalGear::getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile) {
 	hpuint toothSampleSize = gearProfile.size() / getNumberOfTeeth();
-	hpreal rotation = glm::tan(getHelixAngle()) * z;
+	hpreal rotationHelixAngle = glm::tan(getHelixAngle()) * z;
 
 	vector<hpvec2> toothProfile(toothSampleSize + 1); //TODO: Change the "+1" and let toothProfile return the points only until next tooth starts
 	getToothProfile(toothProfile);
@@ -19,12 +19,16 @@ void CylindricalGear::getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile) 
 	int rotDirection = 1;
 	if((first[0] * last[1] - first[1] * last[0]) < 0)
 		rotDirection = -1;
+
+	hpreal rotationConstant = rotDirection * 180.0f / M_PI * rotationHelixAngle;
+	hpreal rotationPerTooth = rotDirection * 360.0f / nTeeth;
+
+	hpreal degreeRotation = rotationConstant;
 	for(hpuint i = 0; i < nTeeth; ++i) {
-		hpreal degreeRotation = (float) (rotDirection * (M_PI * 2.0f * i / nTeeth + rotation) * 180.0f / M_PI);
 		for(hpuint j = 0; j < toothSampleSize; ++j) {
-			assert(i * toothSampleSize + j < gearProfile.size()); //TODO: remove this line.
 			gearProfile[i * toothSampleSize + j] = glm::rotate(toothProfile[j], degreeRotation);
 		}
+		degreeRotation += rotationPerTooth;
 	}
 }
 

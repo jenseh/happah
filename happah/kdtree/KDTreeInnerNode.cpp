@@ -14,7 +14,7 @@ public:
 
 
 
-KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox)
+KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox, int terminateDepth )
 {
 	//TODO: Something goes wrong here, sometimes all the triangles are put into left side
   m_bBox = bBox;
@@ -63,7 +63,15 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 
   // If all in one node
   if( leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size() ){
-	  m_leftChild = new KDTreeLeaf(triangles, depth + 1);
+	  // If all triangles are put in one node there should only be 2 more inner nodes untill the algorithm is forces to quit
+	  if( terminateDepth == -1 ) {
+		  terminateDepth = depth +2;
+	  }
+	  if( depth == terminateDepth ) {
+		  m_leftChild = new KDTreeLeaf(triangles, depth +1);
+	  }else {
+		  m_leftChild = new KDTreeInnerNode(triangles, leftBox, depth + 1, maxTrianglesPerBox, terminateDepth);
+	  }
 	  std::vector<Triangle>* emptyList = new std::vector<Triangle>;
 	  m_rightChild = new KDTreeLeaf(emptyList, depth +1);
 	  return;

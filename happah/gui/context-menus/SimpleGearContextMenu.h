@@ -3,8 +3,10 @@
 
 #include <QAction>
 #include "happah/geometries/gears/SimpleGear.h"
+#include "happah/geometries/DiscGenerator.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/context-menus/ContextMenu.h"
+#include "happah/simulations/DiscGearGrind.h"
 
 class SimpleGearGUIStateNode;
 typedef std::shared_ptr<SimpleGearGUIStateNode> SimpleGearGUIStateNode_ptr;
@@ -24,7 +26,7 @@ private:
 
 private slots:
 	void generateDisc();
-	void useSimpleGearInSumulation();
+	void createDiscGearGrind();
 
 };
 

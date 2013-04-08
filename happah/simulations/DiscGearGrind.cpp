@@ -1,7 +1,7 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
-	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.3)
+	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.1)
 {
 	hpreal alpha = m_gear->getHelixAngle();
 	hpreal z = -m_gear->getFaceWidth();
@@ -31,8 +31,14 @@ void DiscGearGrind::calculateGrindingDepth(double time){
     for( size_t i = 0; i < m_gearRays->size(); i++){
         // Transform Ray
         Ray ray = m_gearRays->at(i);
+        //ray.print();
         ray.transform(matrix);
+        //ray.print();
         ray.moveOrigin(-m_maxDistance);
+        //ray.print();
+        //std::cout<<std::endl;
+
+        m_distances[i] = 2 * m_maxDistance;
         m_distances[i] = (m_kdTree->intersectFirst(ray, m_maxDistance * 2) - m_maxDistance) / m_maxDistance;
     }
 }
@@ -42,16 +48,17 @@ DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     calculateGrindingDepth(time);
     // Fill color
     for( size_t i = 0; i < m_gearColor->size(); i++){
-    	/*
+
     	if( m_distances[i] < 0 ){
+    		//std::cout<<i<<std::endl;
     		m_gearColor->at(i) = hpcolor(1.0,0.0,0.0,1.0);
     	}else if( m_distances[i] < 0.9999){
+    		//std::cout<<i<<std::endl;
     		m_gearColor->at(i) = hpcolor(0.0,1.0,0.0,1.0);
-    		std::cout<<m_distances[i]<<std::endl;
     	}else{
     		m_gearColor->at(i) = hpcolor(1.0,1.0,1.0,1.0);
-    	}*/
-
+    	}
+    	/*
     	if( m_distances[i] >= 0 ){
     		//m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
     		m_gearColor->at(i) = hpcolor( 0.0, m_distances[i], 1.0, 1.0);
@@ -59,6 +66,7 @@ DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     		m_gearColor->at(i) = hpcolor(1.0, 0.0, 0.0, 1.0);
     		//m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
     	}
+    	*/
 
     }
     return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  RigidAffineTransformation(),  m_disc, m_discMesh, m_gearMovement.getRigidAffineTransformation(time).inverse());

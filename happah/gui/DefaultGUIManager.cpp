@@ -26,6 +26,17 @@ DefaultGUIManager::~DefaultGUIManager() {
 	m_sceneManager->remove(guiStateNodes);
 }
 
+void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh) {
+	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
+	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
+	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, gear, gearMesh));
+
+	QThread* thread = new QThread();
+	DiscGearGrindWorkerListener listener(this);
+	DiscGearGrindWorker* discGearGrindWorker = new DiscGearGrindWorker(simulation, thread, listener);
+	thread->start();
+}
+
 template<class G, class S>
 void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
@@ -91,10 +102,12 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	m_sceneManager->insert(geometry, triangleMesh, color);
 }
 
+
 void DefaultGUIManager::generateDisc(CylindricalGear_ptr cylindricalGear) {
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*cylindricalGear);
 	insert(disc, HP_TRIANGLE_MESH);
 }
+
 
 Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve_ptr bSplineCurve ) {
 	Node_ptr parent = m_sceneManager->findContainingData(bSplineCurve)->getParent();
@@ -186,7 +199,6 @@ void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
-
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());

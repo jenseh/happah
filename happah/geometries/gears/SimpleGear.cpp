@@ -104,7 +104,7 @@ void SimpleGear::setToothProfile(BSplineGearCurve* curve) {
 	m_toothProfile = curve;
 }
 
-void SimpleGear::getToothSpaceProfile(vector<hpvec2> &toothSpaceProfile) const {
+void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {
 	BSplineCurve* splineXY = getCopyWithBeginOfToothAtTop();
 	hpreal low,high;
 	splineXY->getParameterRange(low, high);

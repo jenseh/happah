@@ -7,6 +7,10 @@ InvoluteGearContextMenu::InvoluteGearContextMenu(
 ) : ContextMenu(parent),
 	m_guiManager(guiManager) {
 	
+	QAction* createDiscGearGrind = new QAction(tr("Create disc gear grind"), this);
+	addAction(createDiscGearGrind);
+	connect(createDiscGearGrind, SIGNAL(triggered()), this, SLOT(createDiscGearGrind()));
+
 	QAction* createSimpleGearAction = new QAction(tr("Create simple gear"), this);
 	addAction(createSimpleGearAction);
 	connect(createSimpleGearAction, SIGNAL(triggered()), this, SLOT(createSimpleGear()));
@@ -14,6 +18,8 @@ InvoluteGearContextMenu::InvoluteGearContextMenu(
 	QAction* generateDiscAction = new QAction(tr("Generate disc"), this);
 	addAction(generateDiscAction);
 	connect(generateDiscAction, SIGNAL(triggered()), this, SLOT(generateDisc()));
+
+
 }
 
 InvoluteGearContextMenu::~InvoluteGearContextMenu(){}
@@ -27,6 +33,13 @@ void InvoluteGearContextMenu::generateDisc() {
 	m_guiManager.generateDisc(m_involuteGear);
 }
 
-void InvoluteGearContextMenu::setInvoluteGear(InvoluteGear_ptr involuteGear) {
+void InvoluteGearContextMenu::createDiscGearGrind() {
+	SimpleGear_ptr simpleGear = SimpleGear_ptr(m_involuteGear->toSimpleGear());
+	TriangleMesh_ptr simpleGearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	m_guiManager.createDiscGearGrind(simpleGear, simpleGearMesh);
+}
+
+void InvoluteGearContextMenu::setInvoluteGear(InvoluteGear_ptr involuteGear, TriangleMesh_ptr involuteGearMesh) {
 	m_involuteGear = involuteGear;
+	m_involuteGearMesh = involuteGearMesh;
 }

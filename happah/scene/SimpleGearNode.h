@@ -14,6 +14,7 @@ public:
 
 	virtual void accept(SceneVisitor& sceneVisitor);
 	void insertChild(SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
+	void insertChild(LineMeshNode_ptr lineMeshNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
 
 };

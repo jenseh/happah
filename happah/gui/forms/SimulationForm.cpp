@@ -21,6 +21,7 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 SimulationForm::~SimulationForm() {}
 
 
+
 void SimulationForm::createSimulation() {
 //	if( m_discGearGrind == NULL ){
 //		m_discGearGrind = DiscGearGrind_ptr(new DiscGearGrind(m_disc, m_discMesh, m_gear, m_gearMesh));
@@ -36,7 +37,7 @@ void SimulationForm::createSimulation() {
 	//TODO: this is just Holger's playground to test the WormGearGrind simulation, the actual code is above.
 	// Don't tell the boss..
 
-	WormGearGrindTest();
+	//WormGearGrindTest();
 }
 
 DiscGearGrind_ptr SimulationForm::getDiscGearGrind() const {

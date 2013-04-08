@@ -303,8 +303,16 @@ T* InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 	return minmax;
 }
 
-void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
-	//TODO: implement method
+void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) {
+	vector<hpvec2> toothProfile;
+	toothProfile.resize(profile.capacity());
+	getToothProfile(toothProfile);
+	for (int i = profile.capacity()/2-1;  i >= 0; i--) {
+		profile.push_back(hpvec2(-toothProfile[i].x, toothProfile[i].y));
+	}
+	for (uint i = 0; i < profile.capacity()/2; i++) {
+		profile.push_back(hpvec2(toothProfile[i].x, toothProfile[i].y));
+	}
 }
 
 void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {

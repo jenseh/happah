@@ -10,6 +10,10 @@ void SimpleGearNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
+void SimpleGearNode::insertChild(LineMeshNode_ptr lineMeshNode) {
+	Node::insertChild(lineMeshNode);
+}
+
 void SimpleGearNode::insertChild(SimpleGearGUIStateNode_ptr simpleGearGUIStateNode) {
 	Node::insertChild(simpleGearGUIStateNode);
 }

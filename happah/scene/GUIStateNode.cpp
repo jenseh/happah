@@ -86,7 +86,7 @@ InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 
 
 ContextMenu* InvoluteGearGUIStateNode::getContextMenu() const {
-	m_involuteGearContextMenu->setInvoluteGear(m_involuteGear);
+	m_involuteGearContextMenu->setInvoluteGear(m_involuteGear, getTriangleMesh());
 	return m_involuteGearContextMenu;
 }
 

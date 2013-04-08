@@ -41,6 +41,7 @@ public:
 	void insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
 	void insert(Plane_ptr plane, LineMesh_ptr LineMesh,hpcolor&color);
 //void insert(Plane_ptr plane, BSplineCurve<hpvec2> splineCurve, LineMesh_ptr<hpvec2> lineMesh_ptr, hpcolor& color);
+	void insert(SimpleGear_ptr simpleGear, LineMesh_ptr lineMesh, hpcolor& color);
 	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
 	void insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);

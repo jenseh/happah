@@ -17,6 +17,7 @@
 
 class GUIManager {
 public:
+	virtual void createDiscGearGrind(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh)= 0;
 	virtual void generateDisc(CylindricalGear_ptr cylindricalGear) = 0;
 	virtual void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) = 0;
     virtual void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) = 0;

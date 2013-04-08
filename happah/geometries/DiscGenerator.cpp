@@ -12,8 +12,9 @@ SurfaceOfRevolution_ptr DiscGenerator::generateDiscFrom(CylindricalGear& cylindr
 
 SurfaceOfRevolution_ptr DiscGenerator::generateDiscFrom(StandardProfile profile) {
     std::vector<hpvec2> vertexData;
-    vertexData.reserve(100);
+    vertexData.reserve(50);
     profile.getProfilePartition(vertexData);
+    invertProfile(vertexData);
     return SurfaceOfRevolution_ptr(new SurfaceOfRevolution(vertexData));
 }
 

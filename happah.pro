@@ -35,6 +35,7 @@ HEADERS += \
 	happah/geometries/gears/SimpleGear.h \
 \
 	happah/gui/DefaultGUIManager.h \
+	happah/gui/DiscGearGrindWorker.h \
 	happah/gui/DrawManager.h \
 	happah/gui/Slider.h \
 	happah/gui/GUIManager.h \
@@ -45,6 +46,7 @@ HEADERS += \
 	happah/gui/ToolPanel.h \
 	happah/gui/VectorInput.h \ 
 	happah/gui/Viewport.h \
+	happah/gui/Worker.h \
 \
 	happah/gui/context-menus/ContextMenu.h \
 	happah/gui/context-menus/DiscContextMenu.h \
@@ -142,6 +144,7 @@ SOURCES += \
 	happah/geometries/gears/SimpleGear.cpp \
 \
 	happah/gui/DefaultGUIManager.cpp \
+	happah/gui/DiscGearGrindWorker.cpp \
 	happah/gui/DrawManager.cpp \
 	happah/gui/Slider.cpp \
 	happah/gui/MainWindow.cpp \

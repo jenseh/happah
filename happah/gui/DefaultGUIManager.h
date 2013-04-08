@@ -2,12 +2,14 @@
 #define DEFAULT_GUI_MANAGER_H
 
 #include <QListWidgetItem>
+#include <QThread>
 #include <unordered_map>
 
 using namespace std;
 
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/GUIManager.h"
+#include "happah/gui/DiscGearGrindWorker.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/SceneGraphExplorerListener.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
@@ -23,6 +25,7 @@ public:
 	DefaultGUIManager(SceneManager_ptr sceneManager);
 	~DefaultGUIManager();
 
+	void createDiscGearGrind(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	bool init();
 	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);

@@ -1,7 +1,7 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh):
-	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(100)
+	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.1)
 {
 	hpreal alpha = m_gear->getHelixAngle();
 	hpreal z = -m_gear->getFaceWidth();
@@ -31,12 +31,12 @@ void DiscGearGrind::calculateGrindingDepth(double time){
     for( size_t i = 0; i < m_gearRays->size(); i++){
         // Transform Ray
         Ray ray = m_gearRays->at(i);
-        ray.print();
+        //ray.print();
         ray.transform(matrix);
-        ray.print();
+        //ray.print();
         ray.moveOrigin(-m_maxDistance);
-        ray.print();
-        std::cout<<std::endl;
+        //ray.print();
+        //std::cout<<std::endl;
 
         m_distances[i] = 2 * m_maxDistance;
         m_distances[i] = (m_kdTree->intersectFirst(ray, m_maxDistance * 2) - m_maxDistance) / m_maxDistance;

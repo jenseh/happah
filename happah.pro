@@ -51,6 +51,7 @@ HEADERS += \
 	happah/gui/context-menus/ContextMenu.h \
 	happah/gui/context-menus/DiscContextMenu.h \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
+	happah/gui/context-menus/PlaneContextMenu.h \
 	happah/gui/context-menus/SimpleGearContextMenu.h \
 	happah/gui/context-menus/SimulationContextMenu.h \
 \
@@ -157,6 +158,7 @@ SOURCES += \
 	happah/gui/context-menus/ContextMenu.cpp \
 	happah/gui/context-menus/DiscContextMenu.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
+	happah/gui/context-menus/PlaneContextMenu.cpp \
 	happah/gui/context-menus/SimpleGearContextMenu.cpp \
 	happah/gui/context-menus/SimulationContextMenu.cpp \
 \

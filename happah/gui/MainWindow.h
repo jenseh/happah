@@ -10,6 +10,7 @@
 #include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/context-menus/DiscContextMenu.h"
+#include "happah/gui/context-menus/PlaneContextMenu.h"
 #include "happah/gui/context-menus/SimpleGearContextMenu.h"
 
 class DrawManager;
@@ -28,6 +29,7 @@ public:
 	ContextMenu* getDefaultContextMenu();
 	DiscContextMenu* getDiscContextMenu();
 	InvoluteGearContextMenu* getInvoluteGearContextMenu();
+	PlaneContextMenu* getPlaneContextMenu();
 	SimpleGearContextMenu* getSimpleGearContextMenu();
 	SimulationContextMenu* getSimulationContextMenu();
 
@@ -44,6 +46,7 @@ private:
 	ContextMenu* m_defaultContextMenu;
 	DiscContextMenu* m_discContextMenu;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;
+	PlaneContextMenu* m_planeContextMenu;
 	SimpleGearContextMenu* m_simpleGearContextMenu;
 	SimulationContextMenu* m_simulationContextMenu;
 

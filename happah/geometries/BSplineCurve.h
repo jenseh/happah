@@ -55,7 +55,10 @@ public:
 	bool getPeriodic() const;
 	bool getUniform() const;
 	hpvec3 getValueAt( float t ) const;
+	void handleSelection(){}
+	void handleSelection(int pointIndex){}
 
+	void removeControlPoints();
 	void resetKnots();
 
 	void setClamped( bool clamped );
@@ -63,8 +66,6 @@ public:
 	void setDegree( unsigned int degree );
 	void setPeriodic( bool periodic );
 	void setUniform( bool uniform );
-    void handleSelection(){}
-    void handleSelection(int pointIndex){}
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
 

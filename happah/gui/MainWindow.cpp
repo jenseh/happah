@@ -30,8 +30,9 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
 	m_defaultContextMenu = new ContextMenu(this);
-	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
 	m_discContextMenu = new DiscContextMenu(guiManager, this);
+	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
+	m_planeContextMenu = new PlaneContextMenu(guiManager, this);
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
 	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
 	setCentralWidget(centralWidget);
@@ -57,6 +58,10 @@ DiscContextMenu* MainWindow::getDiscContextMenu() {
 
 InvoluteGearContextMenu* MainWindow::getInvoluteGearContextMenu() {
 	return m_involuteGearContextMenu;
+}
+
+PlaneContextMenu* MainWindow::getPlaneContextMenu() {
+	return m_planeContextMenu;
 }
 
 SimpleGearContextMenu* MainWindow::getSimpleGearContextMenu() {

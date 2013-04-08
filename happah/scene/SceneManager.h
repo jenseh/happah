@@ -40,6 +40,7 @@ public:
 	void insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
 	void insert(Plane_ptr plane, LineMesh_ptr LineMesh,hpcolor&color);
+	void insert(Plane_ptr plane, BSplineCurve_ptr curve);
 //void insert(Plane_ptr plane, BSplineCurve<hpvec2> splineCurve, LineMesh_ptr<hpvec2> lineMesh_ptr, hpcolor& color);
 	void insert(SimpleGear_ptr simpleGear, LineMesh_ptr lineMesh, hpcolor& color);
 	void insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
@@ -62,6 +63,8 @@ private:
 
 	template<class G, class N>
 	void doInsert(shared_ptr<G> geometry);
+	template<class G1, class N1, class G2, class N2>
+	void doInsert(shared_ptr<G1> geometry1, shared_ptr<G2> geometry2);
 	template<class G, class N, class S> 
 	void doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode);
 	template<class G, class N>

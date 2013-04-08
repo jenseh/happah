@@ -101,18 +101,21 @@ private:
 };
 
 #include "happah/geometries/Plane.h"
+#include "happah/gui/context-menus/PlaneContextMenu.h"
 #include "happah/gui/forms/PlaneForm.h"
 
 class PlaneGUIStateNode : public GUIStateNode {
 public:
-	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, string name);
+	PlaneGUIStateNode(Plane_ptr plane, PlaneForm* planeForm, PlaneContextMenu* contextMenu, string name);
 	~PlaneGUIStateNode();
 
+	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 
 private:
 	Plane_ptr m_plane;
+	PlaneContextMenu* m_planeContextMenu;
 	PlaneForm* m_planeForm;
 };
 

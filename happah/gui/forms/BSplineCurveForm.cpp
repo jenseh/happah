@@ -11,6 +11,7 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	m_controlPointInput = new VectorInput( "Next Point", true, true, this );
 	m_controlPointInput->setValue( hpvec3(0.f, 0.f, 0.f) );
 	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(updateBSplineCurveOrigin()));
+	// TODO connect to projection of point onto plane
 
 	QPushButton* addPointButton  = new QPushButton("add control point");
 	connect(addPointButton, SIGNAL(clicked()), this, SLOT(addPoint()));
@@ -36,6 +37,16 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	degreeWidget->setLayout(degreeLayout);
 	connect( m_degreeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeDegree(int)) );
 
+	QWidget* planeWidget = new QWidget(this);
+	QGridLayout* planeLayout = new QGridLayout();
+	m_planeLabel = new QLabel("Using standard plane", planeWidget);
+	QPushButton* planeButton = new QPushButton("reset", planeWidget);
+	planeLayout->addWidget( m_planeLabel, 0,0 );
+	planeLayout->addWidget( planeButton, 0,1 );
+	planeWidget->setLayout( planeLayout );
+	// TODO connect to resetPlane() instead of reset()
+	connect( planeButton, SIGNAL(clicked()), this, SLOT(reset()) );
+
 	QPushButton* createButton  = new QPushButton("create curve");
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createCurve()));
 
@@ -46,17 +57,11 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	layout->addWidget(m_periodicCheckBox);
 	layout->addWidget(m_uniformCheckBox);
 	layout->addWidget(m_clampedCheckBox);
+	layout->addWidget(planeWidget);
 	layout->addWidget(createButton);
 	this->setLayout(layout);
 	
-	m_curve = BSplineCurve_ptr(new BSplineCurve());
-	m_curve->setPeriodic(m_periodicCheckBox->checkState() == Qt::Checked);
-	m_curve->setUniform(m_uniformCheckBox->checkState() == Qt::Checked);
-	m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);
-	m_curve->setDegree(m_degreeSpinBox->value());
-	m_curveInserted = false;
-
-	m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+	reset();
 }
 
 BSplineCurveForm::~BSplineCurveForm() {}
@@ -97,7 +102,10 @@ void BSplineCurveForm::createCurve() {
 		m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);
 		m_curve->setDegree(m_degreeSpinBox->value());
 	}
-	m_guiManager.insert(m_curve,HP_LINE_MESH|HP_POINT_CLOUD);
+	if( !m_useStandardPlane ) {
+		m_guiManager.insert(m_plane, m_curve);
+	}
+	m_guiManager.insert(m_curve,HP_LINE_MESH|HP_POINT_CLOUD); // TODO use findContaining instead of findChildContaining
 	m_curveInserted = true;
 }
 
@@ -120,7 +128,13 @@ void BSplineCurveForm::reset() {
 	m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);
 	m_curve->setDegree(m_degreeSpinBox->value());
 	m_curveInserted = false;
-	m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+	resetPlane();
+}
+
+void BSplineCurveForm::resetPlane() {
+	// TODO change scene graph for current curve/plane
+	// TODO needs to be reset if current plane is deleted
+	setPlane(Plane_ptr());
 }
 
 void BSplineCurveForm::setCurve(BSplineCurve_ptr curve) {
@@ -130,15 +144,20 @@ void BSplineCurveForm::setCurve(BSplineCurve_ptr curve) {
 	m_clampedCheckBox->setCheckState( curve->getClamped() ? Qt::Checked : Qt::Unchecked );
 	m_degreeSpinBox->setValue( curve->getDegree() );
 
-	m_plane = m_guiManager.getParentPlane(m_curve);
-	if( !m_plane ) {
-		m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
-	}
+	setPlane( m_guiManager.getParentPlane(m_curve) );
 
 	m_curveInserted = true;
 }
 
 void BSplineCurveForm::setPlane(Plane_ptr plane) {
-	if( plane ) m_plane = plane;
-	else m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+	if( plane ) {
+		m_plane = plane;
+		m_useStandardPlane = false;
+		m_planeLabel->setText("Using scene plane");
+	}
+	else {
+		m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+		m_useStandardPlane = true;
+		m_planeLabel->setText("Using standard plane");
+	}
 }

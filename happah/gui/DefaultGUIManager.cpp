@@ -74,6 +74,12 @@ void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, const char* label, F*
 	doInsert1D(geometry, guiStateNode);
 }
 
+template<class G, class S, class F, class M>
+void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, toFinalLabel(label)));
+	doInsert1D(geometry, guiStateNode);
+}
+
 template<class G, class S>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode){
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
@@ -86,6 +92,12 @@ void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 template<class G, class S, class F>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
+	doInsert0D(geometry, guiStateNode);
+}
+
+template<class G, class S, class F, class M>
+void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu) {
+	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, contextMenu, toFinalLabel(label)));
 	doInsert0D(geometry, guiStateNode);
 }
 
@@ -133,12 +145,12 @@ bool DefaultGUIManager::init() {
 	}
 	m_mainWindow.show();
 
-	Plane_ptr plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
-	m_sceneManager->insert(plane);
+//	Plane_ptr plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+//	m_sceneManager->insert(plane);
 	return true;
 }
 
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) {
+void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
 		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
@@ -184,15 +196,23 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
 				involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
-void DefaultGUIManager::insert(Plane_ptr plane,hpuint drawMode) {
+void DefaultGUIManager::insert(Plane_ptr plane, BSplineCurve_ptr curve) {
+	m_sceneManager->insert(plane, curve);
+}
 
-	if (drawMode & HP_TRIANGLE_MESH)
-		doInsert2D<Plane, PlaneGUIStateNode, PlaneForm>(plane, "Plane", m_toolPanel->getPlaneForm());
-	if (drawMode & HP_LINE_MESH){
-		doInsert1D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
+void DefaultGUIManager::insert(Plane_ptr plane, hpuint drawMode) {
+
+	if (drawMode & HP_TRIANGLE_MESH) {
+		doInsert2D<Plane, PlaneGUIStateNode, PlaneForm, PlaneContextMenu>
+			(plane, "Plane", m_toolPanel->getPlaneForm(), m_mainWindow.getPlaneContextMenu());
 	}
-	if (drawMode & HP_POINT_CLOUD){
-		doInsert0D<Plane,PlaneGUIStateNode, PlaneForm>(plane,"Plane",m_toolPanel->getPlaneForm());
+	if (drawMode & HP_LINE_MESH) {
+		doInsert1D<Plane, PlaneGUIStateNode, PlaneForm, PlaneContextMenu>
+			(plane, "Plane", m_toolPanel->getPlaneForm(), m_mainWindow.getPlaneContextMenu());
+	}
+	if (drawMode & HP_POINT_CLOUD) {
+		doInsert0D<Plane, PlaneGUIStateNode, PlaneForm, PlaneContextMenu>
+			(plane, "Plane", m_toolPanel->getPlaneForm(), m_mainWindow.getPlaneContextMenu());
 	}
 }
 
@@ -265,6 +285,11 @@ void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
 
 void DefaultGUIManager::update(Worm_ptr worm) {
 	doUpdate2D<Worm>(worm);
+}
+
+void DefaultGUIManager::useForBSpline(Plane_ptr plane) {
+	m_toolPanel->getBSplineCurveForm()->reset();
+	m_toolPanel->getBSplineCurveForm()->setPlane(plane);
 }
 
 void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
@@ -344,10 +369,10 @@ void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handle
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {
 		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
-		std::cout << "(" << secPoint.x << ", " << secPoint.y << ", " << secPoint.z << ")" << std::endl;
+		//std::cout << "(" << secPoint.x << ", " << secPoint.y << ", " << secPoint.z << ")" << std::endl;
 	}
 	else {
-		std::cout << "No intersection." << std::endl;
+		//std::cout << "No intersection." << std::endl;
 	}
 }
 

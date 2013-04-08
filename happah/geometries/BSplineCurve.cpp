@@ -216,6 +216,18 @@ hpvec3 BSplineCurve::getValueAt( float t ) const {
 	}
 }
 
+void BSplineCurve::removeControlPoints() {
+	m_controlPoints.clear();
+//	vector<hpvec3>().swap(m_controlPoints); // forces reallocation
+	m_knots.resize(m_degree+1);
+	for( int i = 1; i < m_degree; i++ ) {
+		m_knots[i] = i*(1.0f/((float) m_degree));
+	}
+	m_knots[0] = 0.0f;
+	m_knots[m_degree] = 1.0f;
+	calculateNormalization();
+}
+
 void BSplineCurve::resetKnots() {
 	int num = m_knots.size();
 	if( num > 0 ) {
@@ -291,24 +303,24 @@ LineMesh* BSplineCurve::toLineMesh() {
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
 	if( tEnd - tBegin > EPSILON ) {
-		vertexData->resize(400);
-		indices->resize(100);
+		vertexData->resize(202);
+		indices->resize(200);
 
-		hpreal stepSize = (tEnd - tBegin) / 99;
-		for( hpuint i = 1; i < 100; i++ ) {
-			(*vertexData)[4*i] = getValueAt(tBegin+(i-1)*stepSize);
-			(*vertexData)[4*i+1] = hpvec3(1.0f,0.0f,0.0f);
-			(*vertexData)[4*i+2] = getValueAt(tBegin+i*stepSize);
-			(*vertexData)[4*i+3] = hpvec3(1.0f,0.0f,0.0f);
-			(*indices)[i] = i;
+		hpreal stepSize = (tEnd - tBegin) / 100;
+		for( hpuint i = 0; i < 100; i++ ) {
+			(*vertexData)[2*i] = getValueAt(tBegin + i*stepSize);
+			(*vertexData)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*indices)[2*i] = i;
+			(*indices)[2*i+1] = i+1;
 		}
+		(*vertexData)[200] = getValueAt(tEnd);
+		(*vertexData)[201] = hpvec3(1.0f,0.0f,0.0f);
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty LineMesh
 		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
 		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
-		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
-		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		indices->push_back( 0 );
 		indices->push_back( 0 );
 	}
 

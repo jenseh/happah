@@ -27,6 +27,34 @@ void SceneManager::doInsert(shared_ptr<G> geometry) {
 	}
 }
 
+/**
+  * Inserts a second geometry beneath a give geometry.
+  * @param geometry1 Parent geometry. If not existent, it will be inserted as child of root.
+  * @param geometry2 Geometry to be inserted beneath geometry1. If it exists,
+    function call will change nothing in scene.
+  */
+template<class G1, class N1, class G2, class N2>
+void SceneManager::doInsert(shared_ptr<G1> geometry1, shared_ptr<G2> geometry2) {
+	Node_ptr node = findContainingData(geometry2);
+	// If geometry2 is already in scene, don't change anything. Otherwise proceed
+	if(!node){
+		Node_ptr parentNode = findContainingData(geometry1);
+		shared_ptr<N1> parentGeometryNode;
+		if(!parentNode) {
+			// create parent geometry, if it's not in the scene
+			parentGeometryNode = shared_ptr<N1>(new N1(geometry1));
+			insertChild( parentGeometryNode );
+		}
+		else {
+			parentGeometryNode = static_pointer_cast<N1>(parentNode);
+		}
+
+		// create geometry2 node and insert beneath geometry1 node
+		shared_ptr<N2> childGeometryNode = shared_ptr<N2>(new N2(geometry2));
+		parentGeometryNode->insertChild( childGeometryNode );
+	}
+}
+
 template<class G, class N, class S>
 void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 	Node_ptr node = findChildContainingData(data);
@@ -349,6 +377,10 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triang
 
 void SceneManager::insert(Plane_ptr plane) {
 	doInsert<Plane, PlaneNode>(plane);
+}
+
+void SceneManager::insert(Plane_ptr plane, BSplineCurve_ptr curve) {
+	doInsert<Plane, PlaneNode, BSplineCurve, BSplineCurveNode>(plane, curve);
 }
 
 void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode) {

@@ -92,9 +92,5 @@ void ToolPanel::handleMouseClickEvent(Ray& ray) {
 void ToolPanel::setForm(Form* form) {
 	m_forms->setCurrentWidget(form);
 
-	// set reference plane for new BSplineCurves
-	if(form == m_planeForm) m_bSplineCurveForm->setPlane( m_planeForm->getPlane() );
-	else if(form != m_bSplineCurveForm) m_bSplineCurveForm->setPlane( Plane_ptr() );
-
 	m_buttonsByForm[form]->setChecked(true);
 }

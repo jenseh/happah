@@ -101,14 +101,19 @@ Form* InvoluteGearGUIStateNode::getForm() {
 
 // Plane
 
-PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, string name ) :
-	GUIStateNode(name), m_plane(plane), m_planeForm(planeForm) {
+PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, PlaneContextMenu* contextMenu, string name ) :
+	GUIStateNode(name), m_plane(plane), m_planeContextMenu(contextMenu), m_planeForm(planeForm) {
 }
 
 PlaneGUIStateNode::~PlaneGUIStateNode() {
 	if(m_planeForm->getPlane() == m_plane) {
 		m_planeForm->reset();
 	}
+}
+
+ContextMenu* PlaneGUIStateNode::getContextMenu() const {
+	m_planeContextMenu->setPlane(m_plane);
+	return m_planeContextMenu;
 }
 
 shared_ptr<void> PlaneGUIStateNode::getData() const {
@@ -119,6 +124,8 @@ Form* PlaneGUIStateNode::getForm() {
 	m_planeForm->setPlane(m_plane);
 	return m_planeForm;
 }
+
+// SimpleGear
 
 SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu, string name)
 	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm), m_simpleGearContextMenu(simpleGearContextMenu) {}

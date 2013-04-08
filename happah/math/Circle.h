@@ -11,6 +11,8 @@
 #include "happah/kdtree/BSphere.h"
 #include "happah/math/Triangle.h"
 
+#include "happah/LoggingUtils.h"
+
 struct CirclePoint {
   hpreal angle;
   hpreal radius;
@@ -72,11 +74,10 @@ struct Circle {
 	//            - No: -> Return false
 	//        - No: -> Return false
 	bool intersect(Triangle* triangle, std::list<CircleHitResult*>* hitResults) {
-		hpvec3 t_normal = glm::cross(triangle->vertices[1] - triangle->vertices[0],
-						triangle->vertices[2] - triangle->vertices[0]);
+		hpvec3 t_normal = triangle->computeNormal();
 
-//                // // std::cout << "radius: " << m_radius << std::endl;
-//                // // std::cout << "circle: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+		// LoggingUtils::printVal("radius", m_radius);
+		// LoggingUtils::printVec("circle", m_center);
 
 
 
@@ -87,22 +88,25 @@ struct Circle {
 		bool nullNormal = isNullVector(t_normal) || isNullVector(m_normal);
 		if (nullNormal) {
 		    std::cerr << "Error: One of the geometry's normals is a null vector!" << std::endl;
-		      std::cout << "EtriangleA: " << triangle->vertices[0].x << ", " << triangle->vertices[0].y << ", " << triangle->vertices[0].z << std::endl;
-		      std::cout << "EtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
-		      std::cout << "EtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
-		      std::cout << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
-		      std::cout << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
-		    exit(1);
-		  }
-		 // // std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
-		// // std::cout << "m_normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+		    LoggingUtils::printVec("EtriangleA", triangle->vertices[0]);
+		    LoggingUtils::printVec("EtriangleB", triangle->vertices[1]);
+		    LoggingUtils::printVec("EtriangleC", triangle->vertices[2]);
+
+		    LoggingUtils::printVec("t_normal", t_normal);
+		    LoggingUtils::printVec("m_normal", m_normal);
+
+		    return false;
+		    //exit(1);
+		}
+		// LoggingUtils::printVec("t_normal", t_normal);
+		// LoggingUtils::printVec("m_normal", m_normal);
 
 		//1: Check collinearity of normal vectors
 		bool collinear = linearDependent(m_normal, t_normal);
 		// // std::cout << "Info: Collinear: " << collinear << std::endl;
 
 		if (collinear) {
-			std::cout << "Debug-Info: The very unlikely case of collinear Triangle-Circle intersection just happened!" << std::endl;
+//			std::cout << "Debug-Info: The very unlikely case of collinear Triangle-Circle intersection just happened!" << std::endl;
 		
 			//2: Check whether planes are identical or parallel
 			bool identical = floatEquals(glm::dot(m_center - triangle->vertices[2], t_normal), 0.0f);
@@ -139,11 +143,11 @@ struct Circle {
 				    hpvec3* hitPoint;
 
 				    if (distC01 < distC12 && distC01 < distC02) {
-					hitPoint = &closestPoint01;
+				    	hitPoint = &closestPoint01;
 				    } else if (distC12 < distC01 && distC12 < distC02) {
-					hitPoint = &closestPoint12;
+				    	hitPoint = &closestPoint12;
 				    } else {
-					hitPoint = &closestPoint02;
+				    	hitPoint = &closestPoint02;
 				    }
 
 				    CircleHitResult* tempHitResult = new CircleHitResult(*hitPoint, *hitPoint, triangle);
@@ -509,8 +513,8 @@ struct Circle {
 	// Check whether a vector has only zeros
 	// This requires a very small epsilon (i.e. 10-e7) to avoid misinterpretation of small normals
 	bool inline isNullVector(hpvec3& vector) {
-	  hpreal epsilon = 10e-10f;
-		if (floatEquals(vector.x, 0.0f, epsilon) && floatEquals(vector.y, 0.0f, epsilon) && floatEquals(vector.z, 0.0f, epsilon)) {
+	  hpreal epsilon = 10e-10;
+		if (floatEquals(vector.x, 0.0, epsilon) && floatEquals(vector.y, 0.0, epsilon) && floatEquals(vector.z, 0.0, epsilon)) {
 			// // std::cout << vector.x << ", " << vector.y << ", " << vector.z << std::endl;
 			return true;
 		} else {

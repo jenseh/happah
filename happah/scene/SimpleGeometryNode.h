@@ -3,16 +3,17 @@
 
 #include "happah/scene/Node.h"
 #include "happah/transformations/RigidAffineTransformation.h"
+#include "happah/scene/SelectListener.h"
 
 template<class G>//extends Geometry
 class SimpleGeometryNode : public Node {
 
 public:
 	SimpleGeometryNode(shared_ptr<G> geometry)
-		: m_geometry(geometry) {}
+		: m_geometry(geometry),m_selectListener(*this) {}
 
 	SimpleGeometryNode(shared_ptr<G> geometry, RigidAffineTransformation& transformation)
-		: m_geometry(geometry), m_rigidAffineTransformation(transformation) {}
+		: m_geometry(geometry), m_rigidAffineTransformation(transformation),m_selectListener(*this) {}
 
 	virtual ~SimpleGeometryNode() {}
 
@@ -30,10 +31,30 @@ public:
 		return m_geometry;
 	}
 
+	class DefaultSelectListener : public SelectListener {
+
+
+		public:
+			DefaultSelectListener(SimpleGeometryNode& simpleGeometryNode)
+			: m_simpleGeometryNode(simpleGeometryNode){}
+			~DefaultSelectListener(){}
+
+            void handleSelectEvent(){m_simpleGeometryNode.getGeometry()->handleSelection();}
+            void handleSelectEvent(int pointIndex){m_simpleGeometryNode.getGeometry()->handleSelection(pointIndex);}
+			void handleDeselectEvent(){}
+
+
+		private:
+			SimpleGeometryNode& m_simpleGeometryNode;
+		};
+
+	virtual DefaultSelectListener* getSelectListener() {
+		return &m_selectListener;
+	}
 protected:
 	shared_ptr<G> m_geometry;
 	RigidAffineTransformation m_rigidAffineTransformation;
-
+	DefaultSelectListener m_selectListener;
 };
 //TODO: upgrade to gcc-4.7 and define:
 //template<class G>

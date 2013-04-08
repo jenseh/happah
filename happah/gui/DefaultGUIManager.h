@@ -23,9 +23,10 @@ public:
 	DefaultGUIManager(SceneManager_ptr sceneManager);
 	~DefaultGUIManager();
 
-	void generateDisc(Gear_ptr gear);
+	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	bool init();
-	void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
     void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
     void insert(DiscGearGrind_ptr discGearGrind);
@@ -46,6 +47,8 @@ public:
 	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
 	void visitScene(SimulationVisitor& visitor);
+	const SceneManager_ptr getSceneManager();
+	virtual Plane_ptr getParentPlane(BSplineCurve_ptr bSplineCurve);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {

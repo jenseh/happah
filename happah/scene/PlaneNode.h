@@ -6,6 +6,7 @@
 using namespace std;
 
 #include "happah/geometries/Plane.h"
+#include "happah/scene/BSplineCurveNode.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"
@@ -22,6 +23,7 @@ public:
 	virtual ~PlaneNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
+	void insertChild(BSplineCurveNode_ptr curveNode);
 	void insertChild(PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
 	void insertChild(PointCloudNode_ptr pointCloudNode);

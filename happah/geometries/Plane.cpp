@@ -87,7 +87,8 @@ PointCloud* Plane::toPointCloud() {
 	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
-	for (hpreal edgeLength=0.0f;edgeLength < 5.0f; edgeLength = edgeLength+0.3f){
+//	for (hpreal edgeLength=0.0f;edgeLength < 5.0f; edgeLength = edgeLength+0.3f){
+	hpreal edgeLength = 1.0f;
 	hpvec3 normal = glm::normalize(m_normal);
 	hpvec3 a = hpvec3(1.f, 0.f, 0.f);
 	if( a == normal ) {
@@ -103,7 +104,7 @@ PointCloud* Plane::toPointCloud() {
 	vertexData->push_back(m_origin - a - b);
 	vertexData->push_back(m_origin + a - b);
 
-	}
+//	}
 
 	return new PointCloud(vertexData);
 }
@@ -150,4 +151,11 @@ Plane& Plane::operator=(const Plane& other) {
 	return *this;
 }
 
+void Plane::handleSelection(){
+
+}
+
+void Plane::handleSelection(int pointIndex){
+
+}
 

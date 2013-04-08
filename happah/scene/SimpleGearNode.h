@@ -1,7 +1,7 @@
 #ifndef SIMPLE_GEAR_NODE_H
 #define SIMPLE_GEAR_NODE_H
 
-#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/TriangleMeshNode.h"

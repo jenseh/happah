@@ -37,6 +37,7 @@ public:
 	WormForm* getWormForm();
 
 	void setForm(Form* form);	
+	void handleMouseClickEvent(Ray& ray);
 
 private:
 	unordered_map<Form*,QPushButton*> m_buttonsByForm;

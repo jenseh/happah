@@ -23,9 +23,10 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager)
-	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager), m_glContext(new QGLContext(GL_FORMAT)) {
+	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager),m_selectionVisitor(*this), m_glContext(new QGLContext(GL_FORMAT)) {
 	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
+
 }
 
 DrawManager::~DrawManager() {}
@@ -54,27 +55,27 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection) {
 	// CHanged for geometry Shader Test ... reverse after successfull test
 	glUseProgram(m_program);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
-	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
+	glBindVertexArray(elementRenderStateNode->getVertexArrayObjectID());
 	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_modelMatrix);
 	glUniformMatrix4fv(m_modelViewProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewProjectionMatrix);
 	glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_normalMatrix);
-	glUniform1f(m_ambientFactorLocation, (GLfloat) elementRenderStateNode.getMaterial().getAmbientFactor());
-	glUniform1f(m_diffuseFactorLocation, (GLfloat) elementRenderStateNode.getMaterial().getDiffuseFactor());
-	glUniform1f(m_specularFactorLocation, (GLfloat) elementRenderStateNode.getMaterial().getSpecularFactor());
-	glUniform1f(m_phongExponentLocation, (GLfloat) elementRenderStateNode.getMaterial().getPhongExponent());
+	glUniform1f(m_ambientFactorLocation, (GLfloat) elementRenderStateNode->getMaterial().getAmbientFactor());
+	glUniform1f(m_diffuseFactorLocation, (GLfloat) elementRenderStateNode->getMaterial().getDiffuseFactor());
+	glUniform1f(m_specularFactorLocation, (GLfloat) elementRenderStateNode->getMaterial().getSpecularFactor());
+	glUniform1f(m_phongExponentLocation, (GLfloat) elementRenderStateNode->getMaterial().getPhongExponent());
 	glUniform3f(m_cameraPositionLocation, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	if (elementRenderStateNode.hasColorVector()) {
+	if (elementRenderStateNode->hasColorVector()) {
 		glUniform4f(m_colorComponentLocation, 0.0f, 0.0f, 0.0f, 0.0f);
 		glUniform1i(m_isColorPerVertexLocation, 1);
 		glUniform1i(m_isSkipLightingContributionComputationLocation, 1);
 	} else {
-		hpcolor color = elementRenderStateNode.getColor();
+		hpcolor color = elementRenderStateNode->getColor();
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_isColorPerVertexLocation, 0);
 		glUniform1i(m_isSkipLightingContributionComputationLocation, m_isSkipLightingContributionComputation); //TODO: ask user if he wants to use fragment shading
@@ -82,27 +83,52 @@ void DrawManager::doDraw(ElementRenderStateNode& elementRenderStateNode, RigidAf
 
 	int size;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-	glDrawElements(elementRenderStateNode.getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	if(doSelection){
+		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex()/100.0f;
+		cout << "colorIndex: " << colorIndex << endl;
+		hpcolor color = hpvec4(colorIndex,0.0f,0.0f,0.0f);
+		glUniform1i(m_drawSelectionColors,1);
+		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
+		glUniform1i(m_isColorPerVertexLocation, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+		glDrawElements(elementRenderStateNode->getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER,0);
+	}
+	glUniform1i(m_drawSelectionColors,0);
+	glUniform1i(m_selectedLocation,elementRenderStateNode->getSelected());
+	glDrawElements(elementRenderStateNode->getMode(), size / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
-void DrawManager::doDraw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection){
 	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
 	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
 	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix;
-	glBindVertexArray(pointCloudRenderStateNode.getVertexArrayObjectID());
+	glBindVertexArray(pointCloudRenderStateNode->getVertexArrayObjectID());
 	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);
 	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
 	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
-	glDrawArrays(pointCloudRenderStateNode.getMode(), 0, pointCloudRenderStateNode.getVertexData()->size());
+	if(doSelection){
+		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex()/100.0f;
+		cout << "colorIndex: " << colorIndex << endl;
+		hpcolor color = hpvec4(colorIndex,0.0f,0.0f,0.0f);
+		glUniform4f(m_pointCloudSelectionColorLocation, color.x, color.y, color.z, color.w);
+		glUniform1i(m_pointCloudDrawSelectionColors,1);
+		glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+		glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVertexData()->size());
+		glBindFramebuffer(GL_FRAMEBUFFER,0);
+	}
+	glUniform1i(m_pointCloudDrawSelectionColors,0);
+	glUniform1i(m_pointCloudSelectedLocation,pointCloudRenderStateNode->getSelected());
+	glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVertexData()->size());
 	glBindVertexArray(0);
 }
 
 void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(m_program);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	m_modelMatrix = hpmat4x4(1.0f);
 	m_viewMatrix = viewMatrix;
@@ -111,8 +137,92 @@ void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3&
 
 	RigidAffineTransformation identityTransformation;
 	m_sceneManager->draw(m_drawVisitor, identityTransformation);
+	//TODO: this is just debug output , remove when selection works
+	glUseProgram(0);
+	int dimensions[4];
+	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+	int width = dimensions[2];
+	int height = dimensions[3];
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,m_selectorTexture);
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glBegin(GL_QUADS);
+	//TL
+	glTexCoord2f(0,1);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.05f,-1.0f+0.35f);
+	//TR
+	glTexCoord2f(1,1);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.35f,-1.0f+0.35f);
+	//BR
+	glTexCoord2f(1,0);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.35f,-1.0f+0.05f);
+	//BL
+	glTexCoord2f(0,0);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertex2f(-1.0f+0.05f,-1.0f+0.05f);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	// TODO :: REMOVE DEBUG OUTPUT
 }
 
+void DrawManager::select(int x, int y){
+	ElementRenderStateNode_ptr currentElementRenderStateNode = m_selectionVisitor.getCurrentSelectedElementRenderStateNode();
+	PointCloudRenderStateNode_ptr currentPointCloudRenderStateNode = m_selectionVisitor.getCurrentSelectedPointCloudRenderStateNode();
+	if (currentElementRenderStateNode){
+		currentElementRenderStateNode->setSelected(0);
+		currentElementRenderStateNode->triggerDeselectEvent();
+	}
+	if (currentPointCloudRenderStateNode){
+			currentPointCloudRenderStateNode->setSelected(0);
+			currentPointCloudRenderStateNode->triggerDeselectEvent();
+		}
+	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	RigidAffineTransformation identityTransformation;
+	m_sceneManager->draw(m_selectionVisitor, identityTransformation);
+
+
+	hpcolor pixel[1];	int dimensions[4];
+	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+	int width = dimensions[2];
+	int height = dimensions[3];
+	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+	glReadPixels(x,height-y,1,1,GL_RGBA,GL_FLOAT,&pixel[0]);
+	cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
+
+	ElementRenderStateNode_ptr foundNode = m_selectionVisitor.findElementRenderStateNodeOfColor(pixel[0]);
+	if(foundNode){
+		foundNode->setSelected(1);
+		foundNode->triggerSelectEvent();
+		cout << "Selected Node ArrayBufferID "<< foundNode->getVertexArrayObjectID() << endl;
+		m_selectionVisitor.setCurrentSelectedElementRenderStateNode(foundNode);
+	}
+	PointCloudRenderStateNode_ptr foundPointCloudNode = m_selectionVisitor.findPointCloudRenderStateNodeOfColor(pixel[0]);
+	if(foundPointCloudNode){
+		m_selectionVisitor.findPointIndexFromColor(pixel[0]);
+		foundPointCloudNode->setSelected(1);
+		foundPointCloudNode->triggerSelectEvent();
+		cout << "Selected Point Cloud Node ArrayBufferID "<< foundPointCloudNode->getVertexArrayObjectID() << endl;
+		m_selectionVisitor.setCurrentSelectedPointCloudRenderStateNode(foundPointCloudNode);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	m_selectionVisitor.setCurrentSelectionIndex(100);
+    m_selectionVisitor.clearColorMaps();
+}
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
 }
@@ -144,81 +254,89 @@ bool DrawManager::init() {
 	glEnable(GL_DEPTH_TEST);
 	if (!initShaderPrograms())
 		return false;
+	if (!enableFrameBuffer())
+		return false;
 	return true;
+
+
 }
 
-void DrawManager::initialize(ElementRenderStateNode& elementRenderStateNode) {
+void DrawManager::initialize(ElementRenderStateNode_ptr elementRenderStateNode) {
 	GLuint bufferID;
-	GLint size = (elementRenderStateNode.getVertexData()->size());
+	GLint size = (elementRenderStateNode->getVertexData()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
-	elementRenderStateNode.setVertexArrayObjectID(bufferID);
-	glBindVertexArray(elementRenderStateNode.getVertexArrayObjectID());
+	elementRenderStateNode->setVertexArrayObjectID(bufferID);
+	glBindVertexArray(elementRenderStateNode->getVertexArrayObjectID());
 
 	// Create New Vertex Buffer Object
 	glGenBuffers(1, &bufferID);
-	elementRenderStateNode.setVertexBufferID(bufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(elementRenderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	elementRenderStateNode->setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode->getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(elementRenderStateNode->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
 	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
 	glEnableVertexAttribArray(m_vertexLocation);
 	glEnableVertexAttribArray(m_normalLocation);
 
 	// Create New Color Buffer Object
-	if (elementRenderStateNode.hasColorVector()) {
+	if (elementRenderStateNode->hasColorVector()) {
 		glGenBuffers(1, &bufferID);
-		elementRenderStateNode.setColorBufferID(bufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode.getColorVector()->size() * sizeof(hpcolor), &(elementRenderStateNode.getColorVector()->at(0)), GL_DYNAMIC_DRAW);
+		elementRenderStateNode->setColorBufferID(bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode->getColorBufferID());
+		glBufferData(GL_ARRAY_BUFFER, elementRenderStateNode->getColorVector()->size() * sizeof(hpcolor), &(elementRenderStateNode->getColorVector()->at(0)), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 		glEnableVertexAttribArray(m_colorLocation);
 	}
 
 	// Create IndexBuffer;
-	size = elementRenderStateNode.getIndices()->size();
+	size = elementRenderStateNode->getIndices()->size();
 	glGenBuffers(1, &bufferID);
-	elementRenderStateNode.setIndexBufferID(bufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementRenderStateNode.getIndexBufferID());
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(elementRenderStateNode.getIndices()->at(0)), GL_DYNAMIC_DRAW);
+	elementRenderStateNode->setIndexBufferID(bufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementRenderStateNode->getIndexBufferID());
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(GLuint), &(elementRenderStateNode->getIndices()->at(0)), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	elementRenderStateNode.setInitialized(true);
+	elementRenderStateNode->setInitialized(true);
 }
 
-void DrawManager::initialize(PointCloudRenderStateNode& pointCloudRenderStateNode) {
+void DrawManager::initialize(PointCloudRenderStateNode_ptr pointCloudRenderStateNode) {
 	GLuint bufferID;
-	GLint size = (pointCloudRenderStateNode.getVertexData()->size());
+	GLint size = (pointCloudRenderStateNode->getVertexData()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
-	pointCloudRenderStateNode.setVertexArrayObjectID(bufferID);
-	glBindVertexArray(pointCloudRenderStateNode.getVertexArrayObjectID());
+	pointCloudRenderStateNode->setVertexArrayObjectID(bufferID);
+	glBindVertexArray(pointCloudRenderStateNode->getVertexArrayObjectID());
 
 	// Create New Vertex Buffer Object
 	glGenBuffers(1, &bufferID);
-	pointCloudRenderStateNode.setVertexBufferID(bufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode.getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	pointCloudRenderStateNode->setVertexBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getVertexBufferID());
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_pointCloudVertexLocation, 3, GL_FLOAT, GL_FALSE,sizeof(hpvec3), 0);
 	glEnableVertexAttribArray(m_pointCloudVertexLocation);
 
 
 	// Create New Color Buffer Object
-	if (pointCloudRenderStateNode.hasColorVector()) {
-		glGenBuffers(1, &bufferID);
-		pointCloudRenderStateNode.setColorBufferID(bufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorBufferID());
-		glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode.getColorVector()->size() * sizeof(hpcolor), pointCloudRenderStateNode.getColorVector(), GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(m_colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
-		glEnableVertexAttribArray(m_colorLocation);
+	glGenBuffers(1, &bufferID);
+	pointCloudRenderStateNode->setColorBufferID(bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getColorBufferID());
+	glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getVertexData()->size() * sizeof(hpcolor),&(m_selectionVisitor.getPointSelectionColors()->at(0)), GL_DYNAMIC_DRAW);
+	cout << "DATA SIZE " << pointCloudRenderStateNode->getVertexData()->size() << " * hpcolor = " << pointCloudRenderStateNode->getVertexData()->size()* sizeof(hpcolor) << endl;
+	cout << "Color 0 "<<m_selectionVisitor.getPointSelectionColors()->at(0).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(0).b << endl;
+	cout << "Color 1 "<<m_selectionVisitor.getPointSelectionColors()->at(1).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(1).b << endl;
+	cout << "Color 2 "<<m_selectionVisitor.getPointSelectionColors()->at(2).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(2).b << endl;
+	cout << "Color 3 "<<m_selectionVisitor.getPointSelectionColors()->at(3).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(3).b << endl;
+	glVertexAttribPointer(m_pointCloudSinglePointSelectionColorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
+	glEnableVertexAttribArray(m_pointCloudSinglePointSelectionColorLocation);
 
-	}
+
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	pointCloudRenderStateNode.setInitialized(true);
+	pointCloudRenderStateNode->setInitialized(true);
 }
 
 
@@ -263,6 +381,9 @@ bool DrawManager::initShaderPrograms() {
 		cerr << "Failed to find normalMatrixLocation." << endl;
 
 	// Material uniforms
+	m_selectedLocation = glGetUniformLocation(m_program, "isSelected");
+	if (m_selectedLocation < 0)
+			cerr << "Failed to find selectedLocation." << endl;
 	m_ambientFactorLocation = glGetUniformLocation(m_program, "ambientFactor");
 	if (m_ambientFactorLocation < 0)
 		cerr << "Failed to find ambientFactorLocation." << endl;
@@ -288,7 +409,9 @@ bool DrawManager::initShaderPrograms() {
 	m_cameraPositionLocation = glGetUniformLocation(m_program, "cameraPosition");
 	if (m_cameraPositionLocation < 0)
 		cerr << "Failed to find cameraPositionLocation." << endl;
-
+	m_drawSelectionColors = glGetUniformLocation(m_program, "drawSelectionColors");
+	if (m_drawSelectionColors < 0)
+		cerr << "Failed to find drawSelectionColorsLocation" << endl;
 	m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	compileShader(m_vertexShader,"shader/pointCloudShader.vert");
 	m_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
@@ -313,7 +436,10 @@ bool DrawManager::initShaderPrograms() {
 		cerr << "Failed to find pcvertexLocation." << endl;
 	m_pointCloudColorLocation = glGetAttribLocation(m_pointCloudProgram, "color");
 	if (m_pointCloudColorLocation < 0)
-		cerr << "Failed to find pccolorLocation." << endl;
+		cerr << "Failed to find PointCloudColorLocation." << endl;
+	m_pointCloudSinglePointSelectionColorLocation= glGetAttribLocation(m_pointCloudProgram, "pointSelectionColor");
+	if (m_pointCloudSinglePointSelectionColorLocation < 0)
+		cerr << "Failed to find m_pointCloudSinglePointSelectionColorLocation." << endl;
 	m_pointCloudModelViewMatrixLocation = glGetUniformLocation(m_pointCloudProgram, "modelViewMatrix");
 	if (m_pointCloudModelViewMatrixLocation< 0)
 		cerr << "Failed to find ModelViewMatrixLocation." << endl;
@@ -323,8 +449,59 @@ bool DrawManager::initShaderPrograms() {
 	m_pointCloudPointRadiusLocation = glGetUniformLocation(m_pointCloudProgram, "pointRadius");
 	if (m_pointCloudPointRadiusLocation < 0)
 		cerr << "Failed to find PointCloudProjectionMatrixLocation." << endl;
-
+	m_pointCloudDrawSelectionColors = glGetUniformLocation(m_pointCloudProgram, "drawSelectionColors");
+	if (m_pointCloudDrawSelectionColors < 0)
+			cerr << "Failed to find m_pointCloudDrawSelectionColors." << endl;
+	m_pointCloudSelectionColorLocation = glGetUniformLocation(m_pointCloudProgram,"selectionColor");
+	if (m_pointCloudSelectionColorLocation < 0)
+				cerr << "Failed to find m_pointCloudSelectionColorLocation." << endl;
+	m_pointCloudSelectedLocation = glGetUniformLocation(m_pointCloudProgram,"selected");
+	if (m_pointCloudSelectedLocation < 0)
+				cerr << "Failed to find m_pointCloudSelectedLocation." << endl;
 	return true;
+}
+
+bool DrawManager::enableFrameBuffer(){
+	int dimensions[4];
+	glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+	int width = dimensions[2];
+	int height = dimensions[3];
+
+	glGenFramebuffers(1, &m_frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+
+	glGenTextures(1,&m_selectorTexture);
+	glBindTexture(GL_TEXTURE_2D,m_selectorTexture);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glGenRenderbuffers(1,&m_depthRenderBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER,m_depthRenderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height); //TODO: adjust to viewport size
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,m_depthRenderBuffer);
+
+	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,m_selectorTexture,0);
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE )
+		return false;
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	return true;
+}
+
+void DrawManager::resizeSelectorTexture(){
+	int dimensions[4];
+		glGetIntegerv(GL_VIEWPORT,&dimensions[0]);
+		int width = dimensions[2];
+		int height = dimensions[3];
+	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+	glBindTexture(GL_TEXTURE_2D,m_selectorTexture);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+	glBindRenderbuffer(GL_RENDERBUFFER,m_depthRenderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height);
+	glBindRenderbuffer(GL_RENDERBUFFER,0);
+	glBindTexture(GL_TEXTURE_2D,0);
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+
 }
 
 DrawManager::DefaultDrawVisitor::DefaultDrawVisitor(DrawManager& drawManager)
@@ -332,18 +509,129 @@ DrawManager::DefaultDrawVisitor::DefaultDrawVisitor(DrawManager& drawManager)
 
 DrawManager::DefaultDrawVisitor::~DefaultDrawVisitor() {}
 
-void DrawManager::DefaultDrawVisitor::draw(ElementRenderStateNode& elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+void DrawManager::DefaultDrawVisitor::draw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
 	// If no Buffer has been assigned, assign one, and write Data into it
-	if (!elementRenderStateNode.isInitialized())
+	if (!elementRenderStateNode->isInitialized())
 		m_drawManager.initialize(elementRenderStateNode);
-	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation);
+	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation,false);
 }
 
-void DrawManager::DefaultDrawVisitor::draw(PointCloudRenderStateNode& pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
-	if (!pointCloudRenderStateNode.isInitialized())
+void DrawManager::DefaultDrawVisitor::draw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	if (!pointCloudRenderStateNode->isInitialized())
 		m_drawManager.initialize(pointCloudRenderStateNode);
-	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation);
+	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation,false);
 }
+
+DrawManager::SelectionVisitor::SelectionVisitor(DrawManager& drawManager)
+	: m_drawManager(drawManager),m_currentSelectionIndex(100) {
+	m_pointSelectionColors = new vector<hpcolor>;
+    for (int g=99; g >= 0 ;g--){
+		float gComponent = (float)g/100.0f;
+        for(int b=99;b >= 0; b--){
+			float bComponent = (float)b/100.0f;
+			m_pointSelectionColors->push_back(hpcolor(0.0f,gComponent,bComponent,0.0f));
+			//cout << "Point Colors: 0.0f "<< gComponent << " " << bComponent << endl;
+		}
+	}
+}
+
+DrawManager::SelectionVisitor::~SelectionVisitor() {}
+
+void DrawManager::SelectionVisitor::draw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) {
+	// If no Buffer has been assigned, assign one, and write Data into it
+	if (!elementRenderStateNode->isInitialized())
+		m_drawManager.initialize(elementRenderStateNode);
+	m_currentSelectionIndex = m_currentSelectionIndex-1;
+	if (m_currentSelectionIndex < 0 ){
+		cerr << "To many Objects ";
+		return;
+	}
+	cout << "selectionIndex: " << m_currentSelectionIndex << endl;
+	m_colorMap.insert(ValuePair((int)(m_currentSelectionIndex),elementRenderStateNode));
+	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation,true);
+}
+void DrawManager::SelectionVisitor::draw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation){
+	if (!pointCloudRenderStateNode->isInitialized())
+		m_drawManager.initialize(pointCloudRenderStateNode);
+	m_currentSelectionIndex=m_currentSelectionIndex-1;
+	if (m_currentSelectionIndex < 0 ){
+		cerr << "To many Objects ";
+		return;
+	}
+	cout << "selectionIndex: " << m_currentSelectionIndex << endl;
+	m_pointCloudColorMap.insert(PCValuePair(m_currentSelectionIndex,pointCloudRenderStateNode));
+	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation,true);
+}
+
+
+int DrawManager::SelectionVisitor::getCurrentSelectionIndex(){
+	return m_currentSelectionIndex;
+}
+
+void DrawManager::SelectionVisitor::setCurrentSelectionIndex(int index){
+	m_currentSelectionIndex = index;
+}
+
+ElementRenderStateNode_ptr DrawManager::SelectionVisitor::findElementRenderStateNodeOfColor(hpcolor color){
+	ElementsColorMap::const_iterator iter = m_colorMap.begin();
+	int index = (int)(color.r*100+0.5f);
+	cout << "Clicked Index: " << index << endl;
+	   iter = m_colorMap.find(index);
+	if(iter != m_colorMap.end()){
+       cout << "Gefunden !"  << endl;
+       return (*iter).second;
+	}
+    else{
+       cout << "Nicht gefunden!" << endl;
+       return NULL;
+    }
+}
+
+ElementRenderStateNode_ptr DrawManager::SelectionVisitor::getCurrentSelectedElementRenderStateNode(){
+	return m_currentSelectedElementRenderStateNode;
+}
+
+void DrawManager::SelectionVisitor::setCurrentSelectedElementRenderStateNode(ElementRenderStateNode_ptr elementRenderStateNode){
+	m_currentSelectedElementRenderStateNode = elementRenderStateNode;
+}
+
+PointCloudRenderStateNode_ptr DrawManager::SelectionVisitor::getCurrentSelectedPointCloudRenderStateNode(){
+	return m_currentSelectedPointCloudRenderStateNode;
+}
+
+void DrawManager::SelectionVisitor::setCurrentSelectedPointCloudRenderStateNode(PointCloudRenderStateNode_ptr pointCloudRenderStateNode){
+	m_currentSelectedPointCloudRenderStateNode = pointCloudRenderStateNode;
+}
+
+PointCloudRenderStateNode_ptr DrawManager::SelectionVisitor::findPointCloudRenderStateNodeOfColor(hpcolor color){
+	PointCloudColorMap::const_iterator iter = m_pointCloudColorMap.begin();
+	int index = (int)(color.r*100+0.5f);
+	cout << "Clicked Index: " << index << endl;
+	   iter = m_pointCloudColorMap.find(index);
+	if(iter != m_pointCloudColorMap.end()){
+       cout << "Gefunden !"  << endl;
+       return (*iter).second;
+	}
+    else{
+       cout << "Nicht gefunden!" << endl;
+       return NULL;
+    }
+}
+vector<hpcolor>* DrawManager::SelectionVisitor::getPointSelectionColors(){
+	return m_pointSelectionColors;
+}
+
+void DrawManager::SelectionVisitor::clearColorMaps(){
+	m_colorMap.clear();
+    m_pointCloudColorMap.clear();
+}
+int DrawManager::SelectionVisitor::findPointIndexFromColor(hpcolor color){
+    int gIndex = (int)(color.g*100.5f);
+    int bIndex = (int)(color.b*100.5f);
+    int index = 9999-((gIndex*100)+bIndex);
+    cout << "Point index: "<< index << endl;
+}
+
 
 DrawManager::DefaultSceneListener::DefaultSceneListener(DrawManager& drawManager)
 	: m_drawManager(drawManager) {}
@@ -366,3 +654,4 @@ void DrawManager::DefaultSceneListener::handleSubtreeUpdatedEvent(Node_ptr root)
 
 void DrawManager::DefaultSceneListener::handleSubtreesUpdatedEvent(vector<Node_ptr>& roots) {}
 
+GLenum DrawManager::m_drawBuffers[] = {GL_FRONT,GL_COLOR_ATTACHMENT0};

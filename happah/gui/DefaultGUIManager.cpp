@@ -91,9 +91,25 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	m_sceneManager->insert(geometry, triangleMesh, color);
 }
 
-void DefaultGUIManager::generateDisc(Gear_ptr gear) {
-	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
+void DefaultGUIManager::generateDisc(CylindricalGear_ptr cylindricalGear) {
+	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*cylindricalGear);
 	insert(disc, HP_TRIANGLE_MESH);
+}
+
+Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve_ptr bSplineCurve ) {
+	Node_ptr parent = m_sceneManager->findContainingData(bSplineCurve)->getParent();
+	
+	PlaneNode_ptr planeNode = dynamic_pointer_cast<PlaneNode>(parent);
+	if( planeNode ) {
+		Plane_ptr plane = static_pointer_cast<Plane>(planeNode->getGeometry());
+		return plane;
+	}
+
+	return Plane_ptr();
+}
+
+const SceneManager_ptr DefaultGUIManager::getSceneManager() {
+	return m_sceneManager;
 }
 
 bool DefaultGUIManager::init() {
@@ -102,16 +118,31 @@ bool DefaultGUIManager::init() {
 		return false;
 	}
 	m_mainWindow.show();
+
+	Plane_ptr plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+	m_sceneManager->insert(plane);
 	return true;
 }
 
 void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) {
+
+	if( drawMode & HP_LINE_MESH ) {
+		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
+				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
+	}
+
+	if( drawMode & HP_POINT_CLOUD ) {
+		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
+				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
+	}
+/*
 	hpcolor color(0.0, 1.0, 0.0, 1.0);
 	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
 	BSplineCurveGUIStateNode_ptr guiStateNode = BSplineCurveGUIStateNode_ptr(new BSplineCurveGUIStateNode(
 				bSplineCurve, m_toolPanel->getBSplineCurveForm(), toFinalLabel("BSplineCurve") ));
 	m_sceneManager->insert(bSplineCurve, guiStateNode);
+*/
 }
 
 void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
@@ -154,8 +185,6 @@ void DefaultGUIManager::insert(Plane_ptr plane,hpuint drawMode) {
 void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
-	if( drawMode & HP_LINE_MESH )
-			doInsert1D<SimpleGear, SimpleGearGUIStateNode>(simpleGear, SimpleGearGUIStateNode_ptr(new SimpleGearGUIStateNode(simpleGear, m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu(), "Simple Gear") ));
 }
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
@@ -179,12 +208,16 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 		cerr << "GUI state node not found." << endl;
 		return;
 	}
+	// FIXME : old point cloud needs to be deleted
 	//m_sceneManager->removeContaining(bSplineCurve, guiStateNode->getPointCloud());
 
 	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
 	hpcolor color(0.0, 1.0, 0.0, 1.0);
 	//guiStateNode->setPointCloud( pointCloud );
 	m_sceneManager->insert(bSplineCurve, pointCloud, color);
+
+	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
+	m_sceneManager->insert(bSplineCurve, lineMesh, color);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
@@ -292,6 +325,7 @@ DefaultGUIManager::DefaultViewportListener::DefaultViewportListener(DefaultGUIMa
 DefaultGUIManager::DefaultViewportListener::~DefaultViewportListener() {}
 
 void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseClickEvent(Ray& ray) {
+	m_defaultGUIManager.m_toolPanel->handleMouseClickEvent(ray);
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {

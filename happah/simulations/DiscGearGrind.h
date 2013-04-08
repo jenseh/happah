@@ -4,7 +4,7 @@
 #include <memory>
 #include <map>
 
-#include "happah/geometries/SimpleGear.h"
+#include "happah/geometries/gears/SimpleGear.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/simulations/Simulation.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
@@ -14,7 +14,7 @@
 class DiscGearGrindResult : public SimulationResult {
 public:
 	SimpleGear_ptr m_gear;
-	vector<hpcolor>* m_gearColor;
+	std::vector<hpcolor>* m_gearColor;
 	TriangleMesh_ptr m_gearMesh;
 	RigidAffineTransformation m_gearTransformation;
 	SurfaceOfRevolution_ptr m_tool;
@@ -49,7 +49,7 @@ public:
 
 private:
 	static const int STEP_COUNT = 5;
-	std::map< hpreal,DiscGearGrindResult > m_precalcResults;
+	std::map< hpreal,DiscGearGrindResult> m_precalcResults;
 
     SurfaceOfRevolution_ptr m_disc;
     SimpleGear_ptr m_gear;
@@ -62,7 +62,7 @@ private:
 
     hpreal m_maxDistance;
 
-    vector<double> m_distances;
+    std::vector<double> m_distances;
 
     Kinematic m_gearMovement;
 

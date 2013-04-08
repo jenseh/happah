@@ -1,9 +1,8 @@
 #ifndef BSPLINEGEARCURVE_H
 #define BSPLINEGEARCURVE_H
 
-#include <iostream>
-#include "happah/HappahTypes.h"
 #include "happah/geometries/BSplineCurve.h"
+#include "happah/HappahTypes.h"
 
 class BSplineGearCurve : public BSplineCurve {
 public:
@@ -13,7 +12,7 @@ public:
 
 	BSplineCurve* getEntireGear() const;
 	hpreal getAngularPitch() const;
-	unsigned int getToothCount() const;
+	hpuint getNumberOfTeeth() const;
 	hpreal getMiddleLength() const;
 	hpreal getMinLength() const;
 	hpreal getMaxLength() const;

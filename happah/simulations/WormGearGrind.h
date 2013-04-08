@@ -4,8 +4,8 @@
 #include <time.h>
 
 #include "happah/HappahTypes.h"
-#include "happah/geometries/InvoluteGear.h"
-#include "happah/geometries/Worm.h"
+#include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/geometries/ZCircleCloud.h"
 #include "happah/kdtree/KDTree.h"
 #include "happah/math/Circle.h"
@@ -36,12 +36,13 @@ public:
 
 private:
   ZCircleCloud* m_worm;
-  TriangleMesh* m_gear;
+  TriangleMesh* m_gearMesh;
 
   hpmat4x4 m_wormModelMatrix;
   hpmat4x4 m_gearModelMatrix;
 
-  constexpr static hpreal MAX_DIST = 1.0f;
+  constexpr static size_t m_resultAngleSlotCount = 100;
+  hpreal m_maxDistance;
 };
 
 #endif // WORMGEARGRIND_H

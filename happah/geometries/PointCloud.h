@@ -11,6 +11,8 @@ class PointCloud{
 public:
 	PointCloud(vector<hpvec3>* vertices);
 	virtual ~PointCloud();
+    void handleSelection(){}
+    void handleSelection(int pointIndex){}
 
 	vector<hpvec3>*getVertices();
 

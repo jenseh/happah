@@ -2,10 +2,10 @@
 
 
 
-SurfaceOfRevolution_ptr DiscGenerator::generateDiscFrom(Gear& gear) {
+SurfaceOfRevolution_ptr DiscGenerator::generateDiscFrom(CylindricalGear& cylindricalGear) {
     std::vector<hpvec2> profile;
-    profile.reserve(20);
-    gear.getToothSpaceProfile(profile);
+    profile.reserve(100);
+    cylindricalGear.getToothSpaceProfile(profile);
     invertProfile(profile);
     return SurfaceOfRevolution_ptr(new SurfaceOfRevolution(profile));
 }

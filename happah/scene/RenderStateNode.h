@@ -5,8 +5,10 @@
 #include <GL/glew.h>
 #include <memory>
 #include <vector>
+#include <list>
 #include "happah/scene/Node.h"
 #include "happah/scene/Material.h"
+#include "happah/scene/SelectListener.h"
 
 class RenderStateNode;
 typedef shared_ptr<RenderStateNode> RenderStateNode_ptr;
@@ -29,8 +31,11 @@ public:
 	void 	setColorVector(std::vector<hpcolor>* colorVector);
 	void 	setMaterial(Material& material);
 	void 	setInitialized(bool isInitialized);
-
-
+	void 	triggerSelectEvent();
+    void    triggerSelectEvent(int pointIndex);
+	void	triggerDeselectEvent();
+	void 	registerSelectListener(SelectListener* selectListener);
+	void	removeSelectListener(SelectListener* selectListener);
 
 	GLuint 					getVertexArrayObjectID();
 	GLuint 					getVertexBufferID();
@@ -61,24 +66,8 @@ private:
 	Material 				m_material;
 	bool 					m_initialized;
 	bool 					m_hasColorVector;
-
+	list<SelectListener*>	m_selectListeners;
 };
 
-/*
-class PointCloudRenderStateNode;
-typedef shared_ptr<PointCloudRenderStateNode> PointCloudRenderStateNode_ptr;
 
-#include "happah/scene/Material.h"
-#include "happah/scene/RenderStateNode.h"
-#include "happah/scene/PointCloudNode.h"
-
-class PointCloudRenderStateNode : public RenderStateNode {
-
-public:
-	PointCloudRenderStateNode(PointCloud_ptr pointCloud,hpcolor& color);
-	PointCloudRenderStateNode(PointCloud_ptr pointCloud,std::vector<hpcolor>* colorVector);
-	virtual ~PointCloudRenderStateNode();
-
-};
-*/
-#endif /* RENDER_STATE_NODE_H_ */
+#endif /*RENDER_STATE_NODE_H_ */

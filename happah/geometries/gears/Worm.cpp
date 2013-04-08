@@ -1,6 +1,6 @@
-#include "Worm.h"
+#include "happah/geometries/gears/Worm.h"
 
-Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations)
+Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal faceWidth)
 	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations)
 {
   m_standardProfile = NULL;
@@ -17,18 +17,15 @@ std::vector<hpvec3>* Worm::createVertexData() {
     // Create result vectors
     std::vector<hpvec3>* vertexData = new std::vector<hpvec3>();
     
-    // TODO: Where should resolution attributes go?
-    hpuint angleResolution = 200;
-    hpuint pointsPerTooth = 200;
     
     std::vector<hpvec2> profileTooth = std::vector<hpvec2>();
-    profileTooth.reserve(pointsPerTooth);
+    profileTooth.reserve(m_pointsPerTooth);
     m_standardProfile->getProfilePartition(profileTooth);
 
     
-    for(hpuint angleStep = 0; angleStep < angleResolution; angleStep++) {
-      hpreal angleRatio     = (hpreal)  angleStep      / angleResolution;
-      hpreal nextAngleRatio = (hpreal) (angleStep + 1) / angleResolution;
+    for(hpuint angleStep = 0; angleStep < m_angleResolution; angleStep++) {
+      hpreal angleRatio     = (hpreal)  angleStep      / m_angleResolution;
+      hpreal nextAngleRatio = (hpreal) (angleStep + 1) / m_angleResolution;
       
       hpreal angle     = angleRatio     * 2.0 * M_PI;
       hpreal nextAngle = nextAngleRatio * 2.0 * M_PI;
@@ -36,17 +33,17 @@ std::vector<hpvec3>* Worm::createVertexData() {
       for (hpuint tooth = 0; tooth < m_toothCount; tooth++) {
 //        hpreal toothRatio = (hpreal) tooth / m_toothCount;
         
-        for (hpuint posZIdx = 0; posZIdx < pointsPerTooth; posZIdx++) {
-//          hpreal pointRatio     = (hpreal) posZIdx       / pointsPerTooth;
-          hpreal nextPointRatio = (hpreal) (posZIdx + 1) / pointsPerTooth;
+        for (hpuint posZIdx = 0; posZIdx < m_pointsPerTooth; posZIdx++) {
+//          hpreal pointRatio     = (hpreal) posZIdx       / m_pointsPerTooth;
+          hpreal nextPointRatio = (hpreal) (posZIdx + 1) / m_pointsPerTooth;
           
-          hpuint angleOffset     = angleRatio     * pointsPerTooth;
-          hpuint nextAngleOffset = nextAngleRatio * pointsPerTooth;          
+          hpuint angleOffset     = angleRatio     * m_pointsPerTooth * m_rotations;
+          hpuint nextAngleOffset = nextAngleRatio * m_pointsPerTooth * m_rotations;
         
-          hpvec2 profilePointRZ = profileTooth.at((posZIdx + angleOffset) % pointsPerTooth);
-          hpvec2 profilePointRN = profileTooth.at((posZIdx + angleOffset + 1) % pointsPerTooth);
-          hpvec2 profilePointNZ = profileTooth.at((posZIdx + nextAngleOffset) % pointsPerTooth);
-          hpvec2 profilePointNN = profileTooth.at((posZIdx + nextAngleOffset + 1) % pointsPerTooth);
+          hpvec2 profilePointRZ = profileTooth.at((posZIdx + angleOffset) % m_pointsPerTooth);
+          hpvec2 profilePointRN = profileTooth.at((posZIdx + angleOffset + 1) % m_pointsPerTooth);
+          hpvec2 profilePointNZ = profileTooth.at((posZIdx + nextAngleOffset) % m_pointsPerTooth);
+          hpvec2 profilePointNN = profileTooth.at((posZIdx + nextAngleOffset + 1) % m_pointsPerTooth);
           
           hpreal radiusRZ = m_radius + profilePointRZ.y;
           hpreal radiusRN = m_radius + profilePointRN.y;
@@ -57,7 +54,7 @@ std::vector<hpvec3>* Worm::createVertexData() {
           hpreal nextPosZTooth = (tooth + (hpuint) nextPointRatio) * m_module * M_PI;
           
           hpreal posZ_RZ = posZTooth + profileTooth.at(posZIdx).x;
-          hpreal posZ_RN = nextPosZTooth + profileTooth.at((posZIdx + 1) % pointsPerTooth).x;
+          hpreal posZ_RN = nextPosZTooth + profileTooth.at((posZIdx + 1) % m_pointsPerTooth).x;
           
           hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ);
           hpvec3 pointRN = hpvec3(radiusRN * cos(angle),     radiusRN * sin(angle),     posZ_RN);
@@ -106,6 +103,10 @@ hpreal Worm::getPressureAngle() {
 	return m_pressureAngle;
 }
 
+hpreal Worm::getRotations() {
+	return m_rotations;
+}
+
 void Worm::setToothCount(hpreal toothCount) {
 	m_toothCount = toothCount;
 	updateValues();
@@ -116,6 +117,11 @@ void Worm::setModule(hpreal module) {
 }
 void Worm::setPressureAngle(hpreal pressureAngle) {
 	m_pressureAngle = pressureAngle;
+	updateValues();
+}
+
+void Worm::setRotations(hpreal rotations) {
+	m_rotations = rotations;
 	updateValues();
 }
 
@@ -132,25 +138,17 @@ TriangleMesh* Worm::toTriangleMesh() {
 }
 
 ZCircleCloud* Worm::toZCircleCloud() {
-//	// Create the profile given the current gear settings
-//	std::vector<hpvec2>* profile = new std::vector<hpvec2>(); //getGearProfile(0); //TODO:Implement
-//	std::vector<hpreal>* posZ = new std::vector<hpreal>;
-//
-//	// Determine resolution (important for following simulations)
-//	const unsigned int resolutionXY = profile->size();
-//	const unsigned int resolutionZ = 10;
-//
-//
-//	for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-//		hpreal posZValue = 1.0;//m_facewidth / resolutionZ; //TODO:Implement
-//		posZ->push_back(posZValue);
-//	}
-//
-//	hpvec3 referenceDir = hpvec3(1.0, 0.0, 0.0);
-//
-//	ZCircleCloud* result = new ZCircleCloud(profile, posZ, resolutionXY, resolutionZ, referenceDir);
-//	return result;
-	return 0;
+	hpreal maxRadius = m_radius + m_standardProfile->getMaxHeight();
+	hpreal startZ = 0.0;
+	hpreal endZ = m_toothCount * m_module * M_PI;
+
+	// Determine resolution (important for following simulations)
+	hpuint resolutionZ = m_toothCount * m_pointsPerTooth;
+
+	hpvec3 referenceDir = hpvec3(1.0, 0.0, 0.0);
+
+	ZCircleCloud* result = new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ, referenceDir);
+	return result;
 }
 
 void Worm::updateValues(){

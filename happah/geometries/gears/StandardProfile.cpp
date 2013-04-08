@@ -1,4 +1,4 @@
-#include "happah/geometries/StandardProfile.h"
+#include "happah/geometries/gears/StandardProfile.h"
 
 StandardProfile::StandardProfile(hpreal module, hpreal pressureAngle, // pressureAngle = Profilwinkel
 		hpreal filletRadius,                                          // filletRadius = Fußrundungsradius
@@ -87,6 +87,10 @@ hpreal StandardProfile::getHeight(hpreal x) const {
 								- (x - center[0]) * (x - center[0])));
 	else
 		return -m_module - m_bottomClearance;
+}
+
+hpreal StandardProfile::getMaxHeight() const {
+	return m_module;
 }
 
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition) {

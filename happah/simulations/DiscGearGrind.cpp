@@ -4,8 +4,8 @@ DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr disc
 	m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(100)
 {
 	hpreal alpha = m_gear->getHelixAngle();
-	hpreal z = -m_gear->getFacewidth();
-	hpreal y = -m_disc->getRadius() - m_gear->getBottomRadius();
+	hpreal z = -m_gear->getFaceWidth();
+	hpreal y = -m_disc->getRadius() - m_gear->getRootRadius();
 	hpvec3 start = hpvec3(0, y,  0);
 	hpvec3 end = hpvec3(sin(alpha) * z, y, z);
     m_gearMovement = Kinematic::getLinearKinematic(start, end, -alpha / M_PI * 180);

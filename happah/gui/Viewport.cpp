@@ -53,12 +53,15 @@ void Viewport::resizeGL(int width, int height) {
 	glViewport(0, 0, width, qMax(height, 1));
 	float ratio = (float) width / (float) height;
 	m_projectionMatrix = glm::perspective(45.0f, ratio, 0.1f, 100.0f);
+	m_drawManager.resizeSelectorTexture();
+
 }
 
 void Viewport::paintGL() {
 	updateView();
 
 	m_drawManager.draw(m_projectionMatrix, m_viewMatrix, m_camera);
+
 }
 
 void Viewport::updateView() {
@@ -116,6 +119,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
 	Ray ray(getMouseRay());
 	m_viewportListener.handleMouseClickEvent(ray);
+
 }
 
 void Viewport::wheelEvent(QWheelEvent *event) {
@@ -131,19 +135,8 @@ void Viewport::wheelEvent(QWheelEvent *event) {
 
 //TODO: Adapt to new achitecture
 void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
-	/*float x = (float) event->pos().x();
-	float y = (float) event->pos().y();
-	float width = (float) this->width();
-	float height = (float) this->height();
-
-	// Create 2World Matrix
-	QMatrix4x4 VP = m_projectionMatrix * m_viewMatrix;
-	float VPFloats[16];
-	const qreal* VPQreals = VP.constData();
-	glm::mat4 toWorld = glm::make_mat4(VPFloats);
-	Picker* picker = new Picker();
-	bool hit = picker->select(x, y, width, height, &toWorld, m_sceneManager);*/
-
+	m_mousePos = event->pos();
+	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
 }
 
 void Viewport::keyPressEvent(QKeyEvent* event) {}

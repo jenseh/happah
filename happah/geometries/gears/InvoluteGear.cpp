@@ -1,18 +1,20 @@
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
 #include <cmath>
 #include <sstream>
 #include <iostream>
 
+#include "happah/LoggingUtils.h"
+
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-InvoluteGear::InvoluteGear(hpuint toothCount, hpreal module, hpreal facewidth, hpreal pressureAngle,
-					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : Gear(),
-					m_toothCount(toothCount), m_module(module), m_facewidth(facewidth),
+InvoluteGear::InvoluteGear(hpuint nTeeth, hpreal module, hpreal faceWidth, hpreal pressureAngle,
+					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : CylindricalGear(),
+					m_nTeeth(nTeeth), m_module(module), m_faceWidth(faceWidth),
 					m_pressureAngle(pressureAngle),
 					m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), m_helixAngle(helixAngle) {
 }
 
-InvoluteGear::InvoluteGear(const InvoluteGear& other) : Gear(),
-				m_toothCount(other.m_toothCount), m_module(other.m_module), m_facewidth(other.m_facewidth),
+InvoluteGear::InvoluteGear(const InvoluteGear& other) : CylindricalGear(),
+				m_nTeeth(other.m_nTeeth), m_module(other.m_module), m_faceWidth(other.m_faceWidth),
 				m_pressureAngle(other.m_pressureAngle), m_bottomClearance(other.m_bottomClearance),
 				m_filletRadius(other.m_filletRadius), m_helixAngle(other.m_helixAngle) {
 }
@@ -22,9 +24,9 @@ InvoluteGear::~InvoluteGear() {}
 //TODO: do we need this?
 InvoluteGear& InvoluteGear::operator=(const InvoluteGear& other) {
 	if(this != &other) {
-		m_toothCount = other.m_toothCount;
+		m_nTeeth = other.m_nTeeth;
 		m_module = other.m_module;
-		m_facewidth = other.m_facewidth;
+		m_faceWidth = other.m_faceWidth;
 		m_pressureAngle = other.m_pressureAngle;
 		m_bottomClearance = other.m_bottomClearance;
 		m_filletRadius = other.m_filletRadius;
@@ -34,15 +36,15 @@ InvoluteGear& InvoluteGear::operator=(const InvoluteGear& other) {
 }
 
 //TODO: use logging here!
-bool InvoluteGear::verifyAndLog(bool condition, std::string message) {
+bool InvoluteGear::verifyAndLog(bool condition, string message) {
 	if(!condition)
-		std::cerr << message << std::endl;
+		cerr << message << endl;
 	return condition;
 }
 
 bool InvoluteGear::verifyConstraints(bool print) {
 	if(print) {
-		return verifyAndLog((m_toothCount > 2), "No involutes possible with only two or less teeth!")
+		return verifyAndLog((m_nTeeth > 2), "No involutes possible with only two or less teeth!")
 			&& verifyAndLog((m_pressureAngle < M_PI / 2.0f),
 					"Pressure angle is too big! A pressure angle of PI/2 would be a circle")
 			&& verifyAndLog((getBaseRadius() <= getReferenceRadius() - m_module),
@@ -58,7 +60,7 @@ bool InvoluteGear::verifyConstraints(bool print) {
 			&& verifyAndLog(getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())),
 					"Involute ends after half of angular pitch!");
 	} else {
-		return (m_toothCount > 2)
+		return (m_nTeeth > 2)
 			&& (m_pressureAngle < M_PI / 2.0f)
 			&& (getBaseRadius() <= getReferenceRadius() - m_module)
 			&& ((pow((getRootRadius() + m_filletRadius) / getBaseRadius(), 2.0f)) - 1.0f >= 0.0f)
@@ -69,9 +71,9 @@ bool InvoluteGear::verifyConstraints(bool print) {
 	}
 }
 
-hpuint InvoluteGear::getToothCount() { return m_toothCount; }
+hpuint InvoluteGear::getNumberOfTeeth() { return m_nTeeth; }
 hpreal InvoluteGear::getModule() { return m_module; }
-hpreal InvoluteGear::getFacewidth() { return m_facewidth; }
+hpreal InvoluteGear::getFaceWidth() { return m_faceWidth; }
 hpreal InvoluteGear::getPressureAngle() { return m_pressureAngle; }
 hpreal InvoluteGear::getBottomClearance() { return m_bottomClearance; }
 hpreal InvoluteGear::getFilletRadius() { return m_filletRadius; }
@@ -79,7 +81,7 @@ hpreal InvoluteGear::getHelixAngle() { return m_helixAngle; }
 
 //Teilkreisradius - where width of gaps and width of teeths have same size
 hpreal InvoluteGear::getReferenceRadius() {
-	return m_toothCount * m_module / 2.0f;
+	return m_nTeeth * m_module / 2.0f;
 }
 //Kopfkreisradius
 hpreal InvoluteGear::getTipRadius() {
@@ -95,7 +97,7 @@ hpreal InvoluteGear::getBaseRadius() {
 }
 //Teilungswinkel
 hpreal InvoluteGear::getAngularPitch() {
-	return 2.0f * M_PI / getToothCount();
+	return 2.0f * M_PI / getNumberOfTeeth();
 }
 hpreal InvoluteGear::getStopFilletInvoluteAngle() {
 	hpreal ratio = pow((getRootRadius() + m_filletRadius) / getBaseRadius(), 2.0f);
@@ -119,10 +121,10 @@ hpvec2 InvoluteGear::mirrorPoint(const hpvec2 &point, const hpvec2 &axis){
 	hpvec2 normal = glm::normalize(hpvec2(-axis.y, axis.x));
 	return (point - (normal * (glm::dot(normal, point) * 2.0f)));
 }
-hpuint* InvoluteGear::getPossibleToothCounts() {
+hpuint* InvoluteGear::getPossibleNumbersOfTeeth() {
 	hpuint minCount = 3;
 	hpuint maxCount = 30; //TODO: How can we set a good max value here?
-	return getPossibleValues<hpuint>(m_toothCount, minCount, maxCount, 1);
+	return getPossibleValues<hpuint>(m_nTeeth, minCount, maxCount, 1);
 }
 hpreal *InvoluteGear::getPossibleModules() {
 	hpreal minSize = 0.0f;
@@ -156,11 +158,11 @@ hpreal *InvoluteGear::getPossibleFilletRadien() {
 		sampleSize = (maxSize - minSize) / 100;
 	return getPossibleValues<hpreal>(m_filletRadius, minSize, maxSize, sampleSize);
 }
-bool InvoluteGear::setToothCount(hpuint toothCount) {
-	hpuint oldValue = m_toothCount;
-	m_toothCount = toothCount;
+bool InvoluteGear::setNumberOfTeeth(hpuint nTeeth) {
+	hpuint oldValue = m_nTeeth;
+	m_nTeeth = nTeeth;
 	if (!verifyConstraints()) {
-		m_toothCount = oldValue;
+		m_nTeeth = oldValue;
 		return false;
 	}
 	return true;
@@ -175,11 +177,11 @@ bool InvoluteGear::setModule(hpreal module) {
 	return true;
 }
 //Actually there is not constraint concerning the facewidth at the moment. But maybe there will be one in the future. Therefore constraints are tested anyway.
-bool InvoluteGear::setFacewidth(hpreal facewidth) {
-	hpreal oldValue = m_facewidth;
-	m_facewidth = facewidth;
+bool InvoluteGear::setFaceWidth(hpreal faceWidth) {
+	hpreal oldValue = m_faceWidth;
+	m_faceWidth = faceWidth;
 	if(!verifyConstraints()) {
-		m_facewidth = oldValue;
+		m_faceWidth = oldValue;
 		return false;
 	}
 	return true;
@@ -223,7 +225,7 @@ bool InvoluteGear::setHelixAngle(hpreal helixAngle) {
 template <class T>
 T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize) {
 
-	if (!verifyConstraints()) std::cerr << "THIS MUST NOT HAPPEN!" << std::endl; //TODO throw error or something like this instead of this line
+	if (!verifyConstraints()) cerr << "THIS MUST NOT HAPPEN!" << endl; //TODO throw error or something like this instead of this line
 
 	hpuint steps = (maxSize - minSize) / sampleSize;
 	T min = maxSize;
@@ -232,7 +234,7 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 	bool rangeFound = false;
 	bool suitableRangeFound = false;
 
-	for (hpuint i = 0; i < steps && !suitableRangeFound; ++i) {
+	for(hpuint i = 0; i < steps && !suitableRangeFound; ++i) {
 		T test = minSize + sampleSize * i;
 		testParameter = test;
 		if (verifyConstraints()) {
@@ -251,7 +253,7 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 			}
 		}
 	}
-	if (min > max) {
+	if(min > max) {
 		min = savedParameter;
 		max = savedParameter;
 	}
@@ -263,15 +265,15 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 }
 
 void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) const {
-    //TODO: implement method
+	//TODO: implement method
 }
 
-std::vector<hpvec2>* InvoluteGear::getToothProfile() {
+void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {
 
-	std::vector<hpvec2>* profile = new std::vector<hpvec2>(TOOTH_SAMPLE_SIZE);
+	hpuint toothSampleSize = toothProfile.size();
 
-	if (!verifyConstraints()) {
-		return profile;
+	if(!verifyConstraints()) {
+		return;
 	}
 
 	//angles of important locations of the toothprofile
@@ -286,11 +288,11 @@ std::vector<hpvec2>* InvoluteGear::getToothProfile() {
 	alpha3 = involuteAngleOfIntersectionWithCircle(getTipRadius());
 	beta3  = getShiftAngle() + involuteToCircleAngle(alpha3);
 
-	hpreal sampleAngleSize = getAngularPitch() / TOOTH_SAMPLE_SIZE;
+	hpreal sampleAngleSize = getAngularPitch() / toothSampleSize;
 	int sampleBeta1 = static_cast<hpuint>(beta1 / sampleAngleSize + 0.5);
 	int sampleBeta2 = static_cast<hpuint>(beta2 / sampleAngleSize + 0.5);
 	int sampleBeta3 = static_cast<hpuint>(beta3 / sampleAngleSize + 0.5);
-	int sampleBeta4 = (TOOTH_SAMPLE_SIZE % 2 == 0) ? TOOTH_SAMPLE_SIZE / 2 : TOOTH_SAMPLE_SIZE / 2 + 1;
+	int sampleBeta4 = (toothSampleSize % 2 == 0) ? toothSampleSize / 2 : toothSampleSize / 2 + 1;
 
 	//if assertion fails, values haven't been possible for involute gear and construction would fail!
 	assert(sampleBeta1 >= 0
@@ -298,17 +300,17 @@ std::vector<hpvec2>* InvoluteGear::getToothProfile() {
 		&& sampleBeta3 >= sampleBeta2
 		&& sampleBeta4 >= sampleBeta3);
 
-	insertCirclePoints(  *profile,           0, sampleBeta1, sampleAngleSize, getRootRadius());
-	insertFilletPoints(  *profile, sampleBeta1, sampleBeta2, sampleAngleSize, alpha2);
-	insertInvolutePoints(*profile, sampleBeta2, sampleBeta3, alpha2, alpha3);
-	insertCirclePoints(  *profile, sampleBeta3, sampleBeta4, sampleAngleSize, getTipRadius());
+	insertCirclePoints(  toothProfile,           0, sampleBeta1, sampleAngleSize, getRootRadius());
+	insertFilletPoints(  toothProfile, sampleBeta1, sampleBeta2, sampleAngleSize, alpha2);
+	insertInvolutePoints(toothProfile, sampleBeta2, sampleBeta3, alpha2, alpha3);
+	insertCirclePoints(  toothProfile, sampleBeta3, sampleBeta4, sampleAngleSize, getTipRadius());
 
-	return profile;
 }
 
-void InvoluteGear::insertCirclePoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
+void InvoluteGear::insertCirclePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
 		const hpreal &sampleAngleSize, const hpreal &radius) {
-	for (hpuint i = start; i < stopBefore; ++i) {
+
+	for(hpuint i = start; i < stopBefore; ++i) {
 		v[i].x = radius * glm::sin(sampleAngleSize * i);
 		v[i].y = radius * glm::cos(sampleAngleSize * i);
 		hpuint j = v.size() - 1 - i; //mirrored side
@@ -316,7 +318,8 @@ void InvoluteGear::insertCirclePoints(std::vector<hpvec2> &v, const hpuint &star
 		v[j].y = radius * glm::cos(sampleAngleSize * j);
 	}
 }
-void InvoluteGear::insertFilletPoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
+
+void InvoluteGear::insertFilletPoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
 		const hpreal &sampleAngleSize, const hpreal &touchEvolvAngle) {
 
 	hpreal shift = getShiftAngle();
@@ -327,7 +330,7 @@ void InvoluteGear::insertFilletPoints(std::vector<hpvec2> &v, const hpuint &star
 	hpreal mirrorAngle = getAngularPitch() / 2.0f;
 	hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 
-	for (hpuint i = start; i < stopBefore; ++i) {
+	for(hpuint i = start; i < stopBefore; ++i) {
 		hpvec2 direction;
 		direction.x = glm::sin(i * sampleAngleSize);
 		direction.y = glm::cos(i * sampleAngleSize);
@@ -340,14 +343,14 @@ void InvoluteGear::insertFilletPoints(std::vector<hpvec2> &v, const hpuint &star
 	}
 }
 
-void InvoluteGear::insertInvolutePoints(std::vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
+void InvoluteGear::insertInvolutePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
 		const hpreal &startInvAngle, const hpreal &stopInvAngle) {
 
 	hpreal mirrorAngle = getAngularPitch() / 2.0f;
 	hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 	hpreal angleStep = (stopInvAngle - startInvAngle) / (stopBefore - start);
 
-	for (hpuint i = start; i < stopBefore; ++i) {
+	for(hpuint i = start; i < stopBefore; ++i) {
 		v[i] = pointOnRightTurnedInvolute(getShiftAngle(), startInvAngle + (i - start) * angleStep);
 		v[v.size() - 1 - i] = mirrorPoint(v[i], mirrorAxis);
 	}
@@ -360,33 +363,36 @@ hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle
 	point.y = radius * glm::cos(involuteStartAngle + angle) + radius * angle * glm::sin(involuteStartAngle + angle);
 	return point;
 }
-TriangleMesh* InvoluteGear::toTriangleMesh() {
 
-	TriangleMesh* mesh = Gear::toTriangleMesh();
+TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
+
+	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
+	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
 	//TODO: replace following two lines with good value for innerGearRadius
-	std::vector<hpvec2>* profile = getGearProfile(0);
-	hpreal innerGearRadius = glm::length(profile->at(0)) / 2.0f;
+	getTraverseProfile(0, profile);
+	hpreal innerGearRadius = glm::length(profile[0]) / 2.0f;
 	vector<hpvec3>* vertexData = mesh->getVertexData();
 	vector<hpuint>* indices = mesh->getIndices();
 
 	for(hpuint side = 0; side < 2; ++side) {
-		profile = getGearProfile(side * getFacewidth());
-		hpreal depth = side * getFacewidth();
+		getTraverseProfile(side * getFaceWidth(), profile);
+		hpreal z = side * getFaceWidth();
 		hpuint startIndex = vertexData->size() / 2;
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
-		if (side == 1)
+		if(side == 1)
 			normal *= -1.0f;
-		for(hpuint i = 0; i < profile->size(); ++i) {
-			hpvec2 currentProfilePoint = profile->at(i);
+		for(vector<hpvec2>::iterator it = profile.begin(), end = profile.end(); it != end; ++it) {
+			hpvec2 currentProfilePoint = *it;
 			hpvec2 currentInnerPoint = glm::normalize(currentProfilePoint) * innerGearRadius;
 
-			vertexData->push_back(hpvec3(currentInnerPoint, depth));
+			vertexData->push_back(hpvec3(currentInnerPoint, z));
 			vertexData->push_back(normal);
-			vertexData->push_back(hpvec3(currentProfilePoint, depth));
+			vertexData->push_back(hpvec3(currentProfilePoint, z));
 			vertexData->push_back(normal);
 		}
 
-		for(hpuint i = startIndex, g = 0; i < vertexData->size() / 2 - 2; ++i, ++g) {
+		hpuint nNewIndices = vertexData->size() / 2 - 2;
+		for(hpuint i = startIndex, g = 0; i < nNewIndices; ++i, ++g) {
 			indices->push_back(i);
 			if(g % 2 == 0) {
 				indices->push_back(i + 1);
@@ -406,55 +412,14 @@ TriangleMesh* InvoluteGear::toTriangleMesh() {
 	}
 	return mesh;
 }
-/*
-ZCircleCloud* InvoluteGear::toZCircleCloud() {
-	// Create the profile given the current gear settings
-	std::vector<hpvec2> *profile = getGearProfile(0);
-	
-	const unsigned int profSize = profile->size();
 
-	// Determine resolution (important for following simulations)
-	const unsigned int resolutionXY = profSize;
-	const unsigned int resolutionZ = 10;
-
-	std::vector<glm::vec2>* points = this->getGearProfile(0);
-	std::vector<float>* posZ = new std::vector<float>;
-
-	for (unsigned int stepZ = 0; stepZ < resolutionZ; stepZ++) {
-		float posZValue = m_facewidth / resolutionZ;
-		posZ->push_back(posZValue);
-	}
-
-	glm::vec3 referenceDir = glm::vec3(1.0f, 0.0f, 0.0f);
-
-	ZCircleCloud* result = new ZCircleCloud(points, posZ, resolutionXY, resolutionZ, referenceDir);
-	result->setModelMatrix(m_modelMatrix);
-	return result;
-}*/
-
-SimpleGear* InvoluteGear::toSimpleGear() {
-	BSplineGearCurve *toothProfile = new BSplineGearCurve();
-	toothProfile->setDegree(1);
-	toothProfile->setPeriodic(false);
-	toothProfile->approximatePoints(getToothProfile(), 20);
-	SimpleGear *simpleGear = new SimpleGear(toothProfile, m_helixAngle, m_facewidth);
+SimpleGear* InvoluteGear::toSimpleGear(hpuint toothSampleSize) {
+	BSplineGearCurve *toothProfileCurve = new BSplineGearCurve();
+	toothProfileCurve->setDegree(1);
+	toothProfileCurve->setPeriodic(false);
+	vector<hpvec2> toothProfilePoints(toothSampleSize);
+	getToothProfile(toothProfilePoints);
+	toothProfileCurve->approximatePoints(&toothProfilePoints, toothSampleSize);
+	SimpleGear *simpleGear = new SimpleGear(toothProfileCurve, m_helixAngle, m_faceWidth);
 	return simpleGear;
-}
-
-
-std::string InvoluteGear::toString() {
-	std::stringstream info;
-	info << "Gear:" << std::endl;
-	info << "tooth count      = " << getToothCount()<< std::endl;
-	info << "module           = " << m_module << std::endl;
-	info << "pressure angle   = " << m_pressureAngle << std::endl;
-	info << "tip radius       = " << getTipRadius() << std::endl;
-	info << "ref. radius      = " << getReferenceRadius() << std::endl;
-	info << "base radius      = " << getBaseRadius() << std::endl;
-	info << "root radius      = " << getRootRadius() << std::endl;
-	info << "fillet radius    = " << m_filletRadius << std::endl;
-	info << "bottom clearance = " << m_bottomClearance << std::endl;
-	info << "helix angle      = " << m_helixAngle << std::endl;
-	info << "angular pitch    = " << getAngularPitch() << std::endl;
-	return info.str();
 }

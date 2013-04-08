@@ -9,28 +9,30 @@ QT += core \
 HEADERS += \
 	happah/Happah.h \
 	happah/HappahTypes.h \
+	happah/LoggingUtils.h \
 \
-#	happah/geometries/BasicRack.h \
+#	happah/geometries/gears/BasicRack.h \
 	happah/geometries/BSplineCurve.h \
-	happah/geometries/BSplineGearCurve.h \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
-        happah/geometries/DiscGenerator.h \
-	happah/geometries/Gear.h \
+	happah/geometries/DiscGenerator.h \
 	happah/geometries/Geometry.h \ 
-	happah/geometries/InvoluteGear.h \
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
 	happah/geometries/PointCloud.h\
 #	happah/geometries/RayCloud.h \
-	happah/geometries/SimpleGear.h \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
-	happah/geometries/StandardProfile.h \
-        happah/geometries/SurfaceOfRevolution.h \
+	happah/geometries/gears/StandardProfile.h \
+	happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
-	happah/geometries/Worm.h \
-#	happah/geometries/ZCircleCloud.h \
+	happah/geometries/gears/Worm.h \
+	happah/geometries/ZCircleCloud.h \
+\
+	happah/geometries/gears/BSplineGearCurve.h \
+	happah/geometries/gears/CylindricalGear.h \
+	happah/geometries/gears/InvoluteGear.h \
+	happah/geometries/gears/SimpleGear.h \
 \
 	happah/gui/DefaultGUIManager.h \
 	happah/gui/DrawManager.h \
@@ -71,10 +73,10 @@ HEADERS += \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
 \
-        happah/scene/BSplineCurveNode.h \
+	happah/scene/BSplineCurveNode.h \
 	happah/scene/DiscNode.h \
 	happah/scene/DrawVisitor.h \
-        happah/scene/DiscGearGrindNode.h \
+	happah/scene/DiscGearGrindNode.h \
 	happah/scene/ElementRenderStateNode.h\
 	happah/scene/GeometryFindVisitor.h \
 	happah/scene/GUIStateNode.h \
@@ -87,13 +89,14 @@ HEADERS += \
 	happah/scene/PointCloudRenderStateNode.h\
 	happah/scene/RayIntersectionVisitor.h \
 	happah/scene/RenderStateNode.h\
-        happah/scene/SimulationNode.h \
-        happah/scene/SimulationVisitor.h \
+	happah/scene/SimulationNode.h \
+	happah/scene/SimulationVisitor.h \
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
+#        happah/scene/SelectVisitor.h\
 	happah/scene/SimpleGearNode.h \
-        happah/scene/SimpleGeometryNode.h \
+	happah/scene/SimpleGeometryNode.h \
 	happah/scene/SpherePatchNode.h\
 	happah/scene/TriangleMeshNode.h \
 	happah/scene/WormNode.h \
@@ -102,37 +105,41 @@ HEADERS += \
 	happah/simulations/DiscGearGrind.h \
 	happah/simulations/Kinematic.h \
 	happah/simulations/Simulation.h \
-#	happah/simulations/WormGearGrind.h \
+	happah/simulations/WormGearGrind.h \
 \
-        happah/transformations/RigidAffineTransformation.h \
+	happah/transformations/RigidAffineTransformation.h \
+\	
+	happah-test/simulations/WormGearGrindTest.h
 
 
 #KEEP SOURCES SORTED!!!
 SOURCES += \
 	happah/main.cpp \
 	happah/Happah.cpp \
+	happah/LoggingUtils.cpp \
 \
-#	happah/geometries/BasicRack.cpp \
+#	happah/geometries/gears/BasicRack.cpp \
 	happah/geometries/BSplineCurve.cpp \
-	happah/geometries/BSplineGearCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
-        happah/geometries/DiscGenerator.cpp \
-	happah/geometries/Gear.cpp \
+	happah/geometries/DiscGenerator.cpp \
 	happah/geometries/Geometry.cpp \
-	happah/geometries/InvoluteGear.cpp \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
 	happah/geometries/PointCloud.cpp\
 #	happah/geometries/RayCloud.cpp \
-	happah/geometries/SimpleGear.cpp \
 #	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
-	happah/geometries/StandardProfile.cpp \
-        happah/geometries/SurfaceOfRevolution.cpp \
+	happah/geometries/gears/StandardProfile.cpp \
+	happah/geometries/SurfaceOfRevolution.cpp \
 #	happah/geometries/TriPatch.cpp \
-	happah/geometries/Worm.cpp \
-#	happah/geometries/ZCircleCloud.cpp \
+	happah/geometries/gears/Worm.cpp \
+	happah/geometries/ZCircleCloud.cpp \
+\
+	happah/geometries/gears/BSplineGearCurve.cpp \
+	happah/geometries/gears/CylindricalGear.cpp \
+	happah/geometries/gears/InvoluteGear.cpp \
+	happah/geometries/gears/SimpleGear.cpp \
 \
 	happah/gui/DefaultGUIManager.cpp \
 	happah/gui/DrawManager.cpp \
@@ -170,8 +177,8 @@ SOURCES += \
 	happah/math/Ray.cpp \
 \
 	happah/scene/BSplineCurveNode.cpp \
-        happah/scene/DiscNode.cpp \
-        happah/scene/DiscGearGrindNode.cpp \
+	happah/scene/DiscNode.cpp \
+	happah/scene/DiscGearGrindNode.cpp \
 	happah/scene/ElementRenderStateNode.cpp\
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
@@ -184,8 +191,8 @@ SOURCES += \
 	happah/scene/RayIntersectionVisitor.cpp \
 	happah/scene/RenderStateNode.cpp\
 	happah/scene/SceneManager.cpp \
-        happah/scene/SceneVisitor.cpp \
-        happah/scene/SimulationNode.cpp \
+	happah/scene/SceneVisitor.cpp \
+	happah/scene/SimulationNode.cpp \
 	happah/scene/SimpleGearNode.cpp \
 	happah/scene/SpherePatchNode.cpp\
 	happah/scene/TriangleMeshNode.cpp \
@@ -195,10 +202,12 @@ SOURCES += \
 	happah/simulations/DiscGearGrind.cpp \
 	happah/simulations/Kinematic.cpp \
 	happah/simulations/Simulation.cpp \
-#	happah/simulations/WormGearGrind.cpp \
+	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
-
+\	
+	happah-test/simulations/WormGearGrindTest.cpp
+	
 FORMS += 
 RESOURCES += 
 
@@ -211,7 +220,8 @@ win32 {
 unix {
 	QMAKE_CXXFLAGS += -std=c++0x
 	LIBS += -lGLEW
-	INCLUDEPATH += /usr/include $$system(pwd)
+        INCLUDEPATH += /usr/include $$system(pwd)\
+        INCLUDEPATH += /home/stud/s_sauer/happah/includes
 }
 
 CONFIG(debug) {

@@ -9,6 +9,10 @@ void PlaneNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
+void PlaneNode::insertChild(BSplineCurveNode_ptr curveNode) {
+	Node::insertChild(curveNode);
+}
+
 void PlaneNode::insertChild(PlaneGUIStateNode_ptr planeGUIStateNode) {
 	Node::insertChild(planeGUIStateNode);
 }

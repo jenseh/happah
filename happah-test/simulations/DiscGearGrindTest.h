@@ -3,7 +3,7 @@
 
 
 #include "../core/geometries/Disc.h"
-#include "../core/geometries/InvoluteGear.h"
+#include "../core/geometries/gears/InvoluteGear.h"
 #include "../core/simulations/DiscGearGrind.h"
 
 class DiscGearGrindTest

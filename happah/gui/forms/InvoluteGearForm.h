@@ -1,10 +1,10 @@
 #ifndef INVOLUTE_GEAR_FORM_H
 #define INVOLUTE_GEAR_FORM_H
 
-#include "happah/geometries/InvoluteGear.h"
+#include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/gui/forms/Form.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/Slider.h"
-#include "happah/gui/forms/Form.h"
 
 class InvoluteGearForm : public Form {
 Q_OBJECT
@@ -27,18 +27,18 @@ private:
 	Slider* m_helixAngleSlider;
 	Slider* m_moduleSlider;
 	Slider* m_pressureAngleSlider;
-	Slider* m_toothCountSlider;
+	Slider* m_nTeethSlider;
 
 	void updateInvoluteGear();
 
 private slots:
 	void changeBottomClearance(hpreal bottomClearance);
-	void changeFacewidth(hpreal facewidth);
+	void changeFaceWidth(hpreal faceWidth);
 	void changeFilletRadius(hpreal radius);
 	void changeHelixAngle(hpreal angle);
 	void changeModule(hpreal module);
 	void changePressureAngle(hpreal angle);
-	void changeToothCount(hpreal toothCount);
+	void changeNumberOfTeeth(hpreal nTeeth);
 	void createInvoluteGear();
 	void updateRanges();
 

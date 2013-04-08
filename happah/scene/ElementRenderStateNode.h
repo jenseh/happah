@@ -9,9 +9,6 @@
 #include "happah/scene/RenderStateNode.h"
 #include "happah/scene/DrawVisitor.h"
 
-class ElementRenderStateNode;
-typedef shared_ptr<ElementRenderStateNode> ElementRenderStateNode_ptr;
-
 using namespace std;
 
 class ElementRenderStateNode : public RenderStateNode{
@@ -24,15 +21,17 @@ public:
 
 
 	void					setIndexBufferID(GLuint id);
-
+	void 					setSelected(int selected);
+	int						getSelected();
 	GLuint 					getIndexBufferID();
 	GLuint 					getMode();
 	vector<hpuint>* 		getIndices();
-
+	ElementRenderStateNode_ptr getPtr(){return dynamic_pointer_cast<ElementRenderStateNode>(shared_from_this());}
 private:
 	vector<hpuint>*			m_indices;
 	GLuint 					m_indexBufferID;
 	GLuint 					m_mode;
+	int						m_selected;
 };
 
 class TriangleMeshRenderStateNode;

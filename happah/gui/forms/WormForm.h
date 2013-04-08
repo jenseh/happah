@@ -2,7 +2,7 @@
 #define WORM_FORM_H
 
 #include "happah/gui/GUIManager.h"
-#include "happah/gui/Slider.h"
+#include "happah/gui/widgets/LabeledRealValuedSlider.h"
 #include "happah/gui/forms/Form.h"
 
 class WormForm : public Form {
@@ -18,10 +18,10 @@ public:
 
 private:
 	GUIManager& m_guiManager;
-	Slider* m_moduleSlider;
-	Slider* m_pressureAngleSlider;
-	Slider* m_toothCountSlider;
-	Slider* m_rotationsSlider;
+	LabeledRealValuedSlider* m_moduleSlider;
+	LabeledRealValuedSlider* m_pressureAngleSlider;
+	LabeledRealValuedSlider* m_toothCountSlider;
+	LabeledRealValuedSlider* m_rotationsSlider;
 	Worm_ptr m_worm;
 	bool m_wormInserted;
 

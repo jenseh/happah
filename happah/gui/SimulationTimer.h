@@ -3,7 +3,7 @@
 #include <QPushButton>
 #include "happah/HappahTypes.h"
 #include <glm/glm.hpp>
-#include "happah/gui/Slider.h"
+#include "happah/gui/widgets/LabeledRealValuedSlider.h"
 #include <QTimer>
 #include <QLayout>
 
@@ -22,7 +22,7 @@ class SimulationTimer: public QGroupBox, public SimulationVisitor {
 	hpreal m_tickTime;// how often in ms
 	QTimer* m_timer;
 	bool m_timerIsRunning;
-	Slider* m_timeSlider;
+	LabeledRealValuedSlider* m_timeSlider;
 
 	void updateSlider();
 

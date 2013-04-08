@@ -4,7 +4,6 @@
 #include "happah/geometries/DiscGenerator.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
-#include "happah/gui/Slider.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/simulations/DiscGearGrind.h"
 #include "happah/simulations/Simulation.h"

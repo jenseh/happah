@@ -410,17 +410,19 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 	vector<hpvec3>* vertexData = mesh->getVertexData();
 	vector<hpuint>* indices = mesh->getIndices();
 
-	vertexData->reserve(vertexData->size() + 2 * (profile.size() * 4)); //avoid reallocation in for loop which would cause iterator invalidity
-	indices->reserve(indices->size() + 2 * (profile.size() * 2 * 3));
+	vertexData->reserve(vertexData->size() + 2 * (profile.size() * 6)); //avoid reallocation in for loop which would cause iterator invalidity
+	indices->reserve(indices->size() + 3 * (profile.size() * 2 * 3));
 
+	hpuint startNewIndices = vertexData->size() / 2;
 	for(hpuint side = 0; side < 2; ++side) {
 		getTraverseProfile(side * getFaceWidth(), profile);
 		hpreal z = side * getFaceWidth();
+		
 		hpuint startIndex = vertexData->size() / 2;
-		hpuint stopIndex = startIndex + profile.size() * 2;
+		hpuint stopIndex = startIndex + profile.size() * 3;
 
 		vector<hpvec3>::iterator vertexDataIterator = --(vertexData->end()); //points to last element of vertexData
-		vertexData->resize(vertexData->size() + profile.size() * 4);
+		vertexData->resize(vertexData->size() + profile.size() * 6);
 
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
 		if(side == 1)
@@ -433,29 +435,54 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 			*(++vertexDataIterator) = normal;
 			*(++vertexDataIterator) = hpvec3(currentProfilePoint, z);
 			*(++vertexDataIterator) = normal;
+
+			//point for bore surface
+			*(++vertexDataIterator) = hpvec3(currentInnerPoint, z);
+			*(++vertexDataIterator) = glm::normalize(hpvec3(-currentInnerPoint.x, -currentInnerPoint.y, 0.0f));
 		}
 
 		vector<hpuint>::iterator indicesIterator = --(indices->end()); //points to last element of indices
 		indices->resize(indices->size() + profile.size() * 2 * 3);
 
-		for(hpuint i = startIndex, g = 0; i < (stopIndex - 2); ++i, ++g) {
+		for(hpuint i = startIndex; i < (stopIndex - 3); i += 3) {
 			*(++indicesIterator) = i;
-			if(g % 2 == 0) {
-				*(++indicesIterator) = i + 1;
-				*(++indicesIterator) = i + 2;
-			} else {
-				*(++indicesIterator) = i + 2;
-				*(++indicesIterator) = i + 1;
-			}
+			*(++indicesIterator) = i + 1;
+			*(++indicesIterator) = i + 3;
+
+			*(++indicesIterator) = i + 1;
+			*(++indicesIterator) = i + 4;
+			*(++indicesIterator) = i + 3;
 		}
+		*(++indicesIterator) = stopIndex - 3;
 		*(++indicesIterator) = stopIndex - 2;
-		*(++indicesIterator) = stopIndex - 1;
 		*(++indicesIterator) = startIndex;
 
-		*(++indicesIterator) = stopIndex - 1;
+		*(++indicesIterator) = stopIndex - 2;
 		*(++indicesIterator) = startIndex + 1;
 		*(++indicesIterator) = startIndex;
 	}
+	//indices for bore surface
+	hpuint distToOtherSide = profile.size() * 3;
+	hpuint stopIndex = startNewIndices + distToOtherSide;
+	vector<hpuint>::iterator indicesIterator = --(indices->end()); //points to last element of indices
+	indices->resize(indices->size() + profile.size() * 2 * 3);
+	vector<hpuint>::const_iterator end = indices->end();
+	for(hpuint i = startNewIndices; i < (stopIndex - 3); i += 3) {
+		*(++indicesIterator) = i + 2;
+		*(++indicesIterator) = i + distToOtherSide;
+		*(++indicesIterator) = i + 5;
+
+		*(++indicesIterator) = i + distToOtherSide;
+		*(++indicesIterator) = i + distToOtherSide + 3;
+		*(++indicesIterator) = i + 5;
+	}
+	*(++indicesIterator) = stopIndex - 1;
+	*(++indicesIterator) = stopIndex - 1 + distToOtherSide;
+	*(++indicesIterator) = startNewIndices + 2;
+
+	*(++indicesIterator) = stopIndex - 1 + distToOtherSide;
+	*(++indicesIterator) = startNewIndices + distToOtherSide;
+	*(++indicesIterator) = startNewIndices + 2;
 	return mesh;
 }
 

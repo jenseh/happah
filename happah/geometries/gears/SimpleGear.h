@@ -36,7 +36,7 @@ public:
 	void setToothProfile(BSplineGearCurve* curve);
 	void setRadius(hpreal radius);
 
-	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) const;
+	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
 
 };

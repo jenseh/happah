@@ -52,7 +52,7 @@ public:
 	//getToothProfile should return all points of one tooth,
 	//even the last point, which must be the same one as the
 	//first one of next tooth.
-	virtual void getToothSpaceProfile(vector<hpvec2>& profile) const = 0;
+	virtual void getToothSpaceProfile(vector<hpvec2>& profile) = 0;
 	virtual void getToothProfile(vector<hpvec2>& toothProfile) = 0;
 	//getTraverseProfile can use getToothProfile but has to bear in mind
 	//that no two points may lay on each other - so special care is

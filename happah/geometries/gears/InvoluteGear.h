@@ -82,7 +82,7 @@ public:
     bool setFilletRadius(hpreal filletRadius);
     bool setHelixAngle(hpreal helixAngle);
 
-    void getToothSpaceProfile(vector<hpvec2> &profile) const;
+    void getToothSpaceProfile(vector<hpvec2> &profile);
     void getToothProfile(vector<hpvec2>& toothProfile);
     TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
     SimpleGear* toSimpleGear(hpuint toothSampleSize = 100);

@@ -6,17 +6,36 @@
 #include "happah/LoggingUtils.h"
 
 // Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
-InvoluteGear::InvoluteGear(hpuint nTeeth, hpreal module, hpreal faceWidth, hpreal pressureAngle,
-					hpreal bottomClearance, hpreal filletRadius, hpreal helixAngle) : CylindricalGear(),
-					m_nTeeth(nTeeth), m_module(module), m_faceWidth(faceWidth),
-					m_pressureAngle(pressureAngle),
-					m_bottomClearance(bottomClearance), m_filletRadius(filletRadius), m_helixAngle(helixAngle) {
+InvoluteGear::InvoluteGear(
+	hpuint nTeeth,
+	hpreal module,
+	hpreal faceWidth,
+	hpreal pressureAngle,
+	hpreal bottomClearance,
+	hpreal filletRadius,
+	hpreal helixAngle,
+	hpreal boreRadius
+) : CylindricalGear(),
+	m_nTeeth(nTeeth),
+	m_module(module),
+	m_faceWidth(faceWidth),
+	m_pressureAngle(pressureAngle),
+	m_bottomClearance(bottomClearance),
+	m_filletRadius(filletRadius),
+	m_helixAngle(helixAngle),
+	m_boreRadius(boreRadius) {
 }
 
-InvoluteGear::InvoluteGear(const InvoluteGear& other) : CylindricalGear(),
-				m_nTeeth(other.m_nTeeth), m_module(other.m_module), m_faceWidth(other.m_faceWidth),
-				m_pressureAngle(other.m_pressureAngle), m_bottomClearance(other.m_bottomClearance),
-				m_filletRadius(other.m_filletRadius), m_helixAngle(other.m_helixAngle) {
+InvoluteGear::InvoluteGear(const InvoluteGear& other)
+  : CylindricalGear(),
+	m_nTeeth(other.m_nTeeth),
+	m_module(other.m_module),
+	m_faceWidth(other.m_faceWidth),
+	m_pressureAngle(other.m_pressureAngle),
+	m_bottomClearance(other.m_bottomClearance),
+	m_filletRadius(other.m_filletRadius),
+	m_helixAngle(other.m_helixAngle),
+	m_boreRadius(other.m_boreRadius) {
 }
 
 InvoluteGear::~InvoluteGear() {}
@@ -31,6 +50,7 @@ InvoluteGear& InvoluteGear::operator=(const InvoluteGear& other) {
 		m_bottomClearance = other.m_bottomClearance;
 		m_filletRadius = other.m_filletRadius;
 		m_helixAngle = other.m_helixAngle;
+		m_boreRadius = other.m_boreRadius;
 	}
 	return *this;
 }
@@ -58,7 +78,9 @@ bool InvoluteGear::verifyConstraints(bool print) {
 			&& verifyAndLog(getStopFilletInvoluteAngle() <= involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module),
 					"Fillet ends when working depth (gemeinsame Zahnhöhe) already started!")
 			&& verifyAndLog(getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())),
-					"Involute ends after half of angular pitch!");
+					"Involute ends after half of angular pitch!")
+			&& verifyAndLog(m_boreRadius >= 0.0f && m_boreRadius <= getRootRadius(),
+					"Bore radius is too small or too big!");
 	} else {
 		return (m_nTeeth > 2)
 			&& (m_pressureAngle < M_PI / 2.0f)
@@ -67,7 +89,8 @@ bool InvoluteGear::verifyConstraints(bool print) {
 			&& (getStopFilletInvoluteAngle() >= 0)
 			&& (getShiftAngle() - getStartFilletAngle() >= 0)
 			&& (getStopFilletInvoluteAngle() <= involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module))
-			&& (getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())));
+			&& (getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())))
+			&& (m_boreRadius >= 0.0f && m_boreRadius < getRootRadius());
 	}
 }
 
@@ -78,6 +101,7 @@ hpreal InvoluteGear::getPressureAngle() { return m_pressureAngle; }
 hpreal InvoluteGear::getBottomClearance() { return m_bottomClearance; }
 hpreal InvoluteGear::getFilletRadius() { return m_filletRadius; }
 hpreal InvoluteGear::getHelixAngle() { return m_helixAngle; }
+hpreal InvoluteGear::getBoreRadius() { return m_boreRadius; }
 
 //Teilkreisradius - where width of gaps and width of teeths have same size
 hpreal InvoluteGear::getReferenceRadius() {
@@ -126,19 +150,19 @@ hpuint* InvoluteGear::getPossibleNumbersOfTeeth() {
 	hpuint maxCount = 30; //TODO: How can we set a good max value here?
 	return getPossibleValues<hpuint>(m_nTeeth, minCount, maxCount, 1);
 }
-hpreal *InvoluteGear::getPossibleModules() {
+hpreal* InvoluteGear::getPossibleModules() {
 	hpreal minSize = 0.0f;
 	hpreal maxSize = 1.5f; //TODO: How can we set a good max value here?
 	hpreal sampleSize = (m_module == 0.0f) ? 0.000001f : m_module / 100.0f;
 	return getPossibleValues<hpreal>(m_module, minSize, maxSize, sampleSize);
 }
-hpreal *InvoluteGear::getPossiblePressureAngles() {
+hpreal* InvoluteGear::getPossiblePressureAngles() {
 	hpreal minSize = M_PI / 180.0f;
 	hpreal maxSize = M_PI / 2.0f;
 	hpreal sampleSize = (m_pressureAngle == 0.0f) ? 0.000001f : m_pressureAngle / 100.0f;
 	return getPossibleValues<hpreal>(m_pressureAngle, minSize, maxSize, sampleSize);
 }
-hpreal *InvoluteGear::getPossibleBottomClearances() {
+hpreal* InvoluteGear::getPossibleBottomClearances() {
 	hpreal minSize = 0.0f;
 	hpreal maxSize = getReferenceRadius() - m_module - getBaseRadius() + m_filletRadius;
 	hpreal sampleSize = (glm::min(m_bottomClearance, m_filletRadius) / 10.0f);
@@ -148,7 +172,7 @@ hpreal *InvoluteGear::getPossibleBottomClearances() {
 		sampleSize = (maxSize - minSize) / 100;
 	return getPossibleValues<hpreal>(m_bottomClearance, minSize, maxSize, sampleSize);
 }
-hpreal *InvoluteGear::getPossibleFilletRadien() {
+hpreal* InvoluteGear::getPossibleFilletRadii() {
 	hpreal minSize = 0.0f;
 	hpreal maxSize = getAngularPitch() / 4;
 	hpreal sampleSize = (glm::min(m_bottomClearance, m_filletRadius) / 10.0f);
@@ -157,6 +181,12 @@ hpreal *InvoluteGear::getPossibleFilletRadien() {
 	if (sampleSize <= 0.0f)
 		sampleSize = (maxSize - minSize) / 100;
 	return getPossibleValues<hpreal>(m_filletRadius, minSize, maxSize, sampleSize);
+}
+hpreal* InvoluteGear::getPossibleBoreRadii() {
+	hpreal *minmax = new hpreal(2);
+	minmax[0] = 0.0f;
+	minmax[1] = getRootRadius();
+	return minmax;
 }
 bool InvoluteGear::setNumberOfTeeth(hpuint nTeeth) {
 	hpuint oldValue = m_nTeeth;
@@ -221,9 +251,18 @@ bool InvoluteGear::setHelixAngle(hpreal helixAngle) {
 		return false;
 	}
 }
+bool InvoluteGear::setBoreRadius(hpreal boreRadius) {
+	hpreal oldValue = m_boreRadius;
+	m_boreRadius = boreRadius;
+	if(!verifyConstraints()) {
+		m_boreRadius = oldValue;
+		return false;
+	}
+	return true;
+}
 
 template <class T>
-T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize) {
+T* InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sampleSize) {
 
 	if (!verifyConstraints()) cerr << "THIS MUST NOT HAPPEN!" << endl; //TODO throw error or something like this instead of this line
 
@@ -258,7 +297,7 @@ T *InvoluteGear::getPossibleValues(T &testParameter, T minSize, T maxSize, T sam
 		max = savedParameter;
 	}
 	testParameter = savedParameter;
-	T *minmax = new T[2];
+	T* minmax = new T[2];
 	minmax[0] = min;
 	minmax[1] = max;
 	return minmax;
@@ -315,8 +354,8 @@ void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {
 
 }
 
-void InvoluteGear::insertCirclePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
-		const hpreal &sampleAngleSize, const hpreal &radius) {
+void InvoluteGear::insertCirclePoints(vector<hpvec2>& v, const hpuint& start, const hpuint& stopBefore,
+		const hpreal& sampleAngleSize, const hpreal& radius) {
 
 	for(hpuint i = start; i < stopBefore; ++i) {
 		v[i].x = radius * glm::sin(sampleAngleSize * i);
@@ -327,8 +366,8 @@ void InvoluteGear::insertCirclePoints(vector<hpvec2> &v, const hpuint &start, co
 	}
 }
 
-void InvoluteGear::insertFilletPoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
-		const hpreal &sampleAngleSize, const hpreal &touchEvolvAngle) {
+void InvoluteGear::insertFilletPoints(vector<hpvec2>& v, const hpuint& start, const hpuint& stopBefore,
+		const hpreal& sampleAngleSize, const hpreal& touchEvolvAngle) {
 
 	hpreal shift = getShiftAngle();
 	hpvec2 involutePoint = pointOnRightTurnedInvolute(shift, touchEvolvAngle);
@@ -351,8 +390,8 @@ void InvoluteGear::insertFilletPoints(vector<hpvec2> &v, const hpuint &start, co
 	}
 }
 
-void InvoluteGear::insertInvolutePoints(vector<hpvec2> &v, const hpuint &start, const hpuint &stopBefore,
-		const hpreal &startInvAngle, const hpreal &stopInvAngle) {
+void InvoluteGear::insertInvolutePoints(vector<hpvec2>& v, const hpuint& start, const hpuint& stopBefore,
+		const hpreal& startInvAngle, const hpreal& stopInvAngle) {
 
 	hpreal mirrorAngle = getAngularPitch() / 2.0f;
 	hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
@@ -364,7 +403,7 @@ void InvoluteGear::insertInvolutePoints(vector<hpvec2> &v, const hpuint &start, 
 	}
 }
 
-hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal &involuteStartAngle, const hpreal &angle){
+hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal& involuteStartAngle, const hpreal& angle){
 	hpreal radius = getBaseRadius();
 	hpvec2 point;
 	point.x = radius * glm::sin(involuteStartAngle + angle) - radius * angle * glm::cos(involuteStartAngle + angle);
@@ -376,48 +415,82 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 
 	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
 	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
-	//TODO: replace following two lines with good value for innerGearRadius
-	getTraverseProfile(0, profile);
-	hpreal innerGearRadius = glm::length(profile[0]) / 2.0f;
 	vector<hpvec3>* vertexData = mesh->getVertexData();
 	vector<hpuint>* indices = mesh->getIndices();
 
+	vertexData->reserve(vertexData->size() + 2 * (profile.size() * 6)); //avoid reallocation in for loop which would cause iterator invalidity
+	indices->reserve(indices->size() + 3 * (profile.size() * 2 * 3));
+
+	hpuint startNewIndices = vertexData->size() / 2;
 	for(hpuint side = 0; side < 2; ++side) {
 		getTraverseProfile(side * getFaceWidth(), profile);
 		hpreal z = side * getFaceWidth();
+		
 		hpuint startIndex = vertexData->size() / 2;
+		hpuint stopIndex = startIndex + profile.size() * 3;
+
+		vector<hpvec3>::iterator vertexDataIterator = --(vertexData->end()); //points to last element of vertexData
+		vertexData->resize(vertexData->size() + profile.size() * 6);
+
 		hpvec3 normal = hpvec3(0.0f, 0.0f, 1.0f);
 		if(side == 1)
 			normal *= -1.0f;
 		for(vector<hpvec2>::iterator it = profile.begin(), end = profile.end(); it != end; ++it) {
 			hpvec2 currentProfilePoint = *it;
-			hpvec2 currentInnerPoint = glm::normalize(currentProfilePoint) * innerGearRadius;
+			hpvec2 currentInnerPoint = glm::normalize(currentProfilePoint) * m_boreRadius;
 
-			vertexData->push_back(hpvec3(currentInnerPoint, z));
-			vertexData->push_back(normal);
-			vertexData->push_back(hpvec3(currentProfilePoint, z));
-			vertexData->push_back(normal);
+			*(++vertexDataIterator) = hpvec3(currentInnerPoint, z);
+			*(++vertexDataIterator) = normal;
+			*(++vertexDataIterator) = hpvec3(currentProfilePoint, z);
+			*(++vertexDataIterator) = normal;
+
+			//point for bore surface
+			*(++vertexDataIterator) = hpvec3(currentInnerPoint, z);
+			*(++vertexDataIterator) = glm::normalize(hpvec3(-currentInnerPoint.x, -currentInnerPoint.y, 0.0f));
 		}
 
-		hpuint nNewIndices = vertexData->size() / 2 - 2;
-		for(hpuint i = startIndex, g = 0; i < nNewIndices; ++i, ++g) {
-			indices->push_back(i);
-			if(g % 2 == 0) {
-				indices->push_back(i + 1);
-				indices->push_back(i + 2);
-			} else {
-				indices->push_back(i + 2);
-				indices->push_back(i + 1);
-			}
-		}
-		indices->push_back(vertexData->size() / 2 - 2);
-		indices->push_back(vertexData->size() / 2 - 1);
-		indices->push_back(startIndex);
+		vector<hpuint>::iterator indicesIterator = --(indices->end()); //points to last element of indices
+		indices->resize(indices->size() + profile.size() * 2 * 3);
 
-		indices->push_back(vertexData->size() / 2 - 1);
-		indices->push_back(startIndex);
-		indices->push_back(startIndex + 1);
+		for(hpuint i = startIndex; i < (stopIndex - 3); i += 3) {
+			*(++indicesIterator) = i;
+			*(++indicesIterator) = i + 1;
+			*(++indicesIterator) = i + 3;
+
+			*(++indicesIterator) = i + 1;
+			*(++indicesIterator) = i + 4;
+			*(++indicesIterator) = i + 3;
+		}
+		*(++indicesIterator) = stopIndex - 3;
+		*(++indicesIterator) = stopIndex - 2;
+		*(++indicesIterator) = startIndex;
+
+		*(++indicesIterator) = stopIndex - 2;
+		*(++indicesIterator) = startIndex + 1;
+		*(++indicesIterator) = startIndex;
 	}
+	//indices for bore surface
+	hpuint distToOtherSide = profile.size() * 3;
+	hpuint stopIndex = startNewIndices + distToOtherSide;
+	vector<hpuint>::iterator indicesIterator = --(indices->end()); //points to last element of indices
+	indices->resize(indices->size() + profile.size() * 2 * 3);
+	vector<hpuint>::const_iterator end = indices->end();
+	for(hpuint i = startNewIndices; i < (stopIndex - 3); i += 3) {
+		*(++indicesIterator) = i + 2;
+		*(++indicesIterator) = i + distToOtherSide;
+		*(++indicesIterator) = i + 5;
+
+		*(++indicesIterator) = i + distToOtherSide;
+		*(++indicesIterator) = i + distToOtherSide + 3;
+		*(++indicesIterator) = i + 5;
+	}
+	*(++indicesIterator) = stopIndex - 1;
+	*(++indicesIterator) = stopIndex - 1 + distToOtherSide;
+	*(++indicesIterator) = startNewIndices + 2;
+
+	*(++indicesIterator) = stopIndex - 1 + distToOtherSide;
+	*(++indicesIterator) = startNewIndices + distToOtherSide;
+	*(++indicesIterator) = startNewIndices + 2;
 	return mesh;
 }
 

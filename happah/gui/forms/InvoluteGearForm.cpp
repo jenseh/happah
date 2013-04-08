@@ -125,7 +125,7 @@ void InvoluteGearForm::updateRanges() {
 	hpreal* modules = m_involuteGear->getPossibleModules();
 	hpreal* pressureAngles = m_involuteGear->getPossiblePressureAngles();
 	hpreal* bottomClearances = m_involuteGear->getPossibleBottomClearances();
-	hpreal* filletRadien = m_involuteGear->getPossibleFilletRadien();
+	hpreal* filletRadien = m_involuteGear->getPossibleFilletRadii();
 	hpreal epsilon = 0.0001f;
 
 	m_nTeethSlider->setSliderValues(m_involuteGear->getNumberOfTeeth(), nTeeth[0], nTeeth[1]);

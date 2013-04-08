@@ -35,8 +35,7 @@ void InvoluteGearContextMenu::generateDisc() {
 
 void InvoluteGearContextMenu::createDiscGearGrind() {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(m_involuteGear->toSimpleGear());
-	TriangleMesh_ptr simpleGearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
-	m_guiManager.createDiscGearGrind(simpleGear, simpleGearMesh);
+	m_guiManager.createDiscGearGrind(simpleGear);
 }
 
 void InvoluteGearContextMenu::setInvoluteGear(InvoluteGear_ptr involuteGear, TriangleMesh_ptr involuteGearMesh) {

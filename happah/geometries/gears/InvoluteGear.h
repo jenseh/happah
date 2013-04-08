@@ -88,8 +88,8 @@ public:
 
     void getToothSpaceProfile(vector<hpvec2> &profile);
     void getToothProfile(vector<hpvec2>& toothProfile);
-    TriangleMesh* toTriangleMesh(hpuint toothSampleSize = 100, hpuint zSampleSize = 10);
-    SimpleGear* toSimpleGear(hpuint toothSampleSize = 100);
+    TriangleMesh* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
+    SimpleGear* toSimpleGear(hpuint nPointsPerTooth = 100);
 
 private:
     hpuint m_nTeeth;

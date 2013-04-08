@@ -30,6 +30,25 @@ bool Gear::toothProfileIsInClockDirection() {
 	return (first[0] * last[1] - first[1] * last[0]) < 0;
 }
 
+LineMesh* Gear::toLineMesh() {
+	vector<Ray>* rays = toTriangleMesh()->toRays();
+	vector<hpvec3>* vertexData = new vector<hpvec3>;
+	vector<uint>* indices = new vector<uint>;
+	vertexData->reserve(rays->size()*2);
+	indices->reserve(rays->size());
+	for( vector<Ray>::iterator it = rays->begin(); it != rays->end(); ++it) {
+		indices->push_back(vertexData->size()/2);
+		vertexData->push_back(it->getOrigin());
+		vertexData->push_back(it->getOrigin());
+		it->moveOrigin(0.05);
+		indices->push_back(vertexData->size()/2);
+		vertexData->push_back(it->getOrigin());
+		vertexData->push_back(it->getOrigin());
+	}
+	delete rays;
+	return new LineMesh(vertexData, indices);
+}
+
 TriangleMesh* Gear::toTriangleMesh() {
 	// Create vector for the result
 	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
@@ -99,7 +118,6 @@ TriangleMesh* Gear::toTriangleMesh() {
 				}
 			}
 			// TODO Something is still worng with the normals
-			//std::cout<<normal.x<<" "<<normal.y<<" "<<normal.z<<std::endl;
 			n = i * indicesInRow + j * 6;
 			for (hpuint k = 0; k < 6; ++k) {
 				n += steps[k];

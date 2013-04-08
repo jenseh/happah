@@ -22,7 +22,6 @@ TriangleMesh::~TriangleMesh() {}
 
 vector<Ray>* TriangleMesh::toRays(){
 	vector<hpvec3>* vertexData = getVertexData();
-	vector<hpuint>* indices = getIndices();
 
 	vector<Ray>* result = new vector<Ray>();
 	result->resize(vertexData->size()/2);

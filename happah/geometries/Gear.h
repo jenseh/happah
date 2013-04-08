@@ -58,10 +58,12 @@ public:
 	//that no two points may lay on each other - so special care is
 	//needed for first and last point of the tooth profile.
 	virtual std::vector<hpvec2>* getGearProfile(hpreal depth);
+
+	LineMesh* toLineMesh();
 	TriangleMesh* toTriangleMesh();
 
 protected:
-	const static hpuint TOOTH_SAMPLE_SIZE = 100;
+	const static hpuint TOOTH_SAMPLE_SIZE = 40;
 	const static hpuint WIDTH_SAMPLE_SIZE = 10;
 
 public:

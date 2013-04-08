@@ -9,6 +9,12 @@ Ray::Ray(hpvec3 origin, hpvec3 direction):m_origin(origin), m_direction(directio
 	m_direction = glm::normalize(m_direction);
 }
 
+void Ray::print() {
+	std::cout<<"Origin:"<<m_origin.x<<"/"<<m_origin.y<<"/"<<m_origin.z<<std::endl;
+	std::cout<<"Direction:"<<m_direction.x<<"/"<<m_direction.y<<"/"<<m_direction.z<<std::endl;
+
+}
+
 void Ray::transform(hpmat4x4& matrix){
 	hpvec4 point1,point2;
 
@@ -38,10 +44,24 @@ const hpvec3& Ray::getDirection()const {
 }
 
 hpreal Ray::intersectDistance(Triangle& triangle){
-	hpvec3 position;
-	if( !intersectTriangle(triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], position) )
+	hpvec3 hit;
+	if( !intersectTriangle(triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], hit) )
 		return 1000000;
+	/*
+	std::cout<<glm::distance(m_origin, hit)<<std::endl;
+	std::cout<<"origin:"<<m_origin.x<<"/"<<m_origin.y<<"/"<<m_origin.z<<std::endl;
+	std::cout<<"direction:"<<m_direction.x<<"/"<<m_direction.y<<"/"<<m_direction.z<<std::endl;
+	std::cout<<"hit:"<<hit.x<<"/"<<hit.y<<"/"<<hit.z<<std::endl;
+	*/
+	return glm::distance(m_origin, hit);
+
+	/*
+	if( !insectTriangle(triangle,position)) {
+		return 100000;
+	}
+	std::cout<<glm::distance(m_origin, position)<<std::endl;
 	return glm::distance(m_origin, position);
+	*/
 }
 
 bool Ray::intersects(BBox& box, hpreal length){
@@ -72,8 +92,28 @@ if ( (getIntersection( linePoint1.x-boxPointMin.x, linePoint2.x-boxPointMin.x, l
 return false;
 }
 
+bool Ray::insectTriangle(Triangle& triangle, hpvec3& hit) {
+	hpvec3 triangleNormal = glm::cross(triangle.vertices[0], triangle.vertices[1]);
+	hpreal denominator = glm::dot(m_direction, triangleNormal);
+	if( denominator < 0.0001 ) { // ray parallel to tiangle plane
+		return false;
+	}
+	hpreal t = (glm::dot(triangle.vertices[0],triangleNormal) - glm::dot(m_origin,triangleNormal)) / denominator;
+	hit = m_origin + t*m_direction;
+	// Check if hit is inside the triangle
+	if( glm::dot(glm::cross(triangle.vertices[1] - triangle.vertices[0], hit - triangle.vertices[0]), triangleNormal) < 0.0 ){
+		return false;
+	}
+	if( glm::dot(glm::cross(triangle.vertices[2] - triangle.vertices[1], hit - triangle.vertices[1]), triangleNormal) < 0.0 ){
+		return false;
+	}
+	if( glm::dot(glm::cross(triangle.vertices[0] - triangle.vertices[2], hit - triangle.vertices[2]), triangleNormal) < 0.0 ){
+		return false;
+	}
+	return true;
+}
+
 bool Ray::intersectTriangle(hpvec3 e, hpvec3 f, hpvec3 g,hpvec3& hit){
- float result;
  float epsilon = 0.00001f;
 
  hpvec3 v1 = f-e;
@@ -96,7 +136,6 @@ bool Ray::intersectTriangle(hpvec3 e, hpvec3 f, hpvec3 g,hpvec3& hit){
    }
  float t= inv*glm::dot(v2,r);
  hit= m_origin+t*m_direction;
-
  return true;
 }
 

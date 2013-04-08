@@ -154,8 +154,9 @@ void DefaultGUIManager::insert(Plane_ptr plane,hpuint drawMode) {
 void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
+	if( drawMode & HP_LINE_MESH )
+			doInsert1D<SimpleGear, SimpleGearGUIStateNode>(simpleGear, SimpleGearGUIStateNode_ptr(new SimpleGearGUIStateNode(simpleGear, m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu(), "Simple Gear") ));
 }
-
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());

@@ -322,6 +322,9 @@ void SceneManager::insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpc
 	doInsert<BSplineCurve, BSplineCurveNode>(curve, pointCloud, color);
 }
 
+void SceneManager::insert(SimpleGear_ptr simpleGear, LineMesh_ptr lineMesh, hpcolor& color) {
+	doInsert<SimpleGear, SimpleGearNode>(simpleGear, lineMesh, color);
+}
 
 void SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){
 	doInsert<SimpleGear, SimpleGearNode >(simpleGear, triangleMesh, color, transformation);

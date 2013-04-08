@@ -6,13 +6,13 @@ class TriangleSorter {
 public:
       TriangleSorter(int axis_) : axis(axis_) {}
       bool operator()(const T& a, const T& b) {
-        return glm::min(a.vertices[0][axis], glm::min(a.vertices[1][axis], a.vertices[2][axis])) < glm::min(b.vertices[0][axis], glm::min(b.vertices[1][axis], b.vertices[2][axis]));
+        return a.vertices[0][axis] < b.vertices[0][axis];
       }
 };
 
 
 
-KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox)
+KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox, int terminateDepth )
 {
 	//TODO: Something goes wrong here, sometimes all the triangles are put into left side
   m_bBox = bBox;
@@ -23,7 +23,7 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 
   // Determine where separating axis should be
   unsigned int middleTPos = size / 2;
-  m_axisValue = glm::min( triangles->at(middleTPos).vertices[0][m_axis], glm::min(triangles->at(middleTPos).vertices[1][m_axis], triangles->at(middleTPos).vertices[2][m_axis]));
+  m_axisValue = triangles->at(middleTPos).vertices[0][m_axis];
 
   std::vector<Triangle>* leftTriangles = new std::vector<Triangle>;
   std::vector<Triangle>* rightTriangles = new std::vector<Triangle>;
@@ -51,7 +51,15 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 
   // If all in one node
   if( leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size() ){
-	  m_leftChild = new KDTreeLeaf(triangles, depth + 1);
+	  // If all triangles are put in one node there should only be 2 more inner nodes untill the algorithm is forces to quit
+	  if( terminateDepth == -1 ) {
+		  terminateDepth = depth +2;
+	  }
+	  if( depth == terminateDepth ) {
+		  m_leftChild = new KDTreeLeaf(triangles, depth +1);
+	  }else {
+		  m_leftChild = new KDTreeInnerNode(triangles, leftBox, depth + 1, maxTrianglesPerBox, terminateDepth);
+	  }
 	  std::vector<Triangle>* emptyList = new std::vector<Triangle>;
 	  m_rightChild = new KDTreeLeaf(emptyList, depth +1);
 	  return;

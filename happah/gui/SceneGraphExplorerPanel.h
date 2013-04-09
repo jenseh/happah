@@ -25,16 +25,20 @@ public:
 	void update(GUIStateNode_ptr guiStateNode);
 
 private:
+	QPushButton* m_createDiscGearGrindButton;
 	QPushButton* m_deleteButton;
 	unordered_map<QListWidgetItem*, GUIStateNode_ptr> m_guiStateNodesByItem;
 	unordered_map<GUIStateNode_ptr, QListWidgetItem*> m_itemsByGUIStateNode;
 	QListWidget* m_listWidget;
 	SceneGraphExplorerListener& m_sceneGraphExplorerListener;
 	void contextMenuEvent (QContextMenuEvent* event);
+	template<class T> bool getSelected(shared_ptr<T>& element);
+
 
 private slots:
-	void handleDeleteButtonClickedEvent();
-	void handleItemClickedEvent(QListWidgetItem* item);
+void handleCreateDiscGearGrindButtonClickedEvent();
+void handleDeleteButtonClickedEvent();
+void handleItemClickedEvent(QListWidgetItem* item);
 
 };
 

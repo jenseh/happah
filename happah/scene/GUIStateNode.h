@@ -93,6 +93,7 @@ public:
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
+	InvoluteGear_ptr getInvoluteGear()const;
 
 private:
 	InvoluteGear_ptr m_involuteGear;
@@ -131,6 +132,7 @@ public:
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
+	SimpleGear_ptr getSimpleGear()const;
 
 private:
 	SimpleGear_ptr m_simpleGear;
@@ -172,9 +174,10 @@ public:
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
+	SurfaceOfRevolution_ptr getSurfaceOfRevolution()const;
 
 private:
-    SurfaceOfRevolution_ptr m_disc;
+    SurfaceOfRevolution_ptr m_surfaceOfRevolution;
 	DiscForm* m_discForm;
 	DiscContextMenu* m_discContextMenu;
 

@@ -107,6 +107,10 @@ Form* InvoluteGearGUIStateNode::getForm() {
 	return m_involuteGearForm;
 }
 
+InvoluteGear_ptr InvoluteGearGUIStateNode::getInvoluteGear()const {
+	return m_involuteGear;
+}
+
 // Plane
 
 PlaneGUIStateNode::PlaneGUIStateNode( Plane_ptr plane, PlaneForm* planeForm, PlaneContextMenu* contextMenu, string name ) :
@@ -157,26 +161,34 @@ Form* SimpleGearGUIStateNode::getForm() {
 	return m_simpleGearForm;
 }
 
+SimpleGear_ptr SimpleGearGUIStateNode::getSimpleGear()const {
+	return m_simpleGear;
+}
+
 DiscGUIStateNode::DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
-	: GUIStateNode(name), m_disc(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
+	: GUIStateNode(name), m_surfaceOfRevolution(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
 
 DiscGUIStateNode::~DiscGUIStateNode() {
-	if(m_discForm->getDisc() == m_disc)
+	if(m_discForm->getDisc() == m_surfaceOfRevolution)
 		m_discForm->reset();
 }
 
 ContextMenu* DiscGUIStateNode::getContextMenu() const {
-	m_discContextMenu->setDisc(m_disc, getTriangleMesh());
+	m_discContextMenu->setDisc(m_surfaceOfRevolution, getTriangleMesh());
 	return m_discContextMenu;
 }
 
 shared_ptr<void> DiscGUIStateNode::getData() const {
-	return m_disc;
+	return m_surfaceOfRevolution;
 }
 
 Form* DiscGUIStateNode::getForm() {
-	m_discForm->setDisc(m_disc);
+	m_discForm->setDisc(m_surfaceOfRevolution);
 	return m_discForm;
+}
+
+SurfaceOfRevolution_ptr DiscGUIStateNode::getSurfaceOfRevolution()const{
+	return m_surfaceOfRevolution;
 }
 
 DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name)

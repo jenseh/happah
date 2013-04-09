@@ -6,6 +6,7 @@
 class SceneGraphExplorerListener {
 
 public:
+	virtual void createDiscGearGrind(SurfaceOfRevolution_ptr, SimpleGear_ptr)= 0;
 	virtual void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) = 0;
 	virtual void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode) = 0;
 

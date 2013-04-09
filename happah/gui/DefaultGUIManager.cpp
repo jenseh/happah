@@ -26,11 +26,22 @@ DefaultGUIManager::~DefaultGUIManager() {
 	m_sceneManager->remove(guiStateNodes);
 }
 
-void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr gear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(gear->toTriangleMesh());
-	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
+void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
 	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
-	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, gear, gearMesh));
+	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
+
+	QThread* thread = new QThread();
+	DiscGearGrindWorkerListener* listener = new DiscGearGrindWorkerListener(this);
+	DiscGearGrindWorker* discGearGrindWorker = new DiscGearGrindWorker(simulation, thread, listener);
+	thread->start();
+}
+
+void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, SimpleGear_ptr simpleGear) {
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
+	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
 
 	QThread* thread = new QThread();
 	DiscGearGrindWorkerListener* listener = new DiscGearGrindWorkerListener(this);
@@ -344,6 +355,10 @@ DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerL
 	: m_defaultGUIManager(defaultGUIManager) {}
 
 DefaultGUIManager::DefaultSceneGraphExplorerListener::~DefaultSceneGraphExplorerListener() {}
+
+void DefaultGUIManager::DefaultSceneGraphExplorerListener::createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear) {
+	m_defaultGUIManager.createDiscGearGrind(surfaceOfRevolution, simpleGear);
+}
 
 void DefaultGUIManager::DefaultSceneGraphExplorerListener::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
 	vector<Node_ptr> parents;

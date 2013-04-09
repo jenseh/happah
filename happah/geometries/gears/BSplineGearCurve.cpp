@@ -50,8 +50,8 @@ void BSplineGearCurve::scale(hpreal scaleFactor) {
 	}
 }
 
-void BSplineGearCurve::getBounds(hpvec2* min, hpvec2* max) const {
-	getEntireGear()->getBounds(min, max);
+void BSplineGearCurve::getBoundingBox(hpvec2* min, hpvec2* max) const {
+	getEntireGear()->getBoundingBox(min, max);
 }
 
 BSplineCurve* BSplineGearCurve::getEntireGear() const {

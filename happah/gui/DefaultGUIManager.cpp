@@ -115,6 +115,34 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	m_sceneManager->insert(geometry, triangleMesh, color);
 }
 
+template<class G>
+void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
+	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
+	if(!guiStateNode) {
+		cerr << "GUI state node not found." << endl;
+		return;
+	}
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
+	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	guiStateNode->setLineMesh(lineMesh);
+	m_sceneManager->insert(geometry, lineMesh, color);
+}
+
+template<class G>
+void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
+	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
+	if(!guiStateNode) {
+		cerr << "GUI state node not found." << endl;
+		return;
+	}
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
+	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	guiStateNode->setPointCloud(pointCloud);
+	m_sceneManager->insert(geometry, pointCloud, color);
+}
+
 
 void DefaultGUIManager::generateDisc(CylindricalGear_ptr cylindricalGear) {
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*cylindricalGear);
@@ -237,6 +265,7 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 }
 
 void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
+	/*
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
@@ -252,6 +281,9 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 
 	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
 	m_sceneManager->insert(bSplineCurve, lineMesh, color);
+	*/
+	doUpdate0D<BSplineCurve>(bSplineCurve);
+	doUpdate1D<BSplineCurve>(bSplineCurve);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {

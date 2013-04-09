@@ -26,6 +26,14 @@ TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
 	return m_triangleMesh;
 }
 
+LineMesh_ptr GUIStateNode::getLineMesh() const {
+	return m_lineMesh;
+}
+
+PointCloud_ptr GUIStateNode::getPointCloud() const {
+	return m_pointCloud;
+}
+
 void GUIStateNode::setName(const char* name) {
 	m_name = string(name);
 }

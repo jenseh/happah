@@ -51,6 +51,8 @@ public:
 	const string& getName() const;
 	GUIStateNode_ptr getptr();
 	TriangleMesh_ptr getTriangleMesh() const;
+	LineMesh_ptr getLineMesh() const;
+	PointCloud_ptr getPointCloud() const;
 	void setName(const char* name);
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 	void setLineMesh(LineMesh_ptr lineMesh);

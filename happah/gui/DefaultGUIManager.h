@@ -167,6 +167,10 @@ private:
 	void doInsert0D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
 	template<class G>
 	void doUpdate2D(shared_ptr<G> geometry);
+	template<class G>
+	void doUpdate1D(shared_ptr<G> geometry);
+	template<class G>
+	void doUpdate0D(shared_ptr<G> geometry);
 
 	string toFinalLabel(const char* label);
 

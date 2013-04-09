@@ -28,9 +28,9 @@ void SceneManager::doInsert(shared_ptr<G> geometry) {
 }
 
 /**
-  * Inserts a second geometry beneath a give geometry.
+  * Inserts a second geometry beneath a given geometry.
   * @param geometry1 Parent geometry. If not existent, it will be inserted as child of root.
-  * @param geometry2 Geometry to be inserted beneath geometry1. If it exists,
+  * @param geometry2 Geometry to be inserted beneath geometry1. If it already exists,
     function call will change nothing in scene.
   */
 template<class G1, class N1, class G2, class N2>

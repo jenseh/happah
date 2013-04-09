@@ -11,7 +11,7 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	m_controlPointInput = new VectorInput( "Next Point", true, true, this );
 	m_controlPointInput->setValue( hpvec3(0.f, 0.f, 0.f) );
 	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(updateBSplineCurveOrigin()));
-	// TODO connect to projection of point onto plane
+	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(projectPointOntoPlane()) );
 
 	QPushButton* addPointButton  = new QPushButton("add control point");
 	connect(addPointButton, SIGNAL(clicked()), this, SLOT(addPoint()));
@@ -66,11 +66,19 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 
 BSplineCurveForm::~BSplineCurveForm() {}
 
+void BSplineCurveForm::projectPointOntoPlane() {
+	hpvec3 normal = m_plane->getNormal();
+	hpvec3 origin = m_plane->getOrigin();
+	hpvec3 point = m_controlPointInput->getValue();
+	point = point + ( glm::dot(normal, origin-point ) )*normal;
+	std::cout << point.x << ';' << point.y << ';' << point.z << std::endl;
+	//m_controlPointInput->setValue(point);
+}
+
 void BSplineCurveForm::addPoint() {
 	if( m_curveInserted ) {
 		m_curve->addControlPoint( m_controlPointInput->getValue() );
 		m_guiManager.update(m_curve);
-//		m_controlPointInput->setValue( hpvec3( 20.0f/(200-rand()%400), 20.0f/(200-rand()%400), 20.0f/(200-rand()%400) ));
 	}
 }
 

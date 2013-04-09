@@ -59,7 +59,7 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 //  LoggingUtils::printVal("leftTriangles", leftTriangleSize);
 //  LoggingUtils::printVal("rightTriangles", rightTrianglesSize);
 
-  std::cout << "ratio: " << ((hpreal)leftTriangleSize / (hpreal)rightTriangleSize) << std::endl;
+  //std::cout << "ratio: " << ((hpreal)leftTriangleSize / (hpreal)rightTriangleSize) << std::endl;
 
   // If all in one node
   if( leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size() ){

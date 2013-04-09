@@ -5,28 +5,40 @@
 
 DiscForm::DiscForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
-		m_disc(DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0))),
 		m_discInserted(false),
 		m_guiManager(guiManager),
-		m_radiusSlider(new LabeledRealValuedSlider(tr("approximated radius"))) {
+		m_radius(1.0),
+		m_radiusSlider(new LabeledRealValuedSlider(tr("approximated radius"))),
+		m_pressureAngle(30.0),
+		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))){
 	QPushButton* createButton = new QPushButton("create disc");
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(m_radiusSlider);
+	layout->addWidget(m_pressureAngleSlider);
 	layout->addWidget(createButton);
 	setLayout(layout);
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createDisc()));
 	connect(m_radiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeRadius(hpreal)));
+	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 
+	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(m_radius/2.0,m_pressureAngle / 180.0 * M_PI ,0,0));
 	updateRanges();
+
 }
 
 DiscForm::~DiscForm() {}
 
 
 void DiscForm::changeRadius(hpreal radius) {
-	//m_disc->setRadius(radius);
+	m_radius = radius;
+	updateRanges();
+	updateDisc();
+}
+
+void DiscForm::changePressureAngle(hpreal pressureAngle) {
+	m_pressureAngle = pressureAngle;
 	updateRanges();
 	updateDisc();
 }
@@ -41,7 +53,7 @@ SurfaceOfRevolution_ptr DiscForm::getDisc() const {
 }
 
 void DiscForm::reset() {
-	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(1,0.2,0,0));
+	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(m_radius/2.0,m_pressureAngle / 180.0 * M_PI ,0,0));
 	m_discInserted = false;
 
 	updateRanges();
@@ -56,11 +68,13 @@ void DiscForm::setDisc(SurfaceOfRevolution_ptr disc) {
 }
 
 void DiscForm::updateDisc() {
+	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(m_radius/2.0,m_pressureAngle / 180.0 * M_PI ,0,0));
 	if(m_discInserted)
 		m_guiManager.update(m_disc);
 }
 
 void DiscForm::updateRanges() {
-	m_radiusSlider->setSliderValues(m_disc->getRadius(), m_disc->getRadius() / 2.0f, m_disc->getRadius() * 2.0f);
+	m_radiusSlider->setSliderValues(m_radius, m_radius / 2.0f, m_radius * 2.0f);
+	m_pressureAngleSlider->setSliderValues(m_pressureAngle, m_pressureAngle / 2.0f, m_pressureAngle * 2.0f);
 }
 

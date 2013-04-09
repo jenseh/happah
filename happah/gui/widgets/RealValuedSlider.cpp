@@ -13,7 +13,7 @@ RealValuedSlider::~RealValuedSlider() {
 //Uses the default values where possible
 void RealValuedSlider::initialize() {
 	QSlider::setMinimum(0);
-	QSlider::setMaximum(100);
+	QSlider::setMaximum(100); //default is 99
 	QSlider::setValue(0);
 	QSlider::setSingleStep(1);
 	QSlider::setPageStep(10);
@@ -24,7 +24,7 @@ void RealValuedSlider::initialize() {
 
 	connect(this, SIGNAL(rangeChanged(int, int)), this, SLOT(rangeChanged(int, int)));
 	connect(this, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
-	connect(this, SIGNAL(sliderMoved(int)), this SLOT(sliderMoved(int)));
+	connect(this, SIGNAL(sliderMoved(int)), this, SLOT(sliderMoved(int)));
 }
 
 void RealValuedSlider::rangeChanged(int min, int max) {
@@ -73,8 +73,7 @@ void RealValuedSlider::setRange(hpreal minimum, hpreal maximum) {
 	if(maximum >= minimum) m_max = maximum;
 	if(m_min <= m_value && m_value <= m_max) {
 		m_qSliderValue = toSlidersIntegerFromValue(m_value);
-	}
-	else {
+	} else {
 		if(m_value < m_min) m_value = m_min;
 		if(m_value > m_max) m_value = m_max;
 	}

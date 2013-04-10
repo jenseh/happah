@@ -5,11 +5,11 @@
 
 #include "happah/gui/widgets/LabeledRealValuedSlider.h"
 
-LabeledRealValuedSlider::LabeledRealValuedSlider(const QString &title, bool integer, QWidget *parent) : QGroupBox(parent) {
+LabeledRealValuedSlider::LabeledRealValuedSlider(const QString &title, bool smoothValues, QWidget *parent) : QGroupBox(parent) {
 
 	setTitle(title);
 
-	m_integer = integer;
+	m_smoothValues = smoothValues;
 
 	m_minLabel = new QLabel(this);
 	m_minLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -21,7 +21,7 @@ LabeledRealValuedSlider::LabeledRealValuedSlider(const QString &title, bool inte
 	m_valueLabel->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
 	m_slider = new QSlider(Qt::Horizontal, this);
-	if(!m_integer) {
+	if(m_smoothValues) {
 		m_slider->setMinimum(0);
 		m_slider->setMaximum(100);
 	}
@@ -30,7 +30,7 @@ LabeledRealValuedSlider::LabeledRealValuedSlider(const QString &title, bool inte
 	m_slider->setTracking(false);
 	m_slider->setFocusPolicy(Qt::StrongFocus); //reach it through clicking or tabbing
 
-	if(m_integer) {
+	if(!m_smoothValues) {
 		m_slider->setTickPosition(QSlider::TicksBelow);
 		m_slider->setSingleStep(1);
 		m_slider->setTickInterval(1);
@@ -61,19 +61,23 @@ void LabeledRealValuedSlider::setSliderValues(hpreal value, hpreal min, hpreal m
 void LabeledRealValuedSlider::setRange(hpreal min, hpreal max) {
 	m_minValue  = min;
 	m_maxValue  = max;
-	update();
+	updateView();
 }
 
-void LabeledRealValuedSlider::update() {
+void LabeledRealValuedSlider::setNewRange(hpreal *minmax) {
+	setRange(minmax[0], minmax[1]);
+}
+
+void LabeledRealValuedSlider::updateView() {
 	QString smin, smax, svalue;
 	m_minLabel->setText(smin.setNum(m_minValue));
 	m_maxLabel->setText(smax.setNum(m_maxValue));
 	disconnect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
-	if (m_integer) {
+	if (!m_smoothValues) {
 		m_slider->setMinimum(0);
 		m_slider->setMaximum(m_maxValue - m_minValue);
 	}
-	m_slider->setValue(toSlidersIntegerFromValue(m_value));
+	m_slider->setValue(getValueForSlider(m_value));
 	connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
 	m_valueLabel->setText(svalue.setNum(m_value));
 }
@@ -84,20 +88,17 @@ hpreal LabeledRealValuedSlider::getValue() {
 
 void LabeledRealValuedSlider::valueChanged(int value) {
 	QString str;
-	m_value = toValueFromSlidersInteger(value);
+	m_value = getValueFromSlider(value);
 	emit valueChanged(m_value);
 	m_valueLabel->setText(str.setNum(m_value));
 }
 
-hpreal LabeledRealValuedSlider::toValueFromSlidersInteger(int value) {
-	// if(!m_integer) {
-	// 	return m_minValue + value * (m_maxValue - m_minValue) / 100;
-	// }
-	uint stepSize = m_integer ? (m_maxValue - m_minValue) : 100;
+hpreal LabeledRealValuedSlider::getValueFromSlider(int value) {
+	uint stepSize = m_smoothValues ? 100 : (m_maxValue - m_minValue);
 	return (m_minValue + value * (m_maxValue - m_minValue) / stepSize);
 }
 
-int LabeledRealValuedSlider::toSlidersIntegerFromValue(hpreal value) {
-	uint stepSize = m_integer ? (m_maxValue - m_minValue) : 100;
+int LabeledRealValuedSlider::getValueForSlider(hpreal value) {
+	uint stepSize = m_smoothValues ? 100 : (m_maxValue - m_minValue);
 	return static_cast<int>((value - m_minValue) * stepSize / (m_maxValue - m_minValue));
 }

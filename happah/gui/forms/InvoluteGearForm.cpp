@@ -5,17 +5,17 @@
 
 InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), 
-		m_boreRadiusSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("bore radius"))),
-		m_bottomClearanceSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("bottom clearance"))),
-		m_faceWidthSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("face width"))),
-		m_filletRadiusSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("fillet radius"))),
+		m_boreRadiusSlider(new LabeledRealValuedSlider(tr("bore radius"))),
+		m_bottomClearanceSlider(new LabeledRealValuedSlider(tr("bottom clearance"))),
+		m_faceWidthSlider(new LabeledRealValuedSlider(tr("face width"))),
+		m_filletRadiusSlider(new LabeledRealValuedSlider(tr("fillet radius"))),
 		m_guiManager(guiManager),
 		m_involuteGear(new InvoluteGear()), 
 		m_involuteGearInserted(false), 
-		m_helixAngleSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("helix angle"))),
-		m_moduleSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("module"))),
-		m_pressureAngleSlider(new LabeledSlider<RealValuedSlider, hpreal>(tr("pressure angle"))),
-		m_nTeethSlider(new LabeledSlider<IntegerSlider, int>(tr("number of teeth"), false)) {
+		m_helixAngleSlider(new LabeledRealValuedSlider(tr("helix angle"))),
+		m_moduleSlider(new LabeledRealValuedSlider(tr("module"))),
+		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))),
+		m_nTeethSlider(new LabeledRealValuedSlider(tr("number of teeth"), false)) {
 	QPushButton* createButton  = new QPushButton("create gear");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -31,14 +31,14 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 	setLayout(layout);
 
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createInvoluteGear()));
-	connect(m_boreRadiusSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeBoreRadius(hpreal)));
-	connect(m_bottomClearanceSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeBottomClearance(hpreal)));
-	connect(m_faceWidthSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeFaceWidth(hpreal)));
-	connect(m_filletRadiusSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
-	connect(m_helixAngleSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
-	connect(m_moduleSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
-	connect(m_nTeethSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changeNumberOfTeeth(hpreal)));
-	connect(m_pressureAngleSlider, SIGNAL(sliderValueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
+	connect(m_boreRadiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBoreRadius(hpreal)));
+	connect(m_bottomClearanceSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeBottomClearance(hpreal)));
+	connect(m_faceWidthSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFaceWidth(hpreal)));
+	connect(m_filletRadiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeFilletRadius(hpreal)));
+	connect(m_helixAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeHelixAngle(hpreal)));
+	connect(m_moduleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeModule(hpreal)));
+	connect(m_nTeethSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeNumberOfTeeth(hpreal)));
+	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 
 	updateRanges();
 }

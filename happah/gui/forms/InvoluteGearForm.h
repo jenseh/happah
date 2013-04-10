@@ -4,9 +4,7 @@
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/GUIManager.h"
-#include "happah/gui/widgets/LabeledSlider.h"
-#include "happah/gui/widgets/IntegerSlider.h"
-#include "happah/gui/widgets/RealValuedSlider.h"
+#include "happah/gui/widgets/LabeledRealValuedSlider.h"
 
 class InvoluteGearForm : public Form {
 Q_OBJECT
@@ -20,17 +18,17 @@ public:
 	void setInvoluteGear(InvoluteGear_ptr involuteGear);
 
 private:
-	LabeledSlider<RealValuedSlider, hpreal>* m_boreRadiusSlider;
-	LabeledSlider<RealValuedSlider, hpreal>* m_bottomClearanceSlider;
-	LabeledSlider<RealValuedSlider, hpreal>* m_faceWidthSlider;
-	LabeledSlider<RealValuedSlider, hpreal>* m_filletRadiusSlider;
+	LabeledRealValuedSlider* m_boreRadiusSlider;
+	LabeledRealValuedSlider* m_bottomClearanceSlider;
+	LabeledRealValuedSlider* m_faceWidthSlider;
+	LabeledRealValuedSlider* m_filletRadiusSlider;
 	GUIManager& m_guiManager;
 	InvoluteGear_ptr m_involuteGear;
 	bool m_involuteGearInserted;
-	LabeledSlider<RealValuedSlider, hpreal>* m_helixAngleSlider;
-	LabeledSlider<RealValuedSlider, hpreal>* m_moduleSlider;
-	LabeledSlider<RealValuedSlider, hpreal>* m_pressureAngleSlider;
-	LabeledSlider<IntegerSlider, int>* m_nTeethSlider;
+	LabeledRealValuedSlider* m_helixAngleSlider;
+	LabeledRealValuedSlider* m_moduleSlider;
+	LabeledRealValuedSlider* m_pressureAngleSlider;
+	LabeledRealValuedSlider* m_nTeethSlider;
 
 	void updateInvoluteGear();
 

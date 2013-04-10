@@ -64,9 +64,7 @@ HEADERS += \
 	happah/gui/forms/SpherePatchForm.h \
 	happah/gui/forms/WormForm.h \
 \
-	happah/gui/widgets/IntegerSlider.h \
 	happah/gui/widgets/LabeledRealValuedSlider.h \
-	happah/gui/widgets/LabeledSlider.h \
 	happah/gui/widgets/RealValuedSlider.h \
 \
 	happah/kdtree/BBox.h \
@@ -175,9 +173,7 @@ SOURCES += \
 	happah/gui/forms/SpherePatchForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
-	happah/gui/widgets/IntegerSlider.cpp \
 	happah/gui/widgets/LabeledRealValuedSlider.cpp \
-	happah/gui/widgets/LabeledSlider.cpp \
 	happah/gui/widgets/RealValuedSlider.cpp \
 \
 	happah/kdtree/BBox.cpp \

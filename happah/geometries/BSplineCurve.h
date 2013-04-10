@@ -57,6 +57,7 @@ public:
 	hpvec3 getValueAt( float t ) const;
 	void handleSelection(){}
 	void handleSelection(int pointIndex){}
+	void interpolatePoints( std::vector<hpvec3>& points );
 
 	void removeControlPoints();
 	void resetKnotsToUniform();

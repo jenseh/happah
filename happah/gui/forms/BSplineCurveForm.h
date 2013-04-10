@@ -28,6 +28,7 @@ private slots:
 	void changeClamped(int state);
 	void changeDegree(int value);
 	void createCurve();
+	void interpolate();
 	void projectPointOntoPlane();
 	void resetPlane();
 

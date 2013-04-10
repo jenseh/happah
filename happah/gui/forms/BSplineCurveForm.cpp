@@ -16,6 +16,9 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	QPushButton* addPointButton  = new QPushButton("add control point");
 	connect(addPointButton, SIGNAL(clicked()), this, SLOT(addPoint()));
 
+	QPushButton* interpolateButton  = new QPushButton("interpolate");
+	connect(interpolateButton, SIGNAL(clicked()), this, SLOT(interpolate()));
+
 	m_periodicCheckBox = new QCheckBox("Periodic", this);
 	m_periodicCheckBox->setCheckState(Qt::Unchecked);
 	connect( m_periodicCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changePeriodic(int)) );
@@ -53,6 +56,7 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(m_controlPointInput);
 	layout->addWidget(addPointButton);
+	layout->addWidget(interpolateButton);
 	layout->addWidget(degreeWidget);
 	layout->addWidget(m_periodicCheckBox);
 	layout->addWidget(m_uniformCheckBox);
@@ -71,13 +75,24 @@ void BSplineCurveForm::projectPointOntoPlane() {
 	hpvec3 origin = m_plane->getOrigin();
 	hpvec3 point = m_controlPointInput->getValue();
 	point = point + ( glm::dot(normal, origin-point ) )*normal;
-	std::cout << point.x << ';' << point.y << ';' << point.z << std::endl;
-	//m_controlPointInput->setValue(point);
+	//m_controlPointInput->setValue(point); // does not work because m_controlPointInput emits valueChanged signal
+}
+
+void BSplineCurveForm::interpolate() {
+	std::vector<hpvec3> inputPoints;
+	m_curve->interpolatePoints( inputPoints );
+	m_guiManager.update(m_curve);
+
+	m_degreeSpinBox->setValue( m_curve->getDegree() );
 }
 
 void BSplineCurveForm::addPoint() {
 	if( m_curveInserted ) {
-		m_curve->addControlPoint( m_controlPointInput->getValue() );
+		hpvec3 normal = m_plane->getNormal();
+		hpvec3 origin = m_plane->getOrigin();
+		hpvec3 point = m_controlPointInput->getValue();
+		point = point + ( glm::dot(normal, origin-point ) )*normal;
+		m_curve->addControlPoint( point );
 		m_guiManager.update(m_curve);
 	}
 }

@@ -24,7 +24,7 @@ void RealValuedSlider::initialize() {
 
 	connect(this, SIGNAL(rangeChanged(int, int)), this, SLOT(rangeChanged(int, int)));
 	connect(this, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
-	connect(this, SIGNAL(sliderMoved(int)), this SLOT(sliderMoved(int)));
+	connect(this, SIGNAL(sliderMoved(int)), this, SLOT(sliderMoved(int)));
 }
 
 void RealValuedSlider::rangeChanged(int min, int max) {

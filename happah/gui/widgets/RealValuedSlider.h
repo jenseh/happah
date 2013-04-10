@@ -41,6 +41,7 @@ public slots:
 	void setValue(hpreal); //void setValue(int);
 	void valueChanged(int);
 	void rangeChanged(int, int);
+	void sliderMoved(int);
 
 signals:
 	void rangeChanged(hpreal, hpreal); // void rangeChanged(int min, int max);

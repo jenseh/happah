@@ -6,7 +6,7 @@
 BSplineCurve::BSplineCurve() {
 	m_degree = 3;
 	m_clampedEnds = false;
-	m_periodic = true;
+	m_periodic = false;
 	m_uniformKnots = true;
 	m_knots.push_back( 0.0f );
 	for( int i = 1; i < m_degree; i++ ) {
@@ -28,7 +28,7 @@ void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 			m_knots[i] *= scaleFact;
 		}
 		m_knots.push_back( 1.0f );
-	/*	// not normalized version, not tested!
+	/*	// non-normalized version, not tested!
 		float scaleFact = (m_knots.back() - m_knots.front()) / m_knots.size();
 		m_knots.push_back( m_knots.back() );
 		for( unsigned int i = 1; i < m_knots.size()-1; i++ ) {
@@ -70,11 +70,11 @@ void BSplineCurve::calculateNormalization() {
 	m_normalizedPoints = m_controlPoints;
 	if(m_periodic && m_controlPoints.size() >= m_degree) {
 		// Calculate circular control points array
-		int sizePoints = m_controlPoints.size()+m_degree-1;
+		int sizePoints = m_controlPoints.size()+m_degree;
 		m_normalizedPoints.resize(sizePoints);
 		std::copy(m_controlPoints.begin(), m_controlPoints.begin()+m_degree, m_normalizedPoints.end()-m_degree);
 		// Resize (& unify) knots array
-		int sizeKnots = m_knots.size()+m_degree-1;
+		int sizeKnots = m_knots.size()+m_degree;
 		m_normalizedKnots.resize(sizeKnots);
 		for( int i = 0; i < sizeKnots; i++ ) {
 			m_normalizedKnots[i] = i*( 1.0f/((float) sizeKnots-1) );
@@ -121,24 +121,23 @@ bool BSplineCurve::check( bool debugOutput ) const {
 	return true;
 }
 
-void BSplineCurve::getBounds( hpvec2* min, hpvec2* max ) const {
+void BSplineCurve::getBoundingBox( hpvec2* min, hpvec2* max ) const {
 	if( m_controlPoints.size() > 0 ) {
 		// TODO: Use iterator
-		min->x = m_controlPoints[0].x - 5;
-		max->x = m_controlPoints[0].x + 5;
-		min->y = m_controlPoints[0].y - 5;
-		max->y = m_controlPoints[0].y + 5;
+		min->x = m_controlPoints[0].x;
+		max->x = m_controlPoints[0].x;
+		min->y = m_controlPoints[0].y;
+		max->y = m_controlPoints[0].y;
 		for( unsigned int i = 1; i < m_controlPoints.size(); i++ ) {
 			if( m_controlPoints[i].x < min->x )
-				min->x = m_controlPoints[i].x - 5;
+				min->x = m_controlPoints[i].x;
 			if( m_controlPoints[i].x > max->x )
-				max->x = m_controlPoints[i].x + 5;
+				max->x = m_controlPoints[i].x;
 			if( m_controlPoints[i].y < min->y )
-				min->y = m_controlPoints[i].y - 5;
+				min->y = m_controlPoints[i].y;
 			if( m_controlPoints[i].y > max->y )
-				max->y = m_controlPoints[i].y + 5;
+				max->y = m_controlPoints[i].y;
 		}
-
 	}
 }
 
@@ -228,7 +227,7 @@ void BSplineCurve::removeControlPoints() {
 	calculateNormalization();
 }
 
-void BSplineCurve::resetKnots() {
+void BSplineCurve::resetKnotsToUniform() {
 	int num = m_knots.size();
 	if( num > 0 ) {
 		m_knots[0] = 0.0f;

@@ -46,7 +46,7 @@ private:
 public:
 	bool check( bool debugOutput ) const;
 
-	virtual void getBounds( hpvec2* min, hpvec2* max ) const;
+	virtual void getBoundingBox( hpvec2* min, hpvec2* max ) const;
 	bool getClamped() const;
 	hpvec3 getControlPoint( unsigned int index ) const;
 	int getDegree() const;
@@ -59,7 +59,7 @@ public:
 	void handleSelection(int pointIndex){}
 
 	void removeControlPoints();
-	void resetKnots();
+	void resetKnotsToUniform();
 
 	void setClamped( bool clamped );
 	void setControlPoint( unsigned int index, hpvec3 newValue );

@@ -110,9 +110,9 @@ Node_ptr Node::removeChildContainingData(shared_ptr<void> data) {
 	Node_ptr child;
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		child = *i;
-		if(child->contains(data)) break;
+		if(child->contains(data)) return removeChild(child);
 	}
-	return removeChild(child);
+	return Node_ptr();
 }
 
 Node_ptr Node::removeChild(Node_ptr child) {

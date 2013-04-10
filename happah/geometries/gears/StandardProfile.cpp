@@ -95,10 +95,11 @@ hpreal StandardProfile::getMaxHeight() const {
 
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition) {
     int numberSamples = partition.capacity();
+    hpreal halfLength = m_module * M_PI * 0.5; // So tooth is symetric
 	for (int i = 0; i < numberSamples; i++) {
 		hpreal x = ((hpreal) i / (hpreal) numberSamples) * m_module * M_PI;
 		hpreal y = getHeight(x);
-		partition.push_back(glm::vec2(x, y));
+		partition.push_back(glm::vec2(x - halfLength, y));
 	}
 
 }

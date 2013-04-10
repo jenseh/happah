@@ -17,7 +17,7 @@ public:
 	hpreal getMinLength() const;
 	hpreal getMaxLength() const;
 	void scale(hpreal scaleFactor);
-	void getBounds(hpvec2* min, hpvec2* max) const;
+	void getBoundingBox(hpvec2* min, hpvec2* max) const;
 
 };
 

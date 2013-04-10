@@ -23,13 +23,17 @@ private:
 	SurfaceOfRevolution_ptr m_disc;
 	bool m_discInserted;
 	GUIManager& m_guiManager;
+	hpreal m_pressureAngle;
+	hpreal m_radius;
 	LabeledRealValuedSlider* m_radiusSlider;
+	LabeledRealValuedSlider* m_pressureAngleSlider;
 
 	void updateDisc();
 	void updateRanges();
 
 private slots:
 	void changeRadius(hpreal);
+	void changePressureAngle(hpreal);
 	void createDisc();
 
 };

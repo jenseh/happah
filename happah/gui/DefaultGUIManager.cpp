@@ -26,11 +26,22 @@ DefaultGUIManager::~DefaultGUIManager() {
 	m_sceneManager->remove(guiStateNodes);
 }
 
-void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr gear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(gear->toTriangleMesh());
-	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*gear);
+void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
 	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
-	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, gear, gearMesh));
+	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
+
+	QThread* thread = new QThread();
+	DiscGearGrindWorkerListener* listener = new DiscGearGrindWorkerListener(this);
+	DiscGearGrindWorker* discGearGrindWorker = new DiscGearGrindWorker(simulation, thread, listener);
+	thread->start();
+}
+
+void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, SimpleGear_ptr simpleGear) {
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
+	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
 
 	QThread* thread = new QThread();
 	DiscGearGrindWorkerListener* listener = new DiscGearGrindWorkerListener(this);
@@ -113,6 +124,34 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setTriangleMesh(triangleMesh);
 	m_sceneManager->insert(geometry, triangleMesh, color);
+}
+
+template<class G>
+void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
+	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
+	if(!guiStateNode) {
+		cerr << "GUI state node not found." << endl;
+		return;
+	}
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
+	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	guiStateNode->setLineMesh(lineMesh);
+	m_sceneManager->insert(geometry, lineMesh, color);
+}
+
+template<class G>
+void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
+	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
+	if(!guiStateNode) {
+		cerr << "GUI state node not found." << endl;
+		return;
+	}
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
+	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	guiStateNode->setPointCloud(pointCloud);
+	m_sceneManager->insert(geometry, pointCloud, color);
 }
 
 
@@ -237,6 +276,7 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 }
 
 void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
+	/*
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
@@ -252,6 +292,9 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 
 	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
 	m_sceneManager->insert(bSplineCurve, lineMesh, color);
+	*/
+	doUpdate0D<BSplineCurve>(bSplineCurve);
+	doUpdate1D<BSplineCurve>(bSplineCurve);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
@@ -312,6 +355,10 @@ DefaultGUIManager::DefaultSceneGraphExplorerListener::DefaultSceneGraphExplorerL
 	: m_defaultGUIManager(defaultGUIManager) {}
 
 DefaultGUIManager::DefaultSceneGraphExplorerListener::~DefaultSceneGraphExplorerListener() {}
+
+void DefaultGUIManager::DefaultSceneGraphExplorerListener::createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear) {
+	m_defaultGUIManager.createDiscGearGrind(surfaceOfRevolution, simpleGear);
+}
 
 void DefaultGUIManager::DefaultSceneGraphExplorerListener::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {
 	vector<Node_ptr> parents;

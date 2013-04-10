@@ -25,7 +25,8 @@ public:
 	DefaultGUIManager(SceneManager_ptr sceneManager);
 	~DefaultGUIManager();
 
-	void createDiscGearGrind(SimpleGear_ptr gear);
+	void createDiscGearGrind(SimpleGear_ptr simpleGear);
+	void createDiscGearGrind(SurfaceOfRevolution_ptr disc, SimpleGear_ptr simpleGear);
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	bool init();
 	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
@@ -61,6 +62,7 @@ private:
 		DefaultSceneGraphExplorerListener(DefaultGUIManager& defaultGUIManager);
 		~DefaultSceneGraphExplorerListener();
 
+		void createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear);
 		void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
 		void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 
@@ -167,6 +169,10 @@ private:
 	void doInsert0D(shared_ptr<G> geometry, const char* label, F* form, M* contextMenu);
 	template<class G>
 	void doUpdate2D(shared_ptr<G> geometry);
+	template<class G>
+	void doUpdate1D(shared_ptr<G> geometry);
+	template<class G>
+	void doUpdate0D(shared_ptr<G> geometry);
 
 	string toFinalLabel(const char* label);
 

@@ -73,6 +73,7 @@ public:
     hpreal* getPossiblePressureAngles();
     hpreal* getPossibleBottomClearances();
     hpreal* getPossibleFilletRadii();
+    hpreal* getPossibleHelixAngles();
     hpreal* getPossibleBoreRadii();
 
     // Values are only set, if they would produce proper gear.

@@ -27,6 +27,7 @@ private:
 
 	void updateRanges();
 	void updateSimpleGear();
+	void setSliderValues();
 
 private slots:
 	void changeFaceWidth(hpreal);

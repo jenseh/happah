@@ -4,6 +4,7 @@
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/GUIManager.h"
+#include "happah/gui/widgets/LabeledIntegerSlider.h"
 #include "happah/gui/widgets/LabeledRealValuedSlider.h"
 
 class InvoluteGearForm : public Form {
@@ -28,9 +29,10 @@ private:
 	LabeledRealValuedSlider* m_helixAngleSlider;
 	LabeledRealValuedSlider* m_moduleSlider;
 	LabeledRealValuedSlider* m_pressureAngleSlider;
-	LabeledRealValuedSlider* m_nTeethSlider;
+	LabeledIntegerSlider* m_nTeethSlider;
 
 	void updateInvoluteGear();
+	void setSliderValues();
 
 private slots:
 	void changeBoreRadius(hpreal boreRadius);
@@ -40,7 +42,7 @@ private slots:
 	void changeHelixAngle(hpreal angle);
 	void changeModule(hpreal module);
 	void changePressureAngle(hpreal angle);
-	void changeNumberOfTeeth(hpreal nTeeth);
+	void changeNumberOfTeeth(int nTeeth);
 	void createInvoluteGear();
 	void updateRanges();
 

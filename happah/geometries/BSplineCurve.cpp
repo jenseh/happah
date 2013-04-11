@@ -222,10 +222,12 @@ void BSplineCurve::interpolatePoints( std::vector<hpvec3>& inputPoints ) {
 
 	m_knots.resize( inputPoints.size() + 2*m_degree ); // yields inputPoints.size() inner knots
 
-	for( unsigned int i = 0; i < m_knots.size(); i++ ) m_knots[i] = i; // equidistant parameterization
+	for( unsigned int i = 0; i < m_knots.size(); i++ ) m_knots[i] = i-3; // equidistant parameterization
 	// clamped ends. TODO if(clamped) {...
-	m_knots[0] = m_knots[1] = m_knots[2] = m_knots[3];
-	m_knots[m_knots.size()-2] = m_knots[m_knots.size()-3] = m_knots[m_knots.size()-4] = m_knots.back();
+	m_knots[0] = m_knots[1] = m_knots[2] = 0;//m_knots[3] = 0;
+	m_knots.back() = m_knots[m_knots.size()-2] = m_knots[m_knots.size()-3];// = m_knots[m_knots.size()-4];
+	for( int i = 0; i < m_knots.size(); i++ ) std::cout << m_knots[i] << ' ';
+	std::cout << std::endl;
 
 	m_controlPoints.resize( m_knots.size() - m_degree - 1 );
 
@@ -281,6 +283,7 @@ void BSplineCurve::interpolatePoints( std::vector<hpvec3>& inputPoints ) {
 	}
 	m_controlPoints[0] = inputPoints[0];
 
+	calculateNormalization();
 }
 
 void BSplineCurve::removeControlPoints() {

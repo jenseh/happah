@@ -41,7 +41,5 @@ hpmat4x4 RigidAffineTransformation::toMatrix4x4() const{
 						m_matrix[1][0],m_matrix[1][1],m_matrix[1][2],0.0f,
 						m_matrix[2][0],m_matrix[2][1],m_matrix[2][2],0.0f,
 						m_translation.x,m_translation.y,m_translation.z,1.0f);
-
-//	hpmat4x4 result = hpmat4x4(1.0f);
 	return result;
 }

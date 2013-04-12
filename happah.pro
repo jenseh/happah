@@ -16,6 +16,7 @@ HEADERS += \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
 	happah/geometries/DiscGenerator.h \
+	happah/geometries/FocalSpline.h \
 	happah/geometries/Geometry.h \ 
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
@@ -56,6 +57,7 @@ HEADERS += \
 \
 	happah/gui/forms/BSplineCurveForm.h \
 	happah/gui/forms/DiscForm.h \
+	happah/gui/forms/FocalSplineForm.h \
 	happah/gui/forms/Form.h \
 	happah/gui/forms/InvoluteGearForm.h \
 	happah/gui/forms/PlaneForm.h \
@@ -84,6 +86,7 @@ HEADERS += \
 	happah/scene/DrawVisitor.h \
 	happah/scene/DiscGearGrindNode.h \
 	happah/scene/ElementRenderStateNode.h\
+	happah/scene/FocalSplineNode.h \
 	happah/scene/GeometryFindVisitor.h \
 	happah/scene/GUIStateNode.h \
 	happah/scene/InvoluteGearNode.h \
@@ -100,7 +103,6 @@ HEADERS += \
 	happah/scene/SceneListener.h \
 	happah/scene/SceneManager.h \
 	happah/scene/SceneVisitor.h \
-#        happah/scene/SelectVisitor.h\
 	happah/scene/SimpleGearNode.h \
 	happah/scene/SimpleGeometryNode.h \
 	happah/scene/SpherePatchNode.h\
@@ -129,6 +131,7 @@ SOURCES += \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/DiscGenerator.cpp \
+	happah/geometries/FocalSpline.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
@@ -166,6 +169,7 @@ SOURCES += \
 \
 	happah/gui/forms/BSplineCurveForm.cpp \
 	happah/gui/forms/DiscForm.cpp \
+	happah/gui/forms/FocalSplineForm.cpp \
 	happah/gui/forms/Form.cpp \
 	happah/gui/forms/InvoluteGearForm.cpp \
 	happah/gui/forms/PlaneForm.cpp \
@@ -190,6 +194,7 @@ SOURCES += \
 	happah/scene/DiscNode.cpp \
 	happah/scene/DiscGearGrindNode.cpp \
 	happah/scene/ElementRenderStateNode.cpp\
+	happah/scene/FocalSplineNode.cpp \
 	happah/scene/GUIStateNode.cpp \
 	happah/scene/InvoluteGearNode.cpp \
 	happah/scene/LineMeshNode.cpp\

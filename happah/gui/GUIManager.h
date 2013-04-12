@@ -3,6 +3,7 @@
 
 #include "happah/HappahConstants.h"
 #include "happah/geometries/BSplineCurve.h"
+#include "happah/geometries/FocalSpline.h"
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/geometries/gears/SimpleGear.h"
 #include "happah/geometries/Mesh.h"
@@ -23,6 +24,7 @@ public:
 	virtual void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) = 0;
 	//virtual void insert(DiscGearGrindResult simulationResult) = 0;
 	virtual void insert(DiscGearGrind_ptr discGearGrind) = 0;
+	virtual void insert(FocalSpline_ptr focalSpline,hpuint drawMode)= 0;
 	virtual void insert(InvoluteGear_ptr involuteGear,hpuint drawMode) = 0;
 	virtual void insert(Plane_ptr plane, BSplineCurve_ptr curve) = 0;
 	virtual void insert(Plane_ptr plane, hpuint drawMode) = 0;

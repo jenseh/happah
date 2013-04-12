@@ -19,6 +19,7 @@ using namespace std;
 #include "happah/scene/SceneListener.h"
 #include "happah/scene/PointCloudNode.h"
 #include "happah/simulations/DiscGearGrind.h"
+#include "happah/geometries/FocalSpline.h"
 
 
 class SceneManager : public Node {
@@ -29,6 +30,9 @@ public:
 	void insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode);
 	void insert(BSplineCurve_ptr curve, LineMesh_ptr LineMesh, hpcolor&color);
 	void insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color);
+	void insert(FocalSpline_ptr focalSpline, FocalSplineGUIStateNode_ptr guiStateNode);
+	void insert(FocalSpline_ptr focalSpline, PointCloud_ptr pointCloud, hpcolor&color);
+	void insert(FocalSpline_ptr focalSpline, LineMesh_ptr LineMesh, hpcolor&color);
 	void insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr discGUIStateNode);
 	void insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(SurfaceOfRevolution_ptr geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);

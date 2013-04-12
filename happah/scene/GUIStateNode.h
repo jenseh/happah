@@ -33,6 +33,9 @@ typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 class SpherePatchGUIStateNode;
 typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
 
+class FocalSplineGUIStateNode;
+typedef shared_ptr<FocalSplineGUIStateNode> FocalSplineGUIStateNode_ptr;
+
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/gui/context-menus/ContextMenu.h"
@@ -183,6 +186,22 @@ private:
 	DiscForm* m_discForm;
 	DiscContextMenu* m_discContextMenu;
 
+};
+
+#include "happah/geometries/FocalSpline.h"
+#include "happah/gui/forms/FocalSplineForm.h"
+
+class FocalSplineGUIStateNode : public GUIStateNode{
+public:
+	FocalSplineGUIStateNode(FocalSpline_ptr focalSpline, FocalSplineForm* focalSplineForm, string name);
+	~FocalSplineGUIStateNode();
+
+	shared_ptr<void> getData() const;
+	Form* getForm();
+	FocalSpline_ptr getFocalSpline() const;
+private:
+	FocalSpline_ptr m_focalSpline;
+	FocalSplineForm* m_focalSplineForm;
 };
 
 

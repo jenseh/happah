@@ -12,6 +12,7 @@ using namespace std;
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/forms/BSplineCurveForm.h"
 #include "happah/gui/forms/DiscForm.h"
+#include "happah/gui/forms/FocalSplineForm.h"
 #include "happah/gui/forms/InvoluteGearForm.h"
 #include "happah/gui/forms/PlaneForm.h"
 #include "happah/gui/forms/SimpleGearForm.h"
@@ -19,6 +20,7 @@ using namespace std;
 #include "happah/gui/forms/SimulationForm.h"
 #include "happah/gui/forms/SpherePatchForm.h"
 #include "happah/gui/forms/WormForm.h"
+
 
 class ToolPanel : public QWidget {
 Q_OBJECT
@@ -29,6 +31,7 @@ public:
 
 	BSplineCurveForm* getBSplineCurveForm();
 	DiscForm* getDiscForm();
+	FocalSplineForm* getFocalSplineForm();
 	InvoluteGearForm* getInvoluteGearForm();
 	PlaneForm* getPlaneForm();
 	SimpleGearForm* getSimpleGearForm();
@@ -46,6 +49,7 @@ private:
 
 	BSplineCurveForm* m_bSplineCurveForm;
 	DiscForm* m_discForm;
+	FocalSplineForm* m_focalSplineForm;
 	InvoluteGearForm* m_involuteGearForm;
 	PlaneForm* m_planeForm;
 	SimpleGearForm* m_simpleGearForm;

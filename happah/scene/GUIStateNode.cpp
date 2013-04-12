@@ -74,6 +74,31 @@ Form* BSplineCurveGUIStateNode::getForm() {
 	return m_bSplineCurveForm;
 }
 
+// Focal Spline
+
+FocalSplineGUIStateNode::FocalSplineGUIStateNode(
+		FocalSpline_ptr focalSpline,
+		FocalSplineForm* focalSplineForm,
+		string name)
+	: GUIStateNode(name), m_focalSpline(focalSpline),m_focalSplineForm(focalSplineForm) {
+
+}
+FocalSplineGUIStateNode::~FocalSplineGUIStateNode()
+{
+	if(m_focalSplineForm->getFocalSpline() == m_focalSpline) {
+		m_focalSplineForm->reset();
+	}
+}
+
+shared_ptr<void> FocalSplineGUIStateNode::getData() const {
+	return m_focalSpline;
+}
+
+Form* FocalSplineGUIStateNode::getForm() {
+	m_focalSplineForm->setFocalSpline(m_focalSpline);
+	return m_focalSplineForm;
+}
+
 // InvoluteGear
 
 InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(

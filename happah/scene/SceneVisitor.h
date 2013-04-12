@@ -3,6 +3,7 @@
 
 class BSplineCurveNode;
 class InvoluteGearNode;
+class FocalSplineNode;
 class PlaneNode;
 class TriangleMeshNode;
 class LineMeshNode;
@@ -18,6 +19,7 @@ class SceneVisitor {
 
 public:
 	virtual void visit(BSplineCurveNode& bSplineCurveNode);
+	virtual void visit(FocalSplineNode& focalSplineNode);
 	virtual void visit(InvoluteGearNode& involuteGearNode) = 0;
 	virtual void visit(PlaneNode& planeNode) = 0;
 	virtual void visit(TriangleMeshNode& triangleMeshNode) = 0;

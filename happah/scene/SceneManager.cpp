@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "happah/scene/BSplineCurveNode.h"
+#include "happah/scene/FocalSplineNode.h"
 #include "happah/scene/InvoluteGearNode.h"
 #include "happah/scene/LineMeshNode.h"
 #include "happah/scene/PlaneNode.h"
@@ -360,6 +361,18 @@ void SceneManager::insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpc
 
 void SceneManager::insert(BSplineCurve_ptr curve, LineMesh_ptr lineMesh, hpcolor& color) {
 	doInsert<BSplineCurve, BSplineCurveNode>(curve, lineMesh, color);
+}
+
+void SceneManager::insert(FocalSpline_ptr focalSpline, FocalSplineGUIStateNode_ptr guiStateNode) {
+	doInsert<FocalSpline, FocalSplineNode, FocalSplineGUIStateNode>(focalSpline, guiStateNode);
+}
+
+void SceneManager::insert(FocalSpline_ptr focalSpline, PointCloud_ptr pointCloud, hpcolor& color) {
+	doInsert<FocalSpline, FocalSplineNode>(focalSpline, pointCloud, color);
+}
+
+void SceneManager::insert(FocalSpline_ptr focalSpline, LineMesh_ptr lineMesh, hpcolor& color) {
+	doInsert<FocalSpline, FocalSplineNode>(focalSpline, lineMesh, color);
 }
 
 

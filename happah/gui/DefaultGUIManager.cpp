@@ -14,7 +14,7 @@ DefaultGUIManager::DefaultGUIManager(SceneManager_ptr sceneManager)
 		m_subtreesInsertedEventHandler(*this),
 		m_subtreesRemovedEventHandler(*this),
 		m_subtreesUpdatedEventHandler(*this),
-		m_toolPanel(m_mainWindow.getToolPanel()) {
+		m_toolPanel(m_mainWindow.getToolPanel()){
 	m_sceneManager->registerSceneListener(&m_sceneListener);
 }
 
@@ -56,6 +56,7 @@ void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 	m_sceneManager->insert(geometry, triangleMesh, color);
 	guiStateNode->setTriangleMesh(triangleMesh);
 	m_sceneManager->insert(geometry, guiStateNode);
+
 }
 
 template<class G, class S, class F>
@@ -77,6 +78,7 @@ void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 	m_sceneManager->insert(geometry, lineMesh, color);
 	guiStateNode->setLineMesh(lineMesh);
 	m_sceneManager->insert(geometry, guiStateNode);
+
 }
 
 template<class G, class S, class F>
@@ -228,6 +230,19 @@ void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
     			discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation") ));
     m_sceneManager->insert(discGearGrind, guiStateNode);
 }
+void DefaultGUIManager::insert(FocalSpline_ptr focalSpline,hpuint drawMode){
+	if(drawMode & HP_TRIANGLE_MESH){
+			// DO nothing .. we don't want triangles
+			//doInsert2D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
+	}
+	if(drawMode & HP_LINE_MESH){
+		doInsert1D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
+	}
+	if(drawMode & HP_POINT_CLOUD){
+		doInsert0D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
+	}
+}
+
 
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)

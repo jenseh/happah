@@ -32,6 +32,7 @@ public:
 	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
     void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
+    void insert(FocalSpline_ptr focalSpline, hpuint drawMode = HP_LINE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
     void insert(DiscGearGrind_ptr discGearGrind);
 	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
@@ -147,6 +148,7 @@ private:
 	SubtreesRemovedEventHandler m_subtreesRemovedEventHandler;
 	SubtreesUpdatedEventHandler m_subtreesUpdatedEventHandler;
 	ToolPanel* m_toolPanel;
+
 
 
 	template<class G, class S>

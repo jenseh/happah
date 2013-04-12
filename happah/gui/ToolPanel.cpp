@@ -5,6 +5,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 		m_forms(new QStackedWidget(this)),
 		m_bSplineCurveForm(new BSplineCurveForm(guiManager, m_forms)),
 		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
+		m_focalSplineForm(new FocalSplineForm(guiManager,m_forms)),
 		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
 		m_discForm(new DiscForm(guiManager, m_forms)),
 		m_planeForm(new PlaneForm(guiManager, m_forms)),
@@ -23,7 +24,8 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	add(buttonsLayout, "W", m_wormForm, 0, 4);
 	add(buttonsLayout, "S", m_simulationForm, 0, 5);
 	add(buttonsLayout, "SP", m_spherePatchForm,1,0);
-	add(buttonsLayout, "BSC", m_bSplineCurveForm,1,1);
+	add(buttonsLayout, "FS", m_focalSplineForm,1,2);
+	add(buttonsLayout, "BSC", m_bSplineCurveForm,1,3);
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);
@@ -76,6 +78,10 @@ SimulationForm* ToolPanel::getSimulationForm() {
 
 SpherePatchForm* ToolPanel::getSpherePatchForm() {
 	return m_spherePatchForm;
+}
+
+FocalSplineForm* ToolPanel::getFocalSplineForm() {
+	return m_focalSplineForm;
 }
 
 void ToolPanel::handleButtonClickedEvent() {

@@ -98,6 +98,7 @@ template<class G, class S>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode){
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
 	hpcolor color(0.0f,1.0f,0.0f,1.0f);
+
 	m_sceneManager->insert(geometry,pointCloud,color);
 	guiStateNode->setPointCloud(pointCloud);
 	m_sceneManager->insert(geometry,guiStateNode);
@@ -106,6 +107,7 @@ void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 template<class G, class S, class F>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
+	// TODO : guiStateNode->registerForm
 	doInsert0D(geometry, guiStateNode);
 }
 

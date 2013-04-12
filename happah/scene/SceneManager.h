@@ -72,21 +72,21 @@ private:
 	template<class G, class N, class S> 
 	void doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	TriangleMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
+	TriangleMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
+	TriangleMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation);
+	PointCloudRenderStateNode_ptr doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color);
+	PointCloudRenderStateNode_ptr doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color);
+	LineMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
+	LineMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	template<class G, class N>
-	void doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
+	LineMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
     template<class S, class N, class G>
     void doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode);
 

@@ -227,10 +227,9 @@ win32 {
 }
 
 unix {
-	QMAKE_CXXFLAGS += -std=c++0x
+	QMAKE_CXXFLAGS += -std=c++0x -Wno-unused-variable -Wno-unused-parameter
 	LIBS += -lGLEW
         INCLUDEPATH += /usr/include $$system(pwd)\
-        INCLUDEPATH += /home/stud/s_sauer/happah/includes
 }
 
 CONFIG(debug) {

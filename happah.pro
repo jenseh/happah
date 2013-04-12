@@ -79,6 +79,7 @@ HEADERS += \
 #	happah/math/Circle.h \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
+        happah/math/Polynom.h \
 \
 	happah/scene/BSplineCurveNode.h \
 	happah/scene/DiscNode.h \

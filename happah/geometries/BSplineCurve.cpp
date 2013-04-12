@@ -215,25 +215,34 @@ hpvec3 BSplineCurve::getValueAt( float t ) const {
 }
 
 void BSplineCurve::interpolatePoints( std::vector<hpvec3>& inputPoints ) {
+	// use control points as input knots
 	if( inputPoints.size() == 0 ) inputPoints.swap(m_controlPoints);
 	if( inputPoints.size() == 0 ) return;
-//	m_controlPoints.clear();
+
 	m_degree = 3;
+	unsigned int m = inputPoints.size() - 1;
 
 	m_knots.resize( inputPoints.size() + 2*m_degree ); // yields inputPoints.size() inner knots
 
-	for( unsigned int i = 0; i < m_knots.size(); i++ ) m_knots[i] = i-3; // equidistant parameterization
-	// clamped ends. TODO if(clamped) {...
-	m_knots[0] = m_knots[1] = m_knots[2] = 0;//m_knots[3] = 0;
-	m_knots.back() = m_knots[m_knots.size()-2] = m_knots[m_knots.size()-3];// = m_knots[m_knots.size()-4];
-	for( int i = 0; i < m_knots.size(); i++ ) std::cout << m_knots[i] << ' ';
-	std::cout << std::endl;
+	// equidistant parameterization
+	for( unsigned int i = 0; i < m_knots.size(); i++ ) m_knots[i] = i-3;
 
-	m_controlPoints.resize( m_knots.size() - m_degree - 1 );
+	// clamping ends
+	m_knots[0] = m_knots[1] = m_knots[2] = m_knots[3] = 0;
+	m_knots.back() = m_knots[m_knots.size()-2] = m_knots[m_knots.size()-3] = m_knots[m_knots.size()-4];
+
+	m_controlPoints.resize( m_knots.size() - m_degree - 1 ); // yields inputPoints.size()+2 control points
 
 	// calculate tri-diagonal matrix
 	std::vector<hpvec3> tridiagMatrix( m_controlPoints.size() );
-	for( unsigned int i = 2; i < tridiagMatrix.size()-1; i++ ) {
+	tridiagMatrix[0].x = 0;
+	tridiagMatrix[0].y = 1;
+	tridiagMatrix[0].z = 0;
+	hpreal alpha_2 = (m_knots[4] - m_knots[2]) / (m_knots[5] - m_knots[2]);
+	tridiagMatrix[1].x = -1;
+	tridiagMatrix[1].y = 1 + alpha_2;
+	tridiagMatrix[1].z = -alpha_2;
+	for( unsigned int i = 2; i < tridiagMatrix.size()-2; i++ ) {
 		hpreal alpha_i = (m_knots[i+2]-m_knots[i]) / (m_knots[i+3]-m_knots[i]);
 		hpreal beta_i  = (m_knots[i+2]-m_knots[i+1]) / (m_knots[i+3]-m_knots[i+1]);
 		hpreal gama_i  = (m_knots[i+2]-m_knots[i+1]) / (m_knots[i+4]-m_knots[i+1]);
@@ -241,47 +250,34 @@ void BSplineCurve::interpolatePoints( std::vector<hpvec3>& inputPoints ) {
 		tridiagMatrix[i].y = (1-beta_i)*alpha_i + beta_i*(1-gama_i);
 		tridiagMatrix[i].z = beta_i*gama_i;
 	}
-	unsigned int m = inputPoints.size() - 1;
-	hpreal alpha_2 = (m_knots[4] - m_knots[2]) / (m_knots[5] - m_knots[2]);
 	hpreal gamma_m = (m_knots[m+2] - m_knots[m+1]) / (m_knots[m+4] - m_knots[m+1]);
-	tridiagMatrix[0].x = 0;
-	tridiagMatrix[0].y = 1;
-	tridiagMatrix[0].z = 0;
-	tridiagMatrix[1].x = -1;
-	tridiagMatrix[1].y = 1 + alpha_2;
-	tridiagMatrix[1].z = -alpha_2;
 	tridiagMatrix[tridiagMatrix.size()-2].x = -1 + gamma_m;
-	tridiagMatrix[tridiagMatrix.size()-2].x = -gamma_m + 2;
-	tridiagMatrix[tridiagMatrix.size()-2].x = -1;
+	tridiagMatrix[tridiagMatrix.size()-2].y = -gamma_m + 2;
+	tridiagMatrix[tridiagMatrix.size()-2].z = -1;
 	tridiagMatrix.back().x = 0;
 	tridiagMatrix.back().y = 1;
 	tridiagMatrix.back().z = 0;
 
-	// resize inputPoints & insert two zero-vectors
+	// resize inputPoints & insert two zero-vectors (right side of matrix equation)
 	std::vector<hpvec3>::iterator it = inputPoints.begin() + 1;
 	inputPoints.insert( it, hpvec3( 0.0f, 0.0f, 0.0f ) );
 	inputPoints.push_back(inputPoints.back());
 	*(inputPoints.end() - 2) = hpvec3( 0.0f, 0.0f, 0.0f );
 
-//	std::cout << tridiagMatrix.size() << " | " << inputPoints.size() << " | " << m_controlPoints.size() << std::endl;
 	// solve linear equation system
 	std::vector<hpreal> v(tridiagMatrix.size()+1);
 	v[0] = 0.0f;
-	m_controlPoints[0] = hpvec3( 0.0f, 0.0f, 0.0f );
-	m_controlPoints.push_back( hpvec3( 0.0f, 0.0f, 0.0f ) );
+	std::vector<hpvec3> y(tridiagMatrix.size()+1);
+	y[0] = hpvec3( 0.0f, 0.0f, 0.0f );
 	for( unsigned int k = 0; k < tridiagMatrix.size(); k++ ) {
-		std::cout << tridiagMatrix[k].x << " | " << tridiagMatrix[k].y << " | " << tridiagMatrix[k].z << " | " << std::endl;
 		hpreal z = 1.0f / (tridiagMatrix[k].y - v[k]*tridiagMatrix[k].x);
-		std::cout << z << std::endl;
 		v[k+1] = z*tridiagMatrix[k].z;
-		m_controlPoints[k+1] = z*(inputPoints[k] - tridiagMatrix[k]*m_controlPoints[k]);
+		y[k+1] = z*(inputPoints[k] - (tridiagMatrix[k].x)*y[k]);
 	}
-	*(m_controlPoints.end()-2) = m_controlPoints.back();
-	for( int k = m_controlPoints.size() - 3; k >= 0 ; k-- ) {
-		m_controlPoints[k] -= v[k+1]*m_controlPoints[k+1];
-		std::cout << m_controlPoints[k].x << " | " << m_controlPoints[k].y << " | " << m_controlPoints[k].z << " | " << std::endl;
+	m_controlPoints.back() = y[ tridiagMatrix.size() ];
+	for( int k = m_controlPoints.size() - 2; k >= 0 ; k-- ) {
+		m_controlPoints[k] = y[k+1] - v[k+1]*m_controlPoints[k+1];
 	}
-	m_controlPoints[0] = inputPoints[0];
 
 	calculateNormalization();
 }
@@ -391,8 +387,9 @@ LineMesh* BSplineCurve::toLineMesh() {
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
 	if( tEnd - tBegin > EPSILON ) {
-		vertexData->resize(202);
-		indices->resize(200);
+		int n = m_controlPoints.size();
+		vertexData->resize(202+2*n);
+		indices->resize(200+2*n-2);
 
 		hpreal stepSize = (tEnd - tBegin) / 100;
 		for( hpuint i = 0; i < 100; i++ ) {
@@ -403,6 +400,16 @@ LineMesh* BSplineCurve::toLineMesh() {
 		}
 		(*vertexData)[200] = getValueAt(tEnd);
 		(*vertexData)[201] = hpvec3(1.0f,0.0f,0.0f);
+
+		for( hpuint i = 0; i < n-1; i++ ) {
+			(*vertexData)[2*(101+i)] = m_controlPoints[i];
+			(*vertexData)[2*(101+i)+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*indices)[2*(100+i)] = 101+i;
+			(*indices)[2*(100+i)+1] = 101+i+1;
+		}
+		(*vertexData)[202+2*n-2] = m_controlPoints.back();
+		(*vertexData)[202+2*n-1] = hpvec3(1.0f,0.0f,0.0f);
+
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty LineMesh

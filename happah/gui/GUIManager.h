@@ -32,6 +32,7 @@ public:
 	virtual void insert(SpherePatch_ptr spherePatch, hpuint drawMode) = 0;
 	virtual void insert(Worm_ptr worm, hpuint drawMode) = 0;
 	virtual void update(BSplineCurve_ptr bSplineCurve) = 0;
+	virtual void update(FocalSpline_ptr focalSpline) = 0;
 	//virtual void update(DiscGearGrindResult simulationResult) = 0;
 	virtual void update(SurfaceOfRevolution_ptr disc) = 0;
 	virtual void update(InvoluteGear_ptr involuteGear) = 0;

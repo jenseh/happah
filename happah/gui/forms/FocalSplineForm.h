@@ -16,6 +16,7 @@ public:
 
 private slots:
 	void createFocalSpline();
+	void update();
 private:
 	GUIManager& m_guiManager;
 	FocalSpline_ptr m_focalSpline;

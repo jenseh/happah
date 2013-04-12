@@ -45,6 +45,7 @@ public:
     //void update(DiscGearGrindResult simulationResult);
     void update(SurfaceOfRevolution_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
+	void update(FocalSpline_ptr focalSpline);
 	void update(Plane_ptr plane);
 	void update(SimpleGear_ptr simpleGear);
 	void update(SpherePatch_ptr spherePatch);

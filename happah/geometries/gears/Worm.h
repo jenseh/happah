@@ -38,8 +38,7 @@ public:
 
   TriangleMesh* toTriangleMesh();
   ZCircleCloud* toZCircleCloud();
-  void handleSelection(){}
-  void handleSelection(int pointIndex){}
+
 private:
   hpuint m_toothCount;
   hpreal m_module;

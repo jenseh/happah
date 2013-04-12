@@ -20,8 +20,7 @@ public:
   //void setControlPoint(int index,hpvec3 value);
   //void update();
   //hpvec3 getControlPoint(int index);
-  void handleSelection(){}
-  void handleSelection(int pointIndex){}
+
 
 private:
   int m_degree,m_detail;

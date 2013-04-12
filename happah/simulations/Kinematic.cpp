@@ -6,7 +6,18 @@ Kinematic::Kinematic(Polynom<double> transX, Polynom<double> transY, Polynom<dou
     m_rotateX(rotX), m_rotateY(rotY), m_rotateZ(rotZ){
 }
 
-// Get Matrix at time t
+Kinematic Kinematic::getLinearKinematic(glm::vec3 start, glm::vec3 end){
+    glm::vec3 delta = end - start;
+    return Kinematic(Polynom<double>(2,start.x, delta.x), Polynom<double>(2,start.y, delta.y), Polynom<double>(2,start.z, delta.z));
+}
+
+Kinematic Kinematic::getLinearKinematic(glm::vec3 start, glm::vec3 end, hpreal rotY){
+    glm::vec3 delta = end - start;
+    return Kinematic(Polynom<double>(2,start.x, delta.x), Polynom<double>(2,start.y, delta.y), Polynom<double>(2,start.z, delta.z),
+                     Polynom<double>(0), Polynom<double>(1, rotY), Polynom<double>(0));
+}
+
+
 glm::mat4 Kinematic::getMatrix(double t){
     glm::mat4 result(1);
     // Rotation
@@ -17,18 +28,6 @@ glm::mat4 Kinematic::getMatrix(double t){
     result = glm::translate(result,
                    glm::vec3(m_translateX.getY(t), m_translateY.getY(t), m_translateZ.getY(t)) );
     return result;
-}
-
-
-Kinematic Kinematic::getLinearKinematic(glm::vec3 start, glm::vec3 end){
-    glm::vec3 delta = end - start;
-    return Kinematic(Polynom<double>(2,start.x, delta.x), Polynom<double>(2,start.y, delta.y), Polynom<double>(2,start.z, delta.z));
-}
-
-Kinematic Kinematic::getLinearKinematic(glm::vec3 start, glm::vec3 end, hpreal rotY){
-    glm::vec3 delta = end - start;
-    return Kinematic(Polynom<double>(2,start.x, delta.x), Polynom<double>(2,start.y, delta.y), Polynom<double>(2,start.z, delta.z),
-    				 Polynom<double>(0), Polynom<double>(1, rotY), Polynom<double>(0));
 }
 
 RigidAffineTransformation Kinematic::getRigidAffineTransformation(double t){

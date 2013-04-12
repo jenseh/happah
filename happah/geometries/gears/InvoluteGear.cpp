@@ -90,7 +90,7 @@ bool InvoluteGear::verifyConstraints(bool print) {
 			&& (getShiftAngle() - getStartFilletAngle() >= 0)
 			&& (getStopFilletInvoluteAngle() <= involuteAngleOfIntersectionWithCircle(getReferenceRadius() - m_module))
 			&& (getAngularPitch() / 2.0f >= getShiftAngle() + involuteToCircleAngle(involuteAngleOfIntersectionWithCircle(getTipRadius())))
-			&& (m_boreRadius >= 0.0f && m_boreRadius < getRootRadius());
+			&& (m_boreRadius >= 0.0f && m_boreRadius <= getRootRadius());
 	}
 }
 
@@ -182,8 +182,15 @@ hpreal* InvoluteGear::getPossibleFilletRadii() {
 		sampleSize = (maxSize - minSize) / 100;
 	return getPossibleValues<hpreal>(m_filletRadius, minSize, maxSize, sampleSize);
 }
+hpreal* InvoluteGear::getPossibleHelixAngles() {
+	hpreal epsilon = 0.00001f;
+	hpreal* minmax = new hpreal(2);
+	minmax[0] = -(M_PI / 2.0f - epsilon);
+	minmax[1] =   M_PI / 2.0f - epsilon;
+	return minmax;
+}
 hpreal* InvoluteGear::getPossibleBoreRadii() {
-	hpreal *minmax = new hpreal(2);
+	hpreal* minmax = new hpreal(2);
 	minmax[0] = 0.0f;
 	minmax[1] = getRootRadius();
 	return minmax;
@@ -254,7 +261,7 @@ bool InvoluteGear::setHelixAngle(hpreal helixAngle) {
 bool InvoluteGear::setBoreRadius(hpreal boreRadius) {
 	hpreal oldValue = m_boreRadius;
 	m_boreRadius = boreRadius;
-	if(!verifyConstraints()) {
+	if(!verifyConstraints(true)) {
 		m_boreRadius = oldValue;
 		return false;
 	}

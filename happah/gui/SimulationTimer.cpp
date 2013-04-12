@@ -11,7 +11,7 @@ SimulationTimer::SimulationTimer(GUIManager& listener,
 								m_tickTime(tickTime),
 								m_timer(new QTimer(this)),
 								m_timerIsRunning(false),
-								m_timeSlider(new LabeledRealValuedSlider("Time", true, this)){
+								m_timeSlider(new LabeledRealValuedSlider("Time", this)){
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(m_timeSlider);

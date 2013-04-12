@@ -37,7 +37,6 @@ HEADERS += \
 	happah/gui/DefaultGUIManager.h \
 	happah/gui/DiscGearGrindWorker.h \
 	happah/gui/DrawManager.h \
-	happah/gui/widgets/LabeledRealValuedSlider.h \
 	happah/gui/GUIManager.h \
 	happah/gui/MainWindow.h \
 	happah/gui/SceneGraphExplorerListener.h \
@@ -65,6 +64,9 @@ HEADERS += \
 	happah/gui/forms/SpherePatchForm.h \
 	happah/gui/forms/WormForm.h \
 \
+	happah/gui/widgets/LabeledIntegerSlider.h \
+	happah/gui/widgets/LabeledRealValuedSlider.h \
+\
 	happah/kdtree/BBox.h \
 	happah/kdtree/BSphere.h \ 
 	happah/kdtree/KDTree.h \
@@ -75,6 +77,7 @@ HEADERS += \
 #	happah/math/Circle.h \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
+        happah/math/Polynom.h \
 \
 	happah/scene/BSplineCurveNode.h \
 	happah/scene/DiscNode.h \
@@ -147,7 +150,6 @@ SOURCES += \
 	happah/gui/DefaultGUIManager.cpp \
 	happah/gui/DiscGearGrindWorker.cpp \
 	happah/gui/DrawManager.cpp \
-	happah/gui/widgets/LabeledRealValuedSlider.cpp \
 	happah/gui/MainWindow.cpp \
 	happah/gui/SceneGraphExplorerPanel.cpp \
 	happah/gui/SimulationTimer.cpp \
@@ -171,6 +173,9 @@ SOURCES += \
 	happah/gui/forms/SimulationForm.cpp \
 	happah/gui/forms/SpherePatchForm.cpp \
 	happah/gui/forms/WormForm.cpp \
+\
+	happah/gui/widgets/LabeledIntegerSlider.cpp \
+	happah/gui/widgets/LabeledRealValuedSlider.cpp \
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/BSphere.cpp \
@@ -223,10 +228,9 @@ win32 {
 }
 
 unix {
-	QMAKE_CXXFLAGS += -std=c++0x
+	QMAKE_CXXFLAGS += -std=c++0x -Wno-unused-variable -Wno-unused-parameter
 	LIBS += -lGLEW
         INCLUDEPATH += /usr/include $$system(pwd)\
-        INCLUDEPATH += /home/stud/s_sauer/happah/includes
 }
 
 CONFIG(debug) {

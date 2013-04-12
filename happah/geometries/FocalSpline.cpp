@@ -109,13 +109,7 @@ PointCloud* FocalSpline::toPointCloud(){
 	return new PointCloud(vertices);
 }
 
-void FocalSpline::handleSelection(){
 
-}
-
-void FocalSpline::handleSelection(int pointIndex){
-
-}
 
 hpvec3 FocalSpline::cartesianToPolarCoordinates(hpvec3 cartesian){
 	hpvec3 polar;

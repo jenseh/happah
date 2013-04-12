@@ -14,8 +14,7 @@ class Mesh {
 public:
 	Mesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
 	virtual ~Mesh();
-    void handleSelection(){}
-    void handleSelection(int pointIndex){}
+
 
 	   vector<hpvec3>* getVertexData();
 	   vector<hpuint>* getIndices();

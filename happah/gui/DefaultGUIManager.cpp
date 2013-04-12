@@ -203,14 +203,7 @@ void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
 		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
 	}
-/*
-	hpcolor color(0.0, 1.0, 0.0, 1.0);
-	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
-	m_sceneManager->insert(bSplineCurve, pointCloud, color);
-	BSplineCurveGUIStateNode_ptr guiStateNode = BSplineCurveGUIStateNode_ptr(new BSplineCurveGUIStateNode(
-				bSplineCurve, m_toolPanel->getBSplineCurveForm(), toFinalLabel("BSplineCurve") ));
-	m_sceneManager->insert(bSplineCurve, guiStateNode);
-*/
+
 }
 
 void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
@@ -218,13 +211,6 @@ void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
 		doInsert2D<SurfaceOfRevolution, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );
 }
 
-/*
-void DefaultGUIManager::insert(DiscGearGrindResult simulationResult) {
-	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 1.0);
-	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
-}
-*/
 
 void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
     DiscGearGrindGUIStateNode_ptr guiStateNode = DiscGearGrindGUIStateNode_ptr(new DiscGearGrindGUIStateNode(
@@ -236,12 +222,14 @@ void DefaultGUIManager::insert(FocalSpline_ptr focalSpline,hpuint drawMode){
 			// DO nothing .. we don't want triangles
 			//doInsert2D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
 	}
+	if(drawMode & HP_POINT_CLOUD){
+			doInsert0D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
+		}
+
 	if(drawMode & HP_LINE_MESH){
 		doInsert1D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
 	}
-	if(drawMode & HP_POINT_CLOUD){
-		doInsert0D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
-	}
+
 }
 
 

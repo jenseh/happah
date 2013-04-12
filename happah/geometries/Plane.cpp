@@ -151,11 +151,4 @@ Plane& Plane::operator=(const Plane& other) {
 	return *this;
 }
 
-void Plane::handleSelection(){
-
-}
-
-void Plane::handleSelection(int pointIndex){
-
-}
 

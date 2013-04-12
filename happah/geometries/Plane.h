@@ -28,8 +28,6 @@ public:
 	TriangleMesh* toTriangleMesh();
 	LineMesh* toLineMesh();
 	PointCloud* toPointCloud();
-    void handleSelection();
-    void handleSelection(int pointIndex);
 
 private:
 	hpvec3 m_normal;

@@ -1,7 +1,5 @@
 #include "happah/geometries/SurfaceOfRevolution.h"
 
-
-// Constructor for a general gear. Gears are always centered on 0,0,0 with the z axis being the gear axis.
 SurfaceOfRevolution::SurfaceOfRevolution(std::vector<hpvec2>& heightProfile):
     Geometry(),  m_heightProfile(heightProfile){
     // Calculate radius
@@ -18,8 +16,6 @@ hpreal SurfaceOfRevolution::getRadius() {
     return m_radius;
 }
 
-
-
 TriangleMesh_ptr SurfaceOfRevolution::toTriangleMesh(uint nWedges){
 	// This creates the quads for a gear. The gear axis is the model's z-axis.
 	std::vector<hpvec3> *vertexData = new std::vector<hpvec3>;
@@ -28,10 +24,9 @@ TriangleMesh_ptr SurfaceOfRevolution::toTriangleMesh(uint nWedges){
 
     float dalpha = 2 * M_PI / nWedges;
 
-
     vertexData->reserve(nWedges * m_heightProfile.size() *2);
-    for (int i = 0; i <= nWedges; i++) {
-		for (unsigned int j = 0; j < m_heightProfile.size();j++) {
+    for (uint i = 0; i <= nWedges; i++) {
+        for (uint j = 0; j < m_heightProfile.size();j++) {
 			vertexData->push_back(hpvec3(m_heightProfile[j].x,
 										sin(i * dalpha) * m_heightProfile[j].y,
 										cos(i * dalpha) * m_heightProfile[j].y));
@@ -50,9 +45,7 @@ TriangleMesh_ptr SurfaceOfRevolution::toTriangleMesh(uint nWedges){
 			}
 		}
 	}
-
 	//insert correct smoothed normals:
-
 	//6 entries per two triangles in indices
     hpuint indicesInRow = indices->size() / nWedges;
 	hpuint trianglePairsInRow  = indicesInRow / 6;

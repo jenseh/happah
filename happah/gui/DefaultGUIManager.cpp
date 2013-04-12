@@ -63,6 +63,7 @@ template<class G, class S, class F>
 void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
 	doInsert2D(geometry, guiStateNode);
+
 }
 
 template<class G, class S, class F, class M>
@@ -149,7 +150,7 @@ void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
 		cerr << "GUI state node not found." << endl;
 		return;
 	}
-	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
+	m_sceneManager->removeContainingData(geometry, guiStateNode->getPointCloud());
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setPointCloud(pointCloud);
@@ -324,6 +325,11 @@ void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
 	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 } */
+void DefaultGUIManager::update(FocalSpline_ptr focalSpline){
+	doUpdate1D<FocalSpline>(focalSpline);
+	doUpdate0D<FocalSpline>(focalSpline);
+
+}
 
 void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 	doUpdate2D<InvoluteGear>(involuteGear);

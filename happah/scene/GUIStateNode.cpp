@@ -104,7 +104,7 @@ void FocalSplineGUIStateNode::GUISelectListener::handleSelectEvent(){
 }
 
 void FocalSplineGUIStateNode::GUISelectListener::handleSelectEvent(int pointIndex){
-
+	m_guiStateNode.getForm()->handleSelection(pointIndex);
 }
 
 void FocalSplineGUIStateNode::GUISelectListener::handleDeselectEvent(){

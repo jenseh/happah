@@ -19,6 +19,10 @@ public:
 	void generateFocalSpline();
 	LineMesh* toLineMesh();
 	PointCloud* toPointCloud();
+	void setPolarControlPoint(hpuint index, hpvec3 controlPoint);
+	void setCartesianControlPoint(hpuint index, hpvec3 controlPoint);
+	hpvec3 getPolarControlPoint(hpuint index);
+	hpvec3 getCartesianControlPoint(hpuint index);
 
 
 private:

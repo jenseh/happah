@@ -6,4 +6,4 @@ Form::Form(QWidget* parent)
 Form::~Form() {}
 
 void Form::handleSelection(){}
-void Form::handleDrag(){}
+void Form::handleDrag(float dx,float dy){}

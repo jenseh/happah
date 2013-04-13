@@ -15,6 +15,22 @@ FocalSpline::FocalSpline()
 FocalSpline::~FocalSpline() {
 
 }
+void FocalSpline::setPolarControlPoint(hpuint index, hpvec3 controlPoint){
+	m_controlPoints->at(index)=controlPoint;
+}
+
+hpvec3 FocalSpline::getPolarControlPoint(hpuint index){
+	return m_controlPoints->at(index);
+}
+
+
+void FocalSpline::setCartesianControlPoint(hpuint index, hpvec3 controlPoint){
+	m_controlPoints->at(index)=cartesianToPolarCoordinates(controlPoint);
+}
+
+hpvec3 FocalSpline::getCartesianControlPoint(hpuint index){
+	return polarToCartesianCoordinates(m_controlPoints->at(index));
+}
 
 void FocalSpline::init(int degree){
 	hpreal radius = 3.0f;
@@ -27,9 +43,7 @@ void FocalSpline::init(int degree){
 }
 
 void FocalSpline::update(){
-	hpvec3 point = m_controlPoints->at(1);
-	point.z = point.z*2;
-	m_controlPoints->at(1)= point;
+
 	generateFocalSpline();
 
 }
@@ -112,8 +126,31 @@ PointCloud* FocalSpline::toPointCloud(){
 
 
 hpvec3 FocalSpline::cartesianToPolarCoordinates(hpvec3 cartesian){
-	hpvec3 polar;
+	hpreal radius = sqrt((cartesian.x*cartesian.x)+(cartesian.y*cartesian.y));
+	hpreal x = cartesian.x-m_center.x;
+	hpreal y = cartesian.y-m_center.y;
+	hpreal phi = 0.0f;
+	if (x>0.0f)
+		phi = atan(y/x);
+	if (x<0.0f)
+		phi = M_PI+atan(y/x);
+	if (x==0.0f)
+		phi = M_PI/2.0f;
+
+
+
+
+
+
+
+
+
+	hpvec3 polar = hpvec3(phi,0.0f,radius);
 	return polar;
+
+
+
+
 }
 
 hpvec3 FocalSpline::polarToCartesianCoordinates(hpvec3 polar){

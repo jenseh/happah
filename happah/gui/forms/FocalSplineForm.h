@@ -14,13 +14,15 @@ public:
 	void reset();
 	void setFocalSpline(FocalSpline_ptr);
 	void handleSelection();
-	void handleDrag();
+	void handleSelection(int pointIndex);
+	void handleDrag(float dx, float dy);
 signals:
 		void selected(Form* form);
 private slots:
 	void createFocalSpline();
 	void update();
 private:
+	int m_currentPointIndex;
 	GUIManager& m_guiManager;
 	FocalSpline_ptr m_focalSpline;
 	bool m_focalSplineInserted;

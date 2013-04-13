@@ -20,6 +20,7 @@ public:
 	void handleRay(Ray& ray);
 	void setCurve(BSplineCurve_ptr curve);
 	void setPlane(Plane_ptr plane);
+	void handleSelection(){emit selected(this);}
 signals:
 		void selected(Form* form);
 private slots:

@@ -106,7 +106,8 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
 		m_up *= DISTANCE_TO_CENTER;
 		}
 		else{
-			m_viewportListener.handleDragEvent();
+			qApp->setOverrideCursor( QCursor( Qt::BlankCursor ) );
+			m_viewportListener.handleDragEvent(-dx,-dy);
 		}
 		updateGL();
 	} else if (event->buttons() == Qt::RightButton) {
@@ -125,6 +126,10 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 	Ray ray(getMouseRay());
 	m_viewportListener.handleMouseClickEvent(ray);
 	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
+}
+
+void Viewport::mouseReleaseEvent(QMouseEvent *event){
+	qApp->setOverrideCursor( QCursor( Qt::ArrowCursor ) );
 }
 
 void Viewport::wheelEvent(QWheelEvent *event) {

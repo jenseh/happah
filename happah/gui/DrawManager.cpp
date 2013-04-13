@@ -215,9 +215,9 @@ void DrawManager::select(int x, int y){
 
 	PointCloudRenderStateNode_ptr foundPointCloudNode = m_selectionVisitor.findPointCloudRenderStateNodeOfColor(pixel[0]);
 	if(foundPointCloudNode){
-		m_selectionVisitor.findPointIndexFromColor(pixel[0]);
+		int index = m_selectionVisitor.findPointIndexFromColor(pixel[0]);
 		foundPointCloudNode->setSelected(1);
-		foundPointCloudNode->triggerSelectEvent();
+		foundPointCloudNode->triggerSelectEvent(index);
 		cout << "Selected Point Cloud Node ArrayBufferID "<< foundPointCloudNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedPointCloudRenderStateNode(foundPointCloudNode);
 		m_somethingSelected = true;
@@ -629,6 +629,7 @@ int DrawManager::SelectionVisitor::findPointIndexFromColor(hpcolor color){
     int bIndex = (int)(color.b*100.5f);
     int index = 9999-((gIndex*100)+bIndex);
     cout << "Point index: "<< index << endl;
+    return index;
 }
 
 

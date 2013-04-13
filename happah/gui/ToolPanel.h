@@ -41,7 +41,7 @@ public:
 
 	void setForm(Form* form);	
 	void handleMouseClickEvent(Ray& ray);
-	void handleDragEvent();
+	void handleDragEvent(float dx,float dy);
 public slots:
 	void handleFormSelectedEvent(Form* form);
 

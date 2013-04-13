@@ -441,8 +441,8 @@ void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handle
 	}
 }
 
-void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleDragEvent(){
-	m_defaultGUIManager.m_toolPanel->handleDragEvent();
+void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleDragEvent(float dx,float dy){
+	m_defaultGUIManager.m_toolPanel->handleDragEvent(dx,dy);
 }
 
 DefaultGUIManager::SubtreesInsertedEventHandler::SubtreesInsertedEventHandler(DefaultGUIManager& defaultGUIManager)

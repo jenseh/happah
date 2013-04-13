@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 
 FocalSplineForm::FocalSplineForm(GUIManager& guiManager,QWidget* parent)
-	: Form(parent),m_guiManager(guiManager), m_focalSplineInserted(false) {
+	: Form(parent),m_guiManager(guiManager), m_focalSplineInserted(false),m_currentPointIndex(-1) {
 	QPushButton* createButton = new QPushButton("create Focal Spline");
 	connect(createButton,SIGNAL(clicked()),this,SLOT(createFocalSpline()));
 	QPushButton* updateButton= new QPushButton("update Spline");
@@ -42,6 +42,7 @@ void FocalSplineForm::reset(){
 }
 
 void FocalSplineForm::update(){
+	m_guiManager.update(m_focalSpline);
 	m_focalSpline->update();
 	m_guiManager.update(m_focalSpline);
 }
@@ -49,13 +50,33 @@ void FocalSplineForm::update(){
 void FocalSplineForm::handleSelection(){
 	emit selected(this);
 	std::cout << "HANDLED SELECTION "<< endl;
-
+	m_currentPointIndex = -1;
 }
 
-void FocalSplineForm::handleDrag(){
-	std::cout << "CAME HERE HANDLING DRAG !!" <<endl;
+void FocalSplineForm::handleSelection(int pointIndex){
+	emit selected(this);
+	m_currentPointIndex = pointIndex;
+	std::cout<< "CURRENT INDEX : "<< pointIndex << endl;
+}
+void FocalSplineForm::handleDrag(float dx,float dy){
+	if(m_currentPointIndex >= 0){
+	hpvec3 point = m_focalSpline->getCartesianControlPoint(m_currentPointIndex);
+	if (dx < 0)
+	point.x = point.x+0.1;
+	if (dx > 0)
+	point.x = point.x-0.1;
+	if (dy > 0)
+	point.y = point.y+0.1;
+	if (dy < 0)
+	point.y = point.y-0.1;
+	if (point.y < 0.0f)
+	point.y = 0.0f;
+	m_focalSpline->setCartesianControlPoint(m_currentPointIndex,point);
 	update();
+	}
 }
+
+
 
 
 

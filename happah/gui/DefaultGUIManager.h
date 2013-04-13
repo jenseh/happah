@@ -95,7 +95,7 @@ private:
 		~DefaultViewportListener();
 
 		void handleMouseClickEvent(Ray& ray);
-		void handleDragEvent();
+		void handleDragEvent(float dx,float dy);
 	private:
 		DefaultGUIManager& m_defaultGUIManager;
 	};

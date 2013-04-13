@@ -23,7 +23,7 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager)
-	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager),m_selectionVisitor(*this), m_glContext(new QGLContext(GL_FORMAT)) {
+	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager),m_selectionVisitor(*this), m_glContext(new QGLContext(GL_FORMAT)),m_somethingSelected(false) {
 	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
 
@@ -203,14 +203,16 @@ void DrawManager::select(int x, int y){
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 	glReadPixels(x,height-y,1,1,GL_RGBA,GL_FLOAT,&pixel[0]);
 	cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
-
+	m_somethingSelected = false;
 	ElementRenderStateNode_ptr foundNode = m_selectionVisitor.findElementRenderStateNodeOfColor(pixel[0]);
 	if(foundNode){
 		foundNode->setSelected(1);
 		foundNode->triggerSelectEvent();
 		cout << "Selected Node ArrayBufferID "<< foundNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedElementRenderStateNode(foundNode);
+		m_somethingSelected = true;
 	}
+
 	PointCloudRenderStateNode_ptr foundPointCloudNode = m_selectionVisitor.findPointCloudRenderStateNodeOfColor(pixel[0]);
 	if(foundPointCloudNode){
 		m_selectionVisitor.findPointIndexFromColor(pixel[0]);
@@ -218,7 +220,9 @@ void DrawManager::select(int x, int y){
 		foundPointCloudNode->triggerSelectEvent();
 		cout << "Selected Point Cloud Node ArrayBufferID "<< foundPointCloudNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedPointCloudRenderStateNode(foundPointCloudNode);
+		m_somethingSelected = true;
 	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	m_selectionVisitor.setCurrentSelectionIndex(100);
     m_selectionVisitor.clearColorMaps();

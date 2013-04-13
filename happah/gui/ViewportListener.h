@@ -7,6 +7,7 @@ class ViewportListener {
 
 public:
 	virtual void handleMouseClickEvent(Ray& ray) = 0;
+	virtual void handleDragEvent() = 0;
 };
 
 #endif

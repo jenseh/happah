@@ -50,7 +50,11 @@ void FocalSplineForm::handleSelection(){
 	emit selected(this);
 	std::cout << "HANDLED SELECTION "<< endl;
 
+}
 
+void FocalSplineForm::handleDrag(){
+	std::cout << "CAME HERE HANDLING DRAG !!" <<endl;
+	update();
 }
 
 

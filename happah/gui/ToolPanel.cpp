@@ -107,6 +107,11 @@ void ToolPanel::handleMouseClickEvent(Ray& ray) {
 	}
 }
 
+void ToolPanel::handleDragEvent(){
+	Form* form = dynamic_cast<Form*>(m_forms->currentWidget());
+	form->handleDrag();
+}
+
 void ToolPanel::setForm(Form* form) {
 	m_forms->setCurrentWidget(form);
 

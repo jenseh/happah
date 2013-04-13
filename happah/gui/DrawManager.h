@@ -35,7 +35,7 @@ public:
 	bool init();
 	void resizeSelectorTexture();
 	void select(int x,int y);
-
+	bool isSomethingSelected(){return m_somethingSelected;}
 private:
 	class DefaultDrawVisitor : public DrawVisitor {
 	public:
@@ -116,6 +116,7 @@ private:
 	GLuint m_depthRenderBuffer;
 	GLuint m_selectorTexture;
 	static GLenum m_drawBuffers[];
+	bool m_somethingSelected;
 
 	GLint m_vertexLocation;
 	GLint m_normalLocation;

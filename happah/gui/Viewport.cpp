@@ -88,6 +88,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
 	hpvec3 delta;
 
 	if (event->buttons() == Qt::LeftButton) {
+		if(!m_drawManager.isSomethingSelected()){
 		// Left turn arround center
 		m_theta = dx*M_PI;
 		m_phi = dy*M_PI;
@@ -103,7 +104,10 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
 		m_up = glm::cross(forward, right);
 		m_up = glm::normalize(m_up);
 		m_up *= DISTANCE_TO_CENTER;
-
+		}
+		else{
+			m_viewportListener.handleDragEvent();
+		}
 		updateGL();
 	} else if (event->buttons() == Qt::RightButton) {
 		// Move left right up down
@@ -113,6 +117,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
 		updateGL();
 	}
 	m_mousePos = event->pos();
+
 
 }
 void Viewport::mousePressEvent(QMouseEvent *event) {

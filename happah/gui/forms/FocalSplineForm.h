@@ -14,6 +14,7 @@ public:
 	void reset();
 	void setFocalSpline(FocalSpline_ptr);
 	void handleSelection();
+	void handleDrag();
 signals:
 		void selected(Form* form);
 private slots:

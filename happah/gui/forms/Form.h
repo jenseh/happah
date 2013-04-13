@@ -10,7 +10,7 @@ public:
 
 	virtual void reset() = 0;
 	virtual void handleSelection();
-
+	virtual void handleDrag();
 };
 
 

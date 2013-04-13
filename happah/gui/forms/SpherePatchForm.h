@@ -14,6 +14,9 @@ public:
 	SpherePatch_ptr getSpherePatch() const;
 	void reset();
 	void setSpherePatch(SpherePatch_ptr spherePatch);
+	void handleSelection(){emit selected(this);}
+signals:
+	void selected(Form* form);
 private:
 	GUIManager& m_guiManager;
 	SpherePatch_ptr m_spherePatch;

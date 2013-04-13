@@ -20,7 +20,8 @@ public:
 	void handleRay(Ray& ray);
 	void setCurve(BSplineCurve_ptr curve);
 	void setPlane(Plane_ptr plane);
-
+signals:
+		void selected(Form* form);
 private slots:
 	void addPoint();
 	void changePeriodic(int state);

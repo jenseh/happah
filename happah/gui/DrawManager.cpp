@@ -324,11 +324,6 @@ void DrawManager::initialize(PointCloudRenderStateNode_ptr pointCloudRenderState
 	pointCloudRenderStateNode->setColorBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getColorBufferID());
 	glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getVertexData()->size() * sizeof(hpcolor),&(m_selectionVisitor.getPointSelectionColors()->at(0)), GL_DYNAMIC_DRAW);
-	cout << "DATA SIZE " << pointCloudRenderStateNode->getVertexData()->size() << " * hpcolor = " << pointCloudRenderStateNode->getVertexData()->size()* sizeof(hpcolor) << endl;
-	cout << "Color 0 "<<m_selectionVisitor.getPointSelectionColors()->at(0).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(0).b << endl;
-	cout << "Color 1 "<<m_selectionVisitor.getPointSelectionColors()->at(1).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(1).b << endl;
-	cout << "Color 2 "<<m_selectionVisitor.getPointSelectionColors()->at(2).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(2).b << endl;
-	cout << "Color 3 "<<m_selectionVisitor.getPointSelectionColors()->at(3).g << " " <<m_selectionVisitor.getPointSelectionColors()->at(3).b << endl;
 	glVertexAttribPointer(m_pointCloudSinglePointSelectionColorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 	glEnableVertexAttribArray(m_pointCloudSinglePointSelectionColorLocation);
 

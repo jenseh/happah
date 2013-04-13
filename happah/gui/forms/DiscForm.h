@@ -18,7 +18,9 @@ public:
 	SurfaceOfRevolution_ptr getDisc() const;
 	void reset();
 	void setDisc(SurfaceOfRevolution_ptr disc);
-
+	void handleSelection(){emit selected(this);}
+signals:
+	void selected(Form* form);
 private:
 	SurfaceOfRevolution_ptr m_disc;
 	bool m_discInserted;

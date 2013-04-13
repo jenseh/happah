@@ -16,7 +16,9 @@ public:
 	SimpleGear_ptr getSimpleGear() const;
 	void reset();
 	void setSimpleGear(SimpleGear_ptr simpleGear);
-
+	void handleSelection(){emit selected(this);}
+signals:
+	void selected(Form* form);
 private:
 	LabeledRealValuedSlider* m_faceWidthSlider;
 	GUIManager& m_guiManager;

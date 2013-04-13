@@ -4,12 +4,12 @@
 #include <QWidget>
 
 class Form : public QWidget {
-
 public:
 	Form(QWidget* parent = 0);
 	virtual ~Form();
 
 	virtual void reset() = 0;
+	virtual void handleSelection();
 
 };
 

@@ -53,9 +53,11 @@ template<class G, class S>
 void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
-	m_sceneManager->insert(geometry, triangleMesh, color);
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = m_sceneManager->insert(geometry, triangleMesh, color);
 	guiStateNode->setTriangleMesh(triangleMesh);
 	m_sceneManager->insert(geometry, guiStateNode);
+	triangleMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+	//TODO: Find a way to Remove the listener again
 
 }
 
@@ -76,10 +78,10 @@ template<class G, class S>
 void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
 	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
-	m_sceneManager->insert(geometry, lineMesh, color);
+	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
 	guiStateNode->setLineMesh(lineMesh);
 	m_sceneManager->insert(geometry, guiStateNode);
-
+	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
 template<class G, class S, class F>
@@ -99,9 +101,10 @@ void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStat
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
 	hpcolor color(0.0f,1.0f,0.0f,1.0f);
 
-	m_sceneManager->insert(geometry,pointCloud,color);
+	PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(geometry,pointCloud,color);
 	guiStateNode->setPointCloud(pointCloud);
 	m_sceneManager->insert(geometry,guiStateNode);
+	pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
 template<class G, class S, class F>
@@ -128,7 +131,8 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setTriangleMesh(triangleMesh);
-	m_sceneManager->insert(geometry, triangleMesh, color);
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode =m_sceneManager->insert(geometry, triangleMesh, color);
+	triangleMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
 template<class G>
@@ -142,7 +146,9 @@ void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
 	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setLineMesh(lineMesh);
-	m_sceneManager->insert(geometry, lineMesh, color);
+	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
+	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+
 }
 
 template<class G>
@@ -156,7 +162,8 @@ void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setPointCloud(pointCloud);
-	m_sceneManager->insert(geometry, pointCloud, color);
+	PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(geometry, pointCloud, color);
+	pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
 

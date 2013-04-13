@@ -41,6 +41,8 @@ public:
 
 	void setForm(Form* form);	
 	void handleMouseClickEvent(Ray& ray);
+public slots:
+	void handleFormSelectedEvent(Form* form);
 
 private:
 	unordered_map<Form*,QPushButton*> m_buttonsByForm;

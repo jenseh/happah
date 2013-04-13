@@ -1,7 +1,7 @@
 #include "happah/scene/GUIStateNode.h"
 
 GUIStateNode::GUIStateNode(string& name)
-	: m_name(name) {}
+	: m_name(name),m_selectListener(*this) {}
 
 GUIStateNode::~GUIStateNode() {}
 
@@ -97,6 +97,18 @@ shared_ptr<void> FocalSplineGUIStateNode::getData() const {
 Form* FocalSplineGUIStateNode::getForm() {
 	m_focalSplineForm->setFocalSpline(m_focalSpline);
 	return m_focalSplineForm;
+}
+
+void FocalSplineGUIStateNode::GUISelectListener::handleSelectEvent(){
+	m_guiStateNode.getForm()->handleSelection();
+}
+
+void FocalSplineGUIStateNode::GUISelectListener::handleSelectEvent(int pointIndex){
+
+}
+
+void FocalSplineGUIStateNode::GUISelectListener::handleDeselectEvent(){
+
 }
 
 // InvoluteGear

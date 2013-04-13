@@ -13,7 +13,9 @@ public:
 	FocalSpline_ptr getFocalSpline() const;
 	void reset();
 	void setFocalSpline(FocalSpline_ptr);
-
+	void handleSelection();
+signals:
+		void selected(Form* form);
 private slots:
 	void createFocalSpline();
 	void update();

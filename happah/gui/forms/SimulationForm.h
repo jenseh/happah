@@ -26,6 +26,9 @@ public:
 	void setDisc(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh);
 	void setGear(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void setDiscGearGrind(DiscGearGrind_ptr discGearGrind);
+	void handleSelection(){emit selected(this);}
+signals:
+		void selected(Form* form);
 private:
 
 	SurfaceOfRevolution_ptr m_disc;

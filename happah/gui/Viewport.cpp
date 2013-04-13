@@ -119,7 +119,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
 	Ray ray(getMouseRay());
 	m_viewportListener.handleMouseClickEvent(ray);
-
+	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
 }
 
 void Viewport::wheelEvent(QWheelEvent *event) {
@@ -136,7 +136,7 @@ void Viewport::wheelEvent(QWheelEvent *event) {
 //TODO: Adapt to new achitecture
 void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
 	m_mousePos = event->pos();
-	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
+
 }
 
 void Viewport::keyPressEvent(QKeyEvent* event) {}

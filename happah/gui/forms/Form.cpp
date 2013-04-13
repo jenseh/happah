@@ -4,3 +4,6 @@ Form::Form(QWidget* parent)
 	: QWidget(parent) {}
 
 Form::~Form() {}
+
+void Form::handleSelection(){}
+

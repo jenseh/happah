@@ -16,7 +16,9 @@ public:
 	Plane_ptr getPlane() const;
 	void reset();
 	void setPlane(Plane_ptr plane);
-
+	void handleSelection(){emit selected(this);}
+signals:
+	void selected(Form* form);
 private slots:
 	void createPlane();
 	void updatePlaneOrigin();

@@ -41,6 +41,7 @@ typedef shared_ptr<FocalSplineGUIStateNode> FocalSplineGUIStateNode_ptr;
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
+#include "happah/scene/SelectListener.h"
 
 class GUIStateNode : public Node {
 public:
@@ -60,9 +61,29 @@ public:
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 	void setLineMesh(LineMesh_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
+	class GUISelectListener : public SelectListener {
 
+
+			public:
+				GUISelectListener(GUIStateNode& guiStateNode)
+				: m_guiStateNode(guiStateNode){}
+				~GUISelectListener(){}
+
+	            virtual void handleSelectEvent();
+	            virtual void handleSelectEvent(int pointIndex);
+				virtual void handleDeselectEvent();
+
+
+			private:
+				GUIStateNode& m_guiStateNode;
+			};
+
+		virtual GUISelectListener* getSelectListener() {
+			return &m_selectListener;
+		}
 
 private:
+	GUISelectListener m_selectListener;
 	string m_name;
 	TriangleMesh_ptr m_triangleMesh;
 	LineMesh_ptr m_lineMesh;

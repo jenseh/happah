@@ -15,7 +15,9 @@ public:
 	Worm_ptr getWorm() const;
 	void reset();
 	void setWorm(Worm_ptr worm);
-
+	void handleSelection(){emit selected(this);}
+signals:
+	void selected(Form* form);
 private:
 	GUIManager& m_guiManager;
 	LabeledRealValuedSlider* m_moduleSlider;

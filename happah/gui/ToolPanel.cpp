@@ -1,4 +1,5 @@
 #include "happah/gui/ToolPanel.h"
+#include <iostream>
 
 ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	: QWidget(parent), 
@@ -18,14 +19,23 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	buttons->setLayout(buttonsLayout);
 
 	add(buttonsLayout, "IG", m_involuteGearForm, 0, 0);
+	connect(m_involuteGearForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "SG", m_simpleGearForm, 0, 1);
+	connect(m_simpleGearForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "P", m_planeForm, 0, 2);
+	connect(m_planeForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "D", m_discForm, 0, 3);
+	connect(m_discForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "W", m_wormForm, 0, 4);
+	connect(m_wormForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "S", m_simulationForm, 0, 5);
+	connect(m_simulationForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "SP", m_spherePatchForm,1,0);
-	add(buttonsLayout, "FS", m_focalSplineForm,1,2);
-	add(buttonsLayout, "BSC", m_bSplineCurveForm,1,3);
+	connect(m_spherePatchForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
+	add(buttonsLayout, "FS", m_focalSplineForm,1,1);
+	connect(m_focalSplineForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
+	add(buttonsLayout, "BSC", m_bSplineCurveForm,1,2);
+	connect(m_bSplineCurveForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);
@@ -33,6 +43,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	setLayout(layout);
 
 	setForm(m_involuteGearForm);
+
 }
 
 ToolPanel::~ToolPanel() {}
@@ -47,6 +58,7 @@ void ToolPanel::add(QGridLayout* buttonsLayout, const char* text, Form* form, in
 	m_buttonsByForm[form] = button;
 	m_formsByButton[button] = form;
 	connect(button, SIGNAL(clicked()), this, SLOT(handleButtonClickedEvent()));
+
 }
 
 BSplineCurveForm* ToolPanel::getBSplineCurveForm() {
@@ -100,3 +112,10 @@ void ToolPanel::setForm(Form* form) {
 
 	m_buttonsByForm[form]->setChecked(true);
 }
+
+void ToolPanel::handleFormSelectedEvent(Form* form){
+	std::cout<< " FORM SELECTED !!!" << endl;
+	setForm(form);
+}
+
+

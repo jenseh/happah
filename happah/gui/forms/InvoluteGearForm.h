@@ -17,7 +17,9 @@ public:
 	InvoluteGear_ptr getInvoluteGear() const;
 	void reset();
 	void setInvoluteGear(InvoluteGear_ptr involuteGear);
-
+	void handleSelection(){emit selected(this);}
+signals:
+	void selected(Form* form);
 private:
 	LabeledRealValuedSlider* m_boreRadiusSlider;
 	LabeledRealValuedSlider* m_bottomClearanceSlider;

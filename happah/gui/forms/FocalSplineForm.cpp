@@ -45,3 +45,16 @@ void FocalSplineForm::update(){
 	m_focalSpline->update();
 	m_guiManager.update(m_focalSpline);
 }
+
+void FocalSplineForm::handleSelection(){
+	emit selected(this);
+	std::cout << "HANDLED SELECTION "<< endl;
+
+
+}
+
+
+
+
+
+

@@ -5,9 +5,9 @@
 
 BSplineCurve::BSplineCurve() {
 	m_degree = 3;
-	m_clampedEnds = false;
+	m_clamped = false;
 	m_periodic = false;
-	m_uniformKnots = true;
+	m_uniform = true;
 	m_knots.push_back( 0.0f );
 	for( int i = 1; i < m_degree; i++ ) {
 		m_knots.push_back( i*(1.0f/((float) m_degree)) );
@@ -21,7 +21,7 @@ BSplineCurve::~BSplineCurve() {
 void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 	m_controlPoints.push_back(newPoint);
 
-	if( m_uniformKnots ) {
+	if( m_uniform ) {
 		float scaleFact = 1.0f - 1.0f/(m_knots.size());
 		m_knots[0] = 0.0f;
 		for( unsigned int i = 1; i < m_knots.size(); i++ ) {
@@ -45,7 +45,7 @@ void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 }
 
 void BSplineCurve::addControlPoint( hpvec3 newPoint, float distanceFromLast ) {
-	if( m_uniformKnots ) {
+	if( m_uniform ) {
 		this->addControlPoint( newPoint );
 	}
 	else {
@@ -80,16 +80,16 @@ void BSplineCurve::calculateNormalization() {
 			m_normalizedKnots[i] = i*( 1.0f/((float) sizeKnots-1) );
 		}
 	}
-	else if(m_clampedEnds && m_normalizedKnots.size()>2*m_degree) {
-		for( int i = 0; i < m_degree+1; i++ ) {
-			m_normalizedKnots[i] = 0.0f;
-			m_normalizedKnots[m_normalizedKnots.size()-i-1] = 1.0f;
+	else if(m_clamped && m_normalizedKnots.size() > 2*(m_degree+1)) {
+		for( int i = 0; i < m_degree; i++ ) {
+			m_normalizedKnots[i] = m_normalizedKnots[m_degree];
+			*(m_normalizedKnots.rbegin()+i) = *(m_normalizedKnots.rbegin()+m_degree);
 		}
-		for( int i = 0; i < m_normalizedKnots.size() - 2*m_degree; i++ ) {
-			m_normalizedKnots[i+m_degree] = i*( 1.0f/((float) m_normalizedKnots.size() - 2*m_degree) );
-		}
+//		for( int i = 0; i < m_normalizedKnots.size() - 2*m_degree; i++ ) {
+//			m_normalizedKnots[i+m_degree] = i*( 1.0f/((float) m_normalizedKnots.size() - 2*m_degree) );
+//		}
 	}
-	else if(m_uniformKnots) {
+	else if(m_uniform) {
 		float fract = 1.0f/((float) m_normalizedKnots.size() - 1);
 		for( int i = 0; i < m_normalizedKnots.size(); i++ ) {
 			m_normalizedKnots[i] = i*fract;
@@ -142,7 +142,7 @@ void BSplineCurve::getBoundingBox( hpvec2* min, hpvec2* max ) const {
 }
 
 bool BSplineCurve::getClamped() const {
-	return m_clampedEnds;
+	return m_clamped;
 }
 
 hpvec3 BSplineCurve::getControlPoint( unsigned int index ) const {
@@ -150,6 +150,10 @@ hpvec3 BSplineCurve::getControlPoint( unsigned int index ) const {
 		return m_controlPoints[index];
 	}
 	return hpvec3(0, 0, 0);
+}
+
+std::vector<hpvec3> BSplineCurve::getControlPoints() const {
+	return std::vector<hpvec3>(m_controlPoints);
 }
 
 int BSplineCurve::getDegree() const {
@@ -172,11 +176,43 @@ bool BSplineCurve::getPeriodic() const {
 }
 
 bool BSplineCurve::getUniform() const {
-	return m_uniformKnots;
+	return m_uniform;
 }
 
-hpvec3 BSplineCurve::getValueAt( float t ) const {
-	// only for uniform, noncyclic, without end-point-interpolation
+hpvec3 BSplineCurve::getDerivativeAt( hpreal t ) const {
+	if( m_normalizedPoints.size() < m_degree + 1 ) {
+		return hpvec3(0,0,0);
+	}
+	if( t < m_normalizedKnots[m_degree] ) {
+		return getDerivativeAt( m_normalizedKnots[m_degree] );
+	}
+	else if( t > m_normalizedKnots[m_normalizedPoints.size()] ) {
+		return getDerivativeAt( m_normalizedKnots[m_normalizedPoints.size()] );
+	}
+	else {
+		int l;
+		for( int i = m_degree; i < m_normalizedKnots.size()-m_degree-1; i++ ) {
+			if( m_normalizedKnots[i] <= t ) {
+				l = i;
+			}
+		}
+
+		std::vector<float> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
+		std::vector<hpvec3> output (m_normalizedPoints.begin()+l-m_degree,m_normalizedPoints.begin()+l+1);
+		std::vector<hpvec3> old (output);
+
+		for( int k = 1; k < m_degree; k++) {
+			for( int i = k; i < m_degree+1; i++) {
+				float alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
+				output[i] = (1-alpha)*old[i-1] + alpha*old[i];
+			}
+			old = output;
+		}
+		return output[m_degree] - output[m_degree-1];
+	}
+}
+
+hpvec3 BSplineCurve::getValueAt( hpreal t ) const {
 	if( m_normalizedPoints.size() < m_degree + 1 ) {
 		return hpvec3(0,0,0);
 	}
@@ -194,11 +230,6 @@ hpvec3 BSplineCurve::getValueAt( float t ) const {
 			}
 		}
 
-//		std::cout << "#knts: " << m_normalizedKnots.size() << " > take [" << l-m_degree << ", " << l+m_degree << "] " << std::endl;
-//		std::cout << "#pts:  " << m_normalizedPoints.size() << " (last idx: " << m_normalizedPoints.size() - 1 << ") ";
-//		std::cout << "> take [" << l-m_degree << ", " << l << "] " << std::endl;
-//		std::cout << std::endl;
-
 		std::vector<float> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
 		std::vector<hpvec3> output (m_normalizedPoints.begin()+l-m_degree,m_normalizedPoints.begin()+l+1);
 		std::vector<hpvec3> old (output);
@@ -214,12 +245,33 @@ hpvec3 BSplineCurve::getValueAt( float t ) const {
 	}
 }
 
+bool BSplineCurve::isClamped() const {
+	return m_clamped;
+}
+
+bool BSplineCurve::isPeriodic() const {
+	return m_periodic;
+}
+
+bool BSplineCurve::isUniform() const {
+	return m_uniform;
+}
+
+void BSplineCurve::interpolateControlPoints() {
+	// use control points as input points
+	std::vector<hpvec3> inputPoints;
+	inputPoints.swap(m_controlPoints);
+
+	interpolatePoints( inputPoints );
+}
+
 void BSplineCurve::interpolatePoints( std::vector<hpvec3>& inputPoints ) {
-	// use control points as input knots
-	if( inputPoints.size() == 0 ) inputPoints.swap(m_controlPoints);
 	if( inputPoints.size() == 0 ) return;
 
 	m_degree = 3;
+	m_clamped = true;
+	m_uniform = false;
+	m_periodic = false;
 	unsigned int m = inputPoints.size() - 1;
 
 	m_knots.resize( inputPoints.size() + 2*m_degree ); // yields inputPoints.size() inner knots
@@ -307,7 +359,7 @@ void BSplineCurve::resetKnotsToUniform() {
 }
 
 void BSplineCurve::setClamped( bool clamped ) {
-	m_clampedEnds = clamped;
+	m_clamped = clamped;
 	calculateNormalization();
 }
 
@@ -322,7 +374,7 @@ void BSplineCurve::setDegree( unsigned int degree ) {
 	if( degree < 1 ) return;
 	m_knots.resize( m_controlPoints.size() + degree + 1 );
 /*
-	if( degree < m_degree && m_uniformKnots ) {
+	if( degree < m_degree && m_uniform ) {
 		float scaleFact = 1.0f / m_knots.back();
 		for( int i = 0; i < m_knots.size(); i++ ) {
 			m_knots[i] *= scaleFact;
@@ -330,7 +382,7 @@ void BSplineCurve::setDegree( unsigned int degree ) {
 	}
 	else */
 	if( degree > m_degree ) {
-/*		if( m_uniformKnots ) {
+/*		if( m_uniform ) {
 			float scaleFact = 1.0f/(m_knots.size() - 1);
 			for( int i = 0; i < m_knots.size(); i++ ) {
 				m_knots[i] = i*scaleFact;
@@ -359,8 +411,8 @@ void BSplineCurve::setDegree( unsigned int degree ) {
 }
 
 void BSplineCurve::setUniform( bool uniform ) {
-	m_uniformKnots = uniform;
-	if( m_uniformKnots ) {
+	m_uniform = uniform;
+	if( m_uniform ) {
 		float scaleFact = 1.0f/(m_knots.size()-1);
 		for( unsigned int i = 0; i < m_knots.size(); i++ ) {
 			m_knots[i] = scaleFact*i;
@@ -386,10 +438,9 @@ LineMesh* BSplineCurve::toLineMesh() {
 
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
-	if( tEnd - tBegin > EPSILON ) {
-		int n = m_controlPoints.size();
-		vertexData->resize(202+2*n);
-		indices->resize(200+2*n-2);
+	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
+		vertexData->resize(202);
+		indices->resize(200);
 
 		hpreal stepSize = (tEnd - tBegin) / 100;
 		for( hpuint i = 0; i < 100; i++ ) {
@@ -400,16 +451,6 @@ LineMesh* BSplineCurve::toLineMesh() {
 		}
 		(*vertexData)[200] = getValueAt(tEnd);
 		(*vertexData)[201] = hpvec3(1.0f,0.0f,0.0f);
-
-		for( hpuint i = 0; i < n-1; i++ ) {
-			(*vertexData)[2*(101+i)] = m_controlPoints[i];
-			(*vertexData)[2*(101+i)+1] = hpvec3(1.0f,0.0f,0.0f);
-			(*indices)[2*(100+i)] = 101+i;
-			(*indices)[2*(100+i)+1] = 101+i+1;
-		}
-		(*vertexData)[202+2*n-2] = m_controlPoints.back();
-		(*vertexData)[202+2*n-1] = hpvec3(1.0f,0.0f,0.0f);
-
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty LineMesh
@@ -418,6 +459,51 @@ LineMesh* BSplineCurve::toLineMesh() {
 		indices->push_back( 0 );
 		indices->push_back( 0 );
 	}
+
+	// control polygon
+	if( m_controlPoints.size() > 1 ) {
+		unsigned int n = m_controlPoints.size();
+		unsigned int nVData = vertexData->size();
+		unsigned int nIndices = indices->size();
+
+		vertexData->resize(nVData+2*n);
+		indices->resize(nIndices+2*n-2);
+
+		for( hpuint i = 0; i < n-1; i++ ) {
+			(*vertexData)[nVData + 2*i] = m_controlPoints[i];
+			(*vertexData)[nVData + 2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*indices)[nIndices + 2*i] = nVData/2 + i;
+			(*indices)[nIndices + 2*i+1] = nVData/2 + i+1;
+		}
+		(*vertexData)[nVData + 2*n-2] = m_controlPoints.back();
+		(*vertexData)[nVData + 2*n-1] = hpvec3(1.0f,0.0f,0.0f);
+	}
+
+	// tangents
+	/*
+	if( m_normalizedKnots.size() > 2*m_degree && m_degree > 1 ) {
+		unsigned int n = m_normalizedKnots.size() - 2*m_degree;
+		unsigned int nVData = vertexData->size();
+		unsigned int nIndices = indices->size();
+
+		vertexData->resize(nVData+4*n);
+		indices->resize(nIndices+2*n);
+
+		for( unsigned int i = 0; i < n; i++ ) {
+			(*vertexData)[nVData + 4*i] = getValueAt(m_normalizedKnots[i+m_degree]);
+			(*vertexData)[nVData + 4*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			std::cout << "p: " << (*vertexData)[nVData + 4*i].x << " | " << (*vertexData)[nVData + 4*i].y << " | " << (*vertexData)[nVData + 4*i].z << std::endl;
+
+			(*vertexData)[nVData + 4*i+2] = (*vertexData)[nVData + 4*i]
+				+ getDerivativeAt(m_normalizedKnots[i+m_degree]);
+			(*vertexData)[nVData + 4*i+3] = hpvec3(1.0f,0.0f,0.0f);
+			std::cout << "d: " << (*vertexData)[nVData + 4*i+2].x << " | " << (*vertexData)[nVData + 4*i+2].y << " | " << (*vertexData)[nVData + 4*i+2].z << std::endl;
+
+			(*indices)[nIndices + 2*i] = nVData/2 + 2*i;
+			(*indices)[nIndices + 2*i + 1] = nVData/2 + 2*i+1;
+		}
+	}
+	*/
 
 	return new LineMesh(vertexData, indices);
 }

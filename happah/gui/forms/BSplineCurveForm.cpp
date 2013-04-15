@@ -79,11 +79,13 @@ void BSplineCurveForm::projectPointOntoPlane() {
 }
 
 void BSplineCurveForm::interpolate() {
-	std::vector<hpvec3> inputPoints;
-	m_curve->interpolatePoints( inputPoints );
+	m_curve->interpolateControlPoints( );
 	m_guiManager.update(m_curve);
 
 	m_degreeSpinBox->setValue( m_curve->getDegree() );
+	m_clampedCheckBox->setCheckState( m_curve->isClamped() ? Qt::Checked : Qt::Unchecked );
+	m_periodicCheckBox->setCheckState( m_curve->isPeriodic() ? Qt::Checked : Qt::Unchecked );
+	m_uniformCheckBox->setCheckState( m_curve->isUniform() ? Qt::Checked : Qt::Unchecked );
 }
 
 void BSplineCurveForm::addPoint() {
@@ -162,9 +164,9 @@ void BSplineCurveForm::resetPlane() {
 
 void BSplineCurveForm::setCurve(BSplineCurve_ptr curve) {
 	m_curve = curve;
-	m_periodicCheckBox->setCheckState( curve->getPeriodic() ? Qt::Checked : Qt::Unchecked );
-	m_uniformCheckBox->setCheckState( curve->getUniform() ? Qt::Checked : Qt::Unchecked );
-	m_clampedCheckBox->setCheckState( curve->getClamped() ? Qt::Checked : Qt::Unchecked );
+	m_periodicCheckBox->setCheckState( curve->isPeriodic() ? Qt::Checked : Qt::Unchecked );
+	m_uniformCheckBox->setCheckState( curve->isUniform() ? Qt::Checked : Qt::Unchecked );
+	m_clampedCheckBox->setCheckState( curve->isClamped() ? Qt::Checked : Qt::Unchecked );
 	m_degreeSpinBox->setValue( curve->getDegree() );
 
 	setPlane( m_guiManager.getParentPlane(m_curve) );
@@ -179,7 +181,7 @@ void BSplineCurveForm::setPlane(Plane_ptr plane) {
 		m_planeLabel->setText("Using scene plane");
 	}
 	else {
-		m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 1.0f, 0.0f) ));
+		m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 0.0f, 1.0f) ));
 		m_useStandardPlane = true;
 		m_planeLabel->setText("Using standard plane");
 	}

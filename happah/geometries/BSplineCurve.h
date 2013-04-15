@@ -13,12 +13,14 @@ class BSplineCurve {
 protected:
 	std::vector<hpvec3>	m_controlPoints;
 	bool		m_clampedEnds;
+	bool		m_clamped;
 	int		m_degree;
 	std::vector<hpvec3>	m_normalizedPoints;
 	std::vector<float>	m_normalizedKnots;
 	std::vector<float>	m_knots;
 	bool		m_periodic;
 	bool		m_uniformKnots;
+	bool		m_uniform;
 
 
 public:
@@ -49,13 +51,19 @@ public:
 	virtual void getBoundingBox( hpvec2* min, hpvec2* max ) const;
 	bool getClamped() const;
 	hpvec3 getControlPoint( unsigned int index ) const;
+	std::vector<hpvec3> getControlPoints() const;
 	int getDegree() const;
 	unsigned int getNumberOfControlPoints() const;
 	void getParameterRange( float& t_low, float& t_high );
 	bool getPeriodic() const;
 	bool getUniform() const;
-	hpvec3 getValueAt( float t ) const;
+	hpvec3 getDerivativeAt( hpreal t ) const;
+	hpvec3 getValueAt( hpreal t ) const;
+	void interpolateControlPoints();
 	void interpolatePoints( std::vector<hpvec3>& points );
+	bool isClamped() const;
+	bool isPeriodic() const;
+	bool isUniform() const;
 
 	void removeControlPoints();
 	void resetKnotsToUniform();

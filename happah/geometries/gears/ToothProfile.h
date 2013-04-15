@@ -4,7 +4,7 @@
 #include "happah/geometries/BSplineCurve.h"
 #include "happah/HappahTypes.h"
 
-class ToothProfile : public BSplineCurve {
+class ToothProfile {
 public:
 	ToothProfile(const BSplineCurve& toothProfile);
 	~ToothProfile();

@@ -47,7 +47,7 @@ hpreal ToothProfile::getRootRadius() const {
 BSplineCurve* ToothProfile::getEntireGear() const {
 	BSplineCurve *gearProfile = new BSplineCurve();
 	gearProfile->setPeriodic(true);
-	gearProfile->setDegree(m_degree);
+	gearProfile->setDegree(m_toothProfileCurve.getDegree());
 	// std::vector<hpvec3> copiedControlPoints = m_controlPoints; //to be able to use the iterator. TODO: should we do it like this?
 
 	// hpuint nTeeth = getNumberOfTeeth();

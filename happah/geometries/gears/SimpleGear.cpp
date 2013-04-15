@@ -24,8 +24,8 @@ void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve* gearProfile) {
 
 	for(hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
 		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
-		for(hpuint i = 0; i < m_toothProfile->getNumberOfControlPoints(); ++i) {
-			hpvec3 controlPoint = m_toothProfile->getControlPoint(i);
+		for(hpuint i = 0; i < m_toothProfile->getCurve().getNumberOfControlPoints(); ++i) {
+			hpvec3 controlPoint = m_toothProfile->getCurve().getControlPoint(i);
 			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
 			gearProfile->addControlPoint(turnedPoint);
 		}
@@ -100,8 +100,8 @@ void SimpleGear::setRadius(hpreal radius) {
 }
 
 void SimpleGear::setToothProfile(ToothProfile* curve) {
-	//TODO: do we need 'delete m_toothProfile'?
-	m_toothProfile = curve;
+	// //TODO: do we need 'delete m_toothProfile'?
+	// m_toothProfile = curve;
 }
 
 void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {

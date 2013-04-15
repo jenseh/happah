@@ -54,12 +54,13 @@ public:
 	std::vector<hpvec3> getControlPoints() const;
 	int getDegree() const;
 	unsigned int getNumberOfControlPoints() const;
-	void getParameterRange( float& t_low, float& t_high );
+	void getParameterRange( float& t_low, float& t_high ) const;
 	bool getPeriodic() const;
 	bool getUniform() const;
 	hpvec3 getDerivativeAt( hpreal t ) const;
 	hpvec3 getValueAt( hpreal t ) const;
 	void interpolateControlPoints();
+	void interpolatePoints( std::vector<hpvec2>& points );
 	void interpolatePoints( std::vector<hpvec3>& points );
 	bool isClamped() const;
 	bool isPeriodic() const;

@@ -13,8 +13,10 @@ ToothProfile::ToothProfile(const BSplineCurve& toothProfile) : m_toothProfileCur
 ToothProfile::~ToothProfile() {}
 
 hpreal ToothProfile::getAngularPitch() const {
-	hpvec3 first = m_toothProfileCurve.getValueAt(0.0f);
-	hpvec3 last = m_toothProfileCurve.getValueAt(1.0f);
+	hpreal startValue, stopValue;
+	m_toothProfileCurve.getParameterRange(startValue, stopValue);
+	hpvec3 first = m_toothProfileCurve.getValueAt(startValue);
+	hpvec3 last = m_toothProfileCurve.getValueAt(stopValue);
 	// if angularPitch > PI (more than half of circle), concstruction will fail!
 	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
 }

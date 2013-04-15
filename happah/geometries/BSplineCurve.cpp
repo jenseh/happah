@@ -164,7 +164,7 @@ unsigned int BSplineCurve::getNumberOfControlPoints() const {
 	return m_controlPoints.size();
 }
 
-void BSplineCurve::getParameterRange( float& t_low, float& t_high ) {
+void BSplineCurve::getParameterRange( float& t_low, float& t_high ) const {
 	if( m_normalizedPoints.size() < m_degree + 1 ) return;
 
 	t_low =  m_normalizedKnots[m_degree];
@@ -262,6 +262,15 @@ void BSplineCurve::interpolateControlPoints() {
 	std::vector<hpvec3> inputPoints;
 	inputPoints.swap(m_controlPoints);
 
+	interpolatePoints( inputPoints );
+}
+
+void BSplineCurve::interpolatePoints( std::vector<hpvec2>& points ) {
+	std::vector<hpvec3> inputPoints( points.size() );
+	std::vector<hpvec3>::iterator itInput = inputPoints.begin();
+	for( std::vector<hpvec2>::iterator it = points.begin(), end = points.end(); it != end; ++it, ++itInput ) {
+		*itInput = hpvec3( ( *it ).x, ( *it ).y, 0.0f );
+	}
 	interpolatePoints( inputPoints );
 }
 

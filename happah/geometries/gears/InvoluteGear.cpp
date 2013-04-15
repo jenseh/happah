@@ -481,7 +481,6 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 	hpuint stopIndex = startNewIndices + distToOtherSide;
 	vector<hpuint>::iterator indicesIterator = --(indices->end()); //points to last element of indices
 	indices->resize(indices->size() + profile.size() * 2 * 3);
-	vector<hpuint>::const_iterator end = indices->end();
 	for(hpuint i = startNewIndices; i < (stopIndex - 3); i += 3) {
 		*(++indicesIterator) = i + 2;
 		*(++indicesIterator) = i + distToOtherSide;
@@ -507,8 +506,8 @@ SimpleGear* InvoluteGear::toSimpleGear(hpuint toothSampleSize) {
 	BSplineCurve curveOfToothProfile;
 	curveOfToothProfile.setClamped(true);
 	curveOfToothProfile.setPeriodic(false);
-	curveOfToothProfile.setDegree(3); // by using approximation of BSplineCurve it is set to 3 anyway!
-	curveOfToothProfile.approximatePoints(&toothProfilePoints, toothSampleSize);
+	curveOfToothProfile.setDegree(3); // by using interpolation of BSplineCurve it is set to 3 anyway!
+	curveOfToothProfile.interpolatePoints(toothProfilePoints);
 	SimpleGear *simpleGear = new SimpleGear(curveOfToothProfile, m_helixAngle, m_faceWidth);
 	return simpleGear;
 }

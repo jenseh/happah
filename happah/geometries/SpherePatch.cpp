@@ -55,9 +55,9 @@ SpherePatch::SpherePatch(int degree, hpvec3 a, hpvec3 b, hpvec3 c)
                   //p000 = triPatch2(m_controlPoints[0],m_controlPoints[1],m_controlPoints[2],m_controlPoints[3],m_controlPoints[4],m_controlPoints[5]);
                  //std::cout<<"u/v/w"<<" "<<m_u<<"/"<<m_v<<"/"<<m_w<<std::endl;
                  //std::cout << "BezierPunkt: "<< p000.x << "/" << p000.y << "/" <<p000.z << std::endl;
-                 m_vertexData.push_back(p000i);
+                 m_verticesAndNormals.push_back(p000i);
                  hpvec3 normal = (p000-m_center); // TODO: THINK OF SOMETING NORMAL
-                 m_vertexData.push_back(normal);
+                 m_verticesAndNormals.push_back(normal);
 
               }
            }
@@ -104,7 +104,7 @@ hpvec3 SpherePatch::triPatch3(hpvec3 p300,hpvec3 p210,hpvec3 p201,hpvec3 p120,hp
 }
 
 TriangleMesh* SpherePatch::toTriangleMesh(){
-  std::vector<hpvec3> *vertexData = &m_vertexData;
+  std::vector<hpvec3> *verticesAndNormals = &m_verticesAndNormals;
   std::vector<hpuint> *indices = new std::vector<hpuint>();
   int detail = m_detail;
   int save = 1;
@@ -129,7 +129,7 @@ TriangleMesh* SpherePatch::toTriangleMesh(){
         }
     }
 }
-  TriangleMesh* result = new TriangleMesh(vertexData, indices);
+  TriangleMesh* result = new TriangleMesh(verticesAndNormals, indices);
   return result;
 }
 

@@ -14,7 +14,7 @@ public:
 
 private:
   glm::vec3 m_controlPoints[6];
-  std::vector<glm::vec4>m_vertexData;
+  std::vector<glm::vec4>m_verticesAndNormals;
 
 };
 

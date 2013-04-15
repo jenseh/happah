@@ -18,7 +18,7 @@ void WormGearGrind::calculateGrindingDepth(){
 
 //   for (hpuint i = 0; i < m_gearMesh->getIndices()->size(); i++) {
 //	   hpuint index = m_gearMesh->getIndices()->at(i);
-//	   LoggingUtils::printVec("Vertex", m_gearMesh->getVertexData()->at(index));
+//	   LoggingUtils::printVec("Vertex", m_gearMesh->getVerticesAndNormals()->at(index));
 //   }
 
    std::vector<Triangle>* triangles = m_gearMesh->toTriangles();

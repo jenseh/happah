@@ -53,14 +53,14 @@ void BasicRack::createHeightProfile() {
     //heightProfile.push_back(heightProfile[0]);
 }
 
-std::vector<hpvec3>* BasicRack::createVertexData() {
+std::vector<hpvec3>* BasicRack::createVerticesAndNormals() {
 	//TODO: implement this
 	return 0;
 }
 
 // This creates the quads for a gear. The gear axis is the model's z-axis.
 //QuadMesh* BasicRack::toQuadMesh() {
-//    std::vector<hpvec3>* vertexData = createVertexData();
+//    std::vector<hpvec3>* verticesAndNormals = createVerticesAndNormals();
 //    std::vector<hpuint>* indices = new std::vector<hpuint>();
 //    hpreal dz = m_depth / Z_DETAIL_LEVEL;
 //
@@ -101,31 +101,31 @@ std::vector<hpvec3>* BasicRack::createVertexData() {
 //                                    glm::vec3(a.x - b.x, a.y - b.y, 0.0f))),
 //                    1.0f);
 //
-//            vertexData.push_back(a);
-//            //vertexData.push_back(normNext);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(b);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(c);
-//            vertexData.push_back(norm);
-//            vertexData.push_back(d);
-//            //vertexData.push_back(normNext);
-//            vertexData.push_back(norm);
+//            verticesAndNormals.push_back(a);
+//            //verticesAndNormals.push_back(normNext);
+//            verticesAndNormals.push_back(norm);
+//            verticesAndNormals.push_back(b);
+//            verticesAndNormals.push_back(norm);
+//            verticesAndNormals.push_back(c);
+//            verticesAndNormals.push_back(norm);
+//            verticesAndNormals.push_back(d);
+//            //verticesAndNormals.push_back(normNext);
+//            verticesAndNormals.push_back(norm);
 //        }
 //    }
 //
-//    QuadMesh* result = new QuadMesh(vertexData, indices);
+//    QuadMesh* result = new QuadMesh(verticesAndNormals, indices);
 //    return result;
 //}
 
 TriangleMesh* BasicRack::toTriangleMesh() {
-    std::vector<hpvec3>* vertexData = createVertexData();
+    std::vector<hpvec3>* verticesAndNormals = createVerticesAndNormals();
     std::vector<hpuint>* indices = new std::vector<hpuint>();
-    hpuint indexCount =  vertexData->size() / 2;
+    hpuint indexCount =  verticesAndNormals->size() / 2;
     indices->reserve(indexCount);
     for (hpuint index = 0; index < indexCount; index++) {
     	indices->push_back(index);
     }
-    TriangleMesh* result = new TriangleMesh(vertexData, indices);
+    TriangleMesh* result = new TriangleMesh(verticesAndNormals, indices);
     return result;
 }

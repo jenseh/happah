@@ -23,7 +23,7 @@ private:
 
   glm::vec3 m_a,m_b,m_c;
   glm::vec3 m_controlPoints[10];
-  std::vector<glm::vec4> m_vertexData;
+  std::vector<glm::vec4> m_verticesAndNormals;
   glm::vec3 triPatch1(glm::vec3 p100,glm::vec3 p010,glm::vec3 p001);
   glm::vec3 triPatch2(glm::vec3 p200,glm::vec3 p110,glm::vec3 p101,glm::vec3 p020,glm::vec3 p011,glm::vec3 p002);
   glm::vec3 triPatch3(glm::vec3 p300,glm::vec3 p210,glm::vec3 p201,glm::vec3 p120,glm::vec3 p111,

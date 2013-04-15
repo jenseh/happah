@@ -49,7 +49,7 @@ void Plane::setOrigin(hpvec3 origin) {
 
 TriangleMesh* Plane::toTriangleMesh() {
 	hpreal edgeLength = 1.0f;
-	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 	hpvec3 normal = glm::normalize(m_normal);
@@ -64,14 +64,14 @@ TriangleMesh* Plane::toTriangleMesh() {
 //	std::cout << a.x << a.y << a.z << std::endl;
 //	std::cout << b.x << b.y << b.z << std::endl;
 	
-	vertexData->push_back(m_origin + a + b);
-	vertexData->push_back(m_normal);
-	vertexData->push_back(m_origin - a + b);
-	vertexData->push_back(m_normal);
-	vertexData->push_back(m_origin - a - b);
-	vertexData->push_back(m_normal);
-	vertexData->push_back(m_origin + a - b);
-	vertexData->push_back(m_normal);
+	verticesAndNormals->push_back(m_origin + a + b);
+	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back(m_origin - a + b);
+	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back(m_origin - a - b);
+	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back(m_origin + a - b);
+	verticesAndNormals->push_back(m_normal);
 
 	indices->push_back(0);
 	indices->push_back(2);
@@ -79,12 +79,12 @@ TriangleMesh* Plane::toTriangleMesh() {
 	indices->push_back(0);
 	indices->push_back(2);
 	indices->push_back(3);
-	return new TriangleMesh(vertexData, indices);
+	return new TriangleMesh(verticesAndNormals, indices);
 }
 
 PointCloud* Plane::toPointCloud() {
 
-	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 //	for (hpreal edgeLength=0.0f;edgeLength < 5.0f; edgeLength = edgeLength+0.3f){
@@ -99,19 +99,19 @@ PointCloud* Plane::toPointCloud() {
 	hpvec3 b = 0.5f*edgeLength*glm::normalize(glm::cross(a,normal));
 
 
-	vertexData->push_back(m_origin + a + b);
-	vertexData->push_back(m_origin - a + b);
-	vertexData->push_back(m_origin - a - b);
-	vertexData->push_back(m_origin + a - b);
+	verticesAndNormals->push_back(m_origin + a + b);
+	verticesAndNormals->push_back(m_origin - a + b);
+	verticesAndNormals->push_back(m_origin - a - b);
+	verticesAndNormals->push_back(m_origin + a - b);
 
 //	}
 
-	return new PointCloud(vertexData);
+	return new PointCloud(verticesAndNormals);
 }
 
 LineMesh* Plane::toLineMesh() {
 	hpreal edgeLength = 1.0f;
-	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 	hpvec3 normal = glm::normalize(m_normal);
@@ -126,14 +126,14 @@ LineMesh* Plane::toLineMesh() {
 //	std::cout << a.x << a.y << a.z << std::endl;
 //	std::cout << b.x << b.y << b.z << std::endl;
 
-	vertexData->push_back((m_origin + a + b)*2.0f);
-	vertexData->push_back(m_normal);
-	vertexData->push_back((m_origin - a + b)*2.0f);
-	vertexData->push_back(m_normal);
-	vertexData->push_back((m_origin - a - b)*2.0f);
-	vertexData->push_back(m_normal);
-	vertexData->push_back((m_origin + a - b)*2.0f);
-	vertexData->push_back(m_normal);
+	verticesAndNormals->push_back((m_origin + a + b)*2.0f);
+	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back((m_origin - a + b)*2.0f);
+	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back((m_origin - a - b)*2.0f);
+	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back((m_origin + a - b)*2.0f);
+	verticesAndNormals->push_back(m_normal);
 
 	indices->push_back(0);
 	indices->push_back(2);
@@ -141,7 +141,7 @@ LineMesh* Plane::toLineMesh() {
 	indices->push_back(0);
 	indices->push_back(2);
 	indices->push_back(3);
-	return new LineMesh(vertexData, indices);
+	return new LineMesh(verticesAndNormals, indices);
 }
 Plane& Plane::operator=(const Plane& other) {
 	if(this != &other) {

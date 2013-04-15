@@ -12,22 +12,22 @@ using namespace std;
 
 class Mesh {
 public:
-	Mesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
+	Mesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
 	virtual ~Mesh();
 
 
-	   vector<hpvec3>* getVertexData();
+	   vector<hpvec3>* getVerticesAndNormals();
 	   vector<hpuint>* getIndices();
 
 	private:
-	    vector<hpvec3>* m_vertexData;
+	    vector<hpvec3>* m_verticesAndNormals;
 	    vector<hpuint>* m_indices;
 };
 typedef shared_ptr<Mesh> Mesh_ptr;
 
 class TriangleMesh : public Mesh {
 public:
-    TriangleMesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
+    TriangleMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
     ~TriangleMesh();
     vector<Triangle>* toTriangles();
     vector<Ray>* toRays();
@@ -36,7 +36,7 @@ typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
 class LineMesh : public Mesh {
 public:
-    LineMesh(vector<hpvec3>* vertexData, vector<hpuint>* indices);
+    LineMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
     ~LineMesh();
 };
 typedef shared_ptr<LineMesh> LineMesh_ptr;

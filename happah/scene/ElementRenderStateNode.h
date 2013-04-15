@@ -13,8 +13,8 @@ using namespace std;
 
 class ElementRenderStateNode : public RenderStateNode{
 public:
-	ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, hpcolor& color);
-	ElementRenderStateNode(hpuint mode, vector<hpvec3>* vertexData, std::vector<hpuint>* indices, vector<hpcolor>* colorVector);
+	ElementRenderStateNode(hpuint mode, vector<hpvec3>* verticesAndNormals, std::vector<hpuint>* indices, hpcolor& color);
+	ElementRenderStateNode(hpuint mode, vector<hpvec3>* verticesAndNormals, std::vector<hpuint>* indices, vector<hpcolor>* colorVector);
 	virtual ~ElementRenderStateNode();
 
 	virtual void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);

@@ -433,29 +433,31 @@ void BSplineCurve::setPeriodic( bool periodic ) {
 }
 
 LineMesh* BSplineCurve::toLineMesh() {
-	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
+
 	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
-		vertexData->resize(202);
+		verticesAndNormals->resize(202);
 		indices->resize(200);
 
 		hpreal stepSize = (tEnd - tBegin) / 100;
 		for( hpuint i = 0; i < 100; i++ ) {
-			(*vertexData)[2*i] = getValueAt(tBegin + i*stepSize);
-			(*vertexData)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*verticesAndNormals)[2*i] = getValueAt(tBegin + i*stepSize);
+			(*verticesAndNormals)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
 			(*indices)[2*i] = i;
 			(*indices)[2*i+1] = i+1;
 		}
-		(*vertexData)[200] = getValueAt(tEnd);
-		(*vertexData)[201] = hpvec3(1.0f,0.0f,0.0f);
+		(*verticesAndNormals)[200] = getValueAt(tEnd);
+		(*verticesAndNormals)[201] = hpvec3(1.0f,0.0f,0.0f);
+
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty LineMesh
-		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
-		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		verticesAndNormals->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		verticesAndNormals->push_back( hpvec3(0.0f,0.0f,0.0f) );
 		indices->push_back( 0 );
 		indices->push_back( 0 );
 	}
@@ -463,41 +465,41 @@ LineMesh* BSplineCurve::toLineMesh() {
 	// control polygon
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
-		unsigned int nVData = vertexData->size();
+		unsigned int nVData = verticesAndNormals->size();
 		unsigned int nIndices = indices->size();
 
-		vertexData->resize(nVData+2*n);
+		verticesAndNormals->resize(nVData+2*n);
 		indices->resize(nIndices+2*n-2);
 
 		for( hpuint i = 0; i < n-1; i++ ) {
-			(*vertexData)[nVData + 2*i] = m_controlPoints[i];
-			(*vertexData)[nVData + 2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*verticesAndNormals)[nVData + 2*i] = m_controlPoints[i];
+			(*verticesAndNormals)[nVData + 2*i+1] = hpvec3(1.0f,0.0f,0.0f);
 			(*indices)[nIndices + 2*i] = nVData/2 + i;
 			(*indices)[nIndices + 2*i+1] = nVData/2 + i+1;
 		}
-		(*vertexData)[nVData + 2*n-2] = m_controlPoints.back();
-		(*vertexData)[nVData + 2*n-1] = hpvec3(1.0f,0.0f,0.0f);
+		(*verticesAndNormals)[nVData + 2*n-2] = m_controlPoints.back();
+		(*verticesAndNormals)[nVData + 2*n-1] = hpvec3(1.0f,0.0f,0.0f);
 	}
 
 	// tangents
 	/*
 	if( m_normalizedKnots.size() > 2*m_degree && m_degree > 1 ) {
 		unsigned int n = m_normalizedKnots.size() - 2*m_degree;
-		unsigned int nVData = vertexData->size();
+		unsigned int nVData = verticesAndNormals->size();
 		unsigned int nIndices = indices->size();
 
-		vertexData->resize(nVData+4*n);
+		verticesAndNormals->resize(nVData+4*n);
 		indices->resize(nIndices+2*n);
 
 		for( unsigned int i = 0; i < n; i++ ) {
-			(*vertexData)[nVData + 4*i] = getValueAt(m_normalizedKnots[i+m_degree]);
-			(*vertexData)[nVData + 4*i+1] = hpvec3(1.0f,0.0f,0.0f);
-			std::cout << "p: " << (*vertexData)[nVData + 4*i].x << " | " << (*vertexData)[nVData + 4*i].y << " | " << (*vertexData)[nVData + 4*i].z << std::endl;
+			(*verticesAndNormals)[nVData + 4*i] = getValueAt(m_normalizedKnots[i+m_degree]);
+			(*verticesAndNormals)[nVData + 4*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			std::cout << "p: " << (*verticesAndNormals)[nVData + 4*i].x << " | " << (*verticesAndNormals)[nVData + 4*i].y << " | " << (*verticesAndNormals)[nVData + 4*i].z << std::endl;
 
-			(*vertexData)[nVData + 4*i+2] = (*vertexData)[nVData + 4*i]
+			(*verticesAndNormals)[nVData + 4*i+2] = (*verticesAndNormals)[nVData + 4*i]
 				+ getDerivativeAt(m_normalizedKnots[i+m_degree]);
-			(*vertexData)[nVData + 4*i+3] = hpvec3(1.0f,0.0f,0.0f);
-			std::cout << "d: " << (*vertexData)[nVData + 4*i+2].x << " | " << (*vertexData)[nVData + 4*i+2].y << " | " << (*vertexData)[nVData + 4*i+2].z << std::endl;
+			(*verticesAndNormals)[nVData + 4*i+3] = hpvec3(1.0f,0.0f,0.0f);
+			std::cout << "d: " << (*verticesAndNormals)[nVData + 4*i+2].x << " | " << (*verticesAndNormals)[nVData + 4*i+2].y << " | " << (*verticesAndNormals)[nVData + 4*i+2].z << std::endl;
 
 			(*indices)[nIndices + 2*i] = nVData/2 + 2*i;
 			(*indices)[nIndices + 2*i + 1] = nVData/2 + 2*i+1;
@@ -505,19 +507,19 @@ LineMesh* BSplineCurve::toLineMesh() {
 	}
 	*/
 
-	return new LineMesh(vertexData, indices);
+	return new LineMesh(verticesAndNormals, indices);
 }
 
 PointCloud* BSplineCurve::toPointCloud() {
 	if(m_controlPoints.size() == 0) {
-		std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
-		vertexData->push_back( hpvec3(0.0f,0.0f,0.0f) );
-		return new PointCloud(vertexData);
+		std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
+		verticesAndNormals->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		return new PointCloud(verticesAndNormals);
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty PointCloud
-		std::vector<hpvec3>* vertexData = new std::vector<hpvec3>(m_controlPoints);
-		return new PointCloud(vertexData);
+		std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>(m_controlPoints);
+		return new PointCloud(verticesAndNormals);
 	}
 }
 

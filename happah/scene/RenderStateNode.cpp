@@ -6,8 +6,8 @@
 
 using namespace std;
 
-RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, hpcolor& color)
-	:m_vertexData(vertexData),m_color(color), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
+RenderStateNode::RenderStateNode(vector<hpvec3>* verticesAndNormals, hpcolor& color)
+	:m_verticesAndNormals(verticesAndNormals),m_color(color), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
 
 	Material material;
 	material.setAmbientFactor(1.5f);
@@ -17,12 +17,12 @@ RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, hpcolor& color)
 	m_material = material;
 }
 
-RenderStateNode::RenderStateNode(vector<hpvec3>* vertexData, vector<hpcolor>* colorVector)
-	:m_vertexData(vertexData),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
+RenderStateNode::RenderStateNode(vector<hpvec3>* verticesAndNormals, vector<hpcolor>* colorVector)
+	:m_verticesAndNormals(verticesAndNormals),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
 
 	size_t a = colorVector->size(); //TODO: remove
-	size_t b = vertexData->size();
-	if (colorVector->size() != vertexData->size() / 2)
+	size_t b = verticesAndNormals->size();
+	if (colorVector->size() != verticesAndNormals->size() / 2)
 		throw;		// TODO : find proper exception;
 
 	Material material;
@@ -61,8 +61,8 @@ void RenderStateNode::setColor(hpcolor color) {
 }
 
 void RenderStateNode::setColorVector(vector<hpcolor>* colorVector) {
-	if (m_vertexData->size() != colorVector->size() * 2) {
-		cerr << m_vertexData->size() <<" != " << colorVector->size() / 2<< endl;
+	if (m_verticesAndNormals->size() != colorVector->size() * 2) {
+		cerr << m_verticesAndNormals->size() <<" != " << colorVector->size() / 2<< endl;
 		throw; // TODO: Find Proper Exception !
 	}
 	m_colorVector = colorVector;
@@ -100,12 +100,12 @@ Material RenderStateNode::getMaterial() {
 }
 
 
-vector<hpvec3>* RenderStateNode::getVertexData() {
-	return m_vertexData;
+vector<hpvec3>* RenderStateNode::getVerticesAndNormals() {
+	return m_verticesAndNormals;
 }
 
 vector<hpvec4>* RenderStateNode::getColorVector(){
-	if (m_vertexData->size() != m_colorVector->size()*2)
+	if (m_verticesAndNormals->size() != m_colorVector->size()*2)
 		throw; // TODO: Find Proper Exception !
 	return m_colorVector;
 }

@@ -30,10 +30,10 @@ HEADERS += \
 	happah/geometries/gears/Worm.h \
 	happah/geometries/ZCircleCloud.h \
 \
-	happah/geometries/gears/BSplineGearCurve.h \
 	happah/geometries/gears/CylindricalGear.h \
 	happah/geometries/gears/InvoluteGear.h \
 	happah/geometries/gears/SimpleGear.h \
+	happah/geometries/gears/ToothProfile.h \
 \
 	happah/gui/DefaultGUIManager.h \
 	happah/gui/DiscGearGrindWorker.h \
@@ -145,10 +145,10 @@ SOURCES += \
 	happah/geometries/gears/Worm.cpp \
 	happah/geometries/ZCircleCloud.cpp \
 \
-	happah/geometries/gears/BSplineGearCurve.cpp \
 	happah/geometries/gears/CylindricalGear.cpp \
 	happah/geometries/gears/InvoluteGear.cpp \
 	happah/geometries/gears/SimpleGear.cpp \
+	happah/geometries/gears/ToothProfile.cpp \
 \
 	happah/gui/DefaultGUIManager.cpp \
 	happah/gui/DiscGearGrindWorker.cpp \

@@ -5,24 +5,24 @@
 
 using namespace std;
 
-#include "happah/geometries/gears/BSplineGearCurve.h"
+#include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 
 class SimpleGear : public CylindricalGear {
 
 private:
-	BSplineGearCurve* m_toothProfile;
+	ToothProfile* m_toothProfile;
 	hpreal m_helixAngle;
 	hpreal m_faceWidth;
 
 public:
-	SimpleGear(BSplineGearCurve *toothProfile, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(ToothProfile *toothProfile, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
 	~SimpleGear();
 
 	void getTraverseProfile(hpreal z, BSplineCurve* gearProfile);
 	BSplineCurve* toTransverseToothProfileSystem(hpreal z);
-	BSplineGearCurve* getCopyWithBeginOfToothAtTop() const;
+	ToothProfile* getCopyWithBeginOfToothAtTop() const;
 
 	hpreal getAngularPitch();
 	hpreal getRootRadius();
@@ -30,11 +30,11 @@ public:
 	hpreal getRadius();
 	hpreal getHelixAngle();
 	hpreal getFaceWidth();
-	BSplineGearCurve getToothProfile();
+	ToothProfile getToothProfile();
 
 	void setHelixAngle(hpreal angle);
 	void setFaceWidth(hpreal faceWidth);
-	void setToothProfile(BSplineGearCurve* curve);
+	void setToothProfile(ToothProfile* curve);
 	void setRadius(hpreal radius);
 
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);

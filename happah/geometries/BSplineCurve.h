@@ -44,6 +44,15 @@ public:
 
 private:
 	void calculateNormalization();
+	int findSpan( hpreal t ) const;
+	int findSpan( hpreal t, std::vector<hpreal>& knots) const;
+
+	std::vector<hpvec3> knotRefinement( hpreal minDist );
+	void refine(
+		std::vector<hpreal>& knots,
+		std::vector<hpvec3>& points,
+		std::vector<hpreal>& newKnots
+	);
 
 public:
 	bool check( bool debugOutput ) const;

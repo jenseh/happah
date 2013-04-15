@@ -21,6 +21,6 @@ public:
 private:
     float m_radius;
     glm::vec4 m_center;
-    std::vector<glm::vec4> m_vertexData;
+    std::vector<glm::vec4> m_verticesAndNormals;
 };
 #endif /* SPHERE_H_ */

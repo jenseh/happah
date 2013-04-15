@@ -31,7 +31,7 @@ private:
 
     void createHeightProfilePartition();
     void createHeightProfile();
-    std::vector<hpvec3>* createVertexData();
+    std::vector<hpvec3>* createVerticesAndNormals();
 };
 
 #endif // BASICRACK_H

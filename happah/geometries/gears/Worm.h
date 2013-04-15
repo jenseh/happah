@@ -24,7 +24,7 @@ public:
       
   ~Worm();
   
-  std::vector<hpvec3>* createVertexData();
+  std::vector<hpvec3>* createVerticesAndNormals();
   
   hpreal getToothCount();
   hpreal getModule();

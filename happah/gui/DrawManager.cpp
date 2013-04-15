@@ -117,12 +117,12 @@ void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode
 		glUniform4f(m_pointCloudSelectionColorLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_pointCloudDrawSelectionColors,1);
 		glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
-		glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVertexData()->size());
+		glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVerticesAndNormals()->size());
 		glBindFramebuffer(GL_FRAMEBUFFER,0);
 	}
 	glUniform1i(m_pointCloudDrawSelectionColors,0);
 	glUniform1i(m_pointCloudSelectedLocation,pointCloudRenderStateNode->getSelected());
-	glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVertexData()->size());
+	glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVerticesAndNormals()->size());
 	glBindVertexArray(0);
 }
 
@@ -267,7 +267,7 @@ bool DrawManager::init() {
 
 void DrawManager::initialize(ElementRenderStateNode_ptr elementRenderStateNode) {
 	GLuint bufferID;
-	GLint size = (elementRenderStateNode->getVertexData()->size());
+	GLint size = (elementRenderStateNode->getVerticesAndNormals()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
 	elementRenderStateNode->setVertexArrayObjectID(bufferID);
@@ -277,7 +277,7 @@ void DrawManager::initialize(ElementRenderStateNode_ptr elementRenderStateNode) 
 	glGenBuffers(1, &bufferID);
 	elementRenderStateNode->setVertexBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, elementRenderStateNode->getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(elementRenderStateNode->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(elementRenderStateNode->getVerticesAndNormals()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_vertexLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), 0);
 	glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(hpvec3), (void*) sizeof(hpvec3));
 	glEnableVertexAttribArray(m_vertexLocation);
@@ -308,7 +308,7 @@ void DrawManager::initialize(ElementRenderStateNode_ptr elementRenderStateNode) 
 
 void DrawManager::initialize(PointCloudRenderStateNode_ptr pointCloudRenderStateNode) {
 	GLuint bufferID;
-	GLint size = (pointCloudRenderStateNode->getVertexData()->size());
+	GLint size = (pointCloudRenderStateNode->getVerticesAndNormals()->size());
 	// Create New VertexArrayObject
 	glGenVertexArrays(1, &bufferID);
 	pointCloudRenderStateNode->setVertexArrayObjectID(bufferID);
@@ -318,7 +318,7 @@ void DrawManager::initialize(PointCloudRenderStateNode_ptr pointCloudRenderState
 	glGenBuffers(1, &bufferID);
 	pointCloudRenderStateNode->setVertexBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getVertexBufferID());
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode->getVertexData()->at(0)), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(hpvec3), &(pointCloudRenderStateNode->getVerticesAndNormals()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_pointCloudVertexLocation, 3, GL_FLOAT, GL_FALSE,sizeof(hpvec3), 0);
 	glEnableVertexAttribArray(m_pointCloudVertexLocation);
 
@@ -327,7 +327,7 @@ void DrawManager::initialize(PointCloudRenderStateNode_ptr pointCloudRenderState
 	glGenBuffers(1, &bufferID);
 	pointCloudRenderStateNode->setColorBufferID(bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getColorBufferID());
-	glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getVertexData()->size() * sizeof(hpcolor),&(m_selectionVisitor.getPointSelectionColors()->at(0)), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, pointCloudRenderStateNode->getVerticesAndNormals()->size() * sizeof(hpcolor),&(m_selectionVisitor.getPointSelectionColors()->at(0)), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(m_pointCloudSinglePointSelectionColorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(hpcolor), 0);
 	glEnableVertexAttribArray(m_pointCloudSinglePointSelectionColorLocation);
 

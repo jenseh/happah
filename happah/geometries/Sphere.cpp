@@ -56,23 +56,23 @@ QuadMesh* Sphere::toQuadMesh() {
             normD = glm::normalize(d-m_center);
             //normD = glm::vec4(1.0f,1.0f,0.0f,0.0f);
 
-            m_vertexData.push_back(a);
-            m_vertexData.push_back(normA);
+            m_verticesAndNormals.push_back(a);
+            m_verticesAndNormals.push_back(normA);
 
-            m_vertexData.push_back(b);
-            m_vertexData.push_back(normB);
+            m_verticesAndNormals.push_back(b);
+            m_verticesAndNormals.push_back(normB);
 
-            m_vertexData.push_back(c);
-            m_vertexData.push_back(normC);
+            m_verticesAndNormals.push_back(c);
+            m_verticesAndNormals.push_back(normC);
 
-            m_vertexData.push_back(d);
-            m_vertexData.push_back(normD);
+            m_verticesAndNormals.push_back(d);
+            m_verticesAndNormals.push_back(normD);
 
         }
     }
 
-    QuadMesh* result = new QuadMesh(m_vertexData, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
-    std::cout << "Kreis Vertices" << m_vertexData.size()<<endl;
+    QuadMesh* result = new QuadMesh(m_verticesAndNormals, concatStringNumber(m_name + " - Instance ", m_objectIdCounter++));
+    std::cout << "Kreis Vertices" << m_verticesAndNormals.size()<<endl;
     return result;
 }
 

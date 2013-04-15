@@ -29,7 +29,7 @@ private:
   hpvec3 m_a,m_b,m_c,m,m_sa,m_sb,m_sc;
   hpvec3 m_controlPoints[10];
   hpvec3 m_secantTriPoints[10];
-  std::vector<hpvec3> m_vertexData;
+  std::vector<hpvec3> m_verticesAndNormals;
   hpvec3 triPatch1(hpvec3 p100,hpvec3 p010,hpvec3 p001);
   hpvec3 triPatch2(hpvec3 p200,hpvec3 p110,hpvec3 p101,hpvec3 p020,hpvec3 p011,hpvec3 p002);
   hpvec3 triPatch3(hpvec3 p300,hpvec3 p210,hpvec3 p201,hpvec3 p120,hpvec3 p111,

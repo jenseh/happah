@@ -422,7 +422,7 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 
 	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
 	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
-	vector<hpvec3>* verticesAndNormals = mesh->getVertexData();
+	vector<hpvec3>* verticesAndNormals = mesh->getVerticesAndNormals();
 	vector<hpuint>* indices = mesh->getIndices();
 
 	verticesAndNormals->reserve(verticesAndNormals->size() + 2 * (profile.size() * 6)); //avoid reallocation in for loop which would cause iterator invalidity

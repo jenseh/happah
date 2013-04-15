@@ -23,8 +23,8 @@ TriPatch::TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::strin
 
                 p000 = triPatch1(m_controlPoints[0],m_controlPoints[1],m_controlPoints[2]);
                 std::cout << "BezierPunkt: "<< p000.x << "/" << p000.y << "/" <<p000.z << endl;
-                m_vertexData.push_back(glm::vec4(p000,1.0f));
-                m_vertexData.push_back(glm::vec4(0.0f,1.0f,0.0f,0.0f));
+                m_verticesAndNormals.push_back(glm::vec4(p000,1.0f));
+                m_verticesAndNormals.push_back(glm::vec4(0.0f,1.0f,0.0f,0.0f));
 
       break;
     case(2):
@@ -49,9 +49,9 @@ TriPatch::TriPatch(int degree, glm::vec3 a, glm::vec3 b, glm::vec3 c, std::strin
                  p000 = p000+offsetVector;
                  std::cout<<"u/v/w"<<" "<<m_u<<"/"<<m_v<<"/"<<m_w<<endl;
                  //std::cout << "BezierPunkt: "<< p000.x << "/" << p000.y << "/" <<p000.z << endl;
-                 m_vertexData.push_back(glm::vec4(p000,1.0f));
+                 m_verticesAndNormals.push_back(glm::vec4(p000,1.0f));
                  glm::vec3 normal = (p000-center);
-                 m_vertexData.push_back(glm::vec4(normal,0.0f));
+                 m_verticesAndNormals.push_back(glm::vec4(normal,0.0f));
                 }
             }
         }
@@ -109,25 +109,25 @@ TriangleMesh* TriPatch::toTriangleMesh(){
     int b=a+n;
     int c=b+1;
     save = c -n;
-    triangles->push_back(m_vertexData.at((a-1)*2));
-    triangles->push_back(m_vertexData.at(a*2));
-    triangles->push_back(m_vertexData.at((b-1)*2));
-    triangles->push_back(m_vertexData.at(a*2));
-    triangles->push_back(m_vertexData.at((c-1)*2));
-    triangles->push_back(m_vertexData.at(a*2));
+    triangles->push_back(m_verticesAndNormals.at((a-1)*2));
+    triangles->push_back(m_verticesAndNormals.at(a*2));
+    triangles->push_back(m_verticesAndNormals.at((b-1)*2));
+    triangles->push_back(m_verticesAndNormals.at(a*2));
+    triangles->push_back(m_verticesAndNormals.at((c-1)*2));
+    triangles->push_back(m_verticesAndNormals.at(a*2));
         }
     }
   std::vector<hpuint> indices;
   TriangleMesh* result = new TriangleMesh(triangles,indices);
 
-  std::cout << "TriPatchVertices" << m_vertexData.size() << endl;
+  std::cout << "TriPatchVertices" << m_verticesAndNormals.size() << endl;
   return result;
 }
 
 void TriPatch::update(){
   glm::vec3 p000;
   int n=m_detail;
-  m_vertexData.clear();
+  m_verticesAndNormals.clear();
   glm::vec3 center = glm::vec3(0.0f);
   float radius = 1.0f;
   switch(m_degree){
@@ -158,13 +158,13 @@ void TriPatch::update(){
                  glm::vec3 offsetVector = glm::normalize(p000);
                  offsetVector = offset*offsetVector;
                  p000 = p000+offsetVector;
-                 m_vertexData.push_back(glm::vec4(p000,1.0f));
+                 m_verticesAndNormals.push_back(glm::vec4(p000,1.0f));
                  glm::vec3 normal =(p000 - center);
-                 m_vertexData.push_back(glm::vec4(normal,0.0f));
+                 m_verticesAndNormals.push_back(glm::vec4(normal,0.0f));
                 }
             }
         }
-      std::cout<<"vertexdataSize: "<<m_vertexData.size()<< endl;
+      std::cout<<"vertexdataSize: "<<m_verticesAndNormals.size()<< endl;
       break;
       default:
       std::cout << "Zu Hoher Grad" <<endl;

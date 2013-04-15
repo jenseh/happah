@@ -58,7 +58,7 @@ void FocalSpline::generateFocalSpline(){
 }
 
 LineMesh* FocalSpline::toLineMesh(){
-	std::vector<hpvec3>* vertexData = new std::vector<hpvec3>;
+	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 	//draw controlpolygon
@@ -66,8 +66,8 @@ LineMesh* FocalSpline::toLineMesh(){
 	for(vector<hpvec3>::iterator it = m_controlPoints->begin(); it != m_controlPoints->end(); ++it){
 			hpvec3 vertexPosition = polarToCartesianCoordinates(*it);
 			hpvec3 vertexNormal = vertexPosition - m_center;
-			vertexData->push_back(vertexPosition);
-			vertexData->push_back(vertexNormal);
+			verticesAndNormals->push_back(vertexPosition);
+			verticesAndNormals->push_back(vertexNormal);
 			cout << "CP Position: " << vertexPosition.x << " " << vertexPosition.y << " " << vertexPosition.z << endl;
 			if (it != m_controlPoints->begin()){
 				indices->push_back(i);
@@ -85,8 +85,8 @@ LineMesh* FocalSpline::toLineMesh(){
 		hpvec3 vertexPosition = polarToCartesianCoordinates(hpvec3(j*phi_c,0.0f,m_radius));
 		hpvec3 vertexNormal = vertexPosition - m_center;
 
-		vertexData->push_back(vertexPosition);
-		vertexData->push_back(vertexNormal);
+		verticesAndNormals->push_back(vertexPosition);
+		verticesAndNormals->push_back(vertexNormal);
 		if (j != 0){
 			indices->push_back(i);
 		}
@@ -99,8 +99,8 @@ LineMesh* FocalSpline::toLineMesh(){
 		for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
 				hpvec3 vertexPosition = polarToCartesianCoordinates(*it);
 				hpvec3 vertexNormal = vertexPosition - m_center;
-				vertexData->push_back(vertexPosition);
-				vertexData->push_back(vertexNormal);
+				verticesAndNormals->push_back(vertexPosition);
+				verticesAndNormals->push_back(vertexNormal);
 				cout << "Spline point Position: " << vertexPosition.x << " " << vertexPosition.y << " " << vertexPosition.z << endl;
 				if (it != m_generatedSpline->begin()){
 					indices->push_back(i);
@@ -110,7 +110,7 @@ LineMesh* FocalSpline::toLineMesh(){
 			}
 		indices->pop_back();
 	}
-	return new LineMesh(vertexData, indices);
+	return new LineMesh(verticesAndNormals, indices);
 }
 
 PointCloud* FocalSpline::toPointCloud(){

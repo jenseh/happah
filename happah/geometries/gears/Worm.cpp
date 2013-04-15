@@ -13,9 +13,9 @@ Worm::~Worm() {
 }
 
 
-std::vector<hpvec3>* Worm::createVertexData() {
+std::vector<hpvec3>* Worm::createVerticesAndNormals() {
     // Create result vectors
-    std::vector<hpvec3>* vertexData = new std::vector<hpvec3>();
+    std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>();
     
     
     std::vector<hpvec2> profileTooth = std::vector<hpvec2>();
@@ -73,24 +73,24 @@ std::vector<hpvec3>* Worm::createVertexData() {
           hpvec3 normalNN = hpvec3(normalTempNN.x, normalTempNN.y, 0.0);
           
           // Push points in counter clockwise direction
-          vertexData->push_back(pointRN);
-          vertexData->push_back(normalRZ);
-          vertexData->push_back(pointRZ);
-          vertexData->push_back(normalRZ);
-          vertexData->push_back(pointNZ);
-          vertexData->push_back(normalNZ);
+          verticesAndNormals->push_back(pointRN);
+          verticesAndNormals->push_back(normalRZ);
+          verticesAndNormals->push_back(pointRZ);
+          verticesAndNormals->push_back(normalRZ);
+          verticesAndNormals->push_back(pointNZ);
+          verticesAndNormals->push_back(normalNZ);
           
-          vertexData->push_back(pointNZ);
-          vertexData->push_back(normalNZ);
-          vertexData->push_back(pointNN);
-          vertexData->push_back(normalNN);
-          vertexData->push_back(pointRN);
-          vertexData->push_back(normalRN);
+          verticesAndNormals->push_back(pointNZ);
+          verticesAndNormals->push_back(normalNZ);
+          verticesAndNormals->push_back(pointNN);
+          verticesAndNormals->push_back(normalNN);
+          verticesAndNormals->push_back(pointRN);
+          verticesAndNormals->push_back(normalRN);
         }
       }
     }
 
-    return vertexData;
+    return verticesAndNormals;
 }
 
 hpreal Worm::getToothCount() {
@@ -126,14 +126,14 @@ void Worm::setRotations(hpreal rotations) {
 }
 
 TriangleMesh* Worm::toTriangleMesh() {
-    std::vector<hpvec3>* vertexData = createVertexData();
+    std::vector<hpvec3>* verticesAndNormals = createVerticesAndNormals();
     std::vector<hpuint>* indices = new std::vector<hpuint>();
-    hpuint indexCount =  vertexData->size() / 2;
+    hpuint indexCount =  verticesAndNormals->size() / 2;
     indices->reserve(indexCount);
     for (hpuint index = 0; index < indexCount; index++) {
     	indices->push_back(index);
     }
-    TriangleMesh* result = new TriangleMesh(vertexData, indices);
+    TriangleMesh* result = new TriangleMesh(verticesAndNormals, indices);
     return result;
 }
 

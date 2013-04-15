@@ -17,8 +17,8 @@ using namespace std;
 
 class RenderStateNode : public Node {
 public:
-	RenderStateNode(vector<hpvec3>* vertexData, hpcolor& color);
-	RenderStateNode(vector<hpvec3>* vertexData, vector<hpcolor>* colorVector);
+	RenderStateNode(vector<hpvec3>* verticesAndNormals, hpcolor& color);
+	RenderStateNode(vector<hpvec3>* verticesAndNormals, vector<hpcolor>* colorVector);
 	virtual ~RenderStateNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
@@ -48,7 +48,7 @@ public:
 	bool isInitialized();
 	bool hasColorVector();
 
-	vector<hpvec3>* getVertexData();
+	vector<hpvec3>* getVerticesAndNormals();
 	vector<hpvec4>* getColorData();
 
 
@@ -61,7 +61,7 @@ private:
 	GLuint					m_vertexBufferID;
 	GLuint 					m_colorBufferID;
 	hpcolor 				m_color;
-	vector<hpvec3>*			m_vertexData;
+	vector<hpvec3>*			m_verticesAndNormals;
 	vector<hpcolor>* 		m_colorVector;
 	Material 				m_material;
 	bool 					m_initialized;

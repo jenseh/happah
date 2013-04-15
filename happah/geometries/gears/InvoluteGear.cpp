@@ -509,6 +509,6 @@ SimpleGear* InvoluteGear::toSimpleGear(hpuint toothSampleSize) {
 	curveOfToothProfile.setPeriodic(false);
 	curveOfToothProfile.setDegree(3); // by using approximation of BSplineCurve it is set to 3 anyway!
 	curveOfToothProfile.approximatePoints(&toothProfilePoints, toothSampleSize);
-	SimpleGear *simpleGear = new SimpleGear(new ToothProfile(curveOfToothProfile), m_helixAngle, m_faceWidth);
+	SimpleGear *simpleGear = new SimpleGear(curveOfToothProfile, m_helixAngle, m_faceWidth);
 	return simpleGear;
 }

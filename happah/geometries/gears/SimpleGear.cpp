@@ -6,6 +6,11 @@ SimpleGear::SimpleGear(ToothProfile *toothProfile, hpreal helixAngle, hpreal fac
 	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
+SimpleGear::SimpleGear(const BSplineCurve& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
+	m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
+	m_toothProfile = new ToothProfile(toothProfileCurve);
+}
+
 SimpleGear::SimpleGear(const SimpleGear& other)
 	: m_toothProfile(new ToothProfile(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_faceWidth(other.m_faceWidth) {}
 
@@ -16,9 +21,7 @@ SimpleGear::~SimpleGear(){
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
 void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve* gearProfile) {
-//BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z) {
-
-	//gearProfile->resetPoints(); or something like that. TODO: insert this!!!
+	gearProfile->removeControlPoints(); //reset possible control and knot points of the given BSplineCurve
 	gearProfile->setPeriodic(true);
 	hpreal rotation = glm::tan(m_helixAngle) * z;
 

@@ -5,6 +5,7 @@
 
 using namespace std;
 
+#include "happah/geometries/BSplineCurve.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 
@@ -16,7 +17,8 @@ private:
 	hpreal m_faceWidth;
 
 public:
-	SimpleGear(ToothProfile *toothProfile, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(ToothProfile* toothProfile, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(const BSplineCurve& toothProfileCurve, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
 	~SimpleGear();
 

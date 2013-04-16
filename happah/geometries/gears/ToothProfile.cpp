@@ -73,13 +73,13 @@ bool ToothProfile::pointsSavedInClockDirection() const {
 // Remark: the numbers behind the literals mean, that the corresponding points
 // are rotated around the origin. As point a equals point i when rotated with
 // one anuglar pitch, point i is dropped
-BSplineCurve* ToothProfile::getEntireGear() const {
+void ToothProfile::extendToGearCurve(BSplineCurve& gearProfile) const {
 
 	hpuint nTeeth = getNumberOfTeeth();
 	hpuint degree = m_toothProfileCurve.getDegree();
-	hpreal direction = -1.0f;
+	hpreal direction = 1.0f;
 	if(pointsSavedInClockDirection())
-		direction = 1.0f;
+		direction = -1.0f;
 
 	std::vector<hpvec3> controlPoints = m_toothProfileCurve.getControlPoints();
 	std::vector<hpreal> knots = m_toothProfileCurve.getKnots();
@@ -116,10 +116,17 @@ BSplineCurve* ToothProfile::getEntireGear() const {
 		*(++gearKnotIt) = lastKnotValue;
 	}
 	*gearPointIt = gearControlPoints.front();
-	BSplineCurve* gearCurve = new BSplineCurve(gearControlPoints, gearKnots);
-	return gearCurve;
+	gearProfile = BSplineCurve(gearControlPoints, gearKnots);
 }
 
 BSplineCurve ToothProfile::getCurve() const {
 	return m_toothProfileCurve;
+}
+
+void ToothProfile::rotate(hpreal degree) {
+	std::vector<hpvec3> controlPoints = m_toothProfileCurve.getControlPoints();
+	for(std::vector<hpvec3>::iterator it = controlPoints.begin(), end = controlPoints.end(); it != end; ++it) {
+		*it = hpvec3(glm::rotate(*it, degree, hpvec3(0,0,1)));
+	}
+	m_toothProfileCurve.setControlPoints(controlPoints);
 }

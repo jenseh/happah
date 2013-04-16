@@ -15,7 +15,15 @@ BSplineCurve::BSplineCurve() {
 	m_knots.push_back( 1.0f );
 }
 
-BSplineCurve::~BSplineCurve() {
+BSplineCurve::BSplineCurve(const BSplineCurve& other)
+  : m_degree(other.m_degree),
+	m_clamped(other.m_clamped),
+	m_periodic(other.m_periodic),
+	m_uniform(other.m_uniform),
+	m_knots(other.m_knots),
+	m_controlPoints(other.m_controlPoints),
+	m_normalizedKnots(other.m_normalizedKnots),
+	m_normalizedPoints(other.m_normalizedPoints) {
 }
 
 BSplineCurve::BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots ) : m_knots( knots ) {
@@ -33,6 +41,9 @@ BSplineCurve::BSplineCurve( const std::vector<hpvec2>& controlPoints, const std:
 	}
 	m_periodic = false;
 	m_uniform = false;
+}
+
+BSplineCurve::~BSplineCurve() {
 }
 
 void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
@@ -390,6 +401,12 @@ void BSplineCurve::setControlPoint( unsigned int index, hpvec3 newValue ) {
 	if( index < m_controlPoints.size() ) {
 		m_controlPoints[index] = newValue;
 	}
+	calculateNormalization();
+}
+
+void BSplineCurve::setControlPoints( const std::vector<hpvec3>& points ) {
+	if( m_controlPoints.size() == points.size() )
+		m_controlPoints = std::vector<hpvec3>( points );
 	calculateNormalization();
 }
 

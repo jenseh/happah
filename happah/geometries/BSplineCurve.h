@@ -25,6 +25,7 @@ protected:
 
 public:
 	BSplineCurve();
+	BSplineCurve(const BSplineCurve& other);
 	BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots );
 	~BSplineCurve();
 
@@ -80,6 +81,7 @@ public:
 
 	void setClamped( bool clamped );
 	void setControlPoint( unsigned int index, hpvec3 newValue );
+	void setControlPoints( const std::vector<hpvec3>& points );
 	void setDegree( unsigned int degree );
 	void setPeriodic( bool periodic );
 	void setUniform( bool uniform );

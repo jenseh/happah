@@ -11,14 +11,13 @@ InvoluteGearContextMenu::InvoluteGearContextMenu(
 	addAction(createDiscGearGrind);
 	connect(createDiscGearGrind, SIGNAL(triggered()), this, SLOT(createDiscGearGrind()));
 
-	QAction* createSimpleGearAction = new QAction(tr("Create simple gear"), this);
-	addAction(createSimpleGearAction);
-	connect(createSimpleGearAction, SIGNAL(triggered()), this, SLOT(createSimpleGear()));
-
 	QAction* generateDiscAction = new QAction(tr("Generate disc"), this);
 	addAction(generateDiscAction);
 	connect(generateDiscAction, SIGNAL(triggered()), this, SLOT(generateDisc()));
 
+	QAction* createSimpleGearAction = new QAction(tr("Create simple gear"), this);
+	addAction(createSimpleGearAction);
+	connect(createSimpleGearAction, SIGNAL(triggered()), this, SLOT(createSimpleGear()));
 
 }
 

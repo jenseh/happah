@@ -5,6 +5,7 @@
 
 using namespace std;
 
+#include "happah/geometries/BSplineCurve.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 
@@ -16,11 +17,12 @@ private:
 	hpreal m_faceWidth;
 
 public:
-	SimpleGear(ToothProfile *toothProfile, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(ToothProfile* toothProfile, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(const BSplineCurve& toothProfileCurve, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
 	~SimpleGear();
 
-	void getTraverseProfile(hpreal z, BSplineCurve* gearProfile);
+	// void getTraverseProfile(hpreal z, BSplineCurve* gearProfile);
 	BSplineCurve* toTransverseToothProfileSystem(hpreal z);
 	ToothProfile* getCopyWithBeginOfToothAtTop() const;
 
@@ -39,6 +41,7 @@ public:
 
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
+	void getTraverseProfile(hpreal z, BSplineCurve& gearProfile);
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

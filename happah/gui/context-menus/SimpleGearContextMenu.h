@@ -14,7 +14,7 @@ typedef std::shared_ptr<SimpleGearGUIStateNode> SimpleGearGUIStateNode_ptr;
 class SimpleGearContextMenu : public ContextMenu {
 Q_OBJECT
 public:
-SimpleGearContextMenu(GUIManager& guiManager, QWidget* parent);
+	SimpleGearContextMenu(GUIManager& guiManager, QWidget* parent);
 	~SimpleGearContextMenu();
 
 	void setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh);
@@ -27,6 +27,7 @@ private:
 private slots:
 	void generateDisc();
 	void createDiscGearGrind();
+	void createCurveOfProfile();
 
 };
 

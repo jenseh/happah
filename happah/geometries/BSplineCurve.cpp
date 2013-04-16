@@ -15,6 +15,34 @@ BSplineCurve::BSplineCurve() {
 	m_knots.push_back( 1.0f );
 }
 
+BSplineCurve::BSplineCurve(const BSplineCurve& other)
+  : m_degree(other.m_degree),
+	m_clamped(other.m_clamped),
+	m_periodic(other.m_periodic),
+	m_uniform(other.m_uniform),
+	m_knots(other.m_knots),
+	m_controlPoints(other.m_controlPoints),
+	m_normalizedKnots(other.m_normalizedKnots),
+	m_normalizedPoints(other.m_normalizedPoints) {
+}
+
+BSplineCurve::BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots ) : m_knots( knots ) {
+	//TODO: put m_controlPoints(controlPoints) in line above and delete these lines until...
+	m_controlPoints.resize(controlPoints.size());
+	std::vector<hpvec3>::iterator mIt = m_controlPoints.begin();
+	for(std::vector<hpvec2>::const_iterator it = controlPoints.begin(), end = controlPoints.end(); it != end; ++it) {
+		*mIt = hpvec3((*it).x, (*it).y, 0.0f);
+		++mIt;
+	}
+	//here
+	m_degree = m_knots.size() - m_controlPoints.size() - 1;
+	if( m_degree <= 0 ) {
+		std::cerr << "Number of control points is too big for given knots!" << std::endl;
+	}
+	m_periodic = false;
+	m_uniform = false;
+}
+
 BSplineCurve::~BSplineCurve() {
 }
 
@@ -42,6 +70,8 @@ void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 	}
 
 	calculateNormalization();
+
+	getKnots();
 }
 
 void BSplineCurve::addControlPoint( hpvec3 newPoint, float distanceFromLast ) {
@@ -54,15 +84,6 @@ void BSplineCurve::addControlPoint( hpvec3 newPoint, float distanceFromLast ) {
 		m_knots.push_back( m_knots.back() + distanceFromLast );
 		calculateNormalization();
 	}
-}
-
-//TODO: this method doesn't work at the moment. It's complete rubbish but I need it to see something ^^
-void BSplineCurve::approximatePoints( std::vector<hpvec2>* points, unsigned int numberOfControlPoints ) {
-	hpreal stepSize = points->size() / ( numberOfControlPoints - 1 ); //subtract one to have first and last point of points!
-	for( unsigned int i = 0; i < ( numberOfControlPoints - 1); ++i ) {
-		addControlPoint( hpvec3(points->at( static_cast<unsigned int>( i*stepSize ) ), 0.0f ) );
-	}
-	addControlPoint( hpvec3(points->back(), 0.0f));
 }
 
 void BSplineCurve::calculateNormalization() {
@@ -156,6 +177,10 @@ std::vector<hpvec3> BSplineCurve::getControlPoints() const {
 	return std::vector<hpvec3>(m_controlPoints);
 }
 
+std::vector<hpreal> BSplineCurve::getKnots() const {
+	return std::vector<hpreal>(m_knots);
+}
+
 int BSplineCurve::getDegree() const {
 	return m_degree;
 }
@@ -164,7 +189,7 @@ unsigned int BSplineCurve::getNumberOfControlPoints() const {
 	return m_controlPoints.size();
 }
 
-void BSplineCurve::getParameterRange( float& t_low, float& t_high ) {
+void BSplineCurve::getParameterRange( float& t_low, float& t_high ) const {
 	if( m_normalizedPoints.size() < m_degree + 1 ) return;
 
 	t_low =  m_normalizedKnots[m_degree];
@@ -262,6 +287,15 @@ void BSplineCurve::interpolateControlPoints() {
 	std::vector<hpvec3> inputPoints;
 	inputPoints.swap(m_controlPoints);
 
+	interpolatePoints( inputPoints );
+}
+
+void BSplineCurve::interpolatePoints( std::vector<hpvec2>& points ) {
+	std::vector<hpvec3> inputPoints( points.size() );
+	std::vector<hpvec3>::iterator itInput = inputPoints.begin();
+	for( std::vector<hpvec2>::iterator it = points.begin(), end = points.end(); it != end; ++it, ++itInput ) {
+		*itInput = hpvec3( ( *it ).x, ( *it ).y, 0.0f );
+	}
 	interpolatePoints( inputPoints );
 }
 
@@ -367,6 +401,12 @@ void BSplineCurve::setControlPoint( unsigned int index, hpvec3 newValue ) {
 	if( index < m_controlPoints.size() ) {
 		m_controlPoints[index] = newValue;
 	}
+	calculateNormalization();
+}
+
+void BSplineCurve::setControlPoints( const std::vector<hpvec3>& points ) {
+	if( m_controlPoints.size() == points.size() )
+		m_controlPoints = std::vector<hpvec3>( points );
 	calculateNormalization();
 }
 

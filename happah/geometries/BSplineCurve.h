@@ -25,6 +25,8 @@ protected:
 
 public:
 	BSplineCurve();
+	BSplineCurve(const BSplineCurve& other);
+	BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots );
 	~BSplineCurve();
 
 	void addControlPoint( hpvec3 newPoint );
@@ -39,8 +41,6 @@ public:
 	  * @see getUniform(), setUniform( bool uniform )
 	  */
 	void addControlPoint( hpvec3 newPoint, float distanceFromLast );
-
-	void approximatePoints( std::vector<hpvec2>* points , unsigned int numberOfControlPoints ); //KATJA!!!
 
 private:
 	void calculateNormalization();
@@ -61,14 +61,16 @@ public:
 	bool getClamped() const;
 	hpvec3 getControlPoint( unsigned int index ) const;
 	std::vector<hpvec3> getControlPoints() const;
+	std::vector<hpreal> getKnots() const;
 	int getDegree() const;
 	unsigned int getNumberOfControlPoints() const;
-	void getParameterRange( float& t_low, float& t_high );
+	void getParameterRange( float& t_low, float& t_high ) const;
 	bool getPeriodic() const;
 	bool getUniform() const;
 	hpvec3 getDerivativeAt( hpreal t ) const;
 	hpvec3 getValueAt( hpreal t ) const;
 	void interpolateControlPoints();
+	void interpolatePoints( std::vector<hpvec2>& points );
 	void interpolatePoints( std::vector<hpvec3>& points );
 	bool isClamped() const;
 	bool isPeriodic() const;
@@ -79,6 +81,7 @@ public:
 
 	void setClamped( bool clamped );
 	void setControlPoint( unsigned int index, hpvec3 newValue );
+	void setControlPoints( const std::vector<hpvec3>& points );
 	void setDegree( unsigned int degree );
 	void setPeriodic( bool periodic );
 	void setUniform( bool uniform );

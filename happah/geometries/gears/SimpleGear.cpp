@@ -6,6 +6,11 @@ SimpleGear::SimpleGear(ToothProfile *toothProfile, hpreal helixAngle, hpreal fac
 	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
+SimpleGear::SimpleGear(const BSplineCurve& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
+	m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
+	m_toothProfile = new ToothProfile(toothProfileCurve);
+}
+
 SimpleGear::SimpleGear(const SimpleGear& other)
 	: m_toothProfile(new ToothProfile(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_faceWidth(other.m_faceWidth) {}
 
@@ -15,21 +20,11 @@ SimpleGear::~SimpleGear(){
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve* gearProfile) {
-//BSplineCurve* SimpleGear::toTransverseToothProfileSystem(hpreal z) {
-
-	//gearProfile->resetPoints(); or something like that. TODO: insert this!!!
-	gearProfile->setPeriodic(true);
-	hpreal rotation = glm::tan(m_helixAngle) * z;
-
-	for(hpuint tooth = 0; tooth < getNumberOfTeeth(); ++tooth) {
-		hpreal degreeRotation = (float) (-(getAngularPitch() * tooth + rotation) * 180.0f / M_PI);
-		for(hpuint i = 0; i < m_toothProfile->getCurve().getNumberOfControlPoints(); ++i) {
-			hpvec3 controlPoint = m_toothProfile->getCurve().getControlPoint(i);
-			hpvec3 turnedPoint = hpvec3(glm::rotate(controlPoint, degreeRotation, hpvec3(0,0,1)));;
-			gearProfile->addControlPoint(turnedPoint);
-		}
-	}
+void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve& gearProfile) {
+	//TODO: turn for depth z!
+	hpreal rotation = -glm::tan(m_helixAngle) * z * 180.0f / M_PI;
+	m_toothProfile->rotate(rotation);
+	m_toothProfile->extendToGearCurve(gearProfile);
 }
 
 //TODO: This method doesn't suit in here! Move it to BSplineGear or somewhere else!!!
@@ -132,4 +127,3 @@ void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 	}
 	//delete splineXY;
 }
-

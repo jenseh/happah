@@ -1,4 +1,5 @@
 #include "SimpleGearContextMenu.h"
+#include "happah/geometries/BSplineCurve.h"
 
 SimpleGearContextMenu::SimpleGearContextMenu(
 	GUIManager& guiManager,
@@ -14,18 +15,29 @@ SimpleGearContextMenu::SimpleGearContextMenu(
 	addAction(generateDiscAction);
 	connect(generateDiscAction, SIGNAL(triggered()), this, SLOT(generateDisc()));
 
+	QAction* createCurveOfProfileAction = new QAction(tr("Create curve of the profile"), this);
+	addAction(createCurveOfProfileAction);
+	connect(createCurveOfProfileAction, SIGNAL(triggered()), this, SLOT(createCurveOfProfile()));
+
 }
 
-SimpleGearContextMenu::~SimpleGearContextMenu(){}
-
-void SimpleGearContextMenu::generateDisc() {
-	m_guiManager.generateDisc(m_simpleGear);
-}
+SimpleGearContextMenu::~SimpleGearContextMenu() {}
 
 void SimpleGearContextMenu::createDiscGearGrind() {
 	// Make a copy for both threads
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(new SimpleGear(*m_simpleGear));
 	m_guiManager.createDiscGearGrind(simpleGear);
+}
+
+void SimpleGearContextMenu::createCurveOfProfile() {
+	BSplineCurve* profile = new BSplineCurve();
+	m_simpleGear->getTraverseProfile(0.0f, *profile);
+	BSplineCurve_ptr gearProfile = BSplineCurve_ptr(profile);
+	m_guiManager.insert(gearProfile, 0x00000006);
+}
+
+void SimpleGearContextMenu::generateDisc() {
+	m_guiManager.generateDisc(m_simpleGear);
 }
 
 void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh) {

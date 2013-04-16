@@ -7,6 +7,7 @@ Viewport::Viewport(ViewportListener& viewportListener,DrawManager& drawManager, 
 	: QGLWidget(drawManager.getGlContext(), parent),
 	  m_viewportListener(viewportListener),
 	  m_drawManager(drawManager),
+	  m_draggingActive(false),
 	  DISTANCE_TO_CENTER(5.0) {
 
 	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
@@ -70,66 +71,79 @@ void Viewport::updateView() {
 
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
 
-	int width = this->width();
-	int height = this->height();
+	if(m_draggingActive) {
+		Ray ray(getMouseRay());
+		m_viewportListener.handleMouseMoveEvent(ray);
+	} else {
 
-	float dx = (float) (event->x() - m_mousePos.x()) / width;
-	float dy = (float) (event->y() - m_mousePos.y()) / height;
+		int width = this->width();
+		int height = this->height();
 
-	hpvec3 forward =m_center - m_camera;
-	forward = glm::normalize(forward);
-	forward *= DISTANCE_TO_CENTER;
-	hpvec3 right = glm::cross(m_up, forward);
-	right = glm::normalize(right);
-	right *= DISTANCE_TO_CENTER;
-	m_up = glm::normalize(m_up);
-	m_up *= DISTANCE_TO_CENTER;
+		float dx = (float) (event->x() - m_mousePos.x()) / width;
+		float dy = (float) (event->y() - m_mousePos.y()) / height;
 
-	hpvec3 delta;
-
-	if (event->buttons() == Qt::LeftButton) {
-		if(!m_drawManager.isSomethingSelected()){
-		// Left turn arround center
-		m_theta = dx*M_PI;
-		m_phi = dy*M_PI;
-
-		m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
-		// Recalc forward
-		forward =m_center - m_camera;
+		hpvec3 forward =m_center - m_camera;
 		forward = glm::normalize(forward);
 		forward *= DISTANCE_TO_CENTER;
-
-		m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
-		// recalc up
-		m_up = glm::cross(forward, right);
+		hpvec3 right = glm::cross(m_up, forward);
+		right = glm::normalize(right);
+		right *= DISTANCE_TO_CENTER;
 		m_up = glm::normalize(m_up);
 		m_up *= DISTANCE_TO_CENTER;
+
+		hpvec3 delta;
+
+		if (event->buttons() == Qt::LeftButton) {
+			if(!m_drawManager.isSomethingSelected()){
+			// Left turn arround center
+			m_theta = dx*M_PI;
+			m_phi = dy*M_PI;
+
+			m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
+			// Recalc forward
+			forward =m_center - m_camera;
+			forward = glm::normalize(forward);
+			forward *= DISTANCE_TO_CENTER;
+
+			m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
+			// recalc up
+			m_up = glm::cross(forward, right);
+			m_up = glm::normalize(m_up);
+			m_up *= DISTANCE_TO_CENTER;
+			}
+			else{
+				qApp->setOverrideCursor( QCursor( Qt::BlankCursor ) );
+				m_viewportListener.handleDragEvent(-dx,-dy);
+			}
+			updateGL();
+		} else if (event->buttons() == Qt::RightButton) {
+			// Move left right up down
+			delta = m_up * dy + right * dx;
+			m_camera += delta;
+			m_center += delta;
+			updateGL();
 		}
-		else{
-			qApp->setOverrideCursor( QCursor( Qt::BlankCursor ) );
-			m_viewportListener.handleDragEvent(-dx,-dy);
-		}
-		updateGL();
-	} else if (event->buttons() == Qt::RightButton) {
-		// Move left right up down
-		delta = m_up * dy + right * dx;
-		m_camera += delta;
-		m_center += delta;
-		updateGL();
 	}
 	m_mousePos = event->pos();
-
-
 }
+
 void Viewport::mousePressEvent(QMouseEvent *event) {
-	m_mousePos = event->pos();
-	Ray ray(getMouseRay());
-	m_viewportListener.handleMouseClickEvent(ray);
-	m_drawManager.select(m_mousePos.x(),m_mousePos.y());
+	if(!m_draggingActive) {
+		m_mousePos = event->pos();
+		Ray ray(getMouseRay());
+		if(m_drawManager.select(event->x(), event->y()))
+			m_draggingActive = true;
+		else
+			m_viewportListener.handleMouseClickEvent(ray);
+	}
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event){
 	qApp->setOverrideCursor( QCursor( Qt::ArrowCursor ) );
+	if(m_draggingActive) {
+		m_viewportListener.handleMouseMoveStopEvent();
+		m_draggingActive = false;
+	}
 }
 
 void Viewport::wheelEvent(QWheelEvent *event) {

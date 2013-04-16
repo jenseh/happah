@@ -173,7 +173,7 @@ void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3&
 	// TODO :: REMOVE DEBUG OUTPUT
 }
 
-void DrawManager::select(int x, int y){
+bool DrawManager::select(int x, int y){
 	ElementRenderStateNode_ptr currentElementRenderStateNode = m_selectionVisitor.getCurrentSelectedElementRenderStateNode();
 	PointCloudRenderStateNode_ptr currentPointCloudRenderStateNode = m_selectionVisitor.getCurrentSelectedPointCloudRenderStateNode();
 	if (currentElementRenderStateNode){
@@ -181,9 +181,9 @@ void DrawManager::select(int x, int y){
 		currentElementRenderStateNode->triggerDeselectEvent();
 	}
 	if (currentPointCloudRenderStateNode){
-			currentPointCloudRenderStateNode->setSelected(0);
-			currentPointCloudRenderStateNode->triggerDeselectEvent();
-		}
+		currentPointCloudRenderStateNode->setSelected(0);
+		currentPointCloudRenderStateNode->triggerDeselectEvent();
+	}
 	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
@@ -202,13 +202,13 @@ void DrawManager::select(int x, int y){
 	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 	glReadPixels(x,height-y,1,1,GL_RGBA,GL_FLOAT,&pixel[0]);
-	cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
+	// cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
 	m_somethingSelected = false;
 	ElementRenderStateNode_ptr foundNode = m_selectionVisitor.findElementRenderStateNodeOfColor(pixel[0]);
 	if(foundNode){
 		foundNode->setSelected(1);
 		foundNode->triggerSelectEvent();
-		cout << "Selected Node ArrayBufferID "<< foundNode->getVertexArrayObjectID() << endl;
+		// cout << "Selected Node ArrayBufferID "<< foundNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedElementRenderStateNode(foundNode);
 		m_somethingSelected = true;
 	}
@@ -218,7 +218,7 @@ void DrawManager::select(int x, int y){
 		int index = m_selectionVisitor.findPointIndexFromColor(pixel[0]);
 		foundPointCloudNode->setSelected(1);
 		foundPointCloudNode->triggerSelectEvent(index);
-		cout << "Selected Point Cloud Node ArrayBufferID "<< foundPointCloudNode->getVertexArrayObjectID() << endl;
+		// cout << "Selected Point Cloud Node ArrayBufferID "<< foundPointCloudNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedPointCloudRenderStateNode(foundPointCloudNode);
 		m_somethingSelected = true;
 	}
@@ -226,6 +226,7 @@ void DrawManager::select(int x, int y){
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	m_selectionVisitor.setCurrentSelectionIndex(100);
     m_selectionVisitor.clearColorMaps();
+    return m_somethingSelected;
 }
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;

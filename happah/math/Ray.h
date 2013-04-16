@@ -22,6 +22,7 @@ public:
 
     Ray();
     Ray(hpvec3 origin, hpvec3 direction);
+    hpreal distanceToPoint(hpvec3& point) const;
     const hpvec3& getOrigin()const;
     const hpvec3& getDirection()const;
     hpreal intersectDistance(Triangle& triangle);

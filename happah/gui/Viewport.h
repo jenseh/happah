@@ -47,7 +47,7 @@ private:
 	QTimer *m_timer;
 	DrawManager& m_drawManager;
 
-	uint m_lastSceneState;
+	bool m_draggingActive;
 	hpmat4x4 m_viewMatrix;
 	hpmat4x4 m_projectionMatrix;
 	hpvec3 m_camera, m_center, m_up;

@@ -107,6 +107,17 @@ void ToolPanel::handleMouseClickEvent(Ray& ray) {
 	}
 }
 
+void ToolPanel::handleMouseMoveEvent(Ray& ray) {
+	if( m_forms->currentWidget() == m_bSplineCurveForm ) {
+		m_bSplineCurveForm->handleMove(ray);
+	}
+}
+void ToolPanel::handleMouseMoveStopEvent() {
+	if( m_forms->currentWidget() == m_bSplineCurveForm ) {
+		m_bSplineCurveForm->handleMoveStop();
+	}
+}
+
 void ToolPanel::handleDragEvent(float dx,float dy){
 	Form* form = dynamic_cast<Form*>(m_forms->currentWidget());
 	form->handleDrag(dx,dy);

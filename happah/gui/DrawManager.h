@@ -34,7 +34,7 @@ public:
 	QGLContext* getGlContext();
 	bool init();
 	void resizeSelectorTexture();
-	void select(int x,int y);
+	bool select(int x,int y);
 	bool isSomethingSelected(){return m_somethingSelected;}
 private:
 	class DefaultDrawVisitor : public DrawVisitor {

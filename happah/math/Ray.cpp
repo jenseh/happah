@@ -25,6 +25,18 @@ hpreal Ray::intersectDistance(Triangle& triangle){
     return glm::distance(m_origin, hit);
 }
 
+hpreal Ray::distanceToPoint(hpvec3& point) const {
+    //The ray "origin+t*direction" is searched for the value t
+    //where "point-ray" is vertical to the ray
+    //=> (point -(origin + t * direction)) = 0
+    //based on this, it follows:
+    hpreal t = glm::dot((point - m_origin), m_direction) / glm::dot(m_direction, m_direction);
+    if(t >= 0.0f)
+        return glm::distance(m_origin + t * m_direction, point);
+    else
+        return 1000000.0f;
+}
+
 bool Ray::intersects(BBox& box, hpreal length){
     hpvec3 hitPoint;
     return checkLineBox(*(box.getMin()), *(box.getMax()), m_origin, m_origin + m_direction * length, hitPoint);

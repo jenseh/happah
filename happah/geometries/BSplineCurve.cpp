@@ -440,34 +440,35 @@ LineMesh* BSplineCurve::toLineMesh() {
 	getParameterRange(tBegin, tEnd);
 
 	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
-		std::vector<hpvec3> knots = knotRefinement( 0.05f );
-		if( knots.size() > 1 ) {
-			verticesAndNormals->resize(2*knots.size());
-			indices->resize(2*(knots.size()-1));
-			for( unsigned int i = 0; i < knots.size()-1; i++ ) {
-				(*verticesAndNormals)[2*i] = knots[i];
+		if( m_clamped ) {
+			std::vector<hpvec3> knots = knotRefinement( 0.05f );
+			if( knots.size() > 1 ) {
+				verticesAndNormals->resize(2*knots.size());
+				indices->resize(2*(knots.size()-1));
+				for( unsigned int i = 0; i < knots.size()-1; i++ ) {
+					(*verticesAndNormals)[2*i] = knots[i];
+					(*verticesAndNormals)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+					(*indices)[2*i] = i;
+					(*indices)[2*i+1] = i+1;
+				}
+				*(verticesAndNormals->end()-2) = knots.back();
+				verticesAndNormals->back() = hpvec3(1.0f,0.0f,0.0f);
+			}
+		}
+		else {
+			verticesAndNormals->resize(202);
+			indices->resize(200);
+
+			hpreal stepSize = (tEnd - tBegin) / 100;
+			for( hpuint i = 0; i < 100; i++ ) {
+				(*verticesAndNormals)[2*i] = getValueAt(tBegin + i*stepSize);
 				(*verticesAndNormals)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
 				(*indices)[2*i] = i;
 				(*indices)[2*i+1] = i+1;
 			}
-			*(verticesAndNormals->end()-2) = knots.back();
-			verticesAndNormals->back() = hpvec3(1.0f,0.0f,0.0f);
+			(*verticesAndNormals)[200] = getValueAt(tEnd);
+			(*verticesAndNormals)[201] = hpvec3(1.0f,0.0f,0.0f);
 		}
-
-		/*
-		verticesAndNormals->resize(202);
-		indices->resize(200);
-
-		hpreal stepSize = (tEnd - tBegin) / 100;
-		for( hpuint i = 0; i < 100; i++ ) {
-			(*verticesAndNormals)[2*i] = getValueAt(tBegin + i*stepSize);
-			(*verticesAndNormals)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
-			(*indices)[2*i] = i;
-			(*indices)[2*i+1] = i+1;
-		}
-		(*verticesAndNormals)[200] = getValueAt(tEnd);
-		(*verticesAndNormals)[201] = hpvec3(1.0f,0.0f,0.0f);
-		*/
 
 	}
 	else {
@@ -591,35 +592,31 @@ std::vector<hpvec3> BSplineCurve::knotRefinement( hpreal minDist ) {
 int tmpHelper = 0;
 	do {
 		newKnots.clear();
-		for( int i = m_degree; i < refinedKnots.size() - m_degree; i++ ) {
+		for( int i = m_degree; i < refinedKnots.size() - m_degree - 1; i++ ) {
 			if( refinedKnots[i+1] - refinedKnots[i] > EPSILON ) {
-/*
 				bool refineCurrent = false;
-				for( int k = std::max( 0, i - m_degree );
-				    k < std::min( i - 1, (int) refinedPoints.size() - 1 );
-				    k++ )
+				for( int k = i - m_degree; k < i; k++ )
 				{
-					refineCurrent |= minDist > glm::length(refinedPoints[k+1] - refinedPoints[k]);
+					refineCurrent |= minDist < glm::length(refinedPoints[k+1] - refinedPoints[k]);
 				}
 				if( refineCurrent ) {
-*/
 					newKnots.push_back( 0.5f*(refinedKnots[i+1]+refinedKnots[i]) );
-//				}
+				}
 			}
 		}
 
-/*
-std::cout << "numNewKnots " << numNewKnots << std::endl;
-std::cout << "knots ";
-for( int i = 0; i < refinedKnots.size(); i++ ) {
-	std::cout << refinedKnots[i] << " ";
-}
-std::cout << std::endl << "newKnots ";
-for( int i = 0; i < newKnots.size(); i++ ) {
-	std::cout << newKnots[i] << " ";
-}
-std::cout << std::endl << std::endl;
-*/
+		/*
+		std::cout << "numNewKnots " << newKnots.size() << std::endl;
+		std::cout << "knots ";
+		for( int i = 0; i < refinedKnots.size(); i++ ) {
+			std::cout << refinedKnots[i] << " ";
+		}
+		std::cout << std::endl << "newKnots ";
+		for( int i = 0; i < newKnots.size(); i++ ) {
+			std::cout << newKnots[i] << " ";
+		}
+		std::cout << std::endl << std::endl;
+		*/
 
 		refine( refinedKnots, refinedPoints, newKnots );
 
@@ -639,11 +636,8 @@ void BSplineCurve::refine(
 {
 	if( newKnots.size() == 0 ) return;
 
-	knots.resize( knots.size() + newKnots.size() );
-	points.resize( points.size() + newKnots.size() );
-
-//	std::vector<float> oldKnots( knots );
-//	std::vector<glm::vec3> oldPoints( points );
+	std::vector<hpreal> refinedKnots( knots.size() + newKnots.size() );
+	std::vector<hpvec3> refinedPoints( points.size() + newKnots.size() );
 
 	int lb = findSpan( newKnots.front(), knots );
 	int ub = findSpan( newKnots.back(), knots );
@@ -653,38 +647,47 @@ void BSplineCurve::refine(
 	int endLowerUnaffeffected = lb;
 
 	// copy unaffected knots
-	if( numUpperUnaffected > 0 ) {
-		std::vector<hpreal> tmp ( knots.begin() + beginUpperUnaffected,
-				knots.begin() + beginUpperUnaffected + numUpperUnaffected );
-		std::copy( tmp.begin(), tmp.end(), knots.end() - numUpperUnaffected );
-	}
+	if( lb > m_degree )
+		std::copy( points.begin(), points.begin()+lb-m_degree, refinedPoints.begin() );
+	if( numUpperUnaffected > 0 )
+		std::copy( points.rbegin(), points.rbegin()+numUpperUnaffected, refinedPoints.rbegin() );
+
+	std::copy( knots.begin(), knots.begin()+lb+1, refinedKnots.begin() );
+	std::copy( knots.begin()+ub+m_degree+1, knots.end(), refinedKnots.begin()+ub+m_degree+1+newKnots.size() );
+
+//	std::cout << "after copy: ";
+//	for( int i = 0; i < refinedKnots.size(); i++ ) std::cout << refinedKnots[i] << " ";
+//	std::cout << std::endl;
 
 	int p = m_degree;
 	int i = ub + p;
-	int k = i + newKnots.size();
+	int k = ub + p + newKnots.size();
 	std::vector<hpreal>::reverse_iterator newKnotIt;
-	for( newKnotIt = newKnots.rbegin(); newKnotIt != newKnots.rend(); newKnotIt++ ) {
-		points[ k - p ] = points[ i - p ];
-		while( *newKnotIt <= knots[i] && i > lb ) {
-			knots[k] = knots[i];
-			points[ k - p - 1 ] = points[ i - p - 1 ];
-			k--; i--;
-		}
 
-//		points[ k - p - 1 ] = points[ k - p ];
+	for( newKnotIt = newKnots.rbegin(); newKnotIt != newKnots.rend(); newKnotIt++ ) {
+		while( *newKnotIt <= knots[i] && i > lb ) {
+			refinedPoints[k-p-1] = points[i-p-1];
+			refinedKnots[k] = knots[i];
+//			std::cout << "w Set [" << k << "] to " << knots[i] << std::endl;
+			i--; k--;
+		}
+		refinedPoints[k-p-1] = refinedPoints[k-p];
+
 		for( int l = 1; l <= p; l++ ) {
 			int ind = k - p + l;
-			float alpha = knots[k+l] - *newKnotIt;
-			if( alpha <= 0.0f) {
-				points[ind-1] = points[ind];
-			}
-			else {
-				alpha = alpha / ( knots[k+l] - knots[i-p+l] );
-				points[ind-1] = alpha*points[ind-1] + (1.0f - alpha)*points[ind];
+			hpreal alpha = refinedKnots[k+l] - *newKnotIt;
+			if( std::abs(alpha) < EPSILON ) {
+				refinedPoints[ind-1] = refinedPoints[ind];
+			} else {
+				alpha = alpha / ( refinedKnots[k+l] - knots[i-p+l]);
+				refinedPoints[ind-1] = alpha*refinedPoints[ind-1] +  (1.0f-alpha)*refinedPoints[ind];
 			}
 		}
-		knots[k] = *newKnotIt;
+		refinedKnots[k] = *newKnotIt;
+//		std::cout << "c Set [" << k << "] to " << *newKnotIt << std::endl;
 		k--;
 	}
+	points.swap(refinedPoints);
+	knots.swap(refinedKnots);
 
 }

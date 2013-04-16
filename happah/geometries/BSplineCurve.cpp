@@ -18,6 +18,23 @@ BSplineCurve::BSplineCurve() {
 BSplineCurve::~BSplineCurve() {
 }
 
+BSplineCurve::BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots ) : m_knots( knots ) {
+	//TODO: put m_controlPoints(controlPoints) in line above and delete these lines until...
+	m_controlPoints.resize(controlPoints.size());
+	std::vector<hpvec3>::iterator mIt = m_controlPoints.begin();
+	for(std::vector<hpvec2>::const_iterator it = controlPoints.begin(), end = controlPoints.end(); it != end; ++it) {
+		*mIt = hpvec3((*it).x, (*it).y, 0.0f);
+		++mIt;
+	}
+	//here
+	m_degree = m_knots.size() - m_controlPoints.size() - 1;
+	if( m_degree <= 0 ) {
+		std::cerr << "Number of control points is too big for given knots!" << std::endl;
+	}
+	m_periodic = false;
+	m_uniform = false;
+}
+
 void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 	m_controlPoints.push_back(newPoint);
 
@@ -42,6 +59,8 @@ void BSplineCurve::addControlPoint( hpvec3 newPoint ) {
 	}
 
 	calculateNormalization();
+
+	getKnots();
 }
 
 void BSplineCurve::addControlPoint( hpvec3 newPoint, float distanceFromLast ) {
@@ -54,15 +73,6 @@ void BSplineCurve::addControlPoint( hpvec3 newPoint, float distanceFromLast ) {
 		m_knots.push_back( m_knots.back() + distanceFromLast );
 		calculateNormalization();
 	}
-}
-
-//TODO: this method doesn't work at the moment. It's complete rubbish but I need it to see something ^^
-void BSplineCurve::approximatePoints( std::vector<hpvec2>* points, unsigned int numberOfControlPoints ) {
-	hpreal stepSize = points->size() / ( numberOfControlPoints - 1 ); //subtract one to have first and last point of points!
-	for( unsigned int i = 0; i < ( numberOfControlPoints - 1); ++i ) {
-		addControlPoint( hpvec3(points->at( static_cast<unsigned int>( i*stepSize ) ), 0.0f ) );
-	}
-	addControlPoint( hpvec3(points->back(), 0.0f));
 }
 
 void BSplineCurve::calculateNormalization() {
@@ -154,6 +164,10 @@ hpvec3 BSplineCurve::getControlPoint( unsigned int index ) const {
 
 std::vector<hpvec3> BSplineCurve::getControlPoints() const {
 	return std::vector<hpvec3>(m_controlPoints);
+}
+
+std::vector<hpreal> BSplineCurve::getKnots() const {
+	return std::vector<hpreal>(m_knots);
 }
 
 int BSplineCurve::getDegree() const {

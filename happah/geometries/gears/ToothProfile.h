@@ -15,6 +15,7 @@ public:
 	hpuint getNumberOfTeeth() const;
 	hpreal getRootRadius() const;
 	hpreal getTipRadius() const;
+	bool pointsSavedInClockDirection() const;
 private:
 	BSplineCurve m_toothProfileCurve;
 };

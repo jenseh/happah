@@ -41,6 +41,7 @@ public:
 
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
+	void getTraverseProfile(hpreal z, BSplineCurve& gearProfile);
 
 };
 typedef shared_ptr<SimpleGear> SimpleGear_ptr;

@@ -25,6 +25,7 @@ protected:
 
 public:
 	BSplineCurve();
+	BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots );
 	~BSplineCurve();
 
 	void addControlPoint( hpvec3 newPoint );
@@ -40,8 +41,6 @@ public:
 	  */
 	void addControlPoint( hpvec3 newPoint, float distanceFromLast );
 
-	void approximatePoints( std::vector<hpvec2>* points , unsigned int numberOfControlPoints ); //KATJA!!!
-
 private:
 	void calculateNormalization();
 
@@ -52,6 +51,7 @@ public:
 	bool getClamped() const;
 	hpvec3 getControlPoint( unsigned int index ) const;
 	std::vector<hpvec3> getControlPoints() const;
+	std::vector<hpreal> getKnots() const;
 	int getDegree() const;
 	unsigned int getNumberOfControlPoints() const;
 	void getParameterRange( float& t_low, float& t_high ) const;

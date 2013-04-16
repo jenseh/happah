@@ -136,3 +136,10 @@ void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 	//delete splineXY;
 }
 
+void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve& gearProfile) {
+	//TODO: turn for depth z!
+	BSplineCurve* curve = m_toothProfile->getEntireGear();
+	gearProfile = *curve;
+	// delete curve;
+}
+

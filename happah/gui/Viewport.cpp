@@ -72,6 +72,7 @@ void Viewport::updateView() {
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
 
 	if(m_draggingActive) {
+		qApp->setOverrideCursor( QCursor( Qt::ClosedHandCursor ) );
 		Ray ray(getMouseRay());
 		m_viewportListener.handleDragEvent(ray);
 	} else {
@@ -137,6 +138,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 void Viewport::mouseReleaseEvent(QMouseEvent *event){
 	if(m_draggingActive) {
 		m_draggingActive = false;
+		qApp->setOverrideCursor( QCursor( Qt::ArrowCursor ) );
 	}
 }
 

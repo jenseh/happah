@@ -26,6 +26,7 @@ private:
 	int m_currentPointIndex;
 	GUIManager& m_guiManager;
 	FocalSpline_ptr m_focalSpline;
+	Plane_ptr m_plane;
 	bool m_focalSplineInserted;
 
 };

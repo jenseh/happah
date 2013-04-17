@@ -27,7 +27,7 @@ bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult*>* 
 
 hpreal KDTreeLeaf::intersectFirst(Ray& intersector, hpreal maxLength){
 	for(std::vector<Triangle>::iterator pos = m_triangles->begin(); pos != m_triangles->end(); ++pos){
-		maxLength = std::min(maxLength, intersector.intersectDistance(*pos));
+		maxLength = std::min(maxLength, intersector.intersect(*pos));
 	}
 	return maxLength;
 }

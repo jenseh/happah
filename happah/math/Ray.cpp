@@ -18,12 +18,6 @@ const hpvec3& Ray::getOrigin()const {
     return m_origin;
 }
 
-hpreal Ray::intersectDistance(Triangle& triangle){
-    hpvec3 hit;
-    if( !intersectTriangle(triangle, hit) )
-        return 1000000.0;
-    return glm::distance(m_origin, hit);
-}
 
 hpreal Ray::distanceToPoint(hpvec3& point) const {
     //The ray "origin+t*direction" is searched for the value t
@@ -34,12 +28,19 @@ hpreal Ray::distanceToPoint(hpvec3& point) const {
     if(t >= 0.0f)
         return glm::distance(m_origin + t * m_direction, point);
     else
-        return 1000000.0f;
+        return  std::numeric_limits<hpreal>::max();
 }
 
-bool Ray::intersects(BBox& box, hpreal length){
+bool Ray::intersect(BBox& box, hpreal length){
     hpvec3 hitPoint;
     return checkLineBox(*(box.getMin()), *(box.getMax()), m_origin, m_origin + m_direction * length, hitPoint);
+}
+
+hpreal Ray::intersect(Triangle& triangle){
+    hpvec3 hit;
+    if( !intersectTriangle(triangle, hit) )
+        return std::numeric_limits<hpreal>::max();
+    return glm::distance(m_origin, hit);
 }
 
 bool Ray::intersectTriangle(Triangle& triangle,hpvec3& hit){
@@ -68,10 +69,6 @@ bool Ray::intersectTriangle(Triangle& triangle,hpvec3& hit){
      return true;
 }
 
-void Ray::moveOrigin(hpreal delta){
-    m_origin += (delta * m_direction);
-}
-
 void Ray::transform(hpmat4x4& matrix){
 	hpvec4 point1,point2;
 
@@ -90,6 +87,10 @@ void Ray::transform(hpmat4x4& matrix){
 	m_origin = (glm::vec3)point1;
 	m_direction = (glm::vec3)(point2 - point1);
 	m_direction = glm::normalize(m_direction);
+}
+
+void Ray::translateInDirection(hpreal delta){
+    m_origin += (delta * m_direction);
 }
 
 

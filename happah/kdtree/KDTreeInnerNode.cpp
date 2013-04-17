@@ -114,7 +114,7 @@ bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResul
 }
 
 hpreal KDTreeInnerNode::intersectFirst(Ray& intersector, hpreal maxLength){
-	if( intersector.intersects(m_bBox, maxLength)){
+	if( intersector.intersect(m_bBox, maxLength)){
 		maxLength = std::min(maxLength, m_leftChild->intersectFirst(intersector, maxLength));
 		maxLength = std::min(maxLength, m_rightChild->intersectFirst(intersector, maxLength));
 	}

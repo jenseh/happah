@@ -1,4 +1,5 @@
 #include "happah/scene/Node.h"
+#include <iostream>
 
 Node::Node() {}
 
@@ -102,7 +103,8 @@ void Node::remove(vector<Node_ptr>& nodes, vector<Node_ptr>& removedNodes) {
 
 Node_ptr Node::removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData) {
 	Node_ptr node = findContainingData(parentData);
-	if(node) return node->removeChildContainingData(childData);
+	if(node)
+		return node->removeChildContainingData(childData);
 	return Node_ptr();
 }
 
@@ -110,7 +112,8 @@ Node_ptr Node::removeChildContainingData(shared_ptr<void> data) {
 	Node_ptr child;
 	for(set<Node_ptr>::iterator i = m_children.begin(), end = m_children.end(); i != end; ++i) {
 		child = *i;
-		if(child->contains(data)) return removeChild(child);
+		if(child->contains(data))
+			return removeChild(child);
 	}
 	return Node_ptr();
 }

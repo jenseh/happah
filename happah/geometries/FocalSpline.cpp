@@ -113,11 +113,14 @@ void FocalSpline::adjustControlPoints(int index){
 		m_phi = m_controlPoints->at(index+1).x - m_controlPoints->at(index).x;
 	else
 		m_phi = m_controlPoints->at(index).x - m_controlPoints->at(index-1).x;
+	if (m_phi < 0)
+		m_phi = 0.0f;
 	m_phiComplete = m_phi*m_controlPoints->size();
 	if (m_phiComplete > M_PI){
 		m_phiComplete = M_PI;
 		m_phi = m_phiComplete/m_controlPoints->size();
 	}
+
 	for(int i= 0; i < m_controlPoints->size(); i++){
 		hpreal phiPoint = m_controlPoints->at(index).x;
 		hpreal newPhi = 0.0f;
@@ -203,12 +206,25 @@ hpvec3 FocalSpline::cartesianToPolarCoordinates(hpvec3 cartesian){
 	hpreal x = cartesian.x-m_center.x;
 	hpreal y = cartesian.y-m_center.y;
 	hpreal phi = 0.0f;
+	if (y >= 0){
 	if (x>0.0f)
 		phi = atan(y/x);
 	if (x<0.0f)
 		phi = M_PI+atan(y/x);
 	if (x==0.0f)
 		phi = M_PI/2.0f;
+	}
+	else {
+		if (x>0.0f){
+			atan(y/x);
+		}
+		if (x<0.0f){
+			phi = atan(y/x) - M_PI;
+		}
+		if (x==0.0f){
+			phi= -M_PI/2.0f;
+		}
+	}
 
 	hpvec3 polar = hpvec3(phi,0.0f,radius);
 	return polar;

@@ -129,7 +129,6 @@ void ToolPanel::setForm(Form* form) {
 }
 
 void ToolPanel::handleFormSelectedEvent(Form* form){
-	std::cout<< " FORM SELECTED !!!" << endl;
 	setForm(form);
 }
 

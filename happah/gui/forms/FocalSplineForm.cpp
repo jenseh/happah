@@ -44,21 +44,18 @@ void FocalSplineForm::reset(){
 }
 
 void FocalSplineForm::update(){
-	m_guiManager.update(m_focalSpline);
 	m_focalSpline->update();
 	m_guiManager.update(m_focalSpline);
 }
 
 void FocalSplineForm::handleSelection(){
 	emit selected(this);
-	std::cout << "HANDLED SELECTION "<< endl;
 	m_currentPointIndex = -1;
 }
 
 void FocalSplineForm::handleSelection(int pointIndex){
 	emit selected(this);
 	m_currentPointIndex = pointIndex;
-	std::cout<< "CURRENT INDEX : "<< pointIndex << endl;
 }
 void FocalSplineForm::handleDrag(Ray& ray){
 	if(m_currentPointIndex >= 0){

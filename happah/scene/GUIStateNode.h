@@ -12,6 +12,15 @@ typedef shared_ptr<GUIStateNode> GUIStateNode_ptr;
 class BSplineCurveGUIStateNode;
 typedef shared_ptr<BSplineCurveGUIStateNode> BSplineCurveGUIStateNode_ptr;
 
+class DiscGUIStateNode;
+typedef shared_ptr<DiscGUIStateNode> DiscGUIStateNode_ptr;
+
+class DiscGearGrindGUIStateNode;
+typedef shared_ptr<DiscGearGrindGUIStateNode> DiscGearGrindGUIStateNode_ptr;
+
+class FocalSplineGUIStateNode;
+typedef shared_ptr<FocalSplineGUIStateNode> FocalSplineGUIStateNode_ptr;
+
 class InvoluteGearGUIStateNode;
 typedef shared_ptr<InvoluteGearGUIStateNode> InvoluteGearGUIStateNode_ptr;
 
@@ -21,20 +30,14 @@ typedef shared_ptr<PlaneGUIStateNode> PlaneGUIStateNode_ptr;
 class SimpleGearGUIStateNode;
 typedef shared_ptr<SimpleGearGUIStateNode> SimpleGearGUIStateNode_ptr;
 
-class DiscGUIStateNode;
-typedef shared_ptr<DiscGUIStateNode> DiscGUIStateNode_ptr;
-
-class DiscGearGrindGUIStateNode;
-typedef shared_ptr<DiscGearGrindGUIStateNode> DiscGearGrindGUIStateNode_ptr;
-
-class WormGUIStateNode;
-typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
-
 class SpherePatchGUIStateNode;
 typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
 
-class FocalSplineGUIStateNode;
-typedef shared_ptr<FocalSplineGUIStateNode> FocalSplineGUIStateNode_ptr;
+class ToothProfileGUIStateNode;
+typedef shared_ptr<ToothProfileGUIStateNode> ToothProfileGUIStateNode_ptr;
+
+class WormGUIStateNode;
+typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
@@ -61,26 +64,21 @@ public:
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 	void setLineMesh(LineMesh_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
+
 	class GUISelectListener : public SelectListener {
+	public:
+		GUISelectListener(GUIStateNode& guiStateNode) : m_guiStateNode(guiStateNode){}
+		~GUISelectListener(){}
 
+		virtual void handleSelectEvent();
+		virtual void handleSelectEvent(int pointIndex);
+		virtual void handleDeselectEvent();
 
-			public:
-				GUISelectListener(GUIStateNode& guiStateNode)
-				: m_guiStateNode(guiStateNode){}
-				~GUISelectListener(){}
+	private:
+		GUIStateNode& m_guiStateNode;
+	};
 
-	            virtual void handleSelectEvent();
-	            virtual void handleSelectEvent(int pointIndex);
-				virtual void handleDeselectEvent();
-
-
-			private:
-				GUIStateNode& m_guiStateNode;
-			};
-
-		virtual GUISelectListener* getSelectListener() {
-			return &m_selectListener;
-		}
+virtual GUISelectListener* getSelectListener() { return &m_selectListener; }
 
 private:
 	GUISelectListener m_selectListener;
@@ -88,8 +86,6 @@ private:
 	TriangleMesh_ptr m_triangleMesh;
 	LineMesh_ptr m_lineMesh;
 	PointCloud_ptr m_pointCloud;
-
-
 };
 
 #include "happah/geometries/BSplineCurve.h"
@@ -105,6 +101,22 @@ public:
 private:
 	BSplineCurve_ptr m_curve;
 	BSplineCurveForm* m_bSplineCurveForm;
+};
+
+#include "happah/geometries/FocalSpline.h"
+#include "happah/gui/forms/FocalSplineForm.h"
+
+class FocalSplineGUIStateNode : public GUIStateNode{
+public:
+	FocalSplineGUIStateNode(FocalSpline_ptr focalSpline, FocalSplineForm* focalSplineForm, string name);
+	~FocalSplineGUIStateNode();
+
+	shared_ptr<void> getData() const;
+	Form* getForm();
+	FocalSpline_ptr getFocalSpline() const;
+private:
+	FocalSpline_ptr m_focalSpline;
+	FocalSplineForm* m_focalSplineForm;
 };
 
 #include "happah/geometries/gears/InvoluteGear.h"
@@ -209,40 +221,6 @@ private:
 
 };
 
-#include "happah/geometries/FocalSpline.h"
-#include "happah/gui/forms/FocalSplineForm.h"
-
-class FocalSplineGUIStateNode : public GUIStateNode{
-public:
-	FocalSplineGUIStateNode(FocalSpline_ptr focalSpline, FocalSplineForm* focalSplineForm, string name);
-	~FocalSplineGUIStateNode();
-
-	shared_ptr<void> getData() const;
-	Form* getForm();
-	FocalSpline_ptr getFocalSpline() const;
-private:
-	FocalSpline_ptr m_focalSpline;
-	FocalSplineForm* m_focalSplineForm;
-};
-
-
-#include "happah/geometries/gears/Worm.h"
-#include "happah/gui/forms/WormForm.h"
-
-class WormGUIStateNode : public GUIStateNode {
-public:
-	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name);
-	~WormGUIStateNode();
-
-	shared_ptr<void> getData() const;
-	Form* getForm();
-
-private:
-	Worm_ptr m_worm;
-	WormForm* m_wormForm;
-
-};
-
 #include "happah/geometries/SpherePatch.h"
 #include "happah/gui/forms/SpherePatchForm.h"
 
@@ -260,7 +238,37 @@ private:
 
 };
 
+#include "happah/geometries/gears/ToothProfile.h"
+#include "happah/gui/forms/ToothProfileForm.h"
 
+class ToothProfileGUIStateNode : public GUIStateNode {
+public:
+	ToothProfileGUIStateNode(ToothProfile_ptr toothProfile, ToothProfileForm* toothProfileForm, string name);
+	~ToothProfileGUIStateNode();
+	
+	shared_ptr<void> getData() const;
+	Form* getForm();
+private:
+	ToothProfile_ptr m_toothProfile;
+	ToothProfileForm* m_toothProfileForm;
+};
+
+#include "happah/geometries/gears/Worm.h"
+#include "happah/gui/forms/WormForm.h"
+
+class WormGUIStateNode : public GUIStateNode {
+public:
+	WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name);
+	~WormGUIStateNode();
+
+	shared_ptr<void> getData() const;
+	Form* getForm();
+
+private:
+	Worm_ptr m_worm;
+	WormForm* m_wormForm;
+
+};
 
 #endif // GUI_STATE_NODE_H
 

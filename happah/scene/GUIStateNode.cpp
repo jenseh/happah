@@ -55,8 +55,7 @@ BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(
 		BSplineCurve_ptr curve,
 		BSplineCurveForm* bSplineCurveForm,
 		string name )
-	: GUIStateNode(name), m_curve(curve), m_bSplineCurveForm(bSplineCurveForm)
-{}
+	: GUIStateNode(name), m_curve(curve), m_bSplineCurveForm(bSplineCurveForm) {}
 
 BSplineCurveGUIStateNode::~BSplineCurveGUIStateNode()
 {
@@ -72,6 +71,58 @@ shared_ptr<void> BSplineCurveGUIStateNode::getData() const {
 Form* BSplineCurveGUIStateNode::getForm() {
 	m_bSplineCurveForm->setCurve(m_curve);
 	return m_bSplineCurveForm;
+}
+
+// Disc
+
+DiscGUIStateNode::DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
+	: GUIStateNode(name), m_surfaceOfRevolution(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
+
+DiscGUIStateNode::~DiscGUIStateNode() {
+	if(m_discForm->getDisc() == m_surfaceOfRevolution)
+		m_discForm->reset();
+}
+
+ContextMenu* DiscGUIStateNode::getContextMenu() const {
+	m_discContextMenu->setDisc(m_surfaceOfRevolution, getTriangleMesh());
+	return m_discContextMenu;
+}
+
+shared_ptr<void> DiscGUIStateNode::getData() const {
+	return m_surfaceOfRevolution;
+}
+
+Form* DiscGUIStateNode::getForm() {
+	m_discForm->setDisc(m_surfaceOfRevolution);
+	return m_discForm;
+}
+
+SurfaceOfRevolution_ptr DiscGUIStateNode::getSurfaceOfRevolution()const{
+	return m_surfaceOfRevolution;
+}
+
+// DiscGearGrind
+
+DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name)
+	:	GUIStateNode(name), m_discGearGrind(discGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
+
+DiscGearGrindGUIStateNode::~DiscGearGrindGUIStateNode() {
+	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind)
+		m_simulationForm->reset();
+}
+
+ContextMenu* DiscGearGrindGUIStateNode::getContextMenu() const {
+	m_simulationContextMenu->setSimulation(m_discGearGrind);
+	return m_simulationContextMenu;
+}
+
+shared_ptr<void> DiscGearGrindGUIStateNode::getData() const {
+	return m_discGearGrind;
+}
+
+Form* DiscGearGrindGUIStateNode::getForm() {
+	m_simulationForm->setDiscGearGrind(m_discGearGrind);
+	return m_simulationForm;
 }
 
 // Focal Spline
@@ -202,55 +253,48 @@ SimpleGear_ptr SimpleGearGUIStateNode::getSimpleGear()const {
 	return m_simpleGear;
 }
 
-DiscGUIStateNode::DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name)
-	: GUIStateNode(name), m_surfaceOfRevolution(disc), m_discForm(discForm), m_discContextMenu(discContextMenu) {}
+// SpherePatch
 
-DiscGUIStateNode::~DiscGUIStateNode() {
-	if(m_discForm->getDisc() == m_surfaceOfRevolution)
-		m_discForm->reset();
+SpherePatchGUIStateNode::SpherePatchGUIStateNode(SpherePatch_ptr spherePatch, SpherePatchForm* spherePatchForm, string name)
+	: GUIStateNode(name), m_spherePatch(spherePatch), m_spherePatchForm(spherePatchForm) {}
+
+SpherePatchGUIStateNode::~SpherePatchGUIStateNode() {
+	if(m_spherePatchForm->getSpherePatch() == m_spherePatch)
+		m_spherePatchForm->reset();
 }
 
-ContextMenu* DiscGUIStateNode::getContextMenu() const {
-	m_discContextMenu->setDisc(m_surfaceOfRevolution, getTriangleMesh());
-	return m_discContextMenu;
+shared_ptr<void> SpherePatchGUIStateNode::getData() const {
+	return m_spherePatch;
 }
 
-shared_ptr<void> DiscGUIStateNode::getData() const {
-	return m_surfaceOfRevolution;
+Form* SpherePatchGUIStateNode::getForm() {
+	m_spherePatchForm->setSpherePatch(m_spherePatch);
+	return m_spherePatchForm;
 }
 
-Form* DiscGUIStateNode::getForm() {
-	m_discForm->setDisc(m_surfaceOfRevolution);
-	return m_discForm;
+// ToothProfile
+
+ToothProfileGUIStateNode::ToothProfileGUIStateNode(
+		ToothProfile_ptr toothProfile,
+		ToothProfileForm* toothProfileForm,
+		string name)
+	: GUIStateNode(name), m_toothProfile(toothProfile), m_toothProfileForm(toothProfileForm) {}
+
+ToothProfileGUIStateNode::~ToothProfileGUIStateNode()
+{
+	if(m_toothProfileForm->getToothProfile() == m_toothProfile) {
+		m_toothProfileForm->reset();
+	}
 }
 
-SurfaceOfRevolution_ptr DiscGUIStateNode::getSurfaceOfRevolution()const{
-	return m_surfaceOfRevolution;
+shared_ptr<void> ToothProfileGUIStateNode::getData() const {
+	return m_toothProfile;
 }
 
-DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name)
-	:	GUIStateNode(name), m_discGearGrind(discGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
-
-DiscGearGrindGUIStateNode::~DiscGearGrindGUIStateNode() {
-	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind)
-		m_simulationForm->reset();
+Form* ToothProfileGUIStateNode::getForm() {
+	m_toothProfileForm->setToothProfile(m_toothProfile);
+	return m_toothProfileForm;
 }
-
-ContextMenu* DiscGearGrindGUIStateNode::getContextMenu() const {
-	m_simulationContextMenu->setSimulation(m_discGearGrind);
-	return m_simulationContextMenu;
-}
-
-shared_ptr<void> DiscGearGrindGUIStateNode::getData() const {
-	return m_discGearGrind;
-}
-
-Form* DiscGearGrindGUIStateNode::getForm() {
-	m_simulationForm->setDiscGearGrind(m_discGearGrind);
-	return m_simulationForm;
-}
-
-
 
 // Worm
 
@@ -271,19 +315,3 @@ Form* WormGUIStateNode::getForm() {
 	return m_wormForm;
 }
 
-SpherePatchGUIStateNode::SpherePatchGUIStateNode(SpherePatch_ptr spherePatch, SpherePatchForm* spherePatchForm, string name)
-	: GUIStateNode(name), m_spherePatch(spherePatch), m_spherePatchForm(spherePatchForm) {}
-
-SpherePatchGUIStateNode::~SpherePatchGUIStateNode() {
-	if(m_spherePatchForm->getSpherePatch() == m_spherePatch)
-		m_spherePatchForm->reset();
-}
-
-shared_ptr<void> SpherePatchGUIStateNode::getData() const {
-	return m_spherePatch;
-}
-
-Form* SpherePatchGUIStateNode::getForm() {
-	m_spherePatchForm->setSpherePatch(m_spherePatch);
-	return m_spherePatchForm;
-}

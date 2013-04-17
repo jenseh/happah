@@ -10,10 +10,11 @@ using namespace std;
 
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/geometries/gears/SimpleGear.h"
+#include "happah/geometries/gears/ToothProfile.h"
+#include "happah/geometries/gears/Worm.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
-#include "happah/geometries/gears/Worm.h"
 #include "happah/scene/DiscGearGrindNode.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SceneListener.h"
@@ -51,6 +52,9 @@ public:
 	TriangleMeshRenderStateNode_ptr insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(SpherePatch_ptr spherePatch, SpherePatchGUIStateNode_ptr spherePatchGUIStateNode);
 	TriangleMeshRenderStateNode_ptr insert(SpherePatch_ptr spherePatch, TriangleMesh_ptr triangleMesh, hpcolor& color);
+	void insert(ToothProfile_ptr toothProfile, ToothProfileGUIStateNode_ptr toothProfileGuiStateNode);
+	LineMeshRenderStateNode_ptr insert(ToothProfile_ptr toothProfile, LineMesh_ptr lineMesh, hpcolor& color);
+	PointCloudRenderStateNode_ptr insert(ToothProfile_ptr toothProfile, PointCloud_ptr pointCloud, hpcolor& color);
 	TriangleMeshRenderStateNode_ptr insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
 	void registerSceneListener(SceneListener* sceneListener);
@@ -86,8 +90,8 @@ private:
 	LineMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	template<class G, class N>
 	LineMeshRenderStateNode_ptr doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation);
-    template<class S, class N, class G>
-    void doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode);
+	template<class S, class N, class G>
+	void doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode);
 
 
 	void triggerSubtreeInsertedEvent(Node_ptr root);

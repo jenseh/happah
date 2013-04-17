@@ -12,6 +12,7 @@ class RenderStateNode;
 class ElementRenderStateNode;
 class SimpleGearNode;
 class DiscNode;
+class ToothProfileNode;
 class WormNode;
 class SpherePatchNode;
 
@@ -29,6 +30,7 @@ public:
 	virtual void visit(ElementRenderStateNode& elementRenderStateNode)= 0;
 	virtual void visit(SimpleGearNode& simpleGearNode) = 0;
 	virtual void visit(DiscNode& discNode) = 0;
+	virtual void visit(ToothProfileNode& toothProfileNode);
 	virtual void visit(WormNode& wormNode) = 0;
 	virtual void visit(SpherePatchNode& spherePatchNode) = 0;
 };

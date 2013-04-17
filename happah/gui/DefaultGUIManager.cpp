@@ -241,7 +241,6 @@ void DefaultGUIManager::insert(FocalSpline_ptr focalSpline,hpuint drawMode){
 
 }
 
-
 void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<InvoluteGear, InvoluteGearGUIStateNode, InvoluteGearForm, InvoluteGearContextMenu>(
@@ -275,6 +274,15 @@ void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
+}
+
+void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
+	if(drawMode & HP_LINE_MESH) {
+		doInsert1D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm());
+	}
+	if(drawMode & HP_POINT_CLOUD) {
+		doInsert0D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm());
+	}
 }
 
 void DefaultGUIManager::insert(Worm_ptr worm,hpuint drawMode) {
@@ -342,6 +350,11 @@ void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
 
 void DefaultGUIManager::update(SpherePatch_ptr spherePatch) {
 	doUpdate2D<SpherePatch>(spherePatch);
+}
+
+void DefaultGUIManager::update(ToothProfile_ptr toothProfile) {
+	doUpdate0D<ToothProfile>(toothProfile);
+	doUpdate1D<ToothProfile>(toothProfile);
 }
 
 void DefaultGUIManager::update(Worm_ptr worm) {

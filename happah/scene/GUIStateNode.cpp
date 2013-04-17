@@ -52,16 +52,25 @@ void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){
 // BSplineCurve
 
 BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(
-		BSplineCurve_ptr curve,
-		BSplineCurveForm* bSplineCurveForm,
-		string name )
-	: GUIStateNode(name), m_curve(curve), m_bSplineCurveForm(bSplineCurveForm) {}
+	BSplineCurve_ptr curve,
+	BSplineCurveForm* bSplineCurveForm,
+	BSplineCurveContextMenu* bSplineCurveContextMenu,
+	string name
+) : GUIStateNode(name),
+	m_curve(curve),
+	m_bSplineCurveForm(bSplineCurveForm),
+	m_bSplineCurveContextMenu(bSplineCurveContextMenu) {}
 
 BSplineCurveGUIStateNode::~BSplineCurveGUIStateNode()
 {
 	if(m_bSplineCurveForm->getCurve() == m_curve) {
 		m_bSplineCurveForm->reset();
 	}
+}
+
+ContextMenu* BSplineCurveGUIStateNode::getContextMenu() const {
+	m_bSplineCurveContextMenu->setBSplineCurve(m_curve);
+	return m_bSplineCurveContextMenu;
 }
 
 shared_ptr<void> BSplineCurveGUIStateNode::getData() const {
@@ -179,7 +188,6 @@ InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
 	if(m_involuteGearForm->getInvoluteGear() == m_involuteGear)
 		m_involuteGearForm->reset();
 }
-
 
 ContextMenu* InvoluteGearGUIStateNode::getContextMenu() const {
 	m_involuteGearContextMenu->setInvoluteGear(m_involuteGear, getTriangleMesh());

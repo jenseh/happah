@@ -29,6 +29,7 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	centralWidgetLayout->addWidget(new Viewport(viewportListener, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
 
+	m_bSplineCurveContextMenu = new BSplineCurveContextMenu(guiManager, this);
 	m_defaultContextMenu = new ContextMenu(this);
 	m_discContextMenu = new DiscContextMenu(guiManager, this);
 	m_involuteGearContextMenu = new InvoluteGearContextMenu(guiManager, this);
@@ -46,6 +47,10 @@ SceneGraphExplorerPanel* MainWindow::getSceneGraphExplorerPanel() {
 
 ToolPanel* MainWindow::getToolPanel() {
 	return m_toolPanel;
+}
+
+BSplineCurveContextMenu* MainWindow::getBSplineCurveContextMenu() {
+	return m_bSplineCurveContextMenu;
 }
 
 ContextMenu* MainWindow::getDefaultContextMenu() {

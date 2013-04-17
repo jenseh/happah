@@ -1,8 +1,6 @@
 #ifndef INVOLUTE_GEAR_CONTEXT_MENU_H
 #define INVOLUTE_GEAR_CONTEXT_MENU_H
 
-#include <QAction>
-
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/GUIManager.h"

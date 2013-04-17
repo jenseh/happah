@@ -1,4 +1,6 @@
 #include <memory>
+#include <QAction>
+
 #include "happah/gui/context-menus/InvoluteGearContextMenu.h"
 
 InvoluteGearContextMenu::InvoluteGearContextMenu(
@@ -21,7 +23,7 @@ InvoluteGearContextMenu::InvoluteGearContextMenu(
 
 }
 
-InvoluteGearContextMenu::~InvoluteGearContextMenu(){}
+InvoluteGearContextMenu::~InvoluteGearContextMenu() {}
 
 void InvoluteGearContextMenu::createSimpleGear() {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(m_involuteGear->toSimpleGear());

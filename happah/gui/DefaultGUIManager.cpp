@@ -204,13 +204,13 @@ bool DefaultGUIManager::init() {
 void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
-		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
-				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
+		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 	if( drawMode & HP_POINT_CLOUD ) {
-		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm>(
-				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm());
+		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 }

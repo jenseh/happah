@@ -26,6 +26,8 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	layout->addWidget(matingGearButton);
 	layout->addWidget(matingStepButton);
 	this->setLayout(layout);
+
+	reset();
 }
 
 ToothProfileForm::~ToothProfileForm() {

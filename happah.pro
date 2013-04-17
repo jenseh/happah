@@ -48,6 +48,7 @@ HEADERS += \
 	happah/gui/Viewport.h \
 	happah/gui/Worker.h \
 \
+	happah/gui/context-menus/BSplineCurveContextMenu.h \
 	happah/gui/context-menus/ContextMenu.h \
 	happah/gui/context-menus/DiscContextMenu.h \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
@@ -162,6 +163,7 @@ SOURCES += \
 	happah/gui/VectorInput.cpp \
 	happah/gui/Viewport.cpp \
 \
+	happah/gui/context-menus/BSplineCurveContextMenu.cpp \
 	happah/gui/context-menus/ContextMenu.cpp \
 	happah/gui/context-menus/DiscContextMenu.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \

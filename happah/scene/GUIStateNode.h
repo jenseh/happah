@@ -89,17 +89,20 @@ private:
 };
 
 #include "happah/geometries/BSplineCurve.h"
+#include "happah/gui/context-menus/BSplineCurveContextMenu.h"
 #include "happah/gui/forms/BSplineCurveForm.h"
 
 class BSplineCurveGUIStateNode : public GUIStateNode {
 public:
-	BSplineCurveGUIStateNode( BSplineCurve_ptr curve, BSplineCurveForm* bSplineCurveForm, string name);
+	BSplineCurveGUIStateNode( BSplineCurve_ptr curve, BSplineCurveForm* bSplineCurveForm, BSplineCurveContextMenu* bSplineCurveContextMenu, string name);
 	~BSplineCurveGUIStateNode();
-	
+
+	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 private:
 	BSplineCurve_ptr m_curve;
+	BSplineCurveContextMenu* m_bSplineCurveContextMenu;
 	BSplineCurveForm* m_bSplineCurveForm;
 };
 

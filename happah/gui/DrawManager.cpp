@@ -85,7 +85,6 @@ void DrawManager::doDraw(ElementRenderStateNode_ptr elementRenderStateNode, Rigi
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
 	if(doSelection){
 		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex()/100.0f;
-		cout << "colorIndex: " << colorIndex << endl;
 		hpcolor color = hpvec4(colorIndex,0.0f,0.0f,0.0f);
 		glUniform1i(m_drawSelectionColors,1);
 		glUniform4f(m_colorComponentLocation, color.x, color.y, color.z, color.w);
@@ -112,7 +111,6 @@ void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode
 	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
 	if(doSelection){
 		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex()/100.0f;
-		cout << "colorIndex: " << colorIndex << endl;
 		hpcolor color = hpvec4(colorIndex,0.0f,0.0f,0.0f);
 		glUniform4f(m_pointCloudSelectionColorLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_pointCloudDrawSelectionColors,1);
@@ -202,13 +200,11 @@ bool DrawManager::select(int x, int y){
 	glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 	glReadPixels(x,height-y,1,1,GL_RGBA,GL_FLOAT,&pixel[0]);
-	// cout<< "PixelColor " << pixel[0].x <<" " << pixel[0].y<< " " << pixel[0].z<<" " << pixel[0].w << endl;
 	m_somethingSelected = false;
 	ElementRenderStateNode_ptr foundNode = m_selectionVisitor.findElementRenderStateNodeOfColor(pixel[0]);
 	if(foundNode){
 		foundNode->setSelected(1);
 		foundNode->triggerSelectEvent();
-		// cout << "Selected Node ArrayBufferID "<< foundNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedElementRenderStateNode(foundNode);
 		m_somethingSelected = true;
 	}
@@ -218,7 +214,6 @@ bool DrawManager::select(int x, int y){
 		int index = m_selectionVisitor.findPointIndexFromColor(pixel[0]);
 		foundPointCloudNode->setSelected(1);
 		foundPointCloudNode->triggerSelectEvent(index);
-		// cout << "Selected Point Cloud Node ArrayBufferID "<< foundPointCloudNode->getVertexArrayObjectID() << endl;
 		m_selectionVisitor.setCurrentSelectedPointCloudRenderStateNode(foundPointCloudNode);
 		m_somethingSelected = true;
 	}
@@ -530,7 +525,6 @@ DrawManager::SelectionVisitor::SelectionVisitor(DrawManager& drawManager)
         for(int b=99;b >= 0; b--){
 			float bComponent = (float)b/100.0f;
 			m_pointSelectionColors->push_back(hpcolor(0.0f,gComponent,bComponent,0.0f));
-			//cout << "Point Colors: 0.0f "<< gComponent << " " << bComponent << endl;
 		}
 	}
 }
@@ -546,7 +540,7 @@ void DrawManager::SelectionVisitor::draw(ElementRenderStateNode_ptr elementRende
 		cerr << "To many Objects ";
 		return;
 	}
-	cout << "selectionIndex: " << m_currentSelectionIndex << endl;
+
 	m_colorMap.insert(ValuePair((int)(m_currentSelectionIndex),elementRenderStateNode));
 	m_drawManager.doDraw(elementRenderStateNode, rigidAffineTransformation,true);
 }
@@ -558,7 +552,7 @@ void DrawManager::SelectionVisitor::draw(PointCloudRenderStateNode_ptr pointClou
 		cerr << "To many Objects ";
 		return;
 	}
-	cout << "selectionIndex: " << m_currentSelectionIndex << endl;
+
 	m_pointCloudColorMap.insert(PCValuePair(m_currentSelectionIndex,pointCloudRenderStateNode));
 	m_drawManager.doDraw(pointCloudRenderStateNode, rigidAffineTransformation,true);
 }
@@ -575,14 +569,11 @@ void DrawManager::SelectionVisitor::setCurrentSelectionIndex(int index){
 ElementRenderStateNode_ptr DrawManager::SelectionVisitor::findElementRenderStateNodeOfColor(hpcolor color){
 	ElementsColorMap::const_iterator iter = m_colorMap.begin();
 	int index = (int)(color.r*100+0.5f);
-	cout << "Clicked Index: " << index << endl;
 	   iter = m_colorMap.find(index);
 	if(iter != m_colorMap.end()){
-       cout << "Gefunden !"  << endl;
        return (*iter).second;
 	}
     else{
-       cout << "Nicht gefunden!" << endl;
        return NULL;
     }
 }
@@ -606,15 +597,12 @@ void DrawManager::SelectionVisitor::setCurrentSelectedPointCloudRenderStateNode(
 PointCloudRenderStateNode_ptr DrawManager::SelectionVisitor::findPointCloudRenderStateNodeOfColor(hpcolor color){
 	PointCloudColorMap::const_iterator iter = m_pointCloudColorMap.begin();
 	int index = (int)(color.r*100+0.5f);
-	cout << "Clicked Index: " << index << endl;
 	   iter = m_pointCloudColorMap.find(index);
 	if(iter != m_pointCloudColorMap.end()){
-       cout << "Gefunden !"  << endl;
        return (*iter).second;
 	}
     else{
-       cout << "Nicht gefunden!" << endl;
-       return NULL;
+      return NULL;
     }
 }
 vector<hpcolor>* DrawManager::SelectionVisitor::getPointSelectionColors(){
@@ -629,7 +617,6 @@ int DrawManager::SelectionVisitor::findPointIndexFromColor(hpcolor color){
     int gIndex = (int)(color.g*100.5f);
     int bIndex = (int)(color.b*100.5f);
     int index = 9999-((gIndex*100)+bIndex);
-    cout << "Point index: "<< index << endl;
     return index;
 }
 

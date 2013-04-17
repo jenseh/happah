@@ -78,9 +78,9 @@ template<class G, class S>
 void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
 	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
-	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
 	guiStateNode->setLineMesh(lineMesh);
 	m_sceneManager->insert(geometry, guiStateNode);
+	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
 	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
@@ -100,10 +100,9 @@ template<class G, class S>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode){
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
 	hpcolor color(0.0f,1.0f,0.0f,1.0f);
-
-	PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(geometry,pointCloud,color);
 	guiStateNode->setPointCloud(pointCloud);
 	m_sceneManager->insert(geometry,guiStateNode);
+	PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(geometry,pointCloud,color);
 	pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
@@ -229,7 +228,6 @@ void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
 void DefaultGUIManager::insert(FocalSpline_ptr focalSpline,hpuint drawMode){
 	if(drawMode & HP_TRIANGLE_MESH){
 			// DO nothing .. we don't want triangles
-			//doInsert2D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
 	}
 	if(drawMode & HP_POINT_CLOUD){
 			doInsert0D<FocalSpline,FocalSplineGUIStateNode,FocalSplineForm>(focalSpline,"Focal Spline",m_toolPanel->getFocalSplineForm());
@@ -331,8 +329,9 @@ void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
 	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
 } */
 void DefaultGUIManager::update(FocalSpline_ptr focalSpline){
-	doUpdate1D<FocalSpline>(focalSpline);
 	doUpdate0D<FocalSpline>(focalSpline);
+	doUpdate1D<FocalSpline>(focalSpline);
+
 
 }
 

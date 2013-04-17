@@ -225,8 +225,8 @@ bool DrawManager::select(int x, int y){
 
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	m_selectionVisitor.setCurrentSelectionIndex(100);
-    m_selectionVisitor.clearColorMaps();
-    return m_somethingSelected;
+	m_selectionVisitor.clearColorMaps();
+	return m_somethingSelected;
 }
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;

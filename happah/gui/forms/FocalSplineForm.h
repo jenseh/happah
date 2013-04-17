@@ -3,6 +3,7 @@
 
 #include "happah/gui/forms/Form.h"
 #include "happah/gui/GUIManager.h"
+#include "happah/math/Ray.h"
 
 class FocalSplineForm : public Form {
 Q_OBJECT
@@ -15,7 +16,7 @@ public:
 	void setFocalSpline(FocalSpline_ptr);
 	void handleSelection();
 	void handleSelection(int pointIndex);
-	void handleDrag(float dx, float dy);
+	void handleDrag(Ray& ray);
 signals:
 		void selected(Form* form);
 private slots:

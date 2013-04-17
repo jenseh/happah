@@ -59,7 +59,8 @@ void FocalSplineForm::handleSelection(int pointIndex){
 	m_currentPointIndex = pointIndex;
 	std::cout<< "CURRENT INDEX : "<< pointIndex << endl;
 }
-void FocalSplineForm::handleDrag(float dx,float dy){
+void FocalSplineForm::handleDrag(Ray& ray){
+	int dx = 1, dy = 1;
 	if(m_currentPointIndex >= 0){
 	hpvec3 point = m_focalSpline->getCartesianControlPoint(m_currentPointIndex);
 	if (dx < 0)

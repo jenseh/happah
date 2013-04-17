@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "happah/math/Ray.h"
+
 class Form : public QWidget {
 public:
 	Form(QWidget* parent = 0);
@@ -11,7 +13,7 @@ public:
 	virtual void reset() = 0;
 	virtual void handleSelection();
 	virtual void handleSelection(int pointIndex){}
-	virtual void handleDrag(float dx,float dy);
+	virtual void handleDrag(Ray& ray);
 };
 
 

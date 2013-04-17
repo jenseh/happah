@@ -73,7 +73,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
 
 	if(m_draggingActive) {
 		Ray ray(getMouseRay());
-		m_viewportListener.handleMouseMoveEvent(ray);
+		m_viewportListener.handleDragEvent(ray);
 	} else {
 
 		int width = this->width();
@@ -95,25 +95,21 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
 
 		if (event->buttons() == Qt::LeftButton) {
 			if(!m_drawManager.isSomethingSelected()){
-			// Left turn arround center
-			m_theta = dx*M_PI;
-			m_phi = dy*M_PI;
+				// Left turn arround center
+				m_theta = dx*M_PI;
+				m_phi = dy*M_PI;
 
-			m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
-			// Recalc forward
-			forward =m_center - m_camera;
-			forward = glm::normalize(forward);
-			forward *= DISTANCE_TO_CENTER;
+				m_camera = m_center - cos(m_theta) * forward + sin(m_theta) * right;
+				// Recalc forward
+				forward =m_center - m_camera;
+				forward = glm::normalize(forward);
+				forward *= DISTANCE_TO_CENTER;
 
-			m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
-			// recalc up
-			m_up = glm::cross(forward, right);
-			m_up = glm::normalize(m_up);
-			m_up *= DISTANCE_TO_CENTER;
-			}
-			else{
-				qApp->setOverrideCursor( QCursor( Qt::BlankCursor ) );
-				m_viewportListener.handleDragEvent(-dx,-dy);
+				m_camera = m_center - cos(m_phi) * forward + sin(m_phi) * m_up;
+				// recalc up
+				m_up = glm::cross(forward, right);
+				m_up = glm::normalize(m_up);
+				m_up *= DISTANCE_TO_CENTER;
 			}
 			updateGL();
 		} else if (event->buttons() == Qt::RightButton) {
@@ -139,9 +135,8 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event){
-	qApp->setOverrideCursor( QCursor( Qt::ArrowCursor ) );
 	if(m_draggingActive) {
-		m_viewportListener.handleMouseMoveStopEvent();
+		m_viewportListener.handleDragStopEvent();
 		m_draggingActive = false;
 	}
 }

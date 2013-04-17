@@ -24,6 +24,7 @@ FocalSplineForm::~FocalSplineForm() {
 void FocalSplineForm::createFocalSpline(){
 
 		m_focalSpline =  FocalSpline_ptr(new FocalSpline());
+		m_focalSpline->init(3);
 		m_guiManager.insert(m_focalSpline,HP_LINE_MESH|HP_POINT_CLOUD);
 		m_focalSplineInserted = true;
 

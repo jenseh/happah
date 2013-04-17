@@ -28,11 +28,20 @@ public:
 private:
     hpvec3 cartesianToPolarCoordinates(hpvec3 cartesian);
     hpvec3 polarToCartesianCoordinates(hpvec3 polar);
+    void   generateNewControlPoints();
+    void   adjustControlPoints(int index);
+    hpvec3   calculateIntersection(hpvec3 a1,hpvec3 a2, hpvec3 b1, hpvec3 b2);
 	vector<hpvec3>* m_controlPoints;
+	vector<hpvec3>* m_currentControlPoints;
 	vector<hpvec3>* m_generatedSpline;
 	hpvec3 m_center;
 	hpreal m_radius;
 	hpreal m_phi;
+	hpreal m_phiComplete;
+	hpreal m_fraction;
+	int    m_detail;
+	int    m_currentDegree;
+
 };
 typedef shared_ptr<FocalSpline> FocalSpline_ptr;
 

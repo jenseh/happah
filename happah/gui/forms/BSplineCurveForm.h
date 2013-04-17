@@ -18,11 +18,11 @@ public:
 
 	BSplineCurve_ptr getCurve() const;
 	void handleRay(Ray& ray);
-	void handleMove(Ray& ray);
-	void handleMoveStop();
+	void handleDrag(Ray& ray);
 	void setCurve(BSplineCurve_ptr curve);
 	void setPlane(Plane_ptr plane);
-	void handleSelection(){emit selected(this);}
+	void handleSelection();
+	void handleSelection(int pointIndex);
 signals:
 		void selected(Form* form);
 private slots:
@@ -49,7 +49,7 @@ private:
 	QCheckBox* m_periodicCheckBox;
 	Plane_ptr m_plane;
 	QLabel* m_planeLabel;
-	int m_pointMoving;
+	int m_currentPointIndex;
 	QCheckBox* m_uniformCheckBox;
 	bool m_useStandardPlane;
 

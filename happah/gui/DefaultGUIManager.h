@@ -97,11 +97,8 @@ private:
 	public:
 		DefaultViewportListener(DefaultGUIManager& defaultGUIManager);
 		~DefaultViewportListener();
-
 		void handleMouseClickEvent(Ray& ray);
-		void handleMouseMoveEvent(Ray& ray);
-		void handleMouseMoveStopEvent();
-		void handleDragEvent(float dx,float dy);
+		void handleDragEvent(Ray& ray);
 	private:
 		DefaultGUIManager& m_defaultGUIManager;
 	};

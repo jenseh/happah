@@ -136,7 +136,6 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event){
 	if(m_draggingActive) {
-		m_viewportListener.handleDragStopEvent();
 		m_draggingActive = false;
 	}
 }

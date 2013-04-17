@@ -6,7 +6,7 @@
 #include "happah/gui/forms/BSplineCurveForm.h"
 
 BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
-	: Form(parent), m_guiManager(guiManager), m_pointMoving(-1) {
+	: Form(parent), m_guiManager(guiManager), m_currentPointIndex(-1) {
 
 	m_controlPointInput = new VectorInput( "Next Point", true, true, this );
 	m_controlPointInput->setValue( hpvec3(0.f, 0.f, 0.f) );
@@ -146,7 +146,8 @@ void BSplineCurveForm::handleRay(Ray& ray) {
 	}
 }
 
-void BSplineCurveForm::handleMove(Ray& ray) {
+void BSplineCurveForm::handleDrag(Ray& ray) {
+	/*
 	if(m_pointMoving < 0) {
 		hpreal minDistance = 1000000.0f;
 		int nearestPointIndex = -1;
@@ -161,16 +162,24 @@ void BSplineCurveForm::handleMove(Ray& ray) {
 		m_pointMoving = nearestPointIndex;
 	}
 	if( m_pointMoving >= 0 ) {
+	*/
 		hpvec3 intersecPoint;
 		if( m_plane->intersect( ray, intersecPoint ) ) {
-			m_curve->setControlPoint( m_pointMoving, intersecPoint );
+			m_curve->setControlPoint( m_currentPointIndex, intersecPoint );
 			m_guiManager.update( m_curve );
 		}
-	}
+	//}
 }
 
-void BSplineCurveForm::handleMoveStop() {
-	m_pointMoving = -1;
+
+void BSplineCurveForm::handleSelection(){
+	emit selected(this);
+	m_currentPointIndex = -1;
+}
+
+void BSplineCurveForm::handleSelection(int pointIndex){
+		emit selected(this);
+		m_currentPointIndex = pointIndex;
 }
 
 void BSplineCurveForm::reset() {

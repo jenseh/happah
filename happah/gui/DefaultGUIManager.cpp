@@ -453,16 +453,10 @@ void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handle
 		//std::cout << "No intersection." << std::endl;
 	}
 }
-void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseMoveEvent(Ray& ray) {
-	m_defaultGUIManager.m_toolPanel->handleMouseMoveEvent(ray);
-}
 
-void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseMoveStopEvent() {
-	m_defaultGUIManager.m_toolPanel->handleMouseMoveStopEvent();
-}
 
-void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleDragEvent(float dx,float dy){
-	m_defaultGUIManager.m_toolPanel->handleDragEvent(dx,dy);
+void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleDragEvent(Ray& ray){
+	m_defaultGUIManager.m_toolPanel->handleDragEvent(ray);
 }
 
 DefaultGUIManager::SubtreesInsertedEventHandler::SubtreesInsertedEventHandler(DefaultGUIManager& defaultGUIManager)

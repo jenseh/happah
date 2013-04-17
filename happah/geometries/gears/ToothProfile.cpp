@@ -130,3 +130,14 @@ void ToothProfile::rotate(hpreal degree) {
 	}
 	m_toothProfileCurve.setControlPoints(controlPoints);
 }
+
+PointCloud* ToothProfile::toPointCloud() {
+	BSplineCurve curve;
+	extendToGearCurve(curve);
+	return curve.toPointCloud();
+}
+LineMesh* ToothProfile::toLineMesh() {
+	BSplineCurve curve;
+	extendToGearCurve(curve);
+	return curve.toLineMesh();
+}

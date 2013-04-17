@@ -19,6 +19,7 @@ using namespace std;
 #include "happah/gui/forms/SimpleGearForm.h"
 #include "happah/gui/forms/SimulationForm.h"
 #include "happah/gui/forms/SpherePatchForm.h"
+#include "happah/gui/forms/ToothProfileForm.h"
 #include "happah/gui/forms/WormForm.h"
 
 
@@ -37,6 +38,7 @@ public:
 	SimpleGearForm* getSimpleGearForm();
 	SimulationForm* getSimulationForm();
 	SpherePatchForm* getSpherePatchForm();
+	ToothProfileForm* getToothProfileForm();
 	WormForm* getWormForm();
 
 	void setForm(Form* form);	
@@ -60,6 +62,7 @@ private:
 	SimpleGearForm* m_simpleGearForm;
 	SimulationForm* m_simulationForm;
 	SpherePatchForm* m_spherePatchForm;
+	ToothProfileForm* m_toothProfileForm;
 	WormForm* m_wormForm;
 
 	void add(QGridLayout* buttonLayout, const char* text, Form* form, int row, int column);

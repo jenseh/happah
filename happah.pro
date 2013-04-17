@@ -48,6 +48,7 @@ HEADERS += \
 	happah/gui/Viewport.h \
 	happah/gui/Worker.h \
 \
+	happah/gui/context-menus/BSplineCurveContextMenu.h \
 	happah/gui/context-menus/ContextMenu.h \
 	happah/gui/context-menus/DiscContextMenu.h \
 	happah/gui/context-menus/InvoluteGearContextMenu.h \
@@ -64,6 +65,7 @@ HEADERS += \
 	happah/gui/forms/SimpleGearForm.h \
 	happah/gui/forms/SimulationForm.h \
 	happah/gui/forms/SpherePatchForm.h \
+	happah/gui/forms/ToothProfileForm.h \
 	happah/gui/forms/WormForm.h \
 \
 	happah/gui/widgets/LabeledIntegerSlider.h \
@@ -79,7 +81,7 @@ HEADERS += \
 #	happah/math/Circle.h \
 	happah/math/Ray.h \
 	happah/math/Triangle.h \
-        happah/math/Polynom.h \
+	happah/math/Polynom.h \
 \
 	happah/scene/BSplineCurveNode.h \
 	happah/scene/DiscNode.h \
@@ -105,7 +107,8 @@ HEADERS += \
 	happah/scene/SceneVisitor.h \
 	happah/scene/SimpleGearNode.h \
 	happah/scene/SimpleGeometryNode.h \
-	happah/scene/SpherePatchNode.h\
+	happah/scene/SpherePatchNode.h \
+	happah/scene/ToothProfileNode.h \
 	happah/scene/TriangleMeshNode.h \
 	happah/scene/WormNode.h \
 \
@@ -160,6 +163,7 @@ SOURCES += \
 	happah/gui/VectorInput.cpp \
 	happah/gui/Viewport.cpp \
 \
+	happah/gui/context-menus/BSplineCurveContextMenu.cpp \
 	happah/gui/context-menus/ContextMenu.cpp \
 	happah/gui/context-menus/DiscContextMenu.cpp \
 	happah/gui/context-menus/InvoluteGearContextMenu.cpp \
@@ -176,6 +180,7 @@ SOURCES += \
 	happah/gui/forms/SimpleGearForm.cpp \
 	happah/gui/forms/SimulationForm.cpp \
 	happah/gui/forms/SpherePatchForm.cpp \
+	happah/gui/forms/ToothProfileForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
 	happah/gui/widgets/LabeledIntegerSlider.cpp \
@@ -209,7 +214,8 @@ SOURCES += \
 	happah/scene/SceneVisitor.cpp \
 	happah/scene/SimulationNode.cpp \
 	happah/scene/SimpleGearNode.cpp \
-	happah/scene/SpherePatchNode.cpp\
+	happah/scene/SpherePatchNode.cpp \
+	happah/scene/ToothProfileNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
 	happah/scene/WormNode.cpp \
 \

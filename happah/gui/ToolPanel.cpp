@@ -11,6 +11,7 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 		m_discForm(new DiscForm(guiManager, m_forms)),
 		m_planeForm(new PlaneForm(guiManager, m_forms)),
 		m_simulationForm(new SimulationForm(guiManager, m_forms)),
+		m_toothProfileForm(new ToothProfileForm(guiManager, m_forms)),
 		m_wormForm(new WormForm(guiManager, m_forms)),
 		m_spherePatchForm(new SpherePatchForm(guiManager,m_forms)){
 	QGridLayout* buttonsLayout = new QGridLayout();
@@ -36,6 +37,8 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	connect(m_focalSplineForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
 	add(buttonsLayout, "BSC", m_bSplineCurveForm,1,2);
 	connect(m_bSplineCurveForm,SIGNAL(selected(Form*)),this,SLOT(handleFormSelectedEvent(Form*)));
+	add(buttonsLayout, "TP", m_toothProfileForm, 1, 3);
+	connect(m_toothProfileForm, SIGNAL(selected(Form*)), this, SLOT(handleFormSelectedEvent(Form*)));
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(buttons);
@@ -92,6 +95,10 @@ SpherePatchForm* ToolPanel::getSpherePatchForm() {
 	return m_spherePatchForm;
 }
 
+ToothProfileForm* ToolPanel::getToothProfileForm() {
+	return m_toothProfileForm;
+}
+
 FocalSplineForm* ToolPanel::getFocalSplineForm() {
 	return m_focalSplineForm;
 }
@@ -104,17 +111,23 @@ void ToolPanel::handleButtonClickedEvent() {
 void ToolPanel::handleMouseClickEvent(Ray& ray) {
 	if( m_forms->currentWidget() == m_bSplineCurveForm ) {
 		m_bSplineCurveForm->handleRay(ray);
+	} else if( m_forms->currentWidget() == m_toothProfileForm ) {
+		m_toothProfileForm->handleRay(ray);
 	}
 }
 
 void ToolPanel::handleMouseMoveEvent(Ray& ray) {
 	if( m_forms->currentWidget() == m_bSplineCurveForm ) {
 		m_bSplineCurveForm->handleMove(ray);
+	} else if( m_forms->currentWidget() == m_toothProfileForm ) {
+		m_toothProfileForm->handleMove(ray);
 	}
 }
 void ToolPanel::handleMouseMoveStopEvent() {
 	if( m_forms->currentWidget() == m_bSplineCurveForm ) {
 		m_bSplineCurveForm->handleMoveStop();
+	} else if( m_forms->currentWidget() == m_toothProfileForm ) {
+		m_toothProfileForm->handleMoveStop();
 	}
 }
 

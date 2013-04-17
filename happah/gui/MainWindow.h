@@ -8,6 +8,7 @@
 #include "happah/gui/SceneGraphExplorerListener.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/ViewportListener.h"
+#include "happah/gui/context-menus/BSplineCurveContextMenu.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/context-menus/DiscContextMenu.h"
 #include "happah/gui/context-menus/PlaneContextMenu.h"
@@ -26,6 +27,7 @@ public:
 	SceneGraphExplorerPanel* getSceneGraphExplorerPanel();
 	ToolPanel* getToolPanel();
 
+	BSplineCurveContextMenu* getBSplineCurveContextMenu();
 	ContextMenu* getDefaultContextMenu();
 	DiscContextMenu* getDiscContextMenu();
 	InvoluteGearContextMenu* getInvoluteGearContextMenu();
@@ -43,6 +45,7 @@ private:
 	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
 	ToolPanel* m_toolPanel;
 
+	BSplineCurveContextMenu* m_bSplineCurveContextMenu;
 	ContextMenu* m_defaultContextMenu;
 	DiscContextMenu* m_discContextMenu;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;

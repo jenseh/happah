@@ -12,6 +12,7 @@
 #include "happah/scene/RenderStateNode.h"
 #include "happah/scene/SimpleGearNode.h"
 #include "happah/scene/DiscNode.h"
+#include "happah/scene/ToothProfileNode.h"
 #include "happah/scene/WormNode.h"
 #include "happah/scene/SpherePatchNode.h"
 
@@ -352,11 +353,11 @@ PointCloudRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, Poi
 }
 template<class S, class N, class G>
 void SceneManager::doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> guiStateNode) {
-    shared_ptr<N> simulationNode = shared_ptr<N>(new N(simulation));
-    insertChild(simulationNode);
-    simulationNode->buildSubtree();
-    simulationNode->insertChild(guiStateNode);
-    triggerSubtreeInsertedEvent(simulationNode);
+	shared_ptr<N> simulationNode = shared_ptr<N>(new N(simulation));
+	insertChild(simulationNode);
+	simulationNode->buildSubtree();
+	simulationNode->insertChild(guiStateNode);
+	triggerSubtreeInsertedEvent(simulationNode);
 }
 
 void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
@@ -442,6 +443,16 @@ TriangleMeshRenderStateNode_ptr SceneManager::insert(SurfaceOfRevolution_ptr dis
 
 void SceneManager::insert(DiscGearGrind_ptr discGearGrind, DiscGearGrindGUIStateNode_ptr discGearGrindGUIStateNode) {
 	doInsertSimulation<DiscGearGrind, DiscGearGrindNode, DiscGearGrindGUIStateNode>(discGearGrind, discGearGrindGUIStateNode);
+}
+
+void SceneManager::insert(ToothProfile_ptr toothProfile, ToothProfileGUIStateNode_ptr toothProfileGuiStateNode) {
+	doInsert<ToothProfile, ToothProfileNode, ToothProfileGUIStateNode>(toothProfile, toothProfileGuiStateNode);
+}
+LineMeshRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, LineMesh_ptr lineMesh, hpcolor& color) {
+	return doInsert<ToothProfile, ToothProfileNode>(toothProfile, lineMesh, color);
+}
+PointCloudRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, PointCloud_ptr pointCloud, hpcolor& color) {
+	return doInsert<ToothProfile, ToothProfileNode>(toothProfile, pointCloud, color);
 }
 
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {

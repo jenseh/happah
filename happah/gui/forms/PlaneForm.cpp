@@ -32,7 +32,7 @@ void PlaneForm::createPlane() {
 	if( m_planeInserted ) {
 		m_plane = Plane_ptr(new Plane(m_originInput->getValue(), m_normalInput->getValue()));
 	}
-	m_guiManager.insert(m_plane,HP_LINE_MESH|HP_TRIANGLE_MESH|HP_POINT_CLOUD);
+	m_guiManager.insert(m_plane,HP_TRIANGLE_MESH);
 	m_planeInserted = true;
 }
 

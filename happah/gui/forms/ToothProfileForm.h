@@ -15,15 +15,16 @@ public:
 
 	ToothProfile_ptr getToothProfile();
 	void handleRay(Ray& ray);
-	void handleMove(Ray& ray);
-	void handleMoveStop();
-	void handleSelection() { emit selected(this); }
+	void handleDrag(Ray& ray);
+	void handleSelection();
+	void handleSelection(int pointIndex);
 	void reset();
 	void setToothProfile(ToothProfile_ptr toothProfile);
 
 private:
+	int m_currentPointIndex;
 	GUIManager& m_guiManager;
-	int m_pointMoving;
+	Plane_ptr m_plane;
 	ToothProfile_ptr m_toothProfile;
 
 private slots:

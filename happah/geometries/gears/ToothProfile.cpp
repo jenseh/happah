@@ -3,6 +3,12 @@
 #include <vector>
 #include <iostream>
 
+ToothProfile::ToothProfile() {
+	m_toothProfileCurve = BSplineCurve();
+	m_toothProfileCurve.setClamped(true);
+	m_toothProfileCurve.setDegree(3);
+}
+
 ToothProfile::ToothProfile(const BSplineCurve& toothProfile) : m_toothProfileCurve(toothProfile){
 	if(!m_toothProfileCurve.getClamped()) {
 		std::cerr << "A BSplineCurve for a ToothProfile has to be clamed! Otherwise the resulting gear will look against expectation." << std::endl;
@@ -21,8 +27,23 @@ hpreal ToothProfile::getAngularPitch() const {
 	return glm::acos((glm::dot(glm::normalize(first), glm::normalize(last))));
 }
 
+hpuint ToothProfile::getNumberOfPoints() const {
+	return m_toothProfileCurve.getNumberOfControlPoints();
+}
+
 hpuint ToothProfile::getNumberOfTeeth() const {
 	return (hpuint) floor(((M_PI * 2.0) / getAngularPitch()) + 0.5);
+}
+
+Plane* ToothProfile::getPlaneToothProfileLiesIn() const {
+	hpreal startValue, stopValue;
+	m_toothProfileCurve.getParameterRange(startValue, stopValue);
+	hpvec3 first = m_toothProfileCurve.getValueAt(startValue);
+	hpvec3 last = m_toothProfileCurve.getValueAt(stopValue);
+	if(first == last)
+		return new Plane(hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 0.0f, 1.0f));
+	else
+		return new Plane(hpvec3(0.0f, 0.0f, 0.0f), glm::cross(last, first));
 }
 
 hpreal ToothProfile::getTipRadius() const {
@@ -131,11 +152,38 @@ void ToothProfile::rotate(hpreal degree) {
 	m_toothProfileCurve.setControlPoints(controlPoints);
 }
 
+void ToothProfile::setPointOfGear(hpuint index, hpvec3 newValue) {
+	hpuint maxToothProfileIndex = m_toothProfileCurve.getNumberOfControlPoints() - 1;
+	hpuint indexIsInTooth = index / maxToothProfileIndex;
+	hpuint toothProfileIndex = index;
+
+	if(indexIsInTooth == getNumberOfTeeth()) {
+		toothProfileIndex = 0;
+
+	} else if(index >= maxToothProfileIndex) {
+		hpreal startValue, stopValue;
+		m_toothProfileCurve.getParameterRange(startValue, stopValue);
+		hpvec3 first = m_toothProfileCurve.getValueAt(startValue);
+		hpvec3 last = m_toothProfileCurve.getValueAt(stopValue);
+		hpreal rotation = getAngularPitch() * indexIsInTooth * 180.0f / M_PI;
+		hpvec3 rotatedNewValue = glm::rotate(newValue, rotation, glm::cross(last, first));
+		newValue = rotatedNewValue;
+		toothProfileIndex = index % maxToothProfileIndex;
+	}
+	
+	setPointOfToothProfile(toothProfileIndex, newValue);
+}
+
+void ToothProfile::setPointOfToothProfile(hpuint toothProfileIndex, hpvec3 newValue) {
+	m_toothProfileCurve.setControlPoint(toothProfileIndex, newValue);
+}
+
 PointCloud* ToothProfile::toPointCloud() {
 	BSplineCurve curve;
 	extendToGearCurve(curve);
 	return curve.toPointCloud();
 }
+
 LineMesh* ToothProfile::toLineMesh() {
 	BSplineCurve curve;
 	extendToGearCurve(curve);

@@ -10,7 +10,7 @@
 using namespace std;
 
 ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
-	: Form(parent), m_guiManager(guiManager), m_pointMoving(-1) {
+	: Form(parent), m_guiManager(guiManager), m_currentPointIndex(-1) {
 
 	QPushButton* show3dGearButton = new QPushButton("Show gear in 3D");
 	connect(show3dGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
@@ -40,25 +40,13 @@ ToothProfile_ptr ToothProfileForm::getToothProfile() {
 }
 
 void ToothProfileForm::reset() {
-	BSplineCurve curve;
-	m_toothProfile = ToothProfile_ptr(new ToothProfile(curve));
+	m_toothProfile = ToothProfile_ptr(new ToothProfile());
+	m_plane = Plane_ptr(m_toothProfile->getPlaneToothProfileLiesIn());
 }
 
 void ToothProfileForm::setToothProfile(ToothProfile_ptr toothProfile) {
 	m_toothProfile = toothProfile;
 }
-
-// void BSplineTool::addCurveOptions() {
-// 	QPushButton* toGear = new QPushButton("Take as tooth of a gear");
-// 	connect(toGear, SIGNAL(clicked()), this, SLOT(toGearCurve()));
-// 	m_options->addWidget(toGear);
-// }
-// void BSplineTool::toGearCurve() {
-// 	BSplineGearCurve* gearCurve = new BSplineGearCurve(*m_currentCurve);
-// 	deleteCurrentAndEmitNew(gearCurve);
-// 	m_currentCurve = gearCurve;
-// 	emit changed();
-// }
 
 void ToothProfileForm::toSimpleGear() {
 	// SimpleGear* gear = new SimpleGear(new BSplineGearCurve(*m_currentCurve), 0.0f, 0.2f);
@@ -93,35 +81,26 @@ void ToothProfileForm::showNextMatingStep() {
 
 void ToothProfileForm::handleRay(Ray& ray) {
 	// hpvec3 intersecPoint;
-	// if( m_plane->intersect( ray, intersecPoint ) ) {
+	// if(m_plane->intersect(ray, intersecPoint)) {
 	// 	m_controlPointInput->setValue( intersecPoint );
 	// 	addPoint();
 	// }
 }
 
-void ToothProfileForm::handleMove(Ray& ray) {
-	// if(m_pointMoving < 0) {
-	// 	hpreal minDistance = 1000000.0f;
-	// 	int nearestPointIndex = -1;
-	// 	for(hpuint i = 0; i < m_curve->getNumberOfControlPoints(); ++i) {
-	// 		hpvec3 controlPoint = m_curve->getControlPoint( i );
-	// 		hpreal distance = ray.distanceToPoint( controlPoint );
-	// 		if( distance < minDistance ) {
-	// 			minDistance = distance;
-	// 			nearestPointIndex = i;
-	// 		}
-	// 	}
-	// 	m_pointMoving = nearestPointIndex;
-	// }
-	// if( m_pointMoving >= 0 ) {
-	// 	hpvec3 intersecPoint;
-	// 	if( m_plane->intersect( ray, intersecPoint ) ) {
-	// 		m_curve->setControlPoint( m_pointMoving, intersecPoint );
-	// 		m_guiManager.update( m_curve );
-	// 	}
-	// }
+void ToothProfileForm::handleDrag(Ray& ray) {
+	hpvec3 intersectionPoint;
+	if(m_plane->intersect(ray, intersectionPoint)) {
+		m_toothProfile->setPointOfGear(m_currentPointIndex, intersectionPoint);
+		m_guiManager.update(m_toothProfile);
+	}
 }
 
-void ToothProfileForm::handleMoveStop() {
-	// m_pointMoving = -1;
+void ToothProfileForm::handleSelection() {
+	emit selected(this);
+	m_currentPointIndex = -1;
+}
+
+void ToothProfileForm::handleSelection(int pointIndex) {
+	emit selected(this);
+	m_currentPointIndex = pointIndex;
 }

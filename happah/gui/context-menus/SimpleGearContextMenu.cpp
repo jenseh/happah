@@ -1,5 +1,6 @@
 #include "SimpleGearContextMenu.h"
 #include "happah/geometries/BSplineCurve.h"
+#include "happah/geometries/gears/ToothProfile.h"
 
 SimpleGearContextMenu::SimpleGearContextMenu(
 	GUIManager& guiManager,
@@ -19,6 +20,10 @@ SimpleGearContextMenu::SimpleGearContextMenu(
 	addAction(createCurveOfProfileAction);
 	connect(createCurveOfProfileAction, SIGNAL(triggered()), this, SLOT(createCurveOfProfile()));
 
+	QAction* createToothProfileAction = new QAction(tr("Create curve as tooth profile"), this);
+	addAction(createToothProfileAction);
+	connect(createToothProfileAction, SIGNAL(triggered()), this, SLOT(createToothProfile()));
+
 }
 
 SimpleGearContextMenu::~SimpleGearContextMenu() {}
@@ -34,6 +39,12 @@ void SimpleGearContextMenu::createCurveOfProfile() {
 	m_simpleGear->getTraverseProfile(0.0f, *profile);
 	BSplineCurve_ptr gearProfile = BSplineCurve_ptr(profile);
 	m_guiManager.insert(gearProfile, 0x00000006);
+}
+
+void SimpleGearContextMenu::createToothProfile() {
+	ToothProfile* profile = new ToothProfile(m_simpleGear->getToothProfile());
+	ToothProfile_ptr toothProfile = ToothProfile_ptr(profile);
+	m_guiManager.insert(toothProfile, 0x00000006);
 }
 
 void SimpleGearContextMenu::generateDisc() {

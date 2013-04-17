@@ -28,6 +28,7 @@ private slots:
 	void generateDisc();
 	void createDiscGearGrind();
 	void createCurveOfProfile();
+	void createToothProfile();
 
 };
 

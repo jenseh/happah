@@ -12,6 +12,7 @@ FocalSplineForm::FocalSplineForm(GUIManager& guiManager,QWidget* parent)
 	layout->addWidget(createButton);
 	layout->addWidget(updateButton);
 	this->setLayout(layout);
+	m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 0.0f, 1.0f) ));
 
 
 
@@ -60,21 +61,12 @@ void FocalSplineForm::handleSelection(int pointIndex){
 	std::cout<< "CURRENT INDEX : "<< pointIndex << endl;
 }
 void FocalSplineForm::handleDrag(Ray& ray){
-	int dx = 1, dy = 1;
 	if(m_currentPointIndex >= 0){
-	hpvec3 point = m_focalSpline->getCartesianControlPoint(m_currentPointIndex);
-	if (dx < 0)
-	point.x = point.x+0.1;
-	if (dx > 0)
-	point.x = point.x-0.1;
-	if (dy > 0)
-	point.y = point.y+0.1;
-	if (dy < 0)
-	point.y = point.y-0.1;
-	if (point.y < 0.0f)
-	point.y = 0.0f;
-	m_focalSpline->setCartesianControlPoint(m_currentPointIndex,point);
-	update();
+		hpvec3 intersecPoint;
+		if( m_plane->intersect( ray, intersecPoint ) ) {
+			m_focalSpline->setCartesianControlPoint( m_currentPointIndex, intersecPoint );
+			update();
+		}
 	}
 }
 

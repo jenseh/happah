@@ -119,7 +119,6 @@ void FocalSpline::adjustControlPoints(int index){
 		m_phi = m_phiComplete/m_controlPoints->size();
 	}
 	for(int i= 0; i < m_controlPoints->size(); i++){
-		cout << "Came here " << endl;
 		hpreal phiPoint = m_controlPoints->at(index).x;
 		hpreal newPhi = 0.0f;
 		newPhi=phiPoint+(i-index)*m_phi;

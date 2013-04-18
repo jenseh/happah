@@ -1,7 +1,7 @@
 #include "happah/scene/GUIStateNode.h"
 
 GUIStateNode::GUIStateNode(string& name)
-	: m_name(name),m_selectListener(*this) {}
+	: m_name(name),m_selectListener(*this),m_connectListener(*this) {}
 
 GUIStateNode::~GUIStateNode() {}
 
@@ -47,6 +47,35 @@ void GUIStateNode::setLineMesh(LineMesh_ptr lineMesh){
 }
 void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){
 	m_pointCloud = pointCloud;
+}
+
+void GUIStateNode::GUISelectListener::handleSelectEvent(){
+	m_guiStateNode.getForm()->handleSelection();
+}
+
+void GUIStateNode::GUISelectListener::handleSelectEvent(int pointIndex){
+	m_guiStateNode.getForm()->handleSelection(pointIndex);
+}
+
+void GUIStateNode::GUISelectListener::handleDeselectEvent(){
+
+}
+
+void GUIStateNode::GUIConnectListener::handleConnectionEvent(){
+	m_guiStateNode.getForm()->handleConnection();
+}
+
+void GUIStateNode::registerConnectListener(ConnectListener* connectListener){
+	m_connectListeners.push_back(connectListener);
+}
+
+void GUIStateNode::removeConnectListener(ConnectListener* connectListener){
+	m_connectListeners.remove(connectListener);
+}
+
+void GUIStateNode::triggerConnectionEvent(){
+	for(list<ConnectListener*>::iterator i = m_connectListeners.begin(), end = m_connectListeners.end(); i != end; ++i)
+				(*i)->handleConnectionEvent();
 }
 
 // BSplineCurve
@@ -159,17 +188,7 @@ Form* FocalSplineGUIStateNode::getForm() {
 	return m_focalSplineForm;
 }
 
-void FocalSplineGUIStateNode::GUISelectListener::handleSelectEvent(){
-	m_guiStateNode.getForm()->handleSelection();
-}
 
-void FocalSplineGUIStateNode::GUISelectListener::handleSelectEvent(int pointIndex){
-	m_guiStateNode.getForm()->handleSelection(pointIndex);
-}
-
-void FocalSplineGUIStateNode::GUISelectListener::handleDeselectEvent(){
-
-}
 
 // InvoluteGear
 

@@ -48,6 +48,7 @@ typedef shared_ptr<WormGearGrindGUIStateNode> WormGearGrindGUIStateNode_ptr;
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SelectListener.h"
+#include "happah/scene/ConnectListener.h"
 
 class GUIStateNode : public Node {
 public:
@@ -67,7 +68,9 @@ public:
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 	void setLineMesh(LineMesh_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
-
+	void 	registerConnectListener(ConnectListener* selectListener);
+	void	removeConnectListener(ConnectListener* selectListener);
+	void 	triggerConnectionEvent();
 	class GUISelectListener : public SelectListener {
 	public:
 		GUISelectListener(GUIStateNode& guiStateNode) : m_guiStateNode(guiStateNode){}
@@ -81,10 +84,21 @@ public:
 		GUIStateNode& m_guiStateNode;
 	};
 
-virtual GUISelectListener* getSelectListener() { return &m_selectListener; }
+	class GUIConnectListener : public ConnectListener{
+	public:
+		GUIConnectListener(GUIStateNode& guiStateNode) : m_guiStateNode(guiStateNode){}
+		~GUIConnectListener(){}
+		virtual void handleConnectionEvent();
+	private:
+		GUIStateNode& m_guiStateNode;
+	};
 
+	virtual GUISelectListener* getSelectListener() { return &m_selectListener; }
+	virtual GUIConnectListener* getConnectListener() {return &m_connectListener; }
 private:
 	GUISelectListener m_selectListener;
+	GUIConnectListener m_connectListener;
+	list<ConnectListener*> m_connectListeners;
 	string m_name;
 	TriangleMesh_ptr m_triangleMesh;
 	LineMesh_ptr m_lineMesh;

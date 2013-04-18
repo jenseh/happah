@@ -333,3 +333,31 @@ Form* WormGUIStateNode::getForm() {
 	return m_wormForm;
 }
 
+
+Worm_ptr WormGUIStateNode::getWorm() const {
+	return m_worm;
+}
+
+// WormGearGrind
+
+WormGearGrindGUIStateNode::WormGearGrindGUIStateNode(WormGearGrind_ptr wormGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name)
+	:	GUIStateNode(name), m_wormGearGrind(wormGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
+
+WormGearGrindGUIStateNode::~WormGearGrindGUIStateNode() {
+//	if(m_simulationForm->getWormGearGrind() == m_wormGearGrind) //TODO
+//		m_simulationForm->reset();
+}
+
+ContextMenu* WormGearGrindGUIStateNode::getContextMenu() const {
+//	m_simulationContextMenu->setSimulation(m_wormGearGrind); //TODO
+	return m_simulationContextMenu;
+}
+
+shared_ptr<void> WormGearGrindGUIStateNode::getData() const {
+	return m_wormGearGrind;
+}
+
+Form* WormGearGrindGUIStateNode::getForm() {
+//	m_simulationForm->setWormGearGrind(m_wormGearGrind);
+	return m_simulationForm;
+}

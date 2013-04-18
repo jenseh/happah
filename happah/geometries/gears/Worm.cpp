@@ -1,9 +1,10 @@
 #include "happah/geometries/gears/Worm.h"
 
 Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal faceWidth)
-	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations)
+	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations), m_faceWidth(faceWidth)
 {
   m_standardProfile = NULL;
+  m_radius = 3.0 * m_module * m_toothCount / 2.0;
 
   updateValues();
 }
@@ -107,6 +108,10 @@ hpreal Worm::getRotations() {
 	return m_rotations;
 }
 
+hpreal Worm::getRadius() {
+	return m_radius;
+}
+
 void Worm::setToothCount(hpreal toothCount) {
 	m_toothCount = toothCount;
 	updateValues();
@@ -125,7 +130,7 @@ void Worm::setRotations(hpreal rotations) {
 	updateValues();
 }
 
-TriangleMesh* Worm::toTriangleMesh() {
+TriangleMesh_ptr Worm::toTriangleMesh() {
     std::vector<hpvec3>* verticesAndNormals = createVerticesAndNormals();
     std::vector<hpuint>* indices = new std::vector<hpuint>();
     hpuint indexCount =  verticesAndNormals->size() / 2;
@@ -133,21 +138,20 @@ TriangleMesh* Worm::toTriangleMesh() {
     for (hpuint index = 0; index < indexCount; index++) {
     	indices->push_back(index);
     }
-    TriangleMesh* result = new TriangleMesh(verticesAndNormals, indices);
+    TriangleMesh_ptr result = TriangleMesh_ptr(new TriangleMesh(verticesAndNormals, indices));
     return result;
 }
 
-ZCircleCloud* Worm::toZCircleCloud() {
+ZCircleCloud_ptr Worm::toZCircleCloud() {
 	hpreal maxRadius = m_radius + m_standardProfile->getMaxHeight();
 	hpreal startZ = 0.0;
 	hpreal endZ = m_toothCount * m_module * M_PI;
 
 	// Determine resolution (important for following simulations)
 	hpuint resolutionZ = m_toothCount * m_pointsPerTooth;
-
 	hpvec3 referenceDir = hpvec3(1.0, 0.0, 0.0);
 
-	ZCircleCloud* result = new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ, referenceDir);
+	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ, referenceDir));
 	return result;
 }
 

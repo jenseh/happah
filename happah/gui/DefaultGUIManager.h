@@ -10,12 +10,15 @@ using namespace std;
 #include "happah/gui/DrawManager.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/DiscGearGrindWorker.h"
+#include "happah/gui/WormGearGrindWorker.h"
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/SceneGraphExplorerListener.h"
 #include "happah/gui/SceneGraphExplorerPanel.h"
 #include "happah/gui/ToolPanel.h"
 #include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
+#include "happah/geometries/WormGenerator.h"
+#include "happah/simulations/WormGearGrind.h"
 #include "happah/HappahTypes.h"
 #include "happah/HappahConstants.h"
 #include "happah/scene/RayIntersectionVisitor.h"
@@ -29,7 +32,10 @@ public:
 
 	void createDiscGearGrind(SimpleGear_ptr simpleGear);
 	void createDiscGearGrind(SurfaceOfRevolution_ptr disc, SimpleGear_ptr simpleGear);
+	void createWormGearGrind(InvoluteGear_ptr involuteGear);
+	void createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear);
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
+	void generateWorm(InvoluteGear_ptr involuteGear);
 	bool init();
 	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
@@ -37,6 +43,7 @@ public:
 	void insert(FocalSpline_ptr focalSpline, hpuint drawMode = HP_LINE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
 	void insert(DiscGearGrind_ptr discGearGrind);
+	void insert(WormGearGrind_ptr wormGearGrind);
 	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(Plane_ptr plane, BSplineCurve_ptr curve);
 	void insert(Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
@@ -69,6 +76,7 @@ private:
 		~DefaultSceneGraphExplorerListener();
 
 		void createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear);
+		void createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear);
 		void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
 		void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 

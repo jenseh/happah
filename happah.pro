@@ -28,6 +28,7 @@ HEADERS += \
 	happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/gears/Worm.h \
+	happah/geometries/WormGenerator.h \
 	happah/geometries/ZCircleCloud.h \
 \
 	happah/geometries/gears/CylindricalGear.h \
@@ -47,6 +48,7 @@ HEADERS += \
 	happah/gui/VectorInput.h \ 
 	happah/gui/Viewport.h \
 	happah/gui/Worker.h \
+	happah/gui/WormGearGrindWorker.h \
 \
 	happah/gui/context-menus/BSplineCurveContextMenu.h \
 	happah/gui/context-menus/ContextMenu.h \
@@ -112,6 +114,7 @@ HEADERS += \
 	happah/scene/SpherePatchNode.h \
 	happah/scene/ToothProfileNode.h \
 	happah/scene/TriangleMeshNode.h \
+	happah/scene/WormGearGrindNode.h \
 	happah/scene/WormNode.h \
 \
 	happah/simulations/CircularSimulationResult.h \
@@ -148,6 +151,7 @@ SOURCES += \
 	happah/geometries/SurfaceOfRevolution.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/gears/Worm.cpp \
+	happah/geometries/WormGenerator.cpp \
 	happah/geometries/ZCircleCloud.cpp \
 \
 	happah/geometries/gears/CylindricalGear.cpp \
@@ -164,6 +168,7 @@ SOURCES += \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/VectorInput.cpp \
 	happah/gui/Viewport.cpp \
+	happah/gui/WormGearGrindWorker.cpp \
 \
 	happah/gui/context-menus/BSplineCurveContextMenu.cpp \
 	happah/gui/context-menus/ContextMenu.cpp \
@@ -221,6 +226,7 @@ SOURCES += \
 	happah/scene/SpherePatchNode.cpp \
 	happah/scene/ToothProfileNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
+	happah/scene/WormGearGrindNode.cpp \
 	happah/scene/WormNode.cpp \
 \
 	happah/simulations/CircularSimulationResult.cpp \

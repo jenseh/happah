@@ -445,6 +445,10 @@ void SceneManager::insert(DiscGearGrind_ptr discGearGrind, DiscGearGrindGUIState
 	doInsertSimulation<DiscGearGrind, DiscGearGrindNode, DiscGearGrindGUIStateNode>(discGearGrind, discGearGrindGUIStateNode);
 }
 
+void SceneManager::insert(WormGearGrind_ptr wormGearGrind, WormGearGrindGUIStateNode_ptr wormGearGrindGUIStateNode) {
+	doInsertSimulation<WormGearGrind, WormGearGrindNode, WormGearGrindGUIStateNode>(wormGearGrind, wormGearGrindGUIStateNode);
+}
+
 void SceneManager::insert(ToothProfile_ptr toothProfile, ToothProfileGUIStateNode_ptr toothProfileGuiStateNode) {
 	doInsert<ToothProfile, ToothProfileNode, ToothProfileGUIStateNode>(toothProfile, toothProfileGuiStateNode);
 }

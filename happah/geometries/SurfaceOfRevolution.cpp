@@ -2,6 +2,7 @@
 
 SurfaceOfRevolution::SurfaceOfRevolution(std::vector<hpvec2>& heightProfile):
     Geometry(),  m_heightProfile(heightProfile){
+
     // Calculate radius
     m_radius = 0;
     for( std::vector<hpvec2>::iterator it = m_heightProfile.begin(); it != m_heightProfile.end(); ++it) {

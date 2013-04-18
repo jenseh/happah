@@ -93,6 +93,15 @@ hpreal StandardProfile::getMaxHeight() const {
 	return m_module;
 }
 
+
+hpreal StandardProfile::getModule() const {
+	return m_module;
+}
+
+hpreal StandardProfile::getPressureAngle() const {
+	return m_pressureAngle;
+}
+
 void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition) {
     int numberSamples = partition.capacity();
     hpreal halfLength = m_module * M_PI * 0.5; // So tooth is symetric

@@ -14,6 +14,7 @@ using namespace std;
 
 SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sceneGraphExplorerListener, QWidget* parent)
 	: 		QWidget(parent), m_createDiscGearGrindButton(new QPushButton("Create disc gear grind", this)),
+	  		m_createWormGearGrindButton(new QPushButton("Create worm gear grind", this)),
 			m_deleteButton(new QPushButton("Delete", this)), m_listWidget(new QListWidget(this)),
 			m_sceneGraphExplorerListener(sceneGraphExplorerListener) {
 	m_listWidget->setSelectionMode(QAbstractItemView::MultiSelection );
@@ -21,6 +22,7 @@ SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sce
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(m_listWidget);
 	layout->addWidget(m_createDiscGearGrindButton);
+	layout->addWidget(m_createWormGearGrindButton);
 	layout->addWidget(m_deleteButton);
 	setLayout(layout);
 
@@ -28,9 +30,11 @@ SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sce
 
 	connect(m_listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClickedEvent(QListWidgetItem*)));
 	connect(m_createDiscGearGrindButton, SIGNAL(clicked()), this, SLOT(handleCreateDiscGearGrindButtonClickedEvent()));
+	connect(m_createWormGearGrindButton, SIGNAL(clicked()), this, SLOT(handleCreateWormGearGrindButtonClickedEvent()));
 	connect(m_deleteButton, SIGNAL(clicked()), this, SLOT(handleDeleteButtonClickedEvent()));
 
 	m_createDiscGearGrindButton->setEnabled(false);
+	m_createWormGearGrindButton->setEnabled(false);
 }
 
 SceneGraphExplorerPanel::~SceneGraphExplorerPanel() {}
@@ -85,6 +89,26 @@ void SceneGraphExplorerPanel::handleCreateDiscGearGrindButtonClickedEvent() {
 	}
 }
 
+void SceneGraphExplorerPanel::handleCreateWormGearGrindButtonClickedEvent() {
+	WormGUIStateNode_ptr wormGUIStateNode;
+	Worm_ptr worm;
+
+	if(getSelected<WormGUIStateNode>(wormGUIStateNode)){
+		InvoluteGearGUIStateNode_ptr gearGUIStateNode;
+		InvoluteGear_ptr gear;
+
+		// We only allow InvoluteGears for WormGearGrind, no SimpleGears!
+		if(getSelected<InvoluteGearGUIStateNode>(gearGUIStateNode)) {
+			gear = gearGUIStateNode->getInvoluteGear();
+		} else{
+			// TODO: Throw exception
+			return;
+		}
+		worm = wormGUIStateNode->getWorm();
+		m_sceneGraphExplorerListener.createWormGearGrind(worm, gear);
+	}
+}
+
 void SceneGraphExplorerPanel::handleDeleteButtonClickedEvent() {
 	QList<QListWidgetItem*> selectedItems = m_listWidget->selectedItems();
 	vector<GUIStateNode_ptr> selectedGUIStateNodes;
@@ -96,15 +120,23 @@ void SceneGraphExplorerPanel::handleDeleteButtonClickedEvent() {
 
 void SceneGraphExplorerPanel::handleItemClickedEvent(QListWidgetItem* item) {
 	m_sceneGraphExplorerListener.handleGUIStateNodeSelectedEvent(m_guiStateNodesByItem[item]);
-	// Check selection for DiscGearGrind
+
+	// Check selection for DiscGearGrind and WormgearGrind
 	m_createDiscGearGrindButton->setEnabled(false);
+	m_createWormGearGrindButton->setEnabled(false);
+
+	// Define the criteria for when the "create disc gear grind buttons" are enabled
+	// TODO: Would be better to source this out to the respective classes
 	if( m_listWidget->selectedItems().size() == 2 ) {
-		DiscGUIStateNode_ptr disc;
-		if( getSelected<DiscGUIStateNode>(disc) ) {
-			SimpleGearGUIStateNode_ptr simpleGear;
-			InvoluteGearGUIStateNode_ptr involuteGear;
-			if( getSelected<SimpleGearGUIStateNode>(simpleGear) || getSelected<InvoluteGearGUIStateNode>(involuteGear)) {
+		SimpleGearGUIStateNode_ptr simpleGear;
+		InvoluteGearGUIStateNode_ptr involuteGear;
+		if( getSelected<SimpleGearGUIStateNode>(simpleGear) || getSelected<InvoluteGearGUIStateNode>(involuteGear)) {
+			DiscGUIStateNode_ptr disc;
+			WormGUIStateNode_ptr worm;
+			if (getSelected<DiscGUIStateNode>(disc)) {
 				m_createDiscGearGrindButton->setEnabled(true);
+			} else if( getSelected<WormGUIStateNode>(worm) ) {
+				m_createWormGearGrindButton->setEnabled(true);
 			}
 		}
 	}

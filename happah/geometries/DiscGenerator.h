@@ -1,5 +1,5 @@
-#ifndef GRINDINGWHEEL_H
-#define GRINDINGWHEEL_H
+#ifndef DISCGENERATOR_H
+#define DISCGENERATOR_H
 #include "happah/geometries/gears/CylindricalGear.h"
 #include "happah/geometries/gears/StandardProfile.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
@@ -12,4 +12,4 @@ public:
     static SurfaceOfRevolution_ptr generateDiscFrom(StandardProfile profile);
 };
 
-#endif // GRINDINGWHEEL_H
+#endif // DISCGENERATOR_H

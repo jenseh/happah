@@ -1,4 +1,3 @@
-
 #include "DiscGearGrindWorker.h"
 #include <QMetaType>
 

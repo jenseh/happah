@@ -1,10 +1,9 @@
 #include "happah/geometries/gears/Worm.h"
 
-Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal faceWidth)
-	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations), m_faceWidth(faceWidth)
+Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal radius, hpreal faceWidth)
+	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations), m_radius(radius), m_faceWidth(faceWidth)
 {
   m_standardProfile = NULL;
-  m_radius = 3.0 * m_module * m_toothCount / 2.0;
 
   updateValues();
 }
@@ -51,11 +50,8 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals() {
           hpreal radiusNZ = m_radius + profilePointNZ.y;
           hpreal radiusNN = m_radius + profilePointNN.y;
           
-          hpreal posZTooth = tooth * m_module * M_PI;
-          hpreal nextPosZTooth = (tooth + (hpuint) nextPointRatio) * m_module * M_PI;
-          
-          hpreal posZ_RZ = posZTooth + profileTooth.at(posZIdx).x;
-          hpreal posZ_RN = nextPosZTooth + profileTooth.at((posZIdx + 1) % m_pointsPerTooth).x;
+          hpreal posZ_RZ = m_faceWidth * (tooth 							  + profileTooth.at(posZIdx).x 						  	/ (m_module * M_PI)) / m_toothCount;
+          hpreal posZ_RN = m_faceWidth * ((tooth + (hpuint) nextPointRatio) + profileTooth.at((posZIdx + 1) % m_pointsPerTooth).x / (m_module * M_PI)) / m_toothCount;
           
           hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ);
           hpvec3 pointRN = hpvec3(radiusRN * cos(angle),     radiusRN * sin(angle),     posZ_RN);

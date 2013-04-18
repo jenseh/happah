@@ -16,11 +16,12 @@
 
 class Worm : public Geometry {
 public:
-  Worm(hpuint toothCount = 4,
+  Worm(hpuint toothCount = 2,
       hpreal module = 0.13,
       hpreal pressureAngle = 20.0 / 360.0 * 2.0 * M_PI,
       hpuint rotations = 1,
-      hpreal faceWidth = 0.2);
+      hpreal radius = 1.0,
+      hpreal faceWidth = 2.5);
 
   /**
    * @brief Worm constructor setting the height profile and calculating the radius.
@@ -52,7 +53,6 @@ private:
   hpreal m_module;
   hpreal m_pressureAngle;
   hpuint m_rotations;
-  
   hpreal m_radius;
   hpreal m_faceWidth; //TODO: use!
 

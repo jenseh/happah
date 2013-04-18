@@ -102,7 +102,9 @@ hpreal StandardProfile::getPressureAngle() const {
 	return m_pressureAngle;
 }
 
-void StandardProfile::getProfilePartition(std::vector<glm::vec2>& partition) {
+
+// Returns a vector of 2d profile points of one partition. x values are in the range [0; module*PI]
+void StandardProfile::getProfilePartition(std::vector<hpvec2>& partition) {
     int numberSamples = partition.capacity();
     hpreal halfLength = m_module * M_PI * 0.5; // So tooth is symetric
 	for (int i = 0; i < numberSamples; i++) {

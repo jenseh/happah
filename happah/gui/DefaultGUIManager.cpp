@@ -276,10 +276,10 @@ void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 
 void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
 	if(drawMode & HP_LINE_MESH) {
-		doInsert1D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm());
+		doInsert1D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm, ToothProfileContextMenu>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm(), m_mainWindow.getToothProfileContextMenu());
 	}
 	if(drawMode & HP_POINT_CLOUD) {
-		doInsert0D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm());
+		doInsert0D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm, ToothProfileContextMenu>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm(), m_mainWindow.getToothProfileContextMenu());
 	}
 }
 

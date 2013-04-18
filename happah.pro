@@ -55,6 +55,7 @@ HEADERS += \
 	happah/gui/context-menus/PlaneContextMenu.h \
 	happah/gui/context-menus/SimpleGearContextMenu.h \
 	happah/gui/context-menus/SimulationContextMenu.h \
+	happah/gui/context-menus/ToothProfileContextMenu.h \
 \
 	happah/gui/forms/BSplineCurveForm.h \
 	happah/gui/forms/DiscForm.h \
@@ -170,6 +171,7 @@ SOURCES += \
 	happah/gui/context-menus/PlaneContextMenu.cpp \
 	happah/gui/context-menus/SimpleGearContextMenu.cpp \
 	happah/gui/context-menus/SimulationContextMenu.cpp \
+	happah/gui/context-menus/ToothProfileContextMenu.cpp \
 \
 	happah/gui/forms/BSplineCurveForm.cpp \
 	happah/gui/forms/DiscForm.cpp \

@@ -2,21 +2,19 @@
 #include "happah/geometries/gears/SimpleGear.h"
 
 
-SimpleGear::SimpleGear(ToothProfile *toothProfile, hpreal helixAngle, hpreal faceWidth) :
-	m_toothProfile(toothProfile), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
+SimpleGear::SimpleGear(const ToothProfile& toothProfile, hpreal helixAngle, hpreal faceWidth) :
+	m_toothProfile(ToothProfile_ptr(new ToothProfile(toothProfile))), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
 SimpleGear::SimpleGear(const BSplineCurve& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
 	m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
-	m_toothProfile = new ToothProfile(toothProfileCurve);
+	m_toothProfile = ToothProfile_ptr(new ToothProfile(toothProfileCurve));
 }
 
 SimpleGear::SimpleGear(const SimpleGear& other)
-	: m_toothProfile(new ToothProfile(*(other.m_toothProfile))), m_helixAngle(other.m_helixAngle), m_faceWidth(other.m_faceWidth) {}
+	: m_toothProfile(ToothProfile_ptr(new ToothProfile(*(other.m_toothProfile)))), m_helixAngle(other.m_helixAngle), m_faceWidth(other.m_faceWidth) {}
 
-SimpleGear::~SimpleGear(){
-	delete m_toothProfile; //TODO is this correct here?
-}
+SimpleGear::~SimpleGear() {}
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
@@ -27,7 +25,7 @@ void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve& gearProfile) {
 }
 
 //TODO: This method doesn't suit in here! Move it to BSplineGear or somewhere else!!!
-ToothProfile* SimpleGear::getCopyWithBeginOfToothAtTop() const {
+ToothProfile_ptr SimpleGear::getCopyWithBeginOfToothAtTop() const {
 	return m_toothProfile;
 	// We assume, that the given Curve lies only in the XY-Plane,
 	// and we turn it in a way, that the curve starts at the positive y-axis

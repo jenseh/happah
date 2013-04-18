@@ -8,6 +8,7 @@
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
+#include "happah/math/Ray.h"
 
 class BSplineCurve {
 protected:
@@ -63,6 +64,7 @@ public:
 	std::vector<hpvec3> getControlPoints() const;
 	std::vector<hpreal> getKnots() const;
 	int getDegree() const;
+	void getIntersectionPointsWithRay( const Ray& ray, std::vector<hpvec3>& intersectionPoints ) const;
 	unsigned int getNumberOfControlPoints() const;
 	void getParameterRange( float& t_low, float& t_high ) const;
 	bool getPeriodic() const;
@@ -87,6 +89,12 @@ public:
 	void setUniform( bool uniform );
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
+
+
+	//TODO: methods and things below here are only here for short testing time!
+	//=> remove them!
+	void drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints);
+	std::vector<hpvec3> m_furtherDrawPoints;
 
 
 };

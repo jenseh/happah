@@ -41,6 +41,8 @@ BSplineCurve::BSplineCurve( const std::vector<hpvec2>& controlPoints, const std:
 	}
 	m_periodic = false;
 	m_uniform = false;
+
+	calculateNormalization();
 }
 
 BSplineCurve::~BSplineCurve() {
@@ -183,6 +185,15 @@ std::vector<hpreal> BSplineCurve::getKnots() const {
 
 int BSplineCurve::getDegree() const {
 	return m_degree;
+}
+
+void BSplineCurve::getIntersectionPointsWithRay( const Ray& ray, std::vector<hpvec3>& intersectionPoints ) const {
+	intersectionPoints.resize(0);
+	for(std::vector<hpvec3>::const_iterator it = m_controlPoints.begin(), end = m_controlPoints.end(); it != end; ++it) {
+		hpvec2 intersectionPoint;
+		if(ray.intersect(hpvec2(*it), hpvec2(*(it+1)), intersectionPoint))
+			intersectionPoints.push_back(hpvec3(intersectionPoint, 0.0f));
+	}
 }
 
 unsigned int BSplineCurve::getNumberOfControlPoints() const {
@@ -478,7 +489,6 @@ LineMesh* BSplineCurve::toLineMesh() {
 
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
-
 	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
 		if( m_clamped ) {
 			std::vector<hpvec3> knots = knotRefinement( 0.05f );
@@ -518,7 +528,6 @@ LineMesh* BSplineCurve::toLineMesh() {
 		indices->push_back( 0 );
 		indices->push_back( 0 );
 	}
-
 	// control polygon
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
@@ -576,6 +585,21 @@ PointCloud* BSplineCurve::toPointCloud() {
 	else {
 		// TODO remove workaround and find bug when adding empty PointCloud
 		std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>(m_controlPoints);
+
+		//TODO: lines below unto "eeeeennnnnddddd" are only here for short testing time!
+		//=> remove them!
+		float start, stop;
+		getParameterRange(start, stop);
+		hpreal additionalValue = start + (stop - start) / 2.0f;
+		hpvec3 addPoint = getValueAt(additionalValue);
+		verticesAndNormals->push_back(addPoint);
+		cerr << "BSplineCurve::toPointCloud has inserted additional point at value " << additionalValue << ", while start = " << start << " and end = " << stop << endl;
+
+		for(hpuint i = 0; i < m_furtherDrawPoints.size(); ++i) {
+			verticesAndNormals->push_back(m_furtherDrawPoints[i]);
+		}
+
+		//eeeeennnnnddddd
 		return new PointCloud(verticesAndNormals);
 	}
 }
@@ -730,4 +754,9 @@ void BSplineCurve::refine(
 	points.swap(refinedPoints);
 	knots.swap(refinedKnots);
 
+}
+
+
+void BSplineCurve::drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints) {
+	m_furtherDrawPoints = std::vector<hpvec3>(additionalPoints);
 }

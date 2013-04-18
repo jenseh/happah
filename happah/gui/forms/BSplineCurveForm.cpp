@@ -139,10 +139,33 @@ BSplineCurve_ptr BSplineCurveForm::getCurve() const {
 }
 
 void BSplineCurveForm::handleRay(Ray& ray) {
-	hpvec3 intersecPoint;
-	if( m_plane->intersect( ray, intersecPoint ) ) {
-		m_controlPointInput->setValue( intersecPoint );
-		addPoint();
+	// 	hpvec3 intersecPoint;
+	// if( m_plane->intersect( ray, intersecPoint ) ) {
+	// 	m_controlPointInput->setValue( intersecPoint );
+	// 	addPoint();
+	// }
+	//TODO: remove following code and uncomment the lines above!!!
+	//Code should only stay here for short time of testing!
+	if(m_currentPointIndex < 0) {
+		hpvec3 intersecPoint;
+		if( m_plane->intersect( ray, intersecPoint ) ) {
+			Ray ray(hpvec3(0.0f, 0.0f, 0.0f), intersecPoint);
+			std::vector<hpvec3> intersectionPoints;
+			m_curve->getIntersectionPointsWithRay(ray, intersectionPoints);
+			intersectionPoints.push_back(ray.getOrigin());
+			for(hpuint i = 0; i < 8; ++i) {
+				intersectionPoints.push_back(ray.getOrigin() + (float)i * ray.getDirection() / 5.0f);
+			}
+			m_curve->drawAdditionalPoints(intersectionPoints);
+			m_guiManager.update( m_curve );
+		}
+	} else {
+		hpvec3 intersecPoint;
+		if( m_plane->intersect( ray, intersecPoint ) ) {
+			m_controlPointInput->setValue( intersecPoint );
+			addPoint();
+		}
+		m_currentPointIndex = -1;
 	}
 }
 

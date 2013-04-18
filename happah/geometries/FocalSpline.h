@@ -23,6 +23,12 @@ public:
 	void setCartesianControlPoint(hpuint index, hpvec3 controlPoint);
 	hpvec3 getPolarControlPoint(hpuint index);
 	hpvec3 getCartesianControlPoint(hpuint index);
+	void addControlPoint();
+	void addControlPoint(hpvec3);
+	void removeControlPoint(int index);
+	int getDegree();
+	void setDetail(int detail);
+
 
 
 private:

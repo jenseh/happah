@@ -7,3 +7,4 @@ Form::~Form() {}
 
 void Form::handleSelection(){}
 void Form::handleDrag(Ray& ray){}
+void Form::handleRay(Ray& ray){}

@@ -4,7 +4,7 @@
 using namespace std;
 
 FocalSpline::FocalSpline()
-	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_radius(1.0f),m_detail(50),m_currentDegree(0),m_phi(0),m_fraction(0) {
+	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_radius(1.0f),m_detail(50),m_currentDegree(0),m_phi(0),m_fraction(0),m_phiComplete(0) {
 	m_controlPoints = new vector<hpvec3>;
 	m_generatedSpline = new vector<hpvec3>;
 	m_currentControlPoints = new vector<hpvec3>;
@@ -19,6 +19,7 @@ FocalSpline::~FocalSpline() {
 void FocalSpline::setPolarControlPoint(hpuint index, hpvec3 controlPoint){
 	m_controlPoints->at(index)=controlPoint;
 	adjustControlPoints(index);
+	update();
 }
 
 hpvec3 FocalSpline::getPolarControlPoint(hpuint index){
@@ -29,6 +30,7 @@ hpvec3 FocalSpline::getPolarControlPoint(hpuint index){
 void FocalSpline::setCartesianControlPoint(hpuint index, hpvec3 controlPoint){
 	m_controlPoints->at(index)=cartesianToPolarCoordinates(controlPoint);
 	adjustControlPoints(index);
+	update();
 }
 
 hpvec3 FocalSpline::getCartesianControlPoint(hpuint index){
@@ -37,14 +39,72 @@ hpvec3 FocalSpline::getCartesianControlPoint(hpuint index){
 
 void FocalSpline::init(int degree){
 	hpreal radius = 3.0f;
-	m_phi = (M_PI/(float)(degree))/2.0f;
-	for (int i = 0; i <= degree ; i++){
-		hpvec3 controlPoint = hpvec3(i*m_phi,0.0f,radius);
-		m_controlPoints->push_back(controlPoint);
+	if (degree  <1){
+		update();
+		return;
 	}
-	m_phiComplete = m_controlPoints->at(degree).x - m_controlPoints->at(0).x;
-	cout << "phiComplete: " << m_phiComplete << endl;
+	else
+	{
+			m_phi = (M_PI/(float)(degree))/2.0f;
+		for (int i = 0; i <= degree ; i++){
+			hpvec3 controlPoint = hpvec3(i*m_phi,0.0f,radius);
+			m_controlPoints->push_back(controlPoint);
+		}
+		if (m_controlPoints->size() > 0){
+		m_phiComplete = m_controlPoints->at(degree).x - m_controlPoints->at(0).x;
+		update();
+		}
+	}
+}
+
+void FocalSpline::addControlPoint(){
+	hpvec3 newPoint;
+	hpreal newPhi;
+	hpreal newRadius;
+
+	if (m_controlPoints->size()<1){
+		newPhi = M_PI/4.0f;
+		newRadius = m_radius*3;
+		m_phi = newPhi;
+
+	}
+	else{
+	newPhi= m_controlPoints->back().x + m_phi;
+	if  (newPhi == 0){
+		newPhi = M_PI/4.0f;
+		m_phi = newPhi;
+	}
+	newRadius = m_controlPoints->back().z;
+	if (newRadius == 0)
+		newRadius== m_radius*3;
+	}
+
+	newPoint = hpvec3(newPhi,0,newRadius);
+	m_controlPoints->push_back(newPoint);
+	if (m_controlPoints->size() > 1){
+	adjustControlPoints(m_controlPoints->size()-1);
+	}
 	update();
+}
+
+void FocalSpline::addControlPoint(hpvec3 point){
+	hpvec3 newPoint = cartesianToPolarCoordinates(point);
+	int insertionIndex;
+
+	int smaller = 0;
+	for(int i=0; i < m_controlPoints->size(); i++){
+		if (newPoint.x < m_controlPoints->at(i).x){
+			m_controlPoints->insert(m_controlPoints->begin()+i,newPoint);
+			adjustControlPoints(i);
+			break;
+		}
+	if (newPoint.x > m_controlPoints->back().x){
+		m_controlPoints->push_back(newPoint);
+		adjustControlPoints(m_controlPoints->size()-1);
+	}
+	}
+	update();
+
 }
 
 void FocalSpline::update(){
@@ -54,6 +114,10 @@ void FocalSpline::update(){
 }
 
 void FocalSpline::generateFocalSpline(){
+	if (m_controlPoints->size() <1){
+		return;
+	}
+
 	m_generatedSpline->clear();
 	m_fraction = 0.0f;
 
@@ -136,6 +200,7 @@ LineMesh* FocalSpline::toLineMesh(){
 
 	//draw controlpolygon
 	int i = 0;
+	if (m_controlPoints->size()>0){
 	for(vector<hpvec3>::iterator it = m_controlPoints->begin(); it != m_controlPoints->end(); ++it){
 			hpvec3 vertexPosition = polarToCartesianCoordinates(*it);
 			hpvec3 vertexNormal = vertexPosition - m_center;
@@ -148,7 +213,7 @@ LineMesh* FocalSpline::toLineMesh(){
 			i++;
 		}
 	indices->pop_back();
-
+	}
 	// draw Circle
 	int iTemp = i;
 	int detail = 30;
@@ -167,7 +232,7 @@ LineMesh* FocalSpline::toLineMesh(){
 	}
 	indices->push_back(iTemp);
 	//draw generated Spline
-	{
+	if (m_generatedSpline->size()>0){
 		for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
 				hpvec3 vertexPosition = polarToCartesianCoordinates(*it);
 				hpvec3 vertexNormal = vertexPosition - m_center;
@@ -186,10 +251,12 @@ LineMesh* FocalSpline::toLineMesh(){
 
 PointCloud* FocalSpline::toPointCloud(){
 	std::vector<hpvec3>* vertices = new std::vector<hpvec3>;
+	if (m_controlPoints->size()>0){
 	for(vector<hpvec3>::iterator it = m_controlPoints->begin(); it != m_controlPoints->end(); ++it){
 		vertices->push_back(polarToCartesianCoordinates(*it));
 
 
+	}
 	}
 	/*
 	// Draw Generated Spline as Points
@@ -197,6 +264,8 @@ PointCloud* FocalSpline::toPointCloud(){
 			vertices->push_back(polarToCartesianCoordinates(*it));
 	}
 	*/
+	// draw Center
+	vertices->push_back(m_center);
 	return new PointCloud(vertices);
 }
 
@@ -216,14 +285,15 @@ hpvec3 FocalSpline::cartesianToPolarCoordinates(hpvec3 cartesian){
 	}
 	else {
 		if (x>0.0f){
-			atan(y/x);
+			phi=2*M_PI+atan(y/x);
 		}
 		if (x<0.0f){
-			phi = atan(y/x) - M_PI;
+			phi = atan(y/x) + M_PI;
 		}
 		if (x==0.0f){
-			phi= -M_PI/2.0f;
+			phi= 3*M_PI/2.0f;
 		}
+
 	}
 
 	hpvec3 polar = hpvec3(phi,0.0f,radius);
@@ -236,4 +306,22 @@ hpvec3 FocalSpline::polarToCartesianCoordinates(hpvec3 polar){
 	cartesian.y = polar.z * sin(polar.x);
 	cartesian.z = 0.0f;
 	return cartesian;
+}
+
+int FocalSpline::getDegree(){
+	return m_controlPoints->size()-1;
+}
+
+void FocalSpline::removeControlPoint(int index){
+
+	m_controlPoints->erase(m_controlPoints->begin()+index);
+	if (index > 1)
+		adjustControlPoints(index-1);
+	update();
+
+}
+
+void FocalSpline::setDetail(int detail){
+	m_detail = detail;
+	update();
 }

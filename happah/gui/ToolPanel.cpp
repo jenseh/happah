@@ -109,14 +109,10 @@ void ToolPanel::handleButtonClickedEvent() {
 }
 
 void ToolPanel::handleMouseClickEvent(Ray& ray) {
-	if( m_forms->currentWidget() == m_bSplineCurveForm ) {
-		m_bSplineCurveForm->handleRay(ray);
-	} else if( m_forms->currentWidget() == m_toothProfileForm ) {
-		m_toothProfileForm->handleRay(ray);
-	}
+	Form* form = dynamic_cast<Form*>(m_forms->currentWidget());
+	form->handleRay(ray);
+
 }
-
-
 void ToolPanel::handleDragEvent(Ray& ray){
 	Form* form = dynamic_cast<Form*>(m_forms->currentWidget());
 	form->handleDrag(ray);

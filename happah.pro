@@ -70,6 +70,7 @@ HEADERS += \
 \
 	happah/gui/widgets/LabeledIntegerSlider.h \
 	happah/gui/widgets/LabeledRealValuedSlider.h \
+	happah/gui/widgets/LabeledIntegerSpinBox.h\
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/BSphere.h \ 
@@ -185,6 +186,7 @@ SOURCES += \
 \
 	happah/gui/widgets/LabeledIntegerSlider.cpp \
 	happah/gui/widgets/LabeledRealValuedSlider.cpp \
+	happah/gui/widgets/LabeledIntegerSpinBox.cpp\
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/BSphere.cpp \

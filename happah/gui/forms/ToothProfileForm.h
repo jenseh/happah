@@ -34,6 +34,7 @@ private slots:
 
 signals:
 	void selected(Form* form);
+	void toothProfileChanged(ToothProfile_ptr toothProfile);
 
 };
 

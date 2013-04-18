@@ -282,17 +282,27 @@ Form* SpherePatchGUIStateNode::getForm() {
 
 // ToothProfile
 
-ToothProfileGUIStateNode::ToothProfileGUIStateNode(
-		ToothProfile_ptr toothProfile,
-		ToothProfileForm* toothProfileForm,
-		string name)
-	: GUIStateNode(name), m_toothProfile(toothProfile), m_toothProfileForm(toothProfileForm) {}
+ToothProfileGUIStateNode::ToothProfileGUIStateNode (
+	ToothProfile_ptr toothProfile,
+	ToothProfileForm* toothProfileForm,
+	ToothProfileContextMenu* toothProfileContextMenu,
+	string name
+) : GUIStateNode(name),
+	m_toothProfile(toothProfile),
+	m_toothProfileForm(toothProfileForm),
+	m_toothProfileContextMenu(toothProfileContextMenu) {
+}
 
 ToothProfileGUIStateNode::~ToothProfileGUIStateNode()
 {
 	if(m_toothProfileForm->getToothProfile() == m_toothProfile) {
 		m_toothProfileForm->reset();
 	}
+}
+
+ContextMenu* ToothProfileGUIStateNode::getContextMenu() const {
+	m_toothProfileContextMenu->setToothProfile(m_toothProfile);
+	return m_toothProfileContextMenu;
 }
 
 shared_ptr<void> ToothProfileGUIStateNode::getData() const {

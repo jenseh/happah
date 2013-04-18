@@ -209,7 +209,7 @@ private:
 
 class DiscGUIStateNode : public GUIStateNode {
 public:
-    DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
+	DiscGUIStateNode(SurfaceOfRevolution_ptr disc, DiscForm* discForm, DiscContextMenu* discContextMenu, string name);
 	~DiscGUIStateNode();
 
 	ContextMenu* getContextMenu() const;
@@ -218,7 +218,7 @@ public:
 	SurfaceOfRevolution_ptr getSurfaceOfRevolution()const;
 
 private:
-    SurfaceOfRevolution_ptr m_surfaceOfRevolution;
+	SurfaceOfRevolution_ptr m_surfaceOfRevolution;
 	DiscForm* m_discForm;
 	DiscContextMenu* m_discContextMenu;
 
@@ -242,17 +242,20 @@ private:
 };
 
 #include "happah/geometries/gears/ToothProfile.h"
+#include "happah/gui/context-menus/ToothProfileContextMenu.h"
 #include "happah/gui/forms/ToothProfileForm.h"
 
 class ToothProfileGUIStateNode : public GUIStateNode {
 public:
-	ToothProfileGUIStateNode(ToothProfile_ptr toothProfile, ToothProfileForm* toothProfileForm, string name);
+	ToothProfileGUIStateNode(ToothProfile_ptr toothProfile, ToothProfileForm* toothProfileForm, ToothProfileContextMenu* toothProfileContextMenu, string name);
 	~ToothProfileGUIStateNode();
 	
+	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 private:
 	ToothProfile_ptr m_toothProfile;
+	ToothProfileContextMenu* m_toothProfileContextMenu;
 	ToothProfileForm* m_toothProfileForm;
 };
 

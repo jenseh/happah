@@ -16,7 +16,8 @@ ToothProfile::ToothProfile(const BSplineCurve& toothProfile) : m_toothProfileCur
 	}
 }
 
-ToothProfile::~ToothProfile() {}
+ToothProfile::~ToothProfile() {
+}
 
 hpreal ToothProfile::getAngularPitch() const {
 	hpreal startValue, stopValue;

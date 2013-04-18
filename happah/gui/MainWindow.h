@@ -13,6 +13,7 @@
 #include "happah/gui/context-menus/DiscContextMenu.h"
 #include "happah/gui/context-menus/PlaneContextMenu.h"
 #include "happah/gui/context-menus/SimpleGearContextMenu.h"
+#include "happah/gui/context-menus/ToothProfileContextMenu.h"
 
 class DrawManager;
 class InvoluteGearContextMenu;
@@ -34,6 +35,7 @@ public:
 	PlaneContextMenu* getPlaneContextMenu();
 	SimpleGearContextMenu* getSimpleGearContextMenu();
 	SimulationContextMenu* getSimulationContextMenu();
+	ToothProfileContextMenu* getToothProfileContextMenu();
 
 protected:
 	void keyPressEvent(QKeyEvent* event);
@@ -52,7 +54,7 @@ private:
 	PlaneContextMenu* m_planeContextMenu;
 	SimpleGearContextMenu* m_simpleGearContextMenu;
 	SimulationContextMenu* m_simulationContextMenu;
-
+	ToothProfileContextMenu* m_toothProfileContextMenu;
 
 };
 

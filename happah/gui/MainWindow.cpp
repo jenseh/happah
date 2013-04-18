@@ -36,6 +36,8 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	m_planeContextMenu = new PlaneContextMenu(guiManager, this);
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
 	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
+	m_toothProfileContextMenu = new ToothProfileContextMenu(guiManager, this);
+
 	setCentralWidget(centralWidget);
 }
 
@@ -75,6 +77,10 @@ SimpleGearContextMenu* MainWindow::getSimpleGearContextMenu() {
 
 SimulationContextMenu* MainWindow::getSimulationContextMenu() {
 	return m_simulationContextMenu;
+}
+
+ToothProfileContextMenu* MainWindow::getToothProfileContextMenu() {
+	return m_toothProfileContextMenu;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

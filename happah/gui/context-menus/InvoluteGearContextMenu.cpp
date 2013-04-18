@@ -1,7 +1,8 @@
+#include "happah/gui/context-menus/InvoluteGearContextMenu.h"
+
 #include <memory>
 #include <QAction>
 
-#include "happah/gui/context-menus/InvoluteGearContextMenu.h"
 
 InvoluteGearContextMenu::InvoluteGearContextMenu(
 	GUIManager& guiManager,
@@ -16,6 +17,10 @@ InvoluteGearContextMenu::InvoluteGearContextMenu(
 	QAction* generateDiscAction = new QAction(tr("Generate disc"), this);
 	addAction(generateDiscAction);
 	connect(generateDiscAction, SIGNAL(triggered()), this, SLOT(generateDisc()));
+
+	QAction* generateWormAction = new QAction(tr("Generate worm"), this);
+	addAction(generateWormAction);
+	connect(generateWormAction, SIGNAL(triggered()), this, SLOT(generateWorm()));
 
 	QAction* createSimpleGearAction = new QAction(tr("Create simple gear"), this);
 	addAction(createSimpleGearAction);
@@ -32,6 +37,10 @@ void InvoluteGearContextMenu::createSimpleGear() {
 
 void InvoluteGearContextMenu::generateDisc() {
 	m_guiManager.generateDisc(m_involuteGear);
+}
+
+void InvoluteGearContextMenu::generateWorm() {
+	m_guiManager.generateWorm(m_involuteGear);
 }
 
 void InvoluteGearContextMenu::createDiscGearGrind() {

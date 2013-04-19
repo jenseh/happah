@@ -33,7 +33,7 @@ private:
 private slots:
 	void changeModule(hpreal);
 	void changePressureAngle(hpreal);
-	void changeToothCount(hpreal); //TODO: Change to hpuint
+	void changeToothCount(hpreal);
 	void changeRotations(hpreal);
 	void createWorm();
 

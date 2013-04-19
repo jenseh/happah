@@ -1,7 +1,7 @@
 #include "happah/geometries/gears/Worm.h"
 
-Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal radius, hpreal faceWidth)
-	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations), m_radius(radius), m_faceWidth(faceWidth)
+Worm::Worm(hpuint toothCount, hpreal module, hpreal pressureAngle, hpuint rotations, hpreal baseRadius, hpreal faceWidth)
+	: Geometry(), m_toothCount(toothCount), m_module(module), m_pressureAngle(pressureAngle), m_rotations(rotations), m_baseRadius(baseRadius), m_faceWidth(faceWidth)
 {
   m_standardProfile = NULL;
 
@@ -45,12 +45,12 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals() {
           hpvec2 profilePointNZ = profileTooth.at((posZIdx + nextAngleOffset) % m_pointsPerTooth);
           hpvec2 profilePointNN = profileTooth.at((posZIdx + nextAngleOffset + 1) % m_pointsPerTooth);
           
-          hpreal radiusRZ = m_radius + profilePointRZ.y;
-          hpreal radiusRN = m_radius + profilePointRN.y;
-          hpreal radiusNZ = m_radius + profilePointNZ.y;
-          hpreal radiusNN = m_radius + profilePointNN.y;
+          hpreal radiusRZ = m_baseRadius + profilePointRZ.y;
+          hpreal radiusRN = m_baseRadius + profilePointRN.y;
+          hpreal radiusNZ = m_baseRadius + profilePointNZ.y;
+          hpreal radiusNN = m_baseRadius + profilePointNN.y;
           
-          hpreal posZ_RZ = m_faceWidth * (tooth 							  + profileTooth.at(posZIdx).x 						  	/ (m_module * M_PI)) / m_toothCount;
+          hpreal posZ_RZ = m_faceWidth * (tooth 							+ profileTooth.at(posZIdx).x 						  	/ (m_module * M_PI)) / m_toothCount;
           hpreal posZ_RN = m_faceWidth * ((tooth + (hpuint) nextPointRatio) + profileTooth.at((posZIdx + 1) % m_pointsPerTooth).x / (m_module * M_PI)) / m_toothCount;
           
           hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ);
@@ -104,8 +104,12 @@ hpreal Worm::getRotations() {
 	return m_rotations;
 }
 
-hpreal Worm::getRadius() {
-	return m_radius;
+hpreal Worm::getBaseRadius() {
+	return m_baseRadius;
+}
+
+hpreal Worm::getMaxRadius() {
+	return m_baseRadius + m_module;
 }
 
 void Worm::setToothCount(hpreal toothCount) {
@@ -139,7 +143,7 @@ TriangleMesh_ptr Worm::toTriangleMesh() {
 }
 
 ZCircleCloud_ptr Worm::toZCircleCloud() {
-	hpreal maxRadius = m_radius + m_standardProfile->getMaxHeight();
+	hpreal maxRadius = m_baseRadius + m_standardProfile->getMaxHeight();
 	hpreal startZ = 0.0;
 	hpreal endZ = m_toothCount * m_module * M_PI;
 
@@ -151,8 +155,7 @@ ZCircleCloud_ptr Worm::toZCircleCloud() {
 	return result;
 }
 
-void Worm::updateValues(){
-	m_radius = 3.0 * m_module * m_toothCount / 2.0;
+void Worm::updateValues() {
     if( m_standardProfile != NULL )
     	delete m_standardProfile;
     m_standardProfile = new StandardProfile(m_module, m_pressureAngle, 0.0, 0.0);

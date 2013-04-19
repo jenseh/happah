@@ -6,7 +6,7 @@ WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteG
 
 	hpreal alpha = 0.0; //m_gear->getHelixAngle(); //TODO
 	hpreal z = -m_gear->getFaceWidth();
-	hpreal y = -m_worm->getRadius() - m_gear->getRootRadius();
+	hpreal y = m_worm->getBaseRadius() + m_gear->getBaseRadius();
 	hpvec3 start = hpvec3(0, y,  0);
 	hpvec3 end = hpvec3(sin(alpha) * z, y, z);
     m_gearMovement = Kinematic::getLinearKinematic(start, end, -alpha / M_PI * 180);
@@ -26,7 +26,10 @@ WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteG
     m_kdTree = new KDTree(triangles);
 }
 
-WormGearGrind::~WormGearGrind() {}
+WormGearGrind::~WormGearGrind() {
+    delete m_gearColor;
+    delete m_kdTree;
+}
 
 
 void WormGearGrind::calculateGrindingDepth(hpreal time) {
@@ -60,8 +63,8 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
 
 
        // Get the intersection information and use it to color vertices
-//       std::list<CircleHitResult*>::iterator pos = hitResults->begin();
-//       std::list<CircleHitResult*>::iterator end = hitResults->end();
+       std::list<CircleHitResult*>::iterator pos = hitResults->begin();
+       std::list<CircleHitResult*>::iterator end = hitResults->end();
 //       for (; pos != end; pos++) {
 //           CircleHitResult* hitResult = *pos;
 //

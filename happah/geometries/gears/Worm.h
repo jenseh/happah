@@ -20,14 +20,8 @@ public:
       hpreal module = 0.13,
       hpreal pressureAngle = 20.0 / 360.0 * 2.0 * M_PI,
       hpuint rotations = 1,
-      hpreal radius = 1.0,
+      hpreal baseRadius = 1.0,
       hpreal faceWidth = 2.5);
-
-  /**
-   * @brief Worm constructor setting the height profile and calculating the radius.
-   * @param heightProfile
-   */
-//  Worm(StandardProfile* standardProfile, hpuint toothCount, hpuint rotations, hpreal faceWidth);
       
   ~Worm();
   
@@ -38,7 +32,8 @@ public:
   hpreal getPressureAngle();
   hpreal getRotations();
 
-  hpreal getRadius();
+  hpreal getBaseRadius();
+  hpreal getMaxRadius();
 
   void setToothCount(hpreal toothCount);
   void setModule(hpreal module);
@@ -53,7 +48,7 @@ private:
   hpreal m_module;
   hpreal m_pressureAngle;
   hpuint m_rotations;
-  hpreal m_radius;
+  hpreal m_baseRadius;
   hpreal m_faceWidth; //TODO: use!
 
   // TODO: Where should resolution attributes go?

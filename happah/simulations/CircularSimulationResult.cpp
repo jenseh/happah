@@ -12,7 +12,7 @@ CircularSimulationResult::CircularSimulationResult(int angleSteps, int posZSteps
 //  hpreal maxZ = 1.0f;
 
 
-  m_entries = new hash_map<int, hpreal>;
+  m_entries = new std::unordered_map<int, hpreal>;
   m_referenceDir = hpvec3(1.0f, 0.0f, 0.0f);
 }
 
@@ -38,7 +38,7 @@ void CircularSimulationResult::addItem(hpvec3 point, int posZSlot) {
 hpreal CircularSimulationResult::getItem(int angleSlot, int posZSlot) {
   int slot = posZSlot * m_angleSteps + angleSlot;
 
-  hash_map<int, hpreal>::const_iterator result = m_entries->find(slot);
+  std::unordered_map<int, hpreal>::const_iterator result = m_entries->find(slot);
   if (result == m_entries->end()) {
     return INFINITY;
   } else {

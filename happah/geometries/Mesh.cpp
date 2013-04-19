@@ -17,7 +17,8 @@ vector<hpuint>* Mesh::getIndices() {
 }
 
 TriangleMesh::TriangleMesh(vector<hpvec3>* verticesAndNormals,vector<hpuint>* indices)
-		: Mesh(verticesAndNormals,indices) {}
+		: Mesh(verticesAndNormals, indices) {}
+
 TriangleMesh::~TriangleMesh() {}
 
 vector<Ray>* TriangleMesh::toRays(){
@@ -30,6 +31,11 @@ vector<Ray>* TriangleMesh::toRays(){
 								verticesAndNormals->at(i+1) ); // Direction
 	}
 	return result;
+}
+
+hpuint TriangleMesh::getTriangleCount() {
+	vector<hpuint>* indices = getIndices();
+	return indices->size() / 3;
 }
 
 vector<Triangle>* TriangleMesh::toTriangles(){

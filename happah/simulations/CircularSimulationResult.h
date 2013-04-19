@@ -1,13 +1,12 @@
 #ifndef CIRCULARSIMULATIONRESULT_H
 #define CIRCULARSIMULATIONRESULT_H
 
-#include <ext/hash_map> //TODO:replace by newer version
 #include <glm/glm.hpp>
 #include <math.h>
+#include <unordered_map>
 
 #include "happah/HappahTypes.h"
 
-using namespace __gnu_cxx;
 
 class CircularSimulationResult
 {
@@ -18,7 +17,7 @@ public:
   float getItem(int angleSlot, int posZSlot);
 
 private:
-  hash_map<int, float>* m_entries;
+  std::unordered_map<int, float>* m_entries;
   int m_angleSteps;
   int m_posZSteps;
   hpreal m_angleRange;

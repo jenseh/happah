@@ -39,6 +39,9 @@ typedef shared_ptr<ToothProfileGUIStateNode> ToothProfileGUIStateNode_ptr;
 class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
+class WormGearGrindGUIStateNode;
+typedef shared_ptr<WormGearGrindGUIStateNode> WormGearGrindGUIStateNode_ptr;
+
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/gui/context-menus/ContextMenu.h"
@@ -273,6 +276,26 @@ private:
 	ToothProfileForm* m_toothProfileForm;
 };
 
+#include "happah/gui/context-menus/SimulationContextMenu.h"
+#include "happah/gui/forms/SimulationForm.h"
+#include "happah/simulations/WormGearGrind.h"
+
+
+class WormGearGrindGUIStateNode : public GUIStateNode {
+public:
+	WormGearGrindGUIStateNode(WormGearGrind_ptr wormGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name);
+	~WormGearGrindGUIStateNode();
+
+	ContextMenu* getContextMenu() const;
+	shared_ptr<void> getData() const;
+	Form* getForm();
+
+private:
+	WormGearGrind_ptr m_wormGearGrind;
+	SimulationForm* m_simulationForm;
+	SimulationContextMenu* m_simulationContextMenu;
+};
+
 #include "happah/geometries/gears/Worm.h"
 #include "happah/gui/forms/WormForm.h"
 
@@ -283,6 +306,7 @@ public:
 
 	shared_ptr<void> getData() const;
 	Form* getForm();
+	Worm_ptr getWorm()const;
 
 private:
 	Worm_ptr m_worm;

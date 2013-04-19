@@ -15,16 +15,19 @@
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimulationVisitor.h"
 #include "happah/simulations/DiscGearGrind.h"
+#include "happah/simulations/WormGearGrind.h"
 
 
 class GUIManager {
 public:
 	virtual void createDiscGearGrind(SimpleGear_ptr gear) = 0;
 	virtual void generateDisc(CylindricalGear_ptr cylindricalGear) = 0;
+	virtual void generateWorm(InvoluteGear_ptr involuteGear) = 0;
 	virtual void insert(BSplineCurve_ptr bSplineCurve,hpuint drawMode) = 0;
 	virtual void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) = 0;
 	//virtual void insert(DiscGearGrindResult simulationResult) = 0;
 	virtual void insert(DiscGearGrind_ptr discGearGrind) = 0;
+	virtual void insert(WormGearGrind_ptr wormGearGrind) = 0;
 	virtual void insert(FocalSpline_ptr focalSpline,hpuint drawMode) = 0;
 	virtual void insert(InvoluteGear_ptr involuteGear,hpuint drawMode) = 0;
 	virtual void insert(Plane_ptr plane, BSplineCurve_ptr curve) = 0;

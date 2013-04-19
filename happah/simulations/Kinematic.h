@@ -8,7 +8,7 @@
 #include "happah/math/Polynom.h"
 
 /**
- * @brief The Kinematic class represents mouvement in 3d space defined through polynoms representing the mouvement and polynoms representing the rotation.
+ * @brief The Kinematic class represents movement in 3d space defined through polynoms representing the movement and polynoms representing the rotation.
  */
 class Kinematic
 {
@@ -34,7 +34,7 @@ public :
      * @param end end position of the kinematic.
      * @return A Kinematic with the given parameters.
      */
-    static Kinematic getLinearKinematic(glm::vec3 start, glm::vec3 end);
+    static Kinematic getLinearKinematic(hpvec3 start, hpvec3 end);
 
     /**
      * @brief getLinearKinematic returns a linear kinematic of a transformation from position start to position end with a constant rotation.
@@ -43,14 +43,14 @@ public :
      * @param rotY a constant rotation around the y axis.
      * @return A Kinematic with the given parameters.
      */
-    static Kinematic getLinearKinematic(glm::vec3 start, glm::vec3 end, hpreal rotY);
+    static Kinematic getLinearKinematic(hpvec3 start, hpvec3 end, hpreal rotY);
 
     /**
      * @brief getMatrix gets the transformation matrix to a given time t evaluating the polynoms at position t.
      * @param t the time to which to calculate the transformation matrix.
      * @return the transformation matrix to the given time t.
      */
-    glm::mat4 getMatrix(double t);
+    hpmat4x4 getMatrix(double t);
     /**
      * @brief getRigidAffineTransformation gets the RigidAffineTransformation to a given time t.
      * @param t the time to which to calculate the RigidAffineTransformation.

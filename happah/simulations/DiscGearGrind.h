@@ -5,10 +5,10 @@
 #include <map>
 
 #include "happah/geometries/gears/SimpleGear.h"
-#include "happah/kdtree/KDTree.h"
-#include "happah/simulations/Simulation.h"
 #include "happah/geometries/SurfaceOfRevolution.h"
+#include "happah/kdtree/KDTree.h"
 #include "happah/simulations/Kinematic.h"
+#include "happah/simulations/Simulation.h"
 
 /**
  * @brief The DiscGearGrindResult class bundles all the information needed to display a disc gear grind simulation to a given time.
@@ -49,7 +49,7 @@ public:
 	RigidAffineTransformation m_toolTransformation;
 
     /**
-     * @brief DiscGearGrindResult sets all the member variabeles.
+     * @brief DiscGearGrindResult sets all the member variables.
      * @param gear The gear of the simulation.
      * @param gearColor Vector with the color data of the gear.
      * @param gearMesh The triangle mesh representing the gear.
@@ -91,7 +91,7 @@ public:
 
     /**
      * @brief getSimulationResult returns the simulation result at a certain time.
-     *        There are only descrete number of time step precalculated, so the latest result before time is returned.
+     *        There are only discrete number of time step precalculated, so the latest result before time is returned.
      * @param time The time of the simulation result ( time has to be in the interval [0,1] ).
      * @return The simulation result with all the information needed to display the simulation at the given time.
      */
@@ -117,7 +117,7 @@ private:
     std::vector<Ray>* m_gearRays;
     KDTree* m_kdTree;
     hpreal m_maxDistance;
-    std::map< hpreal,DiscGearGrindResult> m_precalcResults;
+    std::map<hpreal,DiscGearGrindResult> m_precalcResults;
     /**
      * @brief calculateGrindingDepth calculated the distances from each vertex of the gear ( m_gearRays ) to the disc and stores them in m_distances.
         For the calculation the rays of the gear with the vertexes as origin and normals as direction are intersected with the disc mesh.

@@ -27,4 +27,7 @@ private:
 
   hpvec3& m_referenceDir;
 };
+
+typedef std::shared_ptr<ZCircleCloud> ZCircleCloud_ptr;
+
 #endif // ZCIRCLECLOUD_H

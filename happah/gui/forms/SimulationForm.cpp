@@ -1,12 +1,11 @@
 #include "SimulationForm.h"
-#include "happah-test/simulations/WormGearGrindTest.h" //TODO:remove
 
 SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
 	  m_guiManager(guiManager),
 	  m_simulationInserted(false) {
 
-	m_simulationTimer = new SimulationTimer(m_guiManager, 0.0f, 1.0, 100, 50);
+	m_simulationTimer = new SimulationTimer(m_guiManager, 0.0, 1.0, 100, 40);
 
 	QPushButton* createButton = new QPushButton("create simulation");
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -32,12 +31,6 @@ void SimulationForm::createSimulation() {
 //        //m_guiManager.update(m_simulation->getSimulationResult(0.0f));
 //		m_simulationInserted = true;
 //	}
-
-
-	//TODO: this is just Holger's playground to test the WormGearGrind simulation, the actual code is above.
-	// Don't tell the boss..
-
-	//WormGearGrindTest();
 }
 
 DiscGearGrind_ptr SimulationForm::getDiscGearGrind() const {

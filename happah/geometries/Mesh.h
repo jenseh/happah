@@ -29,6 +29,8 @@ class TriangleMesh : public Mesh {
 public:
     TriangleMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
     ~TriangleMesh();
+
+    hpuint getTriangleCount();
     vector<Triangle>* toTriangles();
     vector<Ray>* toRays();
 };

@@ -31,6 +31,7 @@ DiscGearGrind::~DiscGearGrind() {
 void DiscGearGrind::calculateGrindingDepth(double time){
     hpmat4x4 matrix = m_gearMovement.getMatrix(time);
     for( size_t i = 0; i < m_gearRays->size(); i++){
+
         // Transform Ray
         Ray ray = m_gearRays->at(i);
         ray.transform(matrix);
@@ -47,7 +48,7 @@ DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     // Fill color
     for( size_t i = 0; i < m_gearColor->size(); i++){
     	if( m_distances[i] >= 0 ){
-    		m_gearColor->at(i) = hpcolor( 0.0, m_distances[i], 1.0, 1.0);
+    		m_gearColor->at(i) = hpcolor(0.0, m_distances[i], 1.0, 1.0);
     	}else{
             m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
     	}
@@ -64,8 +65,8 @@ DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
 }
 
 void DiscGearGrind::runSimulation(){
-    // "-1.0"because 0.0 and 1.0 have to be calculated.
-    hpreal deltaT = 1.0 / ((hpreal) STEP_COUNT-1.0);
+    // "-1.0" because 0.0 and 1.0 have to be calculated.
+    hpreal deltaT = 1.0 / ((hpreal) STEP_COUNT - 1.0);
 	m_precalcResults.clear();
 	for( hpreal t = 0.0; t <= 1.0; t += deltaT ) {
 		m_precalcResults.insert(pair<hpreal, DiscGearGrindResult>(t, calculateSimulationResult(t)));

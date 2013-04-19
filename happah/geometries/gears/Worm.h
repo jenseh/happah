@@ -19,41 +19,36 @@ public:
   Worm(hpuint toothCount = 2,
       hpreal module = 0.13,
       hpreal pressureAngle = 20.0 / 360.0 * 2.0 * M_PI,
-      hpuint rotations = 1,
-      hpreal baseRadius = 1.0,
-      hpreal faceWidth = 2.5);
+      hpreal rotations = 1.0,
+      hpreal baseRadius = 1.0);
       
   ~Worm();
   
-  std::vector<hpvec3>* createVerticesAndNormals();
+  std::vector<hpvec3>* createVerticesAndNormals(hpuint pointsPerTooth = 15, hpuint angleResolution = 50);
   
-  hpreal getToothCount();
+  hpuint getToothCount();
   hpreal getModule();
   hpreal getPressureAngle();
   hpreal getRotations();
-
   hpreal getBaseRadius();
+  hpreal getReferenceRadius();
   hpreal getMaxRadius();
 
-  void setToothCount(hpreal toothCount);
+  void setToothCount(hpuint toothCount);
   void setModule(hpreal module);
   void setPressureAngle(hpreal pressureAngle);
   void setRotations(hpreal rotations);
+  void setBaseRadius(hpreal baseRadius);
 
-  TriangleMesh_ptr toTriangleMesh();
-  ZCircleCloud_ptr toZCircleCloud();
+  TriangleMesh_ptr toTriangleMesh(hpuint pointsPerTooth = 15, hpuint angleResolution = 50);
+  ZCircleCloud_ptr toZCircleCloud(hpuint pointsPerTooth = 15);
 
 private:
   hpuint m_toothCount;
   hpreal m_module;
   hpreal m_pressureAngle;
-  hpuint m_rotations;
+  hpreal m_rotations;		//The number of rotations that one tooth does along the Z axis. It can be 0, but then we won't find a suitable involuteGear!
   hpreal m_baseRadius;
-  hpreal m_faceWidth; //TODO: use!
-
-  // TODO: Where should resolution attributes go?
-  constexpr static hpuint m_angleResolution = 200;
-  constexpr static hpuint m_pointsPerTooth = 200;
 
   StandardProfile* m_standardProfile;
 

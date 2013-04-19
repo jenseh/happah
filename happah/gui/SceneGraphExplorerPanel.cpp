@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -13,7 +14,8 @@ using namespace std;
 #include "happah/gui/SceneGraphExplorerPanel.h"
 
 SceneGraphExplorerPanel::SceneGraphExplorerPanel(SceneGraphExplorerListener& sceneGraphExplorerListener, QWidget* parent)
-	: 		QWidget(parent), m_createDiscGearGrindButton(new QPushButton("Create disc gear grind", this)),
+	: 		QWidget(parent),
+	  		m_createDiscGearGrindButton(new QPushButton("Create disc gear grind", this)),
 	  		m_createWormGearGrindButton(new QPushButton("Create worm gear grind", this)),
 			m_deleteButton(new QPushButton("Delete", this)), m_listWidget(new QListWidget(this)),
 			m_sceneGraphExplorerListener(sceneGraphExplorerListener) {
@@ -101,8 +103,7 @@ void SceneGraphExplorerPanel::handleCreateWormGearGrindButtonClickedEvent() {
 		if(getSelected<InvoluteGearGUIStateNode>(gearGUIStateNode)) {
 			gear = gearGUIStateNode->getInvoluteGear();
 		} else{
-			// TODO: Throw exception
-			return;
+			throw std::string("Error: WormGearGrind only supports involute gears!");
 		}
 		worm = wormGUIStateNode->getWorm();
 		m_sceneGraphExplorerListener.createWormGearGrind(worm, gear);

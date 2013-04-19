@@ -20,6 +20,7 @@ signals:
 	void selected(Form* form);
 private:
 	GUIManager& m_guiManager;
+	LabeledRealValuedSlider* m_baseRadiusSlider;
 	LabeledRealValuedSlider* m_moduleSlider;
 	LabeledRealValuedSlider* m_pressureAngleSlider;
 	LabeledRealValuedSlider* m_toothCountSlider;
@@ -31,6 +32,7 @@ private:
 	void updateWorm();
 
 private slots:
+	void changeBaseRadius(hpreal);
 	void changeModule(hpreal);
 	void changePressureAngle(hpreal);
 	void changeToothCount(hpreal);

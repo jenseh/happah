@@ -40,12 +40,14 @@ void StandardProfile::calcRootCircleCenter(hpreal *center) const {
 }
 
 /**
- * Calculates the profiel for one gear pitch.
- * hpreal x has to be bigger than or equal 0.
+ * Calculates the profile for one gear pitch.
+ * x has to be bigger than or equal to 0.
  * When x = 0 the height at the center of a tooth
  * of the gear is calculated.
  * When x = pitch / 2 the height at the center of
  * the gap between two teeth is calculated.
+ *
+ * Returns a height value in the range [-module - bottomClearance; module]
  */
 hpreal StandardProfile::getHeight(hpreal x) const {
 	/* Values are only calculated of one half of a pitch.
@@ -110,7 +112,7 @@ void StandardProfile::getProfilePartition(std::vector<hpvec2>& partition) {
 	for (int i = 0; i < numberSamples; i++) {
 		hpreal x = ((hpreal) i / (hpreal) numberSamples) * m_module * M_PI;
 		hpreal y = getHeight(x);
-		partition.push_back(glm::vec2(x - halfLength, y));
+		partition.push_back(hpvec2(x - halfLength, y));
 	}
 
 }

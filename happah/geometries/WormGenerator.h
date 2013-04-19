@@ -9,7 +9,6 @@ class WormGenerator
 {
 public:
     static Worm_ptr generateWormFrom(InvoluteGear_ptr involuteGear);
-//    static Worm_ptr generateWormFrom(StandardProfile* profile, hpuint toothCount, hpuint rotations, hpreal faceWidth);
 };
 
 #endif /* WORMGENERATOR_H_ */

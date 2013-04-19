@@ -28,7 +28,8 @@ void WormGearGrindNode::insertChild(WormGearGrindGUIStateNode_ptr wormGearGrindG
 
 void WormGearGrindNode::update(hpreal time) {
 	WormGearGrindResult result = m_wormGearGrind->getSimulationResult(time);
-	//TODO mesh nodes and render state nodes properly
+
+	//TODO remove mesh nodes and render state nodes properly
     removeChild(m_wormMeshNode);
     removeChild(m_gearMeshNode);
 

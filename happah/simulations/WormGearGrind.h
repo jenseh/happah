@@ -72,7 +72,7 @@ public:
 		m_gearMesh(gearMesh),
 		m_gearTransformation(gearTransformation),
 		m_tool(tool),
-        m_toolColor(hpvec4(0.5,0.5,0.5,1.0)),
+        m_toolColor(hpvec4(0.5, 0.5, 0.5, 1.0)),
 		m_toolMesh(toolMesh),
 		m_toolTransformation(toolTransformation){
 	}
@@ -93,6 +93,7 @@ public:
    * @param time The time of the simulation result ( time has to be in the interval [0,1] ).
    * @return The simulation result with all the information needed to display the simulation at the given time.
    */
+
   WormGearGrindResult getSimulationResult(hpreal time);
 
   void runSimulation();
@@ -112,7 +113,7 @@ private:
 	/**
 	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
 	 */
-	static const int STEP_COUNT = 5;
+	static const int STEP_COUNT = 10;
 
 	Worm_ptr m_worm;
 	ZCircleCloud_ptr m_wormCircleCloud;
@@ -122,6 +123,7 @@ private:
 	vector<hpcolor>* m_gearColor;
 	TriangleMesh_ptr m_gearMesh;
 	Kinematic m_gearMovement;
+	Kinematic m_wormMovement;
 	KDTree* m_kdTree;
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;

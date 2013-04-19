@@ -8,7 +8,7 @@
 #include "happah/math/Polynom.h"
 
 /**
- * @brief The Kinematic class represents mouvement in 3d space defined through polynoms representing the mouvement and polynoms representing the rotation.
+ * @brief The Kinematic class represents movement in 3d space defined through polynoms representing the movement and polynoms representing the rotation.
  */
 class Kinematic
 {

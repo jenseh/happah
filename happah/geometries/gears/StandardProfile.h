@@ -10,9 +10,10 @@
 
 class StandardProfile {
 public:
-	StandardProfile(hpreal module, hpreal pressureAngle, // pressureAngle = Profilwinkel
-            hpreal filletRadius,                         // filletRadius = Fußrundungsradius
-			hpreal bottomClearance);                     // bottomClearance = Kopfspiel
+	StandardProfile(hpreal module,
+			hpreal pressureAngle, 		// pressureAngle = Profilwinkel
+            hpreal filletRadius,   		// filletRadius = Fußrundungsradius
+			hpreal bottomClearance);	// bottomClearance = Kopfspiel
 
 	hpreal getHeight(hpreal x) const;
 	hpreal getMaxHeight() const;

@@ -2,11 +2,10 @@
 
 Worm_ptr WormGenerator::generateWormFrom(InvoluteGear_ptr involuteGear) {
 
-	return Worm_ptr(new Worm(involuteGear->getNumberOfTeeth(),
+	return Worm_ptr(new Worm(
+			2,
 			involuteGear->getModule(),
-			involuteGear->getPressureAngle()));
+			involuteGear->getPressureAngle(),
+			1,
+			involuteGear->getModule() * 2.0));
 }
-
-//Worm_ptr WormGenerator::generateWormFrom(StandardProfile* profile, hpuint toothCount, hpuint rotations, hpreal faceWidth) {
-//    return Worm_ptr(new Worm(profile, toothCount, rotations, faceWidth));
-//}

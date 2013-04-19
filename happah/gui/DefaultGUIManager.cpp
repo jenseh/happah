@@ -49,7 +49,7 @@ void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, Simple
 }
 
 void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh());
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh(15, 4));
 	Worm_ptr worm = WormGenerator::generateWormFrom(involuteGear);
 	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
 	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, involuteGear, gearMesh));
@@ -61,7 +61,7 @@ void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
 }
 
 void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh());
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh(15, 4));
 	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
 	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, involuteGear, gearMesh));
 

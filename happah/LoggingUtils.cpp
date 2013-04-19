@@ -69,3 +69,10 @@ void LoggingUtils::print(SimpleGear& simpleGear) {
   }
   cout << endl;
 }
+
+//void LoggingUtils::print(Circle& circle) {
+//	cout << "Circle: " << endl;
+//	LoggingUtils::printVec("center", circle.m_center);
+//	LoggingUtils::printVec("normal", circle.m_normal);
+//	LoggingUtils::printVal("radius", circle.m_radius);
+//}

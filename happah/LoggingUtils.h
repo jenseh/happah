@@ -10,6 +10,7 @@ using namespace std;
 #include "glm/glm.hpp"
 #include "happah/geometries/gears/InvoluteGear.h"
 #include "happah/geometries/gears/SimpleGear.h"
+//#include "happah/math/Circle.h"
 #include "happah/HappahTypes.h"
 
 class LoggingUtils
@@ -21,7 +22,6 @@ public:
 	static void printVal(const char* name, hpreal value);
 	static void printVal(const char* name, bool& value);
 
-
 	static void printVec(const char* name, hpvec2& vector);
 	static void printVec(const char* name, hpvec3& vector);
 	static void printVec(const char* name, hpvec4& vector);
@@ -32,6 +32,7 @@ public:
 
 	static void print(InvoluteGear& involuteGear);
 	static void print(SimpleGear& simpleGear);
+//	static void print(Circle& circle);
 };
 
 #endif // LOGGINGUTILS_H

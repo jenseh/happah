@@ -14,15 +14,15 @@ public:
   hpuint getResolutionZ();
   hpvec3 getReferenceDir();
   hpreal getMaxRadius();
-  std::vector<hpvec3*>* getClosestPoints(hpvec3 hitPoint);
 
-//  Circle computeCircle(hpuint posZIdx, hpuint radiusIdx);
+  hpuint convertPosZToPosZIdx(hpreal posZ);
   Circle computeOuterCircle(hpuint posZIdx);
 
 private:
   hpreal m_maxRadius;
   hpreal m_startZ;
   hpreal m_endZ;
+
   hpuint m_resolutionZ;
 
   hpvec3& m_referenceDir;

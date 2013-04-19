@@ -31,6 +31,7 @@ public:
     ~TriangleMesh();
 
     hpuint getTriangleCount();
+    hpuint getVertexCount();
     vector<Triangle>* toTriangles();
     vector<Ray>* toRays();
 };

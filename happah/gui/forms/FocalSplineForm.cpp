@@ -12,9 +12,11 @@ FocalSplineForm::FocalSplineForm(GUIManager& guiManager,QWidget* parent)
 	m_degreeSpinBox->setValue(2);
 	m_detailSpinBox = new LabeledIntegerSpinBox("Detail");
 	m_detailSpinBox->setValue(20);
+	QPushButton* extendButton = new QPushButton("Extend Spline");
 	connect(createButton,SIGNAL(clicked()),this,SLOT(createFocalSpline()));
 	connect(m_degreeSpinBox,SIGNAL(valueChanged(int)),this,SLOT(changeDegree(int)));
 	connect(m_detailSpinBox,SIGNAL(valueChanged(int)),this,SLOT(changeDetail(int)));
+	connect(extendButton,SIGNAL(clicked()),this,SLOT(extendSpline()));
 	m_addPointButton->setCheckable(true);
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->setSpacing(0);
@@ -23,7 +25,7 @@ FocalSplineForm::FocalSplineForm(GUIManager& guiManager,QWidget* parent)
 	layout->addWidget(m_detailSpinBox);
 	layout->addWidget(m_addPointButton);
 	layout->addWidget(createButton);
-
+	layout->addWidget(extendButton);
 
 	this->setLayout(layout);
 	m_plane = Plane_ptr( new Plane( hpvec3(0.0f, 0.0f, 0.0f), hpvec3(0.0f, 0.0f, 1.0f) ));
@@ -74,7 +76,8 @@ void FocalSplineForm::handleSelection(){
 void FocalSplineForm::handleSelection(int pointIndex){
 	emit selected(this);
 	m_currentPointIndex = pointIndex;
-	std::cout << m_currentPointIndex << endl;
+	m_degreeSpinBox->setValue(m_focalSpline->getDegree(pointIndex));
+	std::cout <<"Selected Something Selection Indes Is: "<< m_currentPointIndex << endl;
 }
 
 
@@ -90,13 +93,14 @@ void FocalSplineForm::handleDrag(Ray& ray){
 
 void FocalSplineForm::changeDegree(int value){
   if(m_focalSpline && !m_addPointButton->isChecked()){
-  int degree =m_focalSpline->getDegree();
+  int degree =m_focalSpline->getDegree(m_currentPointIndex);
   if (value > degree){
+	  std::cout << "Increasing Degree.. selectionIndex is: " << m_currentPointIndex << endl;
 	  m_focalSpline->addControlPoint(m_currentPointIndex);
 	  update();
   }
   if (value < degree){
-	  m_focalSpline->removeControlPoint(degree);
+	  m_focalSpline->removeControlPoint(m_currentPointIndex,degree);
 	  update();
   }
   }
@@ -125,6 +129,12 @@ void FocalSplineForm::handleRay(Ray& ray){
 	update();
 	}
 }
+
+void FocalSplineForm::extendSpline(){
+	m_focalSpline->extendSpline();
+	update();
+}
+
 
 
 

@@ -20,8 +20,11 @@ FocalSpline::~FocalSpline() {
 }
 
 void FocalSpline::setControlPoint(hpuint index, hpvec3 controlPoint){
+	cout << "Setting New ControlPoint selection Index is: "<< index << endl;
 	int bezierCurveIndex = calculateFocalBezierCurveIndexFromPointIndex(index);
+	cout << "Setting New ControlPoint bezier Curve Index is: " << bezierCurveIndex << endl;
 	int currentIndex = calculatePointIndexFromBezierIndex(bezierCurveIndex, index);
+	cout << "Setting New ControlPoint bezier Curve Index is: " << bezierCurveIndex << " current index Is: " << currentIndex << endl;
 	m_controlPoints->at(bezierCurveIndex)->at(currentIndex)=HPUtils::cartesianToPolarCoordinates(controlPoint);
 	adjustControlPoints(bezierCurveIndex,currentIndex);
 	update();
@@ -62,13 +65,11 @@ void FocalSpline::init(int degree){
 
 void FocalSpline::addControlPoint(int selectionIndex){
 	int bezierCurveIndex = 0;
-	if (selectionIndex < 0){
-		bezierCurveIndex = m_controlPoints->size()-1;
-	}
-	else{
+	if (selectionIndex >=0){
+		cout << "Calculating bezierCurveIndex for selectionIndex: " << selectionIndex << endl;
 		bezierCurveIndex = calculateFocalBezierCurveIndexFromPointIndex(selectionIndex);
 	}
-
+	cout <<"in AddControlPoint(int selectionIndex )Selection index is: " << selectionIndex << " Bezier Curve Index is: " << bezierCurveIndex << endl;
 	hpvec3 newPoint;
 	hpreal newPhi;
 	hpreal newRadius;
@@ -125,9 +126,11 @@ void FocalSpline::addControlPoint(hpvec3 point){
 }
 
 void FocalSpline::update(){
+	m_generatedSpline->clear();
 	for(int i = 0; i<m_focalBezierCurves.size();i++){
 		generateFocalSpline(i);
 	}
+	cout << "Generated Spline Size: " << m_generatedSpline->size() << " detail: " << m_detail << endl;
 }
 
 void FocalSpline::generateFocalSpline(int index){
@@ -136,7 +139,7 @@ void FocalSpline::generateFocalSpline(int index){
 		return;
 	}
 
-	m_generatedSpline->clear();
+
 	m_fraction = 0.0f;
 
 	for(int i = 0 ; i < m_detail;i++){
@@ -210,20 +213,26 @@ LineMesh* FocalSpline::toLineMesh(){
 		i++;
 	}
 	indices->push_back(iTemp);
+
 	//draw generated Spline
 	if (m_generatedSpline->size()>0){
+		int j=m_detail;
 		for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
 				hpvec3 vertexPosition = HPUtils::polarToCartesianCoordinates(*it);
 				hpvec3 vertexNormal = vertexPosition - m_center;
 				verticesAndNormals->push_back(vertexPosition);
 				verticesAndNormals->push_back(vertexNormal);
-				if (it != m_generatedSpline->begin()){
+				if (j%m_detail != 0){
 					indices->push_back(i);
 				}
 				indices->push_back(i);
+				if (j%m_detail == m_detail-1)
+					indices->pop_back();
 				i++;
+				j++;
 			}
-		indices->pop_back();
+	//	indices->pop_back();
+
 	}
 	return new LineMesh(verticesAndNormals, indices);
 }
@@ -250,8 +259,13 @@ PointCloud* FocalSpline::toPointCloud(){
 }
 
 
-int FocalSpline::getDegree(){
-	return m_controlPoints->at(0)->size()-1;
+int FocalSpline::getDegree(int selectionIndex){
+	int bezierCurveIndex = 0;
+	if (selectionIndex >= 0)
+		bezierCurveIndex = calculateFocalBezierCurveIndexFromPointIndex(selectionIndex);
+
+	cout << "giving degree of selecion Index " << selectionIndex << "Bezier Index " << bezierCurveIndex << endl;
+	return m_controlPoints->at(bezierCurveIndex)->size()-1;
 }
 
 void FocalSpline::removeControlPoint(int index){
@@ -265,16 +279,29 @@ void FocalSpline::removeControlPoint(int index){
 
 }
 
+void FocalSpline::removeControlPoint(int FocalBezierIndex, int pointIndex){
+	int bezierCurveIndex = 0;
+	if (FocalBezierIndex > 0)
+		bezierCurveIndex = calculateFocalBezierCurveIndexFromPointIndex(FocalBezierIndex);
+	m_controlPoints->at(bezierCurveIndex)->erase(m_controlPoints->at(bezierCurveIndex)->begin()+pointIndex);
+	if (pointIndex > 1)
+		adjustControlPoints(bezierCurveIndex,pointIndex-1);
+	m_focalBezierCurves.at(bezierCurveIndex)->update(m_phi,m_controlPoints->at(bezierCurveIndex));
+	update();
+}
+
 void FocalSpline::setDetail(int detail){
 	m_detail = detail;
 	update();
 }
 
 int FocalSpline::calculateFocalBezierCurveIndexFromPointIndex(int pointIndex){
-	int indexCounter = 0;
+	int indexCounter = -1;
 	int finalIndex = 0;
 	while(indexCounter < pointIndex){
-		indexCounter = m_controlPoints->at(finalIndex)->size();
+		cout<< "In LOOP finalIndex: " << finalIndex << endl;
+		indexCounter += m_controlPoints->at(finalIndex)->size();
+		cout<< "END OF LOOP index Counter is: " << indexCounter << endl;
 		finalIndex++;
 	}
 	cout<< "finalIndex: " << finalIndex << endl;
@@ -289,3 +316,15 @@ int FocalSpline::calculatePointIndexFromBezierIndex(int bezierIndex, int pointIn
   cout << "Index Of Point in FocalBezierCurve: " << finalIndex << endl;
   return finalIndex;
 }
+
+void FocalSpline::extendSpline(){
+	vector<hpvec3>* newPoints = new vector<hpvec3>;
+	newPoints->push_back(hpvec3(m_phiComplete,0,RADIUS*2.0f));
+	newPoints->push_back(hpvec3(m_phiComplete + m_phi,0,RADIUS*2.0f));
+	newPoints->push_back(hpvec3(m_phiComplete + 2*m_phi,0,RADIUS*2.0f));
+	m_controlPoints->push_back(newPoints);
+	m_focalBezierCurves.push_back(new FocalBezierCurve(m_phi,newPoints));
+	update();
+}
+
+

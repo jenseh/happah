@@ -27,6 +27,7 @@ private slots:
 	void changeDegree(int value);
 	void changeDetail(int value);
 	void activateControPointCreation();
+	void extendSpline();
 private:
 	bool m_createPoints;
 	void update();

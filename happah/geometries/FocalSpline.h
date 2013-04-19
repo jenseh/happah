@@ -25,8 +25,10 @@ public:
 	void addControlPoint(int selectionIndex);
 	void addControlPoint(hpvec3);
 	void removeControlPoint(int index);
-	int getDegree();
+	void removeControlPoint(int FocalBezierIndex, int pointIndex);
+	int getDegree(int index);
 	void setDetail(int detail);
+	void extendSpline();
 
 
 

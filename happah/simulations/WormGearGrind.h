@@ -102,7 +102,7 @@ public:
 private:
   hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
   hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
-  void inline computeIntersectingTriangles(size_t& z, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
+  void inline computeIntersectingTriangles(hpuint& z, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
 
 
   Triangle translateTriangle(Triangle& triangle, hpvec3& vector);
@@ -118,13 +118,14 @@ private:
 	Worm_ptr m_worm;
 	ZCircleCloud_ptr m_wormCircleCloud;
 	TriangleMesh_ptr m_wormMesh;
-	std::vector<double> m_distances;
 	InvoluteGear_ptr m_gear;
 	vector<hpcolor>* m_gearColor;
 	TriangleMesh_ptr m_gearMesh;
 	Kinematic m_gearMovement;
 	Kinematic m_wormMovement;
 	KDTree* m_kdTree;
+
+	CircularSimulationResult simResult;
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 

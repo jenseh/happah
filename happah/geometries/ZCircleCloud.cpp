@@ -16,26 +16,9 @@ hpreal ZCircleCloud::getMaxRadius() {
 	return m_maxRadius;
 }
 
-std::vector<hpvec3*>* ZCircleCloud::getClosestPoints(hpvec3 hitPoint) {
-  std::vector<hpvec3*>* closestPoints = new std::vector<hpvec3*>;
-  const hpreal maxDist = 0.1;
-  const hpuint maxNum = 2;
-//  for (hpuint x = 0; x < m_points->size() && closestPoints->size() < maxNum; x++) {
-//      hpvec3* curPoint = getPoint(x, hitPo;
-//      hpreal dist = hprealdistance(hitPoint, *curPoint);
-//      if (dist < maxDist) {
-//          closestPoints->push_back(curPoint);
-//      }
-//  }
-  return closestPoints;
+hpuint ZCircleCloud::convertPosZToPosZIdx(hpreal posZ) {
+	return (hpuint) round((posZ - m_startZ) / (m_endZ - m_startZ));
 }
-
-//Circle ZCircleCloud::computeCircle(hpuint posZIdx, hpuint radiusIdx) {
-//  return Circle(hpvec3(0.0f, 0.0f,
-//                          m_posZ->at(posZIdx)),
-//                hpvec3(0.0f, 0.0f, 1.0f),
-//                m_points->at(radiusIdx).radius);
-//}
 
 Circle ZCircleCloud::computeOuterCircle(hpuint posZIdx) {
   hpreal posZ = m_startZ + posZIdx * (m_endZ - m_startZ) / m_resolutionZ;

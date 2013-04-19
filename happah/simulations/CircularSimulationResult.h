@@ -11,15 +11,16 @@
 class CircularSimulationResult
 {
 public:
-  CircularSimulationResult(int angleSteps, int posZSteps);
+  CircularSimulationResult(hpuint angleSteps = 100, hpuint posZSteps = 30);
 
-  void addItem(glm::vec3 point, int posZSlot);
-  float getItem(int angleSlot, int posZSlot);
+  void addItem(hpvec3 point, hpuint posZSlot);
+  hpreal getItem(hpuint angleSlot, hpuint posZSlot);
+  hpreal getItem(hpvec3 point, hpuint posZSlot);
 
 private:
-  std::unordered_map<int, float>* m_entries;
-  int m_angleSteps;
-  int m_posZSteps;
+  std::unordered_map<hpuint, float>* m_entries;
+  hpuint m_angleSteps;
+  hpuint m_posZSteps;
   hpreal m_angleRange;
   hpvec3 m_referenceDir;
 };

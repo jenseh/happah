@@ -41,9 +41,9 @@ void FocalSplineForm::createFocalSpline(){
 		m_focalSpline =  FocalSpline_ptr(new FocalSpline());
 		m_focalSpline->init(0);
 		m_guiManager.insert(m_focalSpline,HP_LINE_MESH|HP_POINT_CLOUD);
-		m_focalSpline->addControlPoint();
+		m_focalSpline->addControlPoint(m_currentPointIndex);
 		for(int i = 0 ; i < m_degreeSpinBox->getValue();i++){
-			m_focalSpline->addControlPoint();
+			m_focalSpline->addControlPoint(m_currentPointIndex);
 		}
 		update();
 		m_focalSplineInserted = true;
@@ -82,7 +82,7 @@ void FocalSplineForm::handleDrag(Ray& ray){
 	if(m_currentPointIndex >= 0){
 		hpvec3 intersecPoint;
 		if( m_plane->intersect( ray, intersecPoint ) ) {
-			m_focalSpline->setCartesianControlPoint( m_currentPointIndex, intersecPoint );
+			m_focalSpline->setControlPoint( m_currentPointIndex, intersecPoint );
 			update();
 		}
 	}
@@ -92,7 +92,7 @@ void FocalSplineForm::changeDegree(int value){
   if(m_focalSpline && !m_addPointButton->isChecked()){
   int degree =m_focalSpline->getDegree();
   if (value > degree){
-	  m_focalSpline->addControlPoint();
+	  m_focalSpline->addControlPoint(m_currentPointIndex);
 	  update();
   }
   if (value < degree){

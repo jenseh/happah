@@ -10,12 +10,14 @@ HEADERS += \
 	happah/Happah.h \
 	happah/HappahTypes.h \
 	happah/LoggingUtils.h \
+	happah/HappahUtils.h\
 \
 #	happah/geometries/gears/BasicRack.h \
 	happah/geometries/BSplineCurve.h \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
 	happah/geometries/DiscGenerator.h \
+	happah/geometries/FocalBezierCurve.h \
 	happah/geometries/FocalSpline.h \
 	happah/geometries/Geometry.h \ 
 	happah/geometries/Mesh.h\
@@ -133,12 +135,14 @@ SOURCES += \
 	happah/main.cpp \
 	happah/Happah.cpp \
 	happah/LoggingUtils.cpp \
+	happah/HappahUtils.cpp\
 \
 #	happah/geometries/gears/BasicRack.cpp \
 	happah/geometries/BSplineCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/DiscGenerator.cpp \
+	happah/geometries/FocalBezierCurve.cpp \
 	happah/geometries/FocalSpline.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/Mesh.cpp\

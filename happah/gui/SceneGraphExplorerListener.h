@@ -6,7 +6,7 @@
 class SceneGraphExplorerListener {
 
 public:
-
+	virtual ~SceneGraphExplorerListener() {};
 
 	virtual void createDiscGearGrind(SurfaceOfRevolution_ptr, SimpleGear_ptr)= 0;
 	virtual void createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr gear) = 0;

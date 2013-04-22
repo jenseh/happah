@@ -7,6 +7,8 @@ typedef std::shared_ptr<GUIStateNode> GUIStateNode_ptr;
 class GUIVisitor {
 
 public:
+	virtual ~GUIVisitor() {};
+
 	virtual void visit(GUIStateNode_ptr guiStateNode) = 0;
 
 };

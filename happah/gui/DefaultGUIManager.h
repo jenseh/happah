@@ -18,11 +18,12 @@ using namespace std;
 #include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/geometries/WormGenerator.h"
-#include "happah/simulations/WormGearGrind.h"
 #include "happah/HappahTypes.h"
 #include "happah/HappahConstants.h"
 #include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/simulations/DiscGearGrind.h"
+#include "happah/simulations/WormGearGrind.h"
 
 class DefaultGUIManager : public GUIManager {
 

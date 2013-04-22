@@ -1,6 +1,5 @@
-#include <sstream>
-
 #include "happah/gui/DefaultGUIManager.h"
+#include <sstream>
 
 DefaultGUIManager::DefaultGUIManager(SceneManager_ptr sceneManager)
 	  : m_counter(0),
@@ -27,7 +26,7 @@ DefaultGUIManager::~DefaultGUIManager() {
 }
 
 void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(300, 100));
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
 	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
@@ -46,6 +45,22 @@ void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, Simple
 	QThread* thread = new QThread();
 	DiscGearGrindWorkerListener* listener = new DiscGearGrindWorkerListener(this);
 	DiscGearGrindWorker* discGearGrindWorker = new DiscGearGrindWorker(simulation, thread, listener);
+	thread->start();
+}
+
+void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
+	Worm_ptr worm = WormGenerator::generateWormFrom(involuteGear);
+	createWormGearGrind(worm, involuteGear);
+}
+
+void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh(15, 4));
+	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
+	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, involuteGear, gearMesh));
+
+	QThread* thread = new QThread();
+	WormGearGrindWorkerListener* listener = new WormGearGrindWorkerListener(this);
+	WormGearGrindWorker* wormGearGrindWorker = new WormGearGrindWorker(simulation, thread, listener);
 	thread->start();
 }
 
@@ -171,6 +186,11 @@ void DefaultGUIManager::generateDisc(CylindricalGear_ptr cylindricalGear) {
 	insert(disc, HP_TRIANGLE_MESH);
 }
 
+void DefaultGUIManager::generateWorm(InvoluteGear_ptr involuteGear) {
+	Worm_ptr worm = WormGenerator::generateWormFrom(involuteGear);
+	insert(worm, HP_TRIANGLE_MESH);
+}
+
 
 Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve_ptr bSplineCurve ) {
 	Node_ptr parent = m_sceneManager->findContainingData(bSplineCurve)->getParent();
@@ -203,12 +223,12 @@ bool DefaultGUIManager::init() {
 void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
-		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert1D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 	if( drawMode & HP_POINT_CLOUD ) {
-		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert0D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
@@ -222,10 +242,17 @@ void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
 
 void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
     DiscGearGrindGUIStateNode_ptr guiStateNode = DiscGearGrindGUIStateNode_ptr(new DiscGearGrindGUIStateNode(
-    			discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation") ));
+    			discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation")));
     m_sceneManager->insert(discGearGrind, guiStateNode);
 }
-void DefaultGUIManager::insert(FocalSpline_ptr focalSpline,hpuint drawMode){
+
+void DefaultGUIManager::insert(WormGearGrind_ptr wormGearGrind) {
+    WormGearGrindGUIStateNode_ptr guiStateNode = WormGearGrindGUIStateNode_ptr(new WormGearGrindGUIStateNode(
+    			wormGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Worm gear grind simulation")));
+    m_sceneManager->insert(wormGearGrind, guiStateNode);
+}
+
+void DefaultGUIManager::insert(FocalSpline_ptr focalSpline, hpuint drawMode){
 	if(drawMode & HP_TRIANGLE_MESH){
 			// DO nothing .. we don't want triangles
 	}
@@ -312,8 +339,8 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
 	m_sceneManager->insert(bSplineCurve, lineMesh, color);
 	*/
-	doUpdate0D<BSplineCurve>(bSplineCurve);
-	doUpdate1D<BSplineCurve>(bSplineCurve);
+	doUpdate0D<BSplineCurve<hpvec3>>(bSplineCurve);
+	doUpdate1D<BSplineCurve<hpvec3>>(bSplineCurve);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
@@ -388,6 +415,10 @@ DefaultGUIManager::DefaultSceneGraphExplorerListener::~DefaultSceneGraphExplorer
 
 void DefaultGUIManager::DefaultSceneGraphExplorerListener::createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear) {
 	m_defaultGUIManager.createDiscGearGrind(surfaceOfRevolution, simpleGear);
+}
+
+void DefaultGUIManager::DefaultSceneGraphExplorerListener::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
+	m_defaultGUIManager.createWormGearGrind(worm, involuteGear);
 }
 
 void DefaultGUIManager::DefaultSceneGraphExplorerListener::handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes) {

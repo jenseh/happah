@@ -1,6 +1,7 @@
 #ifndef FOCALSPLINE_H_
 #define FOCALSPLINE_H_
 
+#include "happah/geometries/FocalBezierCurve.h"
 #include "happah/geometries/Geometry.h"
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Mesh.h"
@@ -16,31 +17,36 @@ public:
 	virtual ~FocalSpline();
 	void init(int degree);
 	void update();
-	void generateFocalSpline();
+
 	LineMesh* toLineMesh();
 	PointCloud* toPointCloud();
-	void setPolarControlPoint(hpuint index, hpvec3 controlPoint);
-	void setCartesianControlPoint(hpuint index, hpvec3 controlPoint);
-	hpvec3 getPolarControlPoint(hpuint index);
-	hpvec3 getCartesianControlPoint(hpuint index);
+	void setControlPoint(hpuint index, hpvec3 controlPoint);
+	hpvec3 getControlPoint(hpuint index);
+	void addControlPoint(int selectionIndex);
+	void addControlPoint(hpvec3);
+	void removeControlPoint(int index);
+	void removeControlPoint(int FocalBezierIndex, int pointIndex);
+	int getDegree(int index);
+	void setDetail(int detail);
+	void extendSpline();
+
 
 
 private:
-    hpvec3 cartesianToPolarCoordinates(hpvec3 cartesian);
-    hpvec3 polarToCartesianCoordinates(hpvec3 polar);
+
     void   generateNewControlPoints();
-    void   adjustControlPoints(int index);
-    hpvec3   calculateIntersection(hpvec3 a1,hpvec3 a2, hpvec3 b1, hpvec3 b2);
-	vector<hpvec3>* m_controlPoints;
-	vector<hpvec3>* m_currentControlPoints;
+    void   adjustControlPoints(int bezierCurveIndex,int currentIndex);
+    int    calculateFocalBezierCurveIndexFromPointIndex(int pointIndex);
+    int    calculatePointIndexFromBezierIndex(int bezierIndex, int pointIndex);
+    void generateFocalSpline(int i);
+    vector<FocalBezierCurve*> m_focalBezierCurves;
+	vector<vector<hpvec3>*>* m_controlPoints;
 	vector<hpvec3>* m_generatedSpline;
 	hpvec3 m_center;
-	hpreal m_radius;
 	hpreal m_phi;
 	hpreal m_phiComplete;
 	hpreal m_fraction;
 	int    m_detail;
-	int    m_currentDegree;
 
 };
 typedef shared_ptr<FocalSpline> FocalSpline_ptr;

@@ -1,5 +1,5 @@
-#ifndef DISCGEARGRINDSIMULATIONNODE_H
-#define DISCGEARGRINDSIMULATIONNODE_H
+#ifndef DISCGEARGRINDNODE_H
+#define DISCGEARGRINDNODE_H
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimulationNode.h"
 #include "happah/scene/TriangleMeshNode.h"

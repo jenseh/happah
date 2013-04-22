@@ -14,6 +14,8 @@ public:
 	virtual void handleSelection();
 	virtual void handleSelection(int pointIndex){}
 	virtual void handleDrag(Ray& ray);
+	virtual void handleRay(Ray& ray);
+	virtual void handleConnection();
 };
 
 

@@ -90,7 +90,7 @@ void ToothProfileForm::handleRay(Ray& ray) {
 void ToothProfileForm::handleDrag(Ray& ray) {
 	hpvec3 intersectionPoint;
 	if(m_plane->intersect(ray, intersectionPoint)) {
-		m_toothProfile->setPointOfGear(m_currentPointIndex, intersectionPoint);
+		m_toothProfile->setPointOfGear(m_currentPointIndex, hpvec2(intersectionPoint.x, intersectionPoint.y));
 		m_guiManager.update(m_toothProfile);
 		emit toothProfileChanged(m_toothProfile);
 	}

@@ -39,12 +39,16 @@ typedef shared_ptr<ToothProfileGUIStateNode> ToothProfileGUIStateNode_ptr;
 class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
+class WormGearGrindGUIStateNode;
+typedef shared_ptr<WormGearGrindGUIStateNode> WormGearGrindGUIStateNode_ptr;
+
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
 #include "happah/scene/SelectListener.h"
+#include "happah/scene/ConnectListener.h"
 
 class GUIStateNode : public Node {
 public:
@@ -64,7 +68,9 @@ public:
 	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
 	void setLineMesh(LineMesh_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
-
+	void 	registerConnectListener(ConnectListener* selectListener);
+	void	removeConnectListener(ConnectListener* selectListener);
+	void 	triggerConnectionEvent();
 	class GUISelectListener : public SelectListener {
 	public:
 		GUISelectListener(GUIStateNode& guiStateNode) : m_guiStateNode(guiStateNode){}
@@ -78,10 +84,21 @@ public:
 		GUIStateNode& m_guiStateNode;
 	};
 
-virtual GUISelectListener* getSelectListener() { return &m_selectListener; }
+	class GUIConnectListener : public ConnectListener{
+	public:
+		GUIConnectListener(GUIStateNode& guiStateNode) : m_guiStateNode(guiStateNode){}
+		~GUIConnectListener(){}
+		virtual void handleConnectionEvent();
+	private:
+		GUIStateNode& m_guiStateNode;
+	};
 
+	virtual GUISelectListener* getSelectListener() { return &m_selectListener; }
+	virtual GUIConnectListener* getConnectListener() {return &m_connectListener; }
 private:
 	GUISelectListener m_selectListener;
+	GUIConnectListener m_connectListener;
+	list<ConnectListener*> m_connectListeners;
 	string m_name;
 	TriangleMesh_ptr m_triangleMesh;
 	LineMesh_ptr m_lineMesh;
@@ -259,6 +276,26 @@ private:
 	ToothProfileForm* m_toothProfileForm;
 };
 
+#include "happah/gui/context-menus/SimulationContextMenu.h"
+#include "happah/gui/forms/SimulationForm.h"
+#include "happah/simulations/WormGearGrind.h"
+
+
+class WormGearGrindGUIStateNode : public GUIStateNode {
+public:
+	WormGearGrindGUIStateNode(WormGearGrind_ptr wormGearGrind, SimulationForm* simulationForm, SimulationContextMenu* simulationContextMenu, string name);
+	~WormGearGrindGUIStateNode();
+
+	ContextMenu* getContextMenu() const;
+	shared_ptr<void> getData() const;
+	Form* getForm();
+
+private:
+	WormGearGrind_ptr m_wormGearGrind;
+	SimulationForm* m_simulationForm;
+	SimulationContextMenu* m_simulationContextMenu;
+};
+
 #include "happah/geometries/gears/Worm.h"
 #include "happah/gui/forms/WormForm.h"
 
@@ -269,6 +306,7 @@ public:
 
 	shared_ptr<void> getData() const;
 	Form* getForm();
+	Worm_ptr getWorm()const;
 
 private:
 	Worm_ptr m_worm;

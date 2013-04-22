@@ -10,12 +10,14 @@ HEADERS += \
 	happah/Happah.h \
 	happah/HappahTypes.h \
 	happah/LoggingUtils.h \
+	happah/HappahUtils.h\
 \
 #	happah/geometries/gears/BasicRack.h \
 	happah/geometries/BSplineCurve.h \
 #	happah/geometries/CircleCloud.h \
 #	happah/geometries/ControlNet2.h \
 	happah/geometries/DiscGenerator.h \
+	happah/geometries/FocalBezierCurve.h \
 	happah/geometries/FocalSpline.h \
 	happah/geometries/Geometry.h \ 
 	happah/geometries/Mesh.h\
@@ -28,6 +30,7 @@ HEADERS += \
 	happah/geometries/SurfaceOfRevolution.h \
 #	happah/geometries/TriPatch.h \
 	happah/geometries/gears/Worm.h \
+	happah/geometries/WormGenerator.h \
 	happah/geometries/ZCircleCloud.h \
 \
 	happah/geometries/gears/CylindricalGear.h \
@@ -47,6 +50,7 @@ HEADERS += \
 	happah/gui/VectorInput.h \ 
 	happah/gui/Viewport.h \
 	happah/gui/Worker.h \
+	happah/gui/WormGearGrindWorker.h \
 \
 	happah/gui/context-menus/BSplineCurveContextMenu.h \
 	happah/gui/context-menus/ContextMenu.h \
@@ -71,6 +75,7 @@ HEADERS += \
 \
 	happah/gui/widgets/LabeledIntegerSlider.h \
 	happah/gui/widgets/LabeledRealValuedSlider.h \
+	happah/gui/widgets/LabeledIntegerSpinBox.h\
 \
 	happah/kdtree/BBox.h \
 	happah/kdtree/BSphere.h \ 
@@ -111,6 +116,7 @@ HEADERS += \
 	happah/scene/SpherePatchNode.h \
 	happah/scene/ToothProfileNode.h \
 	happah/scene/TriangleMeshNode.h \
+	happah/scene/WormGearGrindNode.h \
 	happah/scene/WormNode.h \
 \
 	happah/simulations/CircularSimulationResult.h \
@@ -129,12 +135,14 @@ SOURCES += \
 	happah/main.cpp \
 	happah/Happah.cpp \
 	happah/LoggingUtils.cpp \
+	happah/HappahUtils.cpp\
 \
 #	happah/geometries/gears/BasicRack.cpp \
-	happah/geometries/BSplineCurve.cpp \
+#	happah/geometries/BSplineCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/DiscGenerator.cpp \
+	happah/geometries/FocalBezierCurve.cpp \
 	happah/geometries/FocalSpline.cpp \
 	happah/geometries/Geometry.cpp \
 	happah/geometries/Mesh.cpp\
@@ -147,6 +155,7 @@ SOURCES += \
 	happah/geometries/SurfaceOfRevolution.cpp \
 #	happah/geometries/TriPatch.cpp \
 	happah/geometries/gears/Worm.cpp \
+	happah/geometries/WormGenerator.cpp \
 	happah/geometries/ZCircleCloud.cpp \
 \
 	happah/geometries/gears/CylindricalGear.cpp \
@@ -163,6 +172,7 @@ SOURCES += \
 	happah/gui/ToolPanel.cpp \
 	happah/gui/VectorInput.cpp \
 	happah/gui/Viewport.cpp \
+	happah/gui/WormGearGrindWorker.cpp \
 \
 	happah/gui/context-menus/BSplineCurveContextMenu.cpp \
 	happah/gui/context-menus/ContextMenu.cpp \
@@ -187,6 +197,7 @@ SOURCES += \
 \
 	happah/gui/widgets/LabeledIntegerSlider.cpp \
 	happah/gui/widgets/LabeledRealValuedSlider.cpp \
+	happah/gui/widgets/LabeledIntegerSpinBox.cpp\
 \
 	happah/kdtree/BBox.cpp \
 	happah/kdtree/BSphere.cpp \
@@ -219,6 +230,7 @@ SOURCES += \
 	happah/scene/SpherePatchNode.cpp \
 	happah/scene/ToothProfileNode.cpp \
 	happah/scene/TriangleMeshNode.cpp \
+	happah/scene/WormGearGrindNode.cpp \
 	happah/scene/WormNode.cpp \
 \
 	happah/simulations/CircularSimulationResult.cpp \

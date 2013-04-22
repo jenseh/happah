@@ -28,14 +28,15 @@ void DiscGearGrindNode::insertChild(DiscGearGrindGUIStateNode_ptr discGearGrindG
 
 void DiscGearGrindNode::update(hpreal time) {
 	DiscGearGrindResult result = m_discGearGrind->getSimulationResult(time);
-	//TODO mesh nodes and render state nodes properly
     removeChild(m_discMeshNode);
     removeChild(m_gearMeshNode);
 
-    m_discMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_toolMesh, result.m_toolTransformation));
-    m_discRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_toolMesh, result.m_toolColor) );
-    m_discMeshNode->insertChild(m_discRenderStateNode);
-    Node::insertChild(m_discMeshNode);
+    if(m_discGearGrind->getToolVisibility()) {
+		m_discMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_toolMesh, result.m_toolTransformation));
+		m_discRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_toolMesh, result.m_toolColor) );
+		m_discMeshNode->insertChild(m_discRenderStateNode);
+		Node::insertChild(m_discMeshNode);
+    }
 
     m_gearMeshNode = TriangleMeshNode_ptr(new TriangleMeshNode(result.m_gearMesh, result.m_gearTransformation));
     m_gearRenderStateNode = TriangleMeshRenderStateNode_ptr(new TriangleMeshRenderStateNode(result.m_gearMesh, result.m_gearColor) );

@@ -2,12 +2,12 @@
 
 WormGearGrindTest::WormGearGrindTest() {
   // Run a simulation here for testing purposes
-  Worm* worm = new Worm();
-  InvoluteGear* gear = new InvoluteGear();
+  Worm_ptr worm = Worm_ptr(new Worm());
+  InvoluteGear_ptr gear = InvoluteGear_ptr(new InvoluteGear());
 
-//  BasicRack* rack = new BasicRack();
-  RigidAffineTransformation trans1;
-  RigidAffineTransformation trans2;
-  WormGearGrind* sim = new WormGearGrind(*worm, *gear, trans1, trans2);
+  TriangleMesh_ptr wormMesh = TriangleMesh_ptr(worm->toTriangleMesh());
+  TriangleMesh_ptr gearMesh = TriangleMesh_ptr(gear->toTriangleMesh());
+
+  WormGearGrind* sim = new WormGearGrind(worm, wormMesh, gear, gearMesh);
   sim->runSimulation();
 }

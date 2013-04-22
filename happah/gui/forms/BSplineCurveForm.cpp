@@ -121,7 +121,7 @@ void BSplineCurveForm::changeDegree(int value) {
 
 void BSplineCurveForm::createCurve() {
 	if( m_curveInserted ) {
-		m_curve = BSplineCurve_ptr(new BSplineCurve());
+		m_curve = BSplineCurve_ptr(new BSplineCurve<hpvec3>());
 		m_curve->setPeriodic(m_periodicCheckBox->checkState() == Qt::Checked);
 		m_curve->setUniform(m_uniformCheckBox->checkState() == Qt::Checked);
 		m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);
@@ -183,7 +183,7 @@ void BSplineCurveForm::handleSelection(int pointIndex){
 }
 
 void BSplineCurveForm::reset() {
-	m_curve = BSplineCurve_ptr(new BSplineCurve());
+	m_curve = BSplineCurve_ptr(new BSplineCurve<hpvec3>());
 	m_curve->setPeriodic(m_periodicCheckBox->checkState() == Qt::Checked);
 	m_curve->setUniform(m_uniformCheckBox->checkState() == Qt::Checked);
 	m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);

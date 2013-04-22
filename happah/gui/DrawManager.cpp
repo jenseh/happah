@@ -103,7 +103,7 @@ void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode
 	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
-	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+//	hpmat4x4 modelViewProjectionMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
 	hpmat4x4 modelViewMatrix = m_viewMatrix * m_modelMatrix;
 	glBindVertexArray(pointCloudRenderStateNode->getVertexArrayObjectID());
 	glUniformMatrix4fv(m_pointCloudModelViewMatrixLocation, 1, GL_FALSE, (GLfloat*) &modelViewMatrix);

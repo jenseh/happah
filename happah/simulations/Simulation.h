@@ -22,6 +22,19 @@ public:
      * @brief runSimulation all the calculations of the simulation should be done in this method.
      */
     virtual void runSimulation() = 0;
+    /**
+     * @brief getToolVisible gets if the tool is visible to the user.
+     * @returns visibility of the tool.
+     */
+    bool getToolVisibility()const;
+    /**
+     * @brief sets visibility of tool mesh in simulation.
+     * @param visible visibility of tool.
+     */
+    void setToolVisibility(bool visible);
+
+private:
+    bool m_toolVisible;
 };
 typedef std::shared_ptr<Simulation> Simulation_ptr;
 

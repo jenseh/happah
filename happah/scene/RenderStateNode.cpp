@@ -2,6 +2,7 @@
 #include "happah/scene/DrawVisitor.h"
 #include "happah/scene/SceneVisitor.h"
 #include <exception>
+#include <iostream>
 
 
 using namespace std;
@@ -18,12 +19,14 @@ RenderStateNode::RenderStateNode(vector<hpvec3>* verticesAndNormals, hpcolor& co
 }
 
 RenderStateNode::RenderStateNode(vector<hpvec3>* verticesAndNormals, vector<hpcolor>* colorVector)
-	:m_verticesAndNormals(verticesAndNormals),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
+	: m_verticesAndNormals(verticesAndNormals),m_color(0.0f,0.0f,0.0f,0.0f),m_colorVector(colorVector), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(true) {
 
-	size_t a = colorVector->size(); //TODO: remove
-	size_t b = verticesAndNormals->size();
-	if (colorVector->size() != verticesAndNormals->size() / 2)
-		throw;		// TODO : find proper exception;
+	//TODO: does this check make sense?
+	//	if (m_verticesAndNormals->size() != m_colorVector->size() * 2) {
+	//		std::cout << "ColorVector size: " << colorVector->size() << std::endl;
+	//		std::cout << "verticesAndNormals size: " << verticesAndNormals->size() << std::endl;
+	//		throw std::string("Error: Color vector has invalid size compared to number of triangles!");
+	//	}
 
 	Material material;
 	material.setAmbientFactor(1.5f);
@@ -61,10 +64,12 @@ void RenderStateNode::setColor(hpcolor color) {
 }
 
 void RenderStateNode::setColorVector(vector<hpcolor>* colorVector) {
-	if (m_verticesAndNormals->size() != colorVector->size() * 2) {
-		cerr << m_verticesAndNormals->size() <<" != " << colorVector->size() / 2<< endl;
-		throw; // TODO: Find Proper Exception !
-	}
+	//TODO: does this check make sense?
+	//	if (m_verticesAndNormals->size() != m_colorVector->size() * 2) {
+	//		std::cout << "ColorVector size: " << colorVector->size() << std::endl;
+	//		std::cout << "verticesAndNormals size: " << verticesAndNormals->size() << std::endl;
+	//		throw std::string("Error: Color vector has invalid size compared to number of triangles!");
+	//	}
 	m_colorVector = colorVector;
 }
 
@@ -105,8 +110,12 @@ vector<hpvec3>* RenderStateNode::getVerticesAndNormals() {
 }
 
 vector<hpvec4>* RenderStateNode::getColorVector(){
-	if (m_verticesAndNormals->size() != m_colorVector->size()*2)
-		throw; // TODO: Find Proper Exception !
+	//TODO: does this check make sense?
+	//	if (m_verticesAndNormals->size() != m_colorVector->size() * 2) {
+	//		std::cout << "ColorVector size: " << colorVector->size() << std::endl;
+	//		std::cout << "verticesAndNormals size: " << verticesAndNormals->size() << std::endl;
+	//		throw std::string("Error: Color vector has invalid size compared to number of triangles!");
+	//	}
 	return m_colorVector;
 }
 

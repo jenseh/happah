@@ -2,6 +2,8 @@
 #define WORMGEARGRIND_H
 
 #include <time.h>
+#include <memory>
+#include <map>
 
 #include "happah/HappahTypes.h"
 #include "happah/geometries/gears/InvoluteGear.h"
@@ -11,38 +13,128 @@
 #include "happah/math/Circle.h"
 #include "happah/math/Triangle.h"
 #include "happah/simulations/CircularSimulationResult.h"
+#include "happah/simulations/Kinematic.h"
+#include "happah/simulations/Simulation.h"
 #include "happah/transformations/RigidAffineTransformation.h"
+
+/**
+ * @brief The WormGearGrindResult class bundles all the information needed to display a worm gear grind simulation to a given time.
+ */
+class WormGearGrindResult : public SimulationResult {
+public:
+    /**
+     * @brief m_gear The gear of the simulation.
+     */
+	CylindricalGear_ptr m_gear;
+    /**
+     * @brief m_gearColor Vector with the color data of the gear.
+     */
+	std::vector<hpcolor>* m_gearColor;
+    /**
+     * @brief m_gearMesh  The triangle mesh representing the gear.
+     */
+	TriangleMesh_ptr m_gearMesh;
+    /**
+     * @brief m_gearTransformation The position/transformation of the gear.
+     */
+	RigidAffineTransformation m_gearTransformation;
+    /**
+     * @brief m_tool Worm representing the tool used to grind the gear.
+     */
+	Worm_ptr m_tool;
+    /**
+     * @brief m_toolColor The unified color of the tool.
+     */
+    hpcolor m_toolColor;
+    /**
+     * @brief m_toolMesh The triangle mesh representing the tool.
+     */
+    TriangleMesh_ptr m_toolMesh;
+    /**
+     * @brief m_toolTransformation The position/transformation of the tool.
+     */
+	RigidAffineTransformation m_toolTransformation;
+
+    /**
+     * @brief WormGearGrindResult sets all the member variables.
+     * @param gear The gear of the simulation.
+     * @param gearColor Vector with the color data of the gear.
+     * @param gearMesh The triangle mesh representing the gear.
+     * @param gearTransformation The position/transformation of the gear.
+     * @param tool Worm representing the tool used to grind the gear.
+     * @param toolMesh The triangle mesh mesh representing the tool.
+     * @param toolTransformation The position/transformation of the tool.
+     */
+	WormGearGrindResult(CylindricalGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
+						Worm_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
+		m_gear(gear),
+        m_gearColor(new std::vector<hpcolor>(*gearColor) ),
+		m_gearMesh(gearMesh),
+		m_gearTransformation(gearTransformation),
+		m_tool(tool),
+        m_toolColor(hpvec4(0.5, 0.5, 0.5, 1.0)),
+		m_toolMesh(toolMesh),
+		m_toolTransformation(toolTransformation){
+	}
+};
 
 class WormGearGrind
 {
 public:
-  WormGearGrind(Worm& worm, InvoluteGear& gear, RigidAffineTransformation& wormTransformation, RigidAffineTransformation& gearTransformation);
+  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);
+  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh);
+
   ~WormGearGrind();
 
+  WormGearGrindResult calculateSimulationResult(hpreal time);
+
+  /**
+   * @brief getSimulationResult returns the simulation result at a certain time.
+   *        There are only discrete number of time step pre-calculated, so the latest result before time is returned.
+   * @param time The time of the simulation result ( time has to be in the interval [0,1] ).
+   * @return The simulation result with all the information needed to display the simulation at the given time.
+   */
+
+  WormGearGrindResult getSimulationResult(hpreal time);
+
   void runSimulation();
-  void calculateGrindingDepth();
+  void calculateGrindingDepth(hpreal time);
 
 private:
+  void init(hpreal gearReferenceRadius);
+
   hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
   hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
-  void inline computeIntersectingTriangles(size_t& z, KDTree& tree, std::list<CircleHitResult*>* hitResults);
+  void inline computeIntersectingTriangles(hpuint& z, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
 
 
   Triangle translateTriangle(Triangle& triangle, hpvec3& vector);
-
-public:
-  Triangle transformTriangle(Triangle& triangle);
-  Circle transformCircle(Circle& circle);
+  Triangle transformTriangle(Triangle& triangle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
+  Circle transformCircle(Circle& circle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
 
 private:
-  ZCircleCloud* m_worm;
-  TriangleMesh* m_gearMesh;
+	/**
+	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
+	 */
+	static const int STEP_COUNT = 100;
 
-  hpmat4x4 m_wormModelMatrix;
-  hpmat4x4 m_gearModelMatrix;
+	Worm_ptr m_worm;
+	ZCircleCloud_ptr m_wormCircleCloud;
+	TriangleMesh_ptr m_wormMesh;
+	CylindricalGear_ptr m_gear;
+	vector<hpcolor>* m_gearColor;
+	TriangleMesh_ptr m_gearMesh;
+	Kinematic m_gearMovement;
+	Kinematic m_wormMovement;
+	KDTree* m_kdTree;
+
+	CircularSimulationResult simResult;
+	hpreal m_maxDistance;
+	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
   constexpr static size_t m_resultAngleSlotCount = 100;
-  hpreal m_maxDistance;
 };
+
+typedef std::shared_ptr<WormGearGrind> WormGearGrind_ptr;
 
 #endif // WORMGEARGRIND_H

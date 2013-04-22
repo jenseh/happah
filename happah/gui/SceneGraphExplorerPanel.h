@@ -26,6 +26,7 @@ public:
 
 private:
 	QPushButton* m_createDiscGearGrindButton;
+	QPushButton* m_createWormGearGrindButton;
 	QPushButton* m_deleteButton;
 	unordered_map<QListWidgetItem*, GUIStateNode_ptr> m_guiStateNodesByItem;
 	unordered_map<GUIStateNode_ptr, QListWidgetItem*> m_itemsByGUIStateNode;
@@ -37,6 +38,7 @@ private:
 
 private slots:
 void handleCreateDiscGearGrindButtonClickedEvent();
+void handleCreateWormGearGrindButtonClickedEvent();
 void handleDeleteButtonClickedEvent();
 void handleItemClickedEvent(QListWidgetItem* item);
 

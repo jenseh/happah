@@ -22,6 +22,7 @@ private:
 private slots:
 	void createSimpleGear();
 	void generateDisc();
+	void generateWorm();
 	void createDiscGearGrind();
 
 };

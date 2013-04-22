@@ -12,32 +12,37 @@ using namespace std;
 
 class Mesh {
 public:
+	Mesh(vector<hpvec2>* verticesAndNormals, vector<hpuint>* indices);
 	Mesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
 	virtual ~Mesh();
 
 
-	   vector<hpvec3>* getVerticesAndNormals();
-	   vector<hpuint>* getIndices();
+	vector<hpvec3>* getVerticesAndNormals();
+	vector<hpuint>* getIndices();
 
-	private:
-	    vector<hpvec3>* m_verticesAndNormals;
-	    vector<hpuint>* m_indices;
+private:
+	vector<hpvec3>* m_verticesAndNormals;
+	vector<hpuint>* m_indices;
 };
 typedef shared_ptr<Mesh> Mesh_ptr;
 
 class TriangleMesh : public Mesh {
 public:
-    TriangleMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
-    ~TriangleMesh();
-    vector<Triangle>* toTriangles();
-    vector<Ray>* toRays();
+	TriangleMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
+	~TriangleMesh();
+
+	hpuint getTriangleCount();
+	hpuint getVertexCount();
+	vector<Triangle>* toTriangles();
+	vector<Ray>* toRays();
 };
 typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
 
 class LineMesh : public Mesh {
 public:
-    LineMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
-    ~LineMesh();
+	LineMesh(vector<hpvec2>* verticesAndNormals, vector<hpuint>* indices);
+	LineMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
+	~LineMesh();
 };
 typedef shared_ptr<LineMesh> LineMesh_ptr;
 

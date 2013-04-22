@@ -16,7 +16,7 @@ SimulationContextMenu::~SimulationContextMenu(){}
 
 void SimulationContextMenu::changeToolVisibility() {
 	m_simulation->setToolVisibility(!m_simulation->getToolVisibility());
-	cout<<m_simulation->getToolVisibility()<<endl;
+//	cout<<m_simulation->getToolVisibility()<<endl;
 }
 
 void SimulationContextMenu::setSimulation(Simulation_ptr simulation) {

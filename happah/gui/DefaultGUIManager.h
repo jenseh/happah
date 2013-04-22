@@ -62,8 +62,8 @@ public:
 	void update(ToothProfile_ptr toothProfile);
 	void update(Worm_ptr worm);
 	void useForBSpline(Plane_ptr plane);
-	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
-	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+//	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
+//	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
 	void visitScene(SimulationVisitor& visitor);
 	const SceneManager_ptr getSceneManager();

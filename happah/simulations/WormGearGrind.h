@@ -78,7 +78,7 @@ public:
 	}
 };
 
-class WormGearGrind
+class WormGearGrind : public Simulation
 {
 public:
   WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);

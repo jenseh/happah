@@ -57,7 +57,7 @@ DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
 }
 
 
-DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
+DiscGearGrindResult DiscGearGrind::getSimulationResult(hpreal time){
 	map<hpreal,DiscGearGrindResult>::iterator it = m_precalcResults.lower_bound(time);
 	if( it == m_precalcResults.end() ){
 		it--;

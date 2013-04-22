@@ -2,14 +2,22 @@
 #include <glm/glm.hpp>
 
 WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh)
-	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.1) {
+	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(1.0) {
+	init(gear->getReferenceRadius());
+}
 
+WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh)
+	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(1.0) {
+	init(gearReferenceRadius);
+}
+
+void WormGearGrind::init(hpreal gearReferenceRadius) {
 	hpreal rotXStart = 360.0;
 	hpreal rotXEnd = 0.0;
 	hpreal rotY = 90.0;
 
 	hpreal x = m_worm->getModule() * M_PI / 4.0;
-	hpreal y = m_worm->getReferenceRadius() + m_gear->getReferenceRadius();
+	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius / 10.0;
 	hpvec3 position = hpvec3(x, y, 0.0);
 
     m_wormMovement = Kinematic(
@@ -32,7 +40,7 @@ WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteG
     		Polynom<double>(2, rotZStart, rotZEnd-rotZStart));
 
     // Convert to right representation
-    m_wormCircleCloud = worm->toZCircleCloud();
+    m_wormCircleCloud = m_worm->toZCircleCloud();
 
     std::vector<Triangle>* triangles = m_wormMesh->toTriangles();
     hpuint gearVertexCount = m_gearMesh->getVertexCount();
@@ -159,7 +167,7 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 	vector<hpuint>* indices = m_gearMesh->getIndices();
 
     // Fill color
-    for( size_t i = 0; i < m_gearMesh->getVertexCount(); i++){
+    for(hpuint i = 0; i < m_gearMesh->getVertexCount(); i++){
     	hpvec3 point = verticesAndNormals->at(2 * indices->at(i));
     	hpuint posZIdx = m_wormCircleCloud->convertPosZToPosZIdx(point.z);
     	hpreal distance = simResult.getItem(point, posZIdx);

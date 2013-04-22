@@ -7,8 +7,13 @@ class TriangleSorter {
 public:
       TriangleSorter(int axis_) : axis(axis_) {}
       bool operator()(const T& a, const T& b) {
-        return glm::min(a.vertices[0][axis], glm::min(a.vertices[1][axis], a.vertices[2][axis]))
-        	 < glm::min(b.vertices[0][axis], glm::min(b.vertices[1][axis], b.vertices[2][axis]));
+//        return glm::min(a.vertices[0][axis], glm::min(a.vertices[1][axis], a.vertices[2][axis]))
+//        	 < glm::min(b.vertices[0][axis], glm::min(b.vertices[1][axis], b.vertices[2][axis]));
+    	  return (a.vertices[0][axis]+
+    	  		  	   a.vertices[1][axis]+
+    	  		  	   a.vertices[2][axis])  < (b.vertices[0][axis]+
+    	    	  		  	   b.vertices[1][axis]+
+    	    	  		  	   b.vertices[2][axis]);
       }
 };
 
@@ -25,9 +30,14 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 
   // Determine where separating axis should be
   unsigned int middleTPos = size / 2;
-  m_axisValue = glm::min( triangles->at(middleTPos).vertices[0][m_axis],
-		  	    glm::min( triangles->at(middleTPos).vertices[1][m_axis],
-		  	    		  triangles->at(middleTPos).vertices[2][m_axis]));
+  m_axisValue = (triangles->at(middleTPos).vertices[0][m_axis]+
+		  	   triangles->at(middleTPos).vertices[1][m_axis]+
+		  	   triangles->at(middleTPos).vertices[2][m_axis]) / 3.0;
+//  m_axisValue = glm::min( triangles->at(middleTPos).vertices[0][m_axis],
+//		  	    glm::min( triangles->at(middleTPos).vertices[1][m_axis],
+//		  	    		  triangles->at(middleTPos).vertices[2][m_axis]));
+
+  //m_axisValue = triangles->at(middleTPos).vertices[0][m_axis];
 
   std::vector<Triangle>* leftTriangles = new std::vector<Triangle>;
   std::vector<Triangle>* rightTriangles = new std::vector<Triangle>;
@@ -37,7 +47,6 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
   std::vector<Triangle>::iterator end = triangles->end();
   for (; pos != end; pos++) {
       Triangle triangle = *pos;
-
       if (triangle.vertices[0][m_axis] <= m_axisValue
           || triangle.vertices[1][m_axis] <= m_axisValue
           || triangle.vertices[2][m_axis] <= m_axisValue) {
@@ -60,7 +69,6 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 //  LoggingUtils::printVal("rightTriangles", rightTrianglesSize);
 
   //std::cout << "ratio: " << ((hpreal)leftTriangleSize / (hpreal)rightTriangleSize) << std::endl;
-
   // If all in one node
   if( leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size() ){
 	  // If all triangles are put in one node there should only be 2 more inner nodes untill the algorithm is forces to quit

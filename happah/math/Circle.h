@@ -8,7 +8,6 @@
 
 #include "happah/HappahTypes.h"
 #include "happah/kdtree/BBox.h"
-#include "happah/kdtree/BSphere.h"
 #include "happah/math/Triangle.h"
 
 #include "happah/LoggingUtils.h"
@@ -593,12 +592,6 @@ struct Circle {
 		} else {
 			return false;
 		}
-	}
-
-
-	// Required for kd-Tree
-	BSphere computeBoundingSphere() {
-	  return BSphere(m_center, m_radius);
 	}
 
 	// Note that the conversion here regards the circle as a sphere.

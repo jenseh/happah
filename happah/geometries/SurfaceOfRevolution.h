@@ -35,7 +35,7 @@ public:
      * @param nWedges count of the wedges with which the triangle mesh is calculated.
      * @return
      */
-    TriangleMesh_ptr toTriangleMesh(uint nWedges = 60);
+    TriangleMesh_ptr toTriangleMesh(uint nWedges = 160);
 
 private:
     std::vector<hpvec2> m_heightProfile;

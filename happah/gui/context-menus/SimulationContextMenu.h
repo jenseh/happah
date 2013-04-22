@@ -19,6 +19,9 @@ private:
 	GUIManager& m_guiManager;
 	Simulation_ptr m_simulation;
 
+private slots:
+	void changeToolVisibility();
+
 
 };
 #endif /* SIMULATIONCONTEXTMENU_H_ */

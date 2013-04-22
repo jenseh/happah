@@ -2,6 +2,16 @@
 
 KDTreeLeaf::KDTreeLeaf(std::vector<Triangle>* triangles, int depth)
 {
+	/*
+		cout<<triangles->size()<<" "<<depth<<endl;
+		if( triangles->size() == 722 ) {
+			for( int i = 0; i < 722; i++) {
+				for( int j = 0; j < 3; j++) {
+					LoggingUtils::printVec("Name:", triangles->at(i).vertices[j]);
+				}
+				cout<<endl;
+			}
+		}*/
         m_triangles = triangles;
 }
 

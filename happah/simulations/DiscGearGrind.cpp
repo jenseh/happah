@@ -1,7 +1,7 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh)
-	: m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.05)
+	: m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.025)
 {
 	hpreal alpha = m_gear->getHelixAngle();
 	hpreal z = -m_gear->getFaceWidth();
@@ -56,6 +56,7 @@ DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  RigidAffineTransformation(),  m_disc, m_discMesh, m_gearMovement.getRigidAffineTransformation(time).inverse());
 }
 
+
 DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
 	map<hpreal,DiscGearGrindResult>::iterator it = m_precalcResults.lower_bound(time);
 	if( it == m_precalcResults.end() ){
@@ -72,3 +73,4 @@ void DiscGearGrind::runSimulation(){
 		m_precalcResults.insert(pair<hpreal, DiscGearGrindResult>(t, calculateSimulationResult(t)));
 	}
 }
+

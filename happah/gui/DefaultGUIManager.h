@@ -77,6 +77,7 @@ private:
 
 		void createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear);
 		void createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear);
+		void createWormGearGrind(Worm_ptr worm, SimpleGear_ptr simpleGear);
 		void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
 		void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 

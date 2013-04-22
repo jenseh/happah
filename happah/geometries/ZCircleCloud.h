@@ -9,24 +9,25 @@
 class ZCircleCloud
 {
 public:
-  ZCircleCloud(hpreal maxRadius, hpreal startZ, hpreal endZ, hpuint resolutionZ, hpvec3 referenceDir);
+  ZCircleCloud(hpreal maxRadius, hpreal startZ, hpreal endZ, hpuint resolutionZ);
 
   hpuint getResolutionZ();
-  hpvec3 getReferenceDir();
+  hpvec2 getReferenceDir();
   hpreal getMaxRadius();
 
+  bool isInZRange(hpreal posZ);
   hpuint convertPosZToPosZIdx(hpreal posZ);
   hpreal convertPosZIdxToPosZ(hpuint posZIdx);
   Circle computeOuterCircle(hpuint posZIdx);
 
 private:
   hpreal m_maxRadius;
+
   hpreal m_startZ;
   hpreal m_endZ;
-
   hpuint m_resolutionZ;
 
-  hpvec3 m_referenceDir;
+  hpvec2 m_referenceDir;
 };
 
 typedef std::shared_ptr<ZCircleCloud> ZCircleCloud_ptr;

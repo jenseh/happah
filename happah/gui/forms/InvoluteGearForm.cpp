@@ -15,7 +15,7 @@ InvoluteGearForm::InvoluteGearForm(GUIManager& guiManager, QWidget* parent)
 		m_helixAngleSlider(new LabeledRealValuedSlider(tr("helix angle"))),
 		m_moduleSlider(new LabeledRealValuedSlider(tr("module"))),
 		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))),
-		m_nTeethSlider(new LabeledIntegerSlider(tr("number of teeth"), false)) {
+		m_nTeethSlider(new LabeledIntegerSlider(tr("number of teeth"))) {
 	QPushButton* createButton = new QPushButton("create gear");
 
 	QVBoxLayout* layout = new QVBoxLayout();

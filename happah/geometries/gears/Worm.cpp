@@ -157,9 +157,8 @@ ZCircleCloud_ptr Worm::toZCircleCloud(hpuint pointsPerTooth) {
 
 	// Determine resolution (important for following simulations)
 	hpuint resolutionZ = m_toothCount * pointsPerTooth;
-	hpvec3 referenceDir = hpvec3(1.0, 0.0, 0.0);
 
-	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ, referenceDir));
+	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ));
 	return result;
 }
 

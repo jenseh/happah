@@ -26,9 +26,9 @@ private:
 	bool m_discInserted;
 	GUIManager& m_guiManager;
 	hpreal m_pressureAngle;
+	LabeledRealValuedSlider* m_pressureAngleSlider;
 	hpreal m_radius;
 	LabeledRealValuedSlider* m_radiusSlider;
-	LabeledRealValuedSlider* m_pressureAngleSlider;
 
 	void updateDisc();
 	void updateRanges();

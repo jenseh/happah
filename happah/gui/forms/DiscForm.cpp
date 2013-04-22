@@ -7,10 +7,10 @@ DiscForm::DiscForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
 		m_discInserted(false),
 		m_guiManager(guiManager),
-		m_radius(1.0),
-		m_radiusSlider(new LabeledRealValuedSlider(tr("approximated radius"))),
 		m_pressureAngle(30.0),
-		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))){
+		m_pressureAngleSlider(new LabeledRealValuedSlider(tr("pressure angle"))),
+		m_radius(1.0),
+		m_radiusSlider(new LabeledRealValuedSlider(tr("approximated radius"))) {
 	QPushButton* createButton = new QPushButton("create disc");
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -23,7 +23,7 @@ DiscForm::DiscForm(GUIManager& guiManager, QWidget* parent)
 	connect(m_radiusSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changeRadius(hpreal)));
 	connect(m_pressureAngleSlider, SIGNAL(valueChanged(hpreal)), this, SLOT(changePressureAngle(hpreal)));
 
-	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(m_radius/2.0,m_pressureAngle / 180.0 * M_PI ,0,0));
+	m_disc = DiscGenerator::generateDiscFrom(StandardProfile(m_radius/2.0, m_pressureAngle / 180.0 * M_PI, 0, 0));
 	updateRanges();
 
 }

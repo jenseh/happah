@@ -3,7 +3,7 @@
 
 #include "happah/gui/Viewport.h"
 
-Viewport::Viewport(ViewportListener& viewportListener,DrawManager& drawManager, QWidget* parent)
+Viewport::Viewport(ViewportListener& viewportListener, DrawManager& drawManager, QWidget* parent)
 	: QGLWidget(drawManager.getGlContext(), parent),
 	  m_viewportListener(viewportListener),
 	  m_drawManager(drawManager),

@@ -68,11 +68,11 @@ public:
 	WormGearGrindResult(CylindricalGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
 						Worm_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
 		m_gear(gear),
-        m_gearColor(new std::vector<hpcolor>(*gearColor) ),
+        m_gearColor(new std::vector<hpcolor>(*gearColor)),
 		m_gearMesh(gearMesh),
 		m_gearTransformation(gearTransformation),
 		m_tool(tool),
-        m_toolColor(hpvec4(0.5, 0.5, 0.5, 1.0)),
+        m_toolColor(hpvec4(0.95, 0.4, 0.4, 1.0)),
 		m_toolMesh(toolMesh),
 		m_toolTransformation(toolTransformation){
 	}
@@ -98,7 +98,7 @@ public:
   WormGearGrindResult getSimulationResult(hpreal time);
 
   void runSimulation();
-  void calculateGrindingDepth(hpreal time);
+  CircularSimulationResult* calculateGrindingDepth(hpreal time);
 
 private:
   void init(hpreal gearReferenceRadius);
@@ -126,12 +126,10 @@ private:
 	Kinematic m_gearMovement;
 	Kinematic m_wormMovement;
 	KDTree* m_kdTree;
-
-	CircularSimulationResult simResult;
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
-  constexpr static size_t m_resultAngleSlotCount = 360;
+  constexpr static size_t m_resultAngleSlotCount = 10;
 };
 
 typedef std::shared_ptr<WormGearGrind> WormGearGrind_ptr;

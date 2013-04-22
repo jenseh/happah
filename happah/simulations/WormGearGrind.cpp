@@ -2,12 +2,12 @@
 #include <glm/glm.hpp>
 
 WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh)
-	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(1.0) {
+	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.1) {
 	init(gear->getReferenceRadius());
 }
 
 WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh)
-	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(1.0) {
+	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.1) {
 	init(gearReferenceRadius);
 }
 
@@ -17,7 +17,7 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
 	hpreal rotY = 90.0;
 
 	hpreal x = m_worm->getModule() * M_PI / 4.0;
-	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius / 1.5; //TODO: remove the factor
+	hpreal y = - m_worm->getReferenceRadius(); // + gearReferenceRadius / 1.5; //TODO: remove the factor
 	hpvec3 position = hpvec3(x, y, 0.0);
 
     m_wormMovement = Kinematic(
@@ -59,8 +59,8 @@ WormGearGrind::~WormGearGrind() {
 }
 
 
-void WormGearGrind::calculateGrindingDepth(hpreal time) {
-	std::cout << "Starting simulation at time " << time << ":" << std::endl;
+CircularSimulationResult* WormGearGrind::calculateGrindingDepth(hpreal time) {
+//	std::cout << "Starting simulation at time " << time << ":" << std::endl;
 
    hpmat4x4 gearModelMatrix = m_gearMovement.getMatrix(time);
    hpmat4x4 wormModelMatrix = m_wormMovement.getMatrix(time);
@@ -68,11 +68,11 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
 
 
    size_t resolutionZ = m_wormCircleCloud->getResolutionZ();
-   simResult = CircularSimulationResult(m_resultAngleSlotCount, resolutionZ);
+   CircularSimulationResult* simResult = new CircularSimulationResult(m_resultAngleSlotCount, resolutionZ);
 
 
-   clock_t start, end;
-   start = clock();
+//   clock_t start, end;
+//   start = clock();
 
    // Compute the distance between every circle and triangle
    for (hpuint posZIdx = 0; posZIdx < resolutionZ; posZIdx++) {
@@ -88,8 +88,8 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
        for (; pos != end; pos++) {
            CircleHitResult hitResult = *pos;
 
-           simResult.addItem(hitResult.hitPointA, posZIdx);
-           simResult.addItem(hitResult.hitPointB, posZIdx);
+           simResult->addItem(hitResult.hitPointA, posZIdx);
+           simResult->addItem(hitResult.hitPointB, posZIdx);
        }
 
        // Check whether
@@ -104,7 +104,7 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
    // Print out results
 //   for (size_t z = 0; z < resolutionZ; z++) {
 //     for (size_t angleSlot = 0; angleSlot < m_resultAngleSlotCount; angleSlot++) {
-//         float radius = simResult.getItem(angleSlot, z);
+//         float radius = simResult->getItem(angleSlot, z);
 //         if (radius == INFINITY) {
 //        	 radius = m_maxDistance;
 //         }
@@ -113,9 +113,9 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
 //     }
 //   }
 
-   end = clock();
-   std::cout << "Time required for execution: " << (hpreal) (end-start) / CLOCKS_PER_SEC << " seconds." << std::endl << std::endl;
-   return;
+//   end = clock();
+//   std::cout << "Time required for execution: " << (hpreal) (end-start) / CLOCKS_PER_SEC << " seconds." << std::endl << std::endl;
+   return simResult;
 }
 
 
@@ -125,6 +125,7 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& posZIdx, std::li
 //  LoggingUtils::print(transformedCircle);
 
   m_kdTree->intersectAll(transformedCircle, hitResults);
+  hpmat4x4 transformation = /*glm::inverse(wormModelMatrix) */ gearModelMatrix; //TODO: Check whether the matrices are valid
 
   // Transform result coordinates back to world
   std::list<CircleHitResult>::iterator iterator;
@@ -134,8 +135,8 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& posZIdx, std::li
 	  hpvec3 pointA = (*iterator).hitPointA;
 	  hpvec3 pointB = (*iterator).hitPointB;
 
-	  iterator->hitPointA = transformPoint(pointA, gearModelMatrix);
-	  iterator->hitPointB = transformPoint(pointB, gearModelMatrix);
+	  iterator->hitPointA = transformPoint(pointA, transformation);
+	  iterator->hitPointB = transformPoint(pointB, transformation);
 //	  LoggingUtils::printVec("hitPointA", iterator->hitPointA); //TODO: Result points seem to be okay
 //	  LoggingUtils::printVec("hitPointB", iterator->hitPointB);
 //	  std::cout << "-----------" << std::endl;
@@ -175,26 +176,41 @@ hpvec3 inline WormGearGrind::transformVector(hpvec3& vector, hpmat4x4& transform
 
 
 WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
-    calculateGrindingDepth(time);
+	CircularSimulationResult* simResult = calculateGrindingDepth(time);
 
 	vector<hpvec3>* verticesAndNormals = m_gearMesh->getVerticesAndNormals();
 	vector<hpuint>* indices = m_gearMesh->getIndices();
-//	hpmat4x4 gearModelMatrix = m_gearMovement.getMatrix(time); //TODO: unused
+	hpmat4x4 gearModelMatrix = m_gearMovement.getMatrix(time);
 
     // Fill color
     for(hpuint i = 0; i < m_gearMesh->getVertexCount(); i++){
-    	hpvec3 point = verticesAndNormals->at(2 * indices->at(i));
-    	hpuint posZSlot = m_wormCircleCloud->convertPosZToPosZIdx(point.z);
-    	hpreal distance = simResult.getItem(point, posZSlot);
-    	if (distance > m_maxDistance) distance = m_maxDistance;
-//    	hpreal distanceRatio =  distance / m_maxDistance;
+    	hpvec3 point = transformPoint(verticesAndNormals->at(2 * indices->at(i)), gearModelMatrix); //TODO: are world coordinates correct?
 
-    	if(distance >= 0) {
-    		m_gearColor->at(i) = hpcolor(0.0, distance, 1.0, 1.0);
-    	} else{
-            m_gearColor->at(i) = hpcolor(1.0, 1.0 + distance, 1.0 + distance, 1.0);
+    	if (m_wormCircleCloud->isInZRange(point.z)) {
+			hpuint posZSlot = m_wormCircleCloud->convertPosZToPosZIdx(point.z);
+			hpreal resultRadius = simResult->getItem(point, posZSlot);
+			hpreal currentRadius = glm::length(hpvec2(point.x, point.y));
+
+			hpreal distance = currentRadius - resultRadius;
+			if (abs(distance) < m_maxDistance) {
+				std::cout << resultRadius << " " << currentRadius << " " << distance << std::endl;
+			}
+
+			if (distance > m_maxDistance) distance = m_maxDistance;
+			else if (distance < -m_maxDistance) distance = -m_maxDistance;
+	    	hpreal distanceRatio =  distance / m_maxDistance;
+
+			if(distance >= 0) {
+				m_gearColor->at(i) = hpcolor(0.0, 0.5 * (1.0 - distanceRatio), distanceRatio, 1.0);
+			} else {
+	            m_gearColor->at(i) = hpcolor(-1.0 * distanceRatio, 0.5 * (1.0 + distanceRatio), 1.0, 1.0);
+			}
+    	} else {
+            m_gearColor->at(i) = hpcolor(0.0, 0.5, 0.0, 1.0);
     	}
     }
+
+    delete simResult;
     return WormGearGrindResult(m_gear, m_gearColor, m_gearMesh, m_gearMovement.getRigidAffineTransformation(time),
     						   m_worm, m_wormMesh, m_wormMovement.getRigidAffineTransformation(time));
 }

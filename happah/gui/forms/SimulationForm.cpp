@@ -10,25 +10,7 @@ SimulationForm::SimulationForm(GUIManager& guiManager, QWidget* parent)
 	QPushButton* createButton = new QPushButton("create simulation");
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->addWidget(m_simulationTimer);
-	layout->addWidget(createButton);
 	setLayout(layout);
-
-	connect(createButton, SIGNAL(clicked()), this, SLOT(createSimulation()));
 }
 
 SimulationForm::~SimulationForm() {}
-
-
-
-void SimulationForm::createSimulation() {}
-
-void SimulationForm::reset() {
-	//TODO: either fill or remove this class
-}
-
-
-void SimulationForm::updateSimulation(hpreal time) {
-	//TODO: either fill or remove this class
-    //if(m_simulationInserted)
-        //m_guiManager.update(m_simulation->getSimulationResult(time));
-}

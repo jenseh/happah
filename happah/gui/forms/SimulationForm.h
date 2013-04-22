@@ -17,7 +17,7 @@ public:
 	SimulationForm(GUIManager& guiManager, QWidget* parent = 0);
 	~SimulationForm();
 
-	void reset();
+	void reset() {};
 	void handleSelection() {emit selected(this);}
 signals:
 		void selected(Form* form);
@@ -25,11 +25,6 @@ private:
 	GUIManager& m_guiManager;
 	bool m_simulationInserted;
 	SimulationTimer* m_simulationTimer;
-
-	void updateSimulation(hpreal time);
-
-private slots:
-	void createSimulation();
 
 };
 

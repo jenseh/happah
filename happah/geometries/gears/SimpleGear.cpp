@@ -6,7 +6,7 @@ SimpleGear::SimpleGear(const ToothProfile& toothProfile, hpreal helixAngle, hpre
 	m_toothProfile(ToothProfile_ptr(new ToothProfile(toothProfile))), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
-SimpleGear::SimpleGear(const BSplineCurve& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
+SimpleGear::SimpleGear(const BSplineCurve<hpvec3>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
 	m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 	m_toothProfile = ToothProfile_ptr(new ToothProfile(toothProfileCurve));
 }
@@ -18,7 +18,7 @@ SimpleGear::~SimpleGear() {}
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve& gearProfile) {
+void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve<hpvec3>& gearProfile) {
 	hpreal rotation = -glm::tan(m_helixAngle) * z * 180.0f / M_PI;
 	m_toothProfile->rotate(rotation);
 	m_toothProfile->extendToGearCurve(gearProfile);
@@ -97,7 +97,7 @@ void SimpleGear::setToothProfile(ToothProfile* curve) {
 }
 
 void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {
-	BSplineCurve splineXY = getCopyWithBeginOfToothAtTop()->getCurve();
+	BSplineCurve<hpvec3> splineXY = getCopyWithBeginOfToothAtTop()->getCurve();
 	hpreal low,high;
 	splineXY.getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSpaceProfile.capacity() - 1); // -1 so whole thooth is sampled
@@ -114,7 +114,7 @@ void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {
 
 void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 	hpuint nPointsPerTooth = toothProfile.size();
-	BSplineCurve splineXY = getCopyWithBeginOfToothAtTop()->getCurve();
+	BSplineCurve<hpvec3> splineXY = getCopyWithBeginOfToothAtTop()->getCurve();
 	hpreal low,high;
 	splineXY.getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(nPointsPerTooth - 1); // -1 so whole thooth is sampled

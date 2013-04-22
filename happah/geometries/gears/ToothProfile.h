@@ -10,11 +10,11 @@
 class ToothProfile {
 public:
 	ToothProfile();
-	ToothProfile(const BSplineCurve& toothProfile);
+	ToothProfile(const BSplineCurve<hpvec3>& toothProfile);
 	~ToothProfile();
 
-	void extendToGearCurve(BSplineCurve& gearProfile) const;
-	BSplineCurve getCurve() const;
+	void extendToGearCurve(BSplineCurve<hpvec3>& gearProfile) const;
+	BSplineCurve<hpvec3> getCurve() const;
 	hpreal getAngularPitch() const;
 	hpuint getNumberOfPoints() const;
 	hpuint getNumberOfTeeth() const;
@@ -28,7 +28,7 @@ public:
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
 private:
-	BSplineCurve m_toothProfileCurve;
+	BSplineCurve<hpvec3> m_toothProfileCurve;
 };
 
 typedef std::shared_ptr<ToothProfile> ToothProfile_ptr;

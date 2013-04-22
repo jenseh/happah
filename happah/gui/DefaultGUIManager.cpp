@@ -230,12 +230,12 @@ bool DefaultGUIManager::init() {
 void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
-		doInsert1D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert1D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 	if( drawMode & HP_POINT_CLOUD ) {
-		doInsert0D<BSplineCurve, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert0D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
@@ -346,8 +346,8 @@ void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
 	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
 	m_sceneManager->insert(bSplineCurve, lineMesh, color);
 	*/
-	doUpdate0D<BSplineCurve>(bSplineCurve);
-	doUpdate1D<BSplineCurve>(bSplineCurve);
+	doUpdate0D<BSplineCurve<hpvec3>>(bSplineCurve);
+	doUpdate1D<BSplineCurve<hpvec3>>(bSplineCurve);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {

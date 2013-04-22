@@ -4,12 +4,12 @@
 #include <iostream>
 
 ToothProfile::ToothProfile() {
-	m_toothProfileCurve = BSplineCurve();
+	m_toothProfileCurve = BSplineCurve<hpvec3>();
 	m_toothProfileCurve.setClamped(true);
 	m_toothProfileCurve.setDegree(3);
 }
 
-ToothProfile::ToothProfile(const BSplineCurve& toothProfile) : m_toothProfileCurve(toothProfile){
+ToothProfile::ToothProfile(const BSplineCurve<hpvec3>& toothProfile) : m_toothProfileCurve(toothProfile){
 	if(!m_toothProfileCurve.getClamped()) {
 		std::cerr << "A BSplineCurve for a ToothProfile has to be clamed! Otherwise the resulting gear will look against expectation." << std::endl;
 		m_toothProfileCurve.setClamped(true);
@@ -95,7 +95,7 @@ bool ToothProfile::pointsSavedInClockDirection() const {
 // Remark: the numbers behind the literals mean, that the corresponding points
 // are rotated around the origin. As point a equals point i when rotated with
 // one anuglar pitch, point i is dropped
-void ToothProfile::extendToGearCurve(BSplineCurve& gearProfile) const {
+void ToothProfile::extendToGearCurve(BSplineCurve<hpvec3>& gearProfile) const {
 
 	hpuint nTeeth = getNumberOfTeeth();
 	hpuint degree = m_toothProfileCurve.getDegree();
@@ -138,10 +138,10 @@ void ToothProfile::extendToGearCurve(BSplineCurve& gearProfile) const {
 		*(++gearKnotIt) = lastKnotValue;
 	}
 	*gearPointIt = gearControlPoints.front();
-	gearProfile = BSplineCurve(gearControlPoints, gearKnots);
+	gearProfile = BSplineCurve<hpvec3>(gearControlPoints, gearKnots);
 }
 
-BSplineCurve ToothProfile::getCurve() const {
+BSplineCurve<hpvec3> ToothProfile::getCurve() const {
 	return m_toothProfileCurve;
 }
 
@@ -180,13 +180,13 @@ void ToothProfile::setPointOfToothProfile(hpuint toothProfileIndex, hpvec3 newVa
 }
 
 PointCloud* ToothProfile::toPointCloud() {
-	BSplineCurve curve;
+	BSplineCurve<hpvec3> curve;
 	extendToGearCurve(curve);
 	return curve.toPointCloud();
 }
 
 LineMesh* ToothProfile::toLineMesh() {
-	BSplineCurve curve;
+	BSplineCurve<hpvec3> curve;
 	extendToGearCurve(curve);
 	return curve.toLineMesh();
 }

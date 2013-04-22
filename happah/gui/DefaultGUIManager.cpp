@@ -54,9 +54,11 @@ void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
 }
 
 void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh(15, 4));
-	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
-	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, involuteGear, gearMesh));
+	SimpleGear_ptr simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
+
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(15, 4));
+	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(30, 100);
+	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, simpleGear, involuteGear->getReferenceRadius(), gearMesh));
 
 	QThread* thread = new QThread();
 	WormGearGrindWorkerListener* listener = new WormGearGrindWorkerListener(this);
@@ -125,7 +127,7 @@ template<class G, class S, class F>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
 	// TODO : guiStateNode->registerForm
-	doInsert0D(geometry, guiStateNode);
+	doInsert0D<G, S>(geometry, guiStateNode);
 }
 
 template<class G, class S, class F, class M>
@@ -392,13 +394,14 @@ void DefaultGUIManager::useForBSpline(Plane_ptr plane) {
 	m_toolPanel->getBSplineCurveForm()->setPlane(plane);
 }
 
-void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
-	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
-}
-
-void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
-	m_toolPanel->getSimulationForm()->setGear(gear, gearMesh);
-}
+//TODO: This should be removed since it is discriminating other simulations that dont have a disc..
+//void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
+//	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
+//}
+//
+//void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
+//	m_toolPanel->getSimulationForm()->setGear(gear, gearMesh);
+//}
 
 void DefaultGUIManager::visitScene(SceneVisitor& visitor) {
 	m_sceneManager->accept(visitor);
@@ -476,7 +479,7 @@ void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handle
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {
-		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
+//		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
 		//std::cout << "(" << secPoint.x << ", " << secPoint.y << ", " << secPoint.z << ")" << std::endl;
 	}
 	else {

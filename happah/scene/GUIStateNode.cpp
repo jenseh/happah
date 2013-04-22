@@ -19,7 +19,7 @@ const string& GUIStateNode::getName() const {
 }
 
 GUIStateNode_ptr GUIStateNode::getptr() {
-	return static_pointer_cast<GUIStateNode>(shared_from_this());
+	return static_pointer_cast<GUIStateNode>(shared_from_this()); //TODO: what is this?
 }
 
 TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
@@ -145,8 +145,9 @@ DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearG
 	:	GUIStateNode(name), m_discGearGrind(discGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
 
 DiscGearGrindGUIStateNode::~DiscGearGrindGUIStateNode() {
-	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind)
+//	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind) {
 		m_simulationForm->reset();
+//	}
 }
 
 ContextMenu* DiscGearGrindGUIStateNode::getContextMenu() const {
@@ -159,7 +160,7 @@ shared_ptr<void> DiscGearGrindGUIStateNode::getData() const {
 }
 
 Form* DiscGearGrindGUIStateNode::getForm() {
-	m_simulationForm->setDiscGearGrind(m_discGearGrind);
+//	m_simulationForm->setDiscGearGrind(m_discGearGrind);
 	return m_simulationForm;
 }
 

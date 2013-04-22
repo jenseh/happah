@@ -20,6 +20,8 @@
 
 class GUIManager {
 public:
+	virtual ~GUIManager() {};
+
 	virtual void createDiscGearGrind(SimpleGear_ptr gear) = 0;
 	virtual void generateDisc(CylindricalGear_ptr cylindricalGear) = 0;
 	virtual void generateWorm(InvoluteGear_ptr involuteGear) = 0;
@@ -47,8 +49,8 @@ public:
 	virtual void update(ToothProfile_ptr toothProfile) = 0;
 	virtual void update(Worm_ptr worm) = 0;
 	virtual void useForBSpline(Plane_ptr plane) = 0;
-	virtual void useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh)= 0;
-	virtual void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr simpleGearMesh) = 0;
+//	virtual void useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh)= 0;
+//	virtual void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr simpleGearMesh) = 0;
 	virtual void visitScene(SceneVisitor& visitor) = 0;
 	virtual void visitScene(SimulationVisitor& visitor) = 0;
 	virtual Plane_ptr getParentPlane(BSplineCurve_ptr bSplineCurve) = 0;

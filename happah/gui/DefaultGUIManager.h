@@ -18,11 +18,12 @@ using namespace std;
 #include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/geometries/WormGenerator.h"
-#include "happah/simulations/WormGearGrind.h"
 #include "happah/HappahTypes.h"
 #include "happah/HappahConstants.h"
 #include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/simulations/DiscGearGrind.h"
+#include "happah/simulations/WormGearGrind.h"
 
 class DefaultGUIManager : public GUIManager {
 
@@ -62,8 +63,8 @@ public:
 	void update(ToothProfile_ptr toothProfile);
 	void update(Worm_ptr worm);
 	void useForBSpline(Plane_ptr plane);
-	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
-	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+//	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
+//	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
 	void visitScene(SimulationVisitor& visitor);
 	const SceneManager_ptr getSceneManager();

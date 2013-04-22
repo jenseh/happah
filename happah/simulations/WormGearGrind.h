@@ -78,7 +78,7 @@ public:
 	}
 };
 
-class WormGearGrind
+class WormGearGrind : public Simulation
 {
 public:
   WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);
@@ -103,14 +103,13 @@ public:
 private:
   void init(hpreal gearReferenceRadius);
 
-  hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
-  hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
   void inline computeIntersectingTriangles(hpuint& z, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
 
-
-  Triangle translateTriangle(Triangle& triangle, hpvec3& vector);
-  Triangle transformTriangle(Triangle& triangle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
+  hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
   Circle transformCircle(Circle& circle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
+//  Triangle transformTriangle(Triangle& triangle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
+  hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
+  Triangle translateTriangle(Triangle& triangle, hpvec3& vector);
 
 private:
 	/**

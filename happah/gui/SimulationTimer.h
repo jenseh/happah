@@ -16,8 +16,8 @@ class SimulationTimer: public QGroupBox, public SimulationVisitor {
 	Q_OBJECT
 	GUIManager& m_listener;
 	hpreal m_currentTime;
+	hpreal m_minTime, m_maxTime;
 	hpreal m_deltaTick; // delta time passed per tick
-	hpreal m_minTime,m_maxTime;
 	QPushButton* m_startStopButton;
 	hpreal m_tickTime;// how often in ms
 	QTimer* m_timer;

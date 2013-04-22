@@ -8,6 +8,8 @@ class PointCloudRenderStateNode;
 class DrawVisitor {
 
 public:
+	virtual ~DrawVisitor() {};
+
 	virtual void draw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation) = 0;
 	virtual void draw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation)= 0;
 

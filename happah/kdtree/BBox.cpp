@@ -7,7 +7,7 @@ BBox::BBox() {
 	m_min = hpvec3(INFINITY, INFINITY, INFINITY);
 	m_max = hpvec3(-INFINITY, -INFINITY, -INFINITY);
 }
-BBox::BBox(glm::vec3 min, glm::vec3 max)
+BBox::BBox(hpvec3 min, hpvec3 max)
 {
   m_min = min;
   m_max = max;
@@ -22,19 +22,19 @@ void BBox::addTriangle(Triangle& t){
 	}
 }
 
-glm::vec3* BBox::getMin() {
+hpvec3* BBox::getMin() {
   return &m_min;
 }
 
-void BBox::setMin(glm::vec3 min) {
+void BBox::setMin(hpvec3 min) {
   m_min = min;
 }
 
-glm::vec3* BBox::getMax() {
+hpvec3* BBox::getMax() {
   return &m_max;
 }
 
-void BBox::setMax(glm::vec3 max) {
+void BBox::setMax(hpvec3 max) {
   m_max = max;
 }
 
@@ -47,7 +47,7 @@ bool BBox::intersects(BBox& other) {
 /*
 // Splits the current box into 2 boxes along the specified axis
 std::vector<BBox*> BBox::split(int axis, float axisValue) {
-  glm::vec3 minMiddle, maxMiddle;
+  hpvec3 minMiddle, maxMiddle;
   if (axis == 0) {      
       minMiddle[0] = axisValue;
       minMiddle[1] = m_max[1];

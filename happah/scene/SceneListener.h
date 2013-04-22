@@ -6,6 +6,8 @@
 class SceneListener {
 
 public:
+	virtual ~SceneListener() {};
+
 	virtual void handleSubtreeInsertedEvent(Node_ptr root) = 0;
 	virtual void handleSubtreesInsertedEvent(vector<Node_ptr>& roots) = 0;
 	virtual void handleSubtreeRemovedEvent(Node_ptr root) = 0;

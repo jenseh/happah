@@ -20,8 +20,8 @@ private:
 	SurfaceOfRevolution_ptr m_disc;
 	TriangleMesh_ptr m_discMesh;
 
-private slots:
-	void useDiscInSumulation();
+//private slots:
+//	void useDiscInSumulation();
 
 };
 

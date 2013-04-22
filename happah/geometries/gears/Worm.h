@@ -3,7 +3,6 @@
 
 #include <glm/glm.hpp>
 #include <cmath>
-
 #include <memory>
 
 #include "happah/HappahTypes.h"

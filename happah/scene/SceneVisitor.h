@@ -19,6 +19,8 @@ class SpherePatchNode;
 class SceneVisitor {
 
 public:
+	virtual ~SceneVisitor() {};
+
 	virtual void visit(BSplineCurveNode& bSplineCurveNode);
 	virtual void visit(FocalSplineNode& focalSplineNode);
 	virtual void visit(InvoluteGearNode& involuteGearNode) = 0;

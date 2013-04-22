@@ -8,7 +8,7 @@
 using namespace std;
 
 RenderStateNode::RenderStateNode(vector<hpvec3>* verticesAndNormals, hpcolor& color)
-	:m_verticesAndNormals(verticesAndNormals),m_color(color), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
+	: m_verticesAndNormals(verticesAndNormals), m_color(color), m_colorVector(0), m_vertexBufferID(0), m_vertexArrayObjectID(0), m_colorBufferID(0), m_initialized(false), m_hasColorVector(false) {
 
 	Material material;
 	material.setAmbientFactor(1.5f);

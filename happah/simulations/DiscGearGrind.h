@@ -96,7 +96,7 @@ public:
      * @param time The time of the simulation result ( time has to be in the interval [0,1] ).
      * @return The simulation result with all the information needed to display the simulation at the given time.
      */
-    DiscGearGrindResult getSimulationResult(double time);
+    DiscGearGrindResult getSimulationResult(hpreal time);
     /**
      * @brief runSimulation precalculates the STEP_COUNT simulation steps and stores them in private member m_precalcResults.
      */

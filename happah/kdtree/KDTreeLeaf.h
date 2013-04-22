@@ -14,7 +14,7 @@ public:
   KDTreeLeaf(std::vector<Triangle>* triangles, int depth);
   ~KDTreeLeaf();
 
-  bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth);
+  bool intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults, BBox& intersectorBox, hpuint depth);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);
   hpuint countTriangles();
 

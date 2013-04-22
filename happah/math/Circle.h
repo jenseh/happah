@@ -72,7 +72,7 @@ struct Circle {
 	//                - No: -> Return false
 	//            - No: -> Return false
 	//        - No: -> Return false
-	bool intersect(Triangle* triangle, std::list<CircleHitResult*>* hitResults) {
+	bool intersect(Triangle* triangle, std::list<CircleHitResult>* hitResults) {
 		hpvec3 t_normal = triangle->computeNormal();
 
 		//LoggingUtils::printVal("radius", m_radius);
@@ -149,14 +149,14 @@ struct Circle {
 				    	hitPoint = &closestPoint02;
 				    }
 
-				    CircleHitResult* tempHitResult = new CircleHitResult(*hitPoint, *hitPoint, triangle);
+				    CircleHitResult tempHitResult = CircleHitResult(*hitPoint, *hitPoint, triangle);
 				    hitResults->push_back(tempHitResult);
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
 						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
-						CircleHitResult* tempHitResult = new CircleHitResult(m_center, m_center, triangle);
+						CircleHitResult tempHitResult = CircleHitResult(m_center, m_center, triangle);
 						hitResults->push_back(tempHitResult);
 						return true;
 					} else {
@@ -277,7 +277,7 @@ struct Circle {
 					// In case min and max are equal, we would get tripple NAN
 					if (!isValidVector(closestPointToCenter)) closestPointToCenter = *minVec;
 
-					CircleHitResult* tempHitResult = new CircleHitResult(*minVec, *maxVec, triangle);
+					CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec, triangle);
 					hitResults->push_back(tempHitResult);
 					// std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
 					// std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;

@@ -19,10 +19,13 @@ CircularSimulationResult::CircularSimulationResult(hpuint angleSteps, hpuint pos
 void CircularSimulationResult::addItem(hpvec3 point, hpuint posZSlot) {
   // Compute the angles of the triangle points to the reference dir
   hpvec3 centerToPoint = glm::normalize(point - hpvec3(0.0, 0.0, point.z));
-  hpreal angle = acos(glm::dot(centerToPoint, m_referenceDir));
+  hpreal angle = acos(glm::dot(centerToPoint, m_referenceDir)); //TODO: missing sign
+  if (centerToPoint.y < 0) angle = M_PI - angle;
   hpreal radius = glm::sqrt(point.x * point.x + point.y * point.y);
 
-  hpuint angleSlot = angle / m_angleRange;
+  std::cout << "angle: " << angle << ", radius: " << radius << std::endl;
+
+  hpuint angleSlot = round(angle / m_angleRange);
   hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
   hpreal oldRadius = getItem(slot, posZSlot);
@@ -47,6 +50,7 @@ hpreal CircularSimulationResult::getItem(hpvec3 point, hpuint posZSlot) {
 	  // Compute the angles of the triangle points to the reference dir
 	  hpvec3 centerToPoint = glm::normalize(point - hpvec3(0.0, 0.0, point.z));
 	  hpreal angle = acos(glm::dot(centerToPoint, m_referenceDir));
+	  if (centerToPoint.y < 0) angle = M_PI - angle;
 	  hpreal radius = glm::sqrt(point.x * point.x + point.y * point.y);
 
 	  int angleSlot = angle / m_angleRange;

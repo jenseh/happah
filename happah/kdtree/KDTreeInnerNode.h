@@ -12,7 +12,7 @@ public:
   KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox, int terminateDepth = -1);
   ~KDTreeInnerNode();
 
-  bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth);
+  bool intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults, BBox& intersectorBox, hpuint depth);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);
   hpuint countTriangles();
 

@@ -76,20 +76,20 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
 
    // Compute the distance between every circle and triangle
    for (hpuint posZIdx = 0; posZIdx < resolutionZ; posZIdx++) {
-       std::list<CircleHitResult*>* hitResults = new std::list<CircleHitResult*>;
+       std::list<CircleHitResult>* hitResults = new std::list<CircleHitResult>;
 
        // Check upper bound
        computeIntersectingTriangles(posZIdx, hitResults, gearModelMatrix, wormModelMatrix);
 
 
        // Get the intersection information and use it to color vertices
-       std::list<CircleHitResult*>::iterator pos = hitResults->begin();
-       std::list<CircleHitResult*>::iterator end = hitResults->end();
+       std::list<CircleHitResult>::iterator pos = hitResults->begin();
+       std::list<CircleHitResult>::iterator end = hitResults->end();
        for (; pos != end; pos++) {
-           CircleHitResult* hitResult = *pos;
+           CircleHitResult hitResult = *pos;
 
-           simResult.addItem(hitResult->hitPointA, posZIdx);
-           simResult.addItem(hitResult->hitPointB, posZIdx);
+           simResult.addItem(hitResult.hitPointA, posZIdx);
+           simResult.addItem(hitResult.hitPointB, posZIdx);
        }
 
        // Check whether
@@ -119,18 +119,27 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
 }
 
 
-void inline WormGearGrind::computeIntersectingTriangles(hpuint& posZIdx, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix) {
+void inline WormGearGrind::computeIntersectingTriangles(hpuint& posZIdx, std::list<CircleHitResult>* hitResults, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix) {
   Circle circle = m_wormCircleCloud->computeOuterCircle(posZIdx);
   Circle transformedCircle = transformCircle(circle, gearModelMatrix, wormModelMatrix);
-  LoggingUtils::print(transformedCircle);
+//  LoggingUtils::print(transformedCircle);
 
   m_kdTree->intersectAll(transformedCircle, hitResults);
 
-//  std::list<CircleHitResult*>::const_iterator iterator;
-//  for (iterator = hitResults->begin(); iterator != hitResults->end(); ++iterator) {
+  // Transform result coordinates back to world
+  std::list<CircleHitResult>::iterator iterator;
+  for (iterator = hitResults->begin(); iterator != hitResults->end(); ++iterator) {
 //	  LoggingUtils::printVec("hitPointA", (*iterator)->hitPointA);
 //	  LoggingUtils::printVec("hitPointB", (*iterator)->hitPointB);
-//  }
+	  hpvec3 pointA = (*iterator).hitPointA;
+	  hpvec3 pointB = (*iterator).hitPointB;
+
+	  iterator->hitPointA = transformPoint(pointA, gearModelMatrix);
+	  iterator->hitPointB = transformPoint(pointB, gearModelMatrix);
+//	  LoggingUtils::printVec("hitPointA", iterator->hitPointA); //TODO: Result points seem to be okay
+//	  LoggingUtils::printVec("hitPointB", iterator->hitPointB);
+//	  std::cout << "-----------" << std::endl;
+  }
 }
 
 hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformation) {
@@ -140,12 +149,14 @@ hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformat
 
 // This transform a circle into the different space of the triangle.
 // Note that the radius is not transformed, since we forbid scaling.
-Circle WormGearGrind::transformCircle(Circle& circle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix) {
-  hpmat4x4 transformation = wormModelMatrix * glm::inverse(gearModelMatrix); //TODO: Check whether the matrices are valid
+Circle WormGearGrind::transformCircle(Circle& circle, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix) {
+  hpmat4x4 transformation = glm::inverse(gearModelMatrix) * wormModelMatrix; //TODO: Check whether the matrices are valid
   return Circle(transformPoint(circle.m_center, transformation),
                 transformVector(circle.m_normal, transformation),
                 circle.m_radius);
 }
+
+
 
 //// This transform a triangle into a different the space of the circle.
 //// Note that normals are not transformed, since we don't use them here.
@@ -168,12 +179,13 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 
 	vector<hpvec3>* verticesAndNormals = m_gearMesh->getVerticesAndNormals();
 	vector<hpuint>* indices = m_gearMesh->getIndices();
+//	hpmat4x4 gearModelMatrix = m_gearMovement.getMatrix(time); //TODO: unused
 
     // Fill color
     for(hpuint i = 0; i < m_gearMesh->getVertexCount(); i++){
     	hpvec3 point = verticesAndNormals->at(2 * indices->at(i));
-    	hpuint posZIdx = m_wormCircleCloud->convertPosZToPosZIdx(point.z);
-    	hpreal distance = simResult.getItem(point, posZIdx);
+    	hpuint posZSlot = m_wormCircleCloud->convertPosZToPosZIdx(point.z);
+    	hpreal distance = simResult.getItem(point, posZSlot);
     	if (distance > m_maxDistance) distance = m_maxDistance;
 //    	hpreal distanceRatio =  distance / m_maxDistance;
 

@@ -105,7 +105,7 @@ KDTreeInnerNode::~KDTreeInnerNode(){
 	delete m_rightChild;
 }
 
-bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth) {
+bool KDTreeInnerNode::intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults, BBox& intersectorBox, hpuint depth) {
   if (intersectorBox.intersects(m_bBox)) {
 
       // Continue with respective child node

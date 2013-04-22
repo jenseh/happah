@@ -369,7 +369,7 @@ WormGearGrindGUIStateNode::~WormGearGrindGUIStateNode() {
 }
 
 ContextMenu* WormGearGrindGUIStateNode::getContextMenu() const {
-//	m_simulationContextMenu->setSimulation(m_wormGearGrind); //TODO
+	m_simulationContextMenu->setSimulation(m_wormGearGrind);
 	return m_simulationContextMenu;
 }
 

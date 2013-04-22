@@ -20,7 +20,7 @@ KDTreeLeaf::~KDTreeLeaf(){
 }
 
 
-bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults, BBox& intersectorBox, hpuint depth) {
+bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults, BBox& intersectorBox, hpuint depth) {
 		// Leaf node
       std::vector<Triangle>::iterator pos = m_triangles->begin();
       std::vector<Triangle>::iterator end = m_triangles->end();

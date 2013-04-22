@@ -10,31 +10,45 @@ template <class T> BSplineCurve<T>::BSplineCurve() {
 	m_uniform = true;
 	m_knots.push_back( 0.0f );
 	for( int i = 1; i < m_degree; i++ ) {
-		m_knots.push_back( i*(1.0f/((float) m_degree)) );
+		m_knots.push_back( i*(1.0f/((hpreal) m_degree)) );
 	}
 	m_knots.push_back( 1.0f );
 }
 
-template <class T> BSplineCurve<T>::BSplineCurve(const BSplineCurve<T>& other)
-  : m_degree(other.m_degree),
-	m_clamped(other.m_clamped),
-	m_periodic(other.m_periodic),
-	m_uniform(other.m_uniform),
-	m_knots(other.m_knots),
+template <class T> BSplineCurve<T>::BSplineCurve( const BSplineCurve<T>& other )
+  : m_clamped(other.m_clamped),
 	m_controlPoints(other.m_controlPoints),
+	m_degree(other.m_degree),
+	m_knots(other.m_knots),
 	m_normalizedKnots(other.m_normalizedKnots),
-	m_normalizedPoints(other.m_normalizedPoints) {
+	m_normalizedPoints(other.m_normalizedPoints),
+	m_periodic(other.m_periodic),
+	m_uniform(other.m_uniform) {
 }
 
-template <class T> BSplineCurve<T>::BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots ) : m_knots( knots ) {
-	//TODO: put m_controlPoints(controlPoints) in line above and delete these lines until...
-	m_controlPoints.resize(controlPoints.size());
-	std::vector<hpvec3>::iterator mIt = m_controlPoints.begin();
-	for(std::vector<hpvec2>::const_iterator it = controlPoints.begin(), end = controlPoints.end(); it != end; ++it) {
-		*mIt = hpvec3((*it).x, (*it).y, 0.0f);
-		++mIt;
+template <class T> BSplineCurve<hpvec3>* BSplineCurve<T>::to3dBSplineCurve() const {
+
+	std::vector<hpvec3> controlPoints = std::vector<hpvec3>(m_controlPoints.size());
+	std::vector<hpvec3>::iterator it = controlPoints.begin();
+	for(std::vector<hpvec2>::const_iterator itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++it) {
+		(*it) = hpvec3(*itOther, 0.0f);
 	}
-	//here
+	std::vector<hpreal> knots = std::vector<hpreal>(m_knots);
+
+	BSplineCurve<hpvec3>* curve3D = new BSplineCurve<hpvec3>(controlPoints, knots);
+	curve3D->setPeriodic( m_periodic );
+	curve3D->setUniform( m_uniform );
+	curve3D->setClamped( m_clamped );
+
+	return curve3D;
+}
+
+template <class T> BSplineCurve<T>::BSplineCurve( const std::vector<T>& controlPoints, const std::vector<hpreal>& knots )
+  : m_controlPoints( controlPoints ),
+	m_knots( knots ),
+	m_normalizedKnots( knots ),
+	m_normalizedPoints( controlPoints ) {
+	
 	m_degree = m_knots.size() - m_controlPoints.size() - 1;
 	if( m_degree <= 0 ) {
 		std::cerr << "Number of control points is too big for given knots!" << std::endl;
@@ -50,14 +64,14 @@ template <class T> void BSplineCurve<T>::addControlPoint( T newPoint ) {
 	m_controlPoints.push_back(newPoint);
 
 	if( m_uniform ) {
-		float scaleFact = 1.0f - 1.0f/(m_knots.size());
+		hpreal scaleFact = 1.0f - 1.0f/(m_knots.size());
 		m_knots[0] = 0.0f;
 		for( unsigned int i = 1; i < m_knots.size(); i++ ) {
 			m_knots[i] *= scaleFact;
 		}
 		m_knots.push_back( 1.0f );
 	/*	// non-normalized version, not tested!
-		float scaleFact = (m_knots.back() - m_knots.front()) / m_knots.size();
+		hpreal scaleFact = (m_knots.back() - m_knots.front()) / m_knots.size();
 		m_knots.push_back( m_knots.back() );
 		for( unsigned int i = 1; i < m_knots.size()-1; i++ ) {
 			 m_knots[i] = m_knots[0] + scaleFact*i;
@@ -65,7 +79,7 @@ template <class T> void BSplineCurve<T>::addControlPoint( T newPoint ) {
 	*/
 	}
 	else {
-		float stepSize = ( m_knots.back() - m_knots.front() ) / (m_knots.size() - 1);
+		hpreal stepSize = ( m_knots.back() - m_knots.front() ) / (m_knots.size() - 1);
 		m_knots.push_back( m_knots.back() + stepSize );
 	}
 
@@ -74,7 +88,7 @@ template <class T> void BSplineCurve<T>::addControlPoint( T newPoint ) {
 	getKnots();
 }
 
-template <class T> void BSplineCurve<T>::addControlPoint( T newPoint, float distanceFromLast ) {
+template <class T> void BSplineCurve<T>::addControlPoint( T newPoint, hpreal distanceFromLast ) {
 	if( m_uniform ) {
 		this->addControlPoint( newPoint );
 	}
@@ -98,7 +112,7 @@ template <class T> void BSplineCurve<T>::calculateNormalization() {
 		int sizeKnots = m_knots.size()+m_degree;
 		m_normalizedKnots.resize(sizeKnots);
 		for( int i = 0; i < sizeKnots; i++ ) {
-			m_normalizedKnots[i] = i*( 1.0f/((float) sizeKnots-1) );
+			m_normalizedKnots[i] = i*( 1.0f/((hpreal) sizeKnots-1) );
 		}
 	}
 	else if(m_clamped && m_normalizedKnots.size() > 2*(m_degree+1)) {
@@ -107,11 +121,11 @@ template <class T> void BSplineCurve<T>::calculateNormalization() {
 			*(m_normalizedKnots.rbegin()+i) = *(m_normalizedKnots.rbegin()+m_degree);
 		}
 //		for( int i = 0; i < m_normalizedKnots.size() - 2*m_degree; i++ ) {
-//			m_normalizedKnots[i+m_degree] = i*( 1.0f/((float) m_normalizedKnots.size() - 2*m_degree) );
+//			m_normalizedKnots[i+m_degree] = i*( 1.0f/((hpreal) m_normalizedKnots.size() - 2*m_degree) );
 //		}
 	}
 	else if(m_uniform) {
-		float fract = 1.0f/((float) m_normalizedKnots.size() - 1);
+		hpreal fract = 1.0f/((hpreal) m_normalizedKnots.size() - 1);
 		for( int i = 0; i < m_normalizedKnots.size(); i++ ) {
 			m_normalizedKnots[i] = i*fract;
 		}
@@ -185,11 +199,77 @@ template <class T> int BSplineCurve<T>::getDegree() const {
 	return m_degree;
 }
 
+template <class T> void BSplineCurve<T>::getIntersectionPointsWithRay( const Ray& ray, std::vector<T>& intersectionPoints ) const {
+	intersectionPoints.resize(0); //ensure that no wrong values are returned
+
+	for(hpuint i = 0; i < m_controlPoints.size() - 1; ++i) {
+		hpvec2 startLine, endLine, intersectionPoint;
+		startLine = hpvec2(m_controlPoints[i]);
+		endLine = hpvec2(m_controlPoints[i + 1]);
+
+		if(ray.intersect(startLine, endLine, intersectionPoint)) {
+			if(m_degree == 1) {
+				intersectionPoints.push_back(T(intersectionPoint));
+			} else {
+				std::vector<hpreal> knots(m_normalizedKnots);
+				std::vector<T> points(m_normalizedPoints);
+
+				int startKnotIndex = i - (m_degree - 1);
+				if(startKnotIndex < m_degree)
+					startKnotIndex = m_degree;
+				int stopKnotIndex = i + m_degree + 1 + m_degree + 1;
+				if(stopKnotIndex > points.size())
+					stopKnotIndex = points.size();
+				bool newPointsInserted = false;
+				do {
+					std::vector<hpreal> newKnots;
+					for(hpuint j = startKnotIndex; j < stopKnotIndex; ++j) {
+						if(knots[j + 1] - knots[j] > 0.05f) {
+							hpreal newKnot = knots[j] + (knots[j + 1] - knots[j]) / 2.0f;
+							newKnots.push_back(newKnot);
+						}
+					}
+					stopKnotIndex += newKnots.size();
+					newPointsInserted = !newKnots.empty();
+					refine(knots, points, newKnots);
+				} while(newPointsInserted);
+
+				for(hpuint j = startKnotIndex; j < stopKnotIndex - m_degree - 1; ++j) {
+					hpvec2 startLine, endLine, intersectionPoint;
+					startLine = hpvec2(points[j]);
+					endLine = hpvec2(points[j + 1]);
+					if(ray.intersect(startLine, endLine, intersectionPoint)) {
+						intersectionPoints.push_back(T(intersectionPoint));
+					}
+				}
+			}
+		}
+	}
+}
+
+template <class T> hpuint BSplineCurve<T>::getMultiplicityOfKnotValue( hpreal knotValue ) const {
+	hpuint count = 0;
+	for (hpuint i = 0; i < m_normalizedKnots.size(); ++i) {
+		if (m_normalizedKnots[i] == knotValue)
+			++count;
+	}
+	return count;
+}
+
+template <class T> hpuint BSplineCurve<T>::getMultiplicity( hpuint knotIndex ) const {
+	hpuint count = 1;
+	for(hpuint i = knotIndex - 1; i >= 0 && m_normalizedKnots[i] == m_normalizedKnots[knotIndex]; --i)
+		++count;
+	for(hpuint i = knotIndex + 1; i < m_normalizedKnots.size() && m_normalizedKnots[knotIndex] == m_normalizedKnots[i]; ++i)
+		++count;
+	return count;
+}
+
 template <class T> unsigned int BSplineCurve<T>::getNumberOfControlPoints() const {
 	return m_controlPoints.size();
 }
 
-template <class T> void BSplineCurve<T>::getParameterRange( float& t_low, float& t_high ) const {
+template <class T> void BSplineCurve<T>::getParameterRange( hpreal& t_low, hpreal& t_high ) const {
 	if( m_normalizedPoints.size() < m_degree + 1 ) return;
 
 	t_low =  m_normalizedKnots[m_degree];
@@ -222,13 +302,13 @@ template <class T> T BSplineCurve<T>::getDerivativeAt( hpreal t ) const {
 			}
 		}
 
-		std::vector<float> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
+		std::vector<hpreal> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
 		std::vector<T> output (m_normalizedPoints.begin()+l-m_degree,m_normalizedPoints.begin()+l+1);
 		std::vector<T> old (output);
 
 		for( int k = 1; k < m_degree; k++) {
 			for( int i = k; i < m_degree+1; i++) {
-				float alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
+				hpreal alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
 				output[i] = (1-alpha)*old[i-1] + alpha*old[i];
 			}
 			old = output;
@@ -255,13 +335,13 @@ template <class T> T BSplineCurve<T>::getValueAt( hpreal t ) const {
 			}
 		}
 
-		std::vector<float> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
+		std::vector<hpreal> knots (m_normalizedKnots.begin()+l-m_degree,m_normalizedKnots.begin()+l+m_degree+1);
 		std::vector<T> output (m_normalizedPoints.begin()+l-m_degree,m_normalizedPoints.begin()+l+1);
 		std::vector<T> old (output);
 
 		for( int k = 1; k < m_degree+1; k++) {
 			for( int i = k; i < m_degree+1; i++) {
-				float alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
+				hpreal alpha = (t - knots[i])/(knots[i+m_degree+1-k]-knots[i]);
 				output[i] = (1-alpha)*old[i-1] + alpha*old[i];
 			}
 			old = output;
@@ -290,14 +370,14 @@ template <class T> void BSplineCurve<T>::interpolateControlPoints() {
 	interpolatePoints( inputPoints );
 }
 
-template <class T> void BSplineCurve<T>::interpolatePoints( std::vector<hpvec2>& points ) {
-	std::vector<hpvec3> inputPoints( points.size() );
-	std::vector<hpvec3>::iterator itInput = inputPoints.begin();
-	for( std::vector<hpvec2>::iterator it = points.begin(), end = points.end(); it != end; ++it, ++itInput ) {
-		*itInput = hpvec3( ( *it ).x, ( *it ).y, 0.0f );
-	}
-	interpolatePoints( inputPoints );
-}
+// template <class T> void BSplineCurve<T>::interpolatePoints( std::vector<hpvec2>& points ) {
+// 	std::vector<hpvec3> inputPoints( points.size() );
+// 	std::vector<hpvec3>::iterator itInput = inputPoints.begin();
+// 	for( std::vector<hpvec2>::iterator it = points.begin(), end = points.end(); it != end; ++it, ++itInput ) {
+// 		*itInput = hpvec3( ( *it ).x, ( *it ).y, 0.0f );
+// 	}
+// 	interpolatePoints( inputPoints );
+// }
 
 template <class T> void BSplineCurve<T>::interpolatePoints( std::vector<T>& inputPoints ) {
 	if( inputPoints.size() == 0 ) return;
@@ -373,7 +453,7 @@ template <class T> void BSplineCurve<T>::removeControlPoints() {
 //	std::vector<hpvec3>().swap(m_controlPoints); // forces reallocation
 	m_knots.resize(m_degree+1);
 	for( int i = 1; i < m_degree; i++ ) {
-		m_knots[i] = i*(1.0f/((float) m_degree));
+		m_knots[i] = i*(1.0f/((hpreal) m_degree));
 	}
 	m_knots[0] = 0.0f;
 	m_knots[m_degree] = 1.0f;
@@ -386,7 +466,7 @@ template <class T> void BSplineCurve<T>::resetKnotsToUniform() {
 		m_knots[0] = 0.0f;
 		m_knots[num-1] = 1.0f;
 		for( int i = 1; i < num-1; i++ ) {
-			m_knots[i] = i*( 1.0f/((float) num-1) );
+			m_knots[i] = i*( 1.0f/((hpreal) num-1) );
 		}
 	}
 	calculateNormalization();
@@ -415,7 +495,7 @@ template <class T> void BSplineCurve<T>::setDegree( unsigned int degree ) {
 	m_knots.resize( m_controlPoints.size() + degree + 1 );
 /*
 	if( degree < m_degree && m_uniform ) {
-		float scaleFact = 1.0f / m_knots.back();
+		hpreal scaleFact = 1.0f / m_knots.back();
 		for( int i = 0; i < m_knots.size(); i++ ) {
 			m_knots[i] *= scaleFact;
 		}
@@ -423,23 +503,23 @@ template <class T> void BSplineCurve<T>::setDegree( unsigned int degree ) {
 	else */
 	if( degree > m_degree ) {
 /*		if( m_uniform ) {
-			float scaleFact = 1.0f/(m_knots.size() - 1);
+			hpreal scaleFact = 1.0f/(m_knots.size() - 1);
 			for( int i = 0; i < m_knots.size(); i++ ) {
 				m_knots[i] = i*scaleFact;
 			}
 		}
 		else {*/
 			int oldBack = m_controlPoints.size() + m_degree;
-			float stepSize = ( m_knots.at(oldBack) - m_knots.front() ) / oldBack;
+			hpreal stepSize = ( m_knots.at(oldBack) - m_knots.front() ) / oldBack;
 			for( int i = 1; i < degree - m_degree + 1; i++ ) {
 				m_knots[oldBack+i] = m_knots.at(oldBack) + i*stepSize;
 			}
 		/*
 		}
-		float scaleFact = 1.0f / ((float) m_knots.size()-1 );
+		hpreal scaleFact = 1.0f / ((hpreal) m_knots.size()-1 );
 		int oldNum = m_controlPoints.size() + m_degree + 1;
 		for( int i = 0; i < oldNum; i++ ) {
-			m_knots[i] *= ((float) oldNum-1)*scaleFact;
+			m_knots[i] *= ((hpreal) oldNum-1)*scaleFact;
 		}
 		for( int i = oldNum; i < m_knots.size(); i++ ) {
 			m_knots[i] = i*scaleFact;
@@ -453,12 +533,12 @@ template <class T> void BSplineCurve<T>::setDegree( unsigned int degree ) {
 template <class T> void BSplineCurve<T>::setUniform( bool uniform ) {
 	m_uniform = uniform;
 	if( m_uniform ) {
-		float scaleFact = 1.0f/(m_knots.size()-1);
+		hpreal scaleFact = 1.0f/(m_knots.size()-1);
 		for( unsigned int i = 0; i < m_knots.size(); i++ ) {
 			m_knots[i] = scaleFact*i;
 		}
 	/*	// not normalized version, not tested!
-		float scaleFact = (m_knots.back() - m_knots.front()) / (m_knots.size()-1);
+		hpreal scaleFact = (m_knots.back() - m_knots.front()) / (m_knots.size()-1);
 		for( unsigned int i = 0; i < m_knots.size(); i++ ) {
 			m_knots[i] = m_knots[0] + scaleFact*i;
 		}
@@ -473,12 +553,11 @@ template <class T> void BSplineCurve<T>::setPeriodic( bool periodic ) {
 }
 
 template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
-	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
+	std::vector<T>* verticesAndNormals = new std::vector<T>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
-
 	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
 		if( m_clamped ) {
 			std::vector<T> knots = knotRefinement( 0.05f );
@@ -487,12 +566,12 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 				indices->resize(2*(knots.size()-1));
 				for( unsigned int i = 0; i < knots.size()-1; i++ ) {
 					(*verticesAndNormals)[2*i] = knots[i];
-					(*verticesAndNormals)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+					(*verticesAndNormals)[2*i+1] = T(1.0f); //TTODO TODO TODO TODO TODO TODO TODO TODO
 					(*indices)[2*i] = i;
 					(*indices)[2*i+1] = i+1;
 				}
 				*(verticesAndNormals->end()-2) = knots.back();
-				verticesAndNormals->back() = hpvec3(1.0f,0.0f,0.0f);
+				verticesAndNormals->back() = T(1.0f); //TODO TODOTODOTODOTODO must be equal to (1.0f,0.0f,0.0f); in 3d case!
 			}
 		}
 		else {
@@ -502,23 +581,22 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 			hpreal stepSize = (tEnd - tBegin) / 100;
 			for( hpuint i = 0; i < 100; i++ ) {
 				(*verticesAndNormals)[2*i] = getValueAt(tBegin + i*stepSize);
-				(*verticesAndNormals)[2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+				(*verticesAndNormals)[2*i+1] = T(1.0f); //TODOTODOTODOTODOTODOTODO hpvec3(1.0f,0.0f,0.0f);
 				(*indices)[2*i] = i;
 				(*indices)[2*i+1] = i+1;
 			}
 			(*verticesAndNormals)[200] = getValueAt(tEnd);
-			(*verticesAndNormals)[201] = hpvec3(1.0f,0.0f,0.0f);
+			(*verticesAndNormals)[201] = T(1.0f); //TODOTODOTODOTODOTODOTODO
 		}
 
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty LineMesh
-		verticesAndNormals->push_back( hpvec3(0.0f,0.0f,0.0f) );
-		verticesAndNormals->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		verticesAndNormals->push_back( T(0.0f) );
+		verticesAndNormals->push_back( T(0.0f) );
 		indices->push_back( 0 );
 		indices->push_back( 0 );
 	}
-
 	// control polygon
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
@@ -530,12 +608,12 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 
 		for( hpuint i = 0; i < n-1; i++ ) {
 			(*verticesAndNormals)[nVData + 2*i] = m_controlPoints[i];
-			(*verticesAndNormals)[nVData + 2*i+1] = hpvec3(1.0f,0.0f,0.0f);
+			(*verticesAndNormals)[nVData + 2*i+1] = T(1.0f); //TODOTODOTODOTODOTODOTODO(1.0f,0.0f,0.0f);
 			(*indices)[nIndices + 2*i] = nVData/2 + i;
 			(*indices)[nIndices + 2*i+1] = nVData/2 + i+1;
 		}
 		(*verticesAndNormals)[nVData + 2*n-2] = m_controlPoints.back();
-		(*verticesAndNormals)[nVData + 2*n-1] = hpvec3(1.0f,0.0f,0.0f);
+		(*verticesAndNormals)[nVData + 2*n-1] = T(1.0f); //TODOTODOTODOTODOTODOTODOTODOhpvec3(1.0f,0.0f,0.0f);
 	}
 
 	// tangents
@@ -563,19 +641,18 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 		}
 	}
 	*/
-
 	return new LineMesh(verticesAndNormals, indices);
 }
 
 template <class T> PointCloud* BSplineCurve<T>::toPointCloud() {
 	if(m_controlPoints.size() == 0) {
-		std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
-		verticesAndNormals->push_back( hpvec3(0.0f,0.0f,0.0f) );
+		std::vector<T>* verticesAndNormals = new std::vector<T>;
+		verticesAndNormals->push_back( T(0.0f) );
 		return new PointCloud(verticesAndNormals);
 	}
 	else {
 		// TODO remove workaround and find bug when adding empty PointCloud
-		std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>(m_controlPoints);
+		std::vector<T>* verticesAndNormals = new std::vector<T>(m_controlPoints);
 		return new PointCloud(verticesAndNormals);
 	}
 }
@@ -621,15 +698,15 @@ template <class T> int BSplineCurve<T>::findSpan( hpreal t, std::vector<hpreal>&
 	*/
 }
 
-template <class T> std::vector<hpvec3> BSplineCurve<T>::knotRefinement( hpreal minDist ) {
-	if( m_normalizedPoints.size() < m_degree + 1 ) return std::vector<hpvec3>();
+template <class T> std::vector<T> BSplineCurve<T>::knotRefinement( hpreal minDist ) {
+	if( m_normalizedPoints.size() < m_degree + 1 ) return std::vector<T>();
 
-	std::vector<float> newKnots;
+	std::vector<hpreal> newKnots;
 
-	std::vector<float> refinedKnots( m_normalizedKnots );
-	std::vector<hpvec3> refinedPoints( m_normalizedPoints );
+	std::vector<hpreal> refinedKnots( m_normalizedKnots );
+	std::vector<T> refinedPoints( m_normalizedPoints );
 
-int tmpHelper = 0;
+	int tmpHelper = 0;
 	do {
 		newKnots.clear();
 		for( int i = m_degree; i < refinedKnots.size() - m_degree - 1; i++ ) {
@@ -660,24 +737,23 @@ int tmpHelper = 0;
 
 		refine( refinedKnots, refinedPoints, newKnots );
 
-tmpHelper++;
-} while(tmpHelper<6);
+		tmpHelper++;
+	} while(tmpHelper<6);
 
 //	} while(newKnots.size() > 0);
-
 
 	return refinedPoints;
 }
 
 template <class T> void BSplineCurve<T>::refine(
     std::vector<hpreal>& knots,
-    std::vector<hpvec3>& points,
-    std::vector<hpreal>& newKnots )
+    std::vector<T>& points,
+    std::vector<hpreal>& newKnots ) const
 {
 	if( newKnots.size() == 0 ) return;
 
 	std::vector<hpreal> refinedKnots( knots.size() + newKnots.size() );
-	std::vector<hpvec3> refinedPoints( points.size() + newKnots.size() );
+	std::vector<T> refinedPoints( points.size() + newKnots.size() );
 
 	int lb = findSpan( newKnots.front(), knots );
 	int ub = findSpan( newKnots.back(), knots );
@@ -731,3 +807,32 @@ template <class T> void BSplineCurve<T>::refine(
 	knots.swap(refinedKnots);
 
 }
+
+
+// template <class T> void BSplineCurve::drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints) {
+// 	m_furtherDrawPoints = std::vector<hpvec3>(additionalPoints);
+// }
+
+// template <class T> void BSplineCurve::addAdditionalCurve(const BSplineCurve& bSplineCurve) {
+// 	m_additionalCurves.push_back(new BSplineCurve(bSplineCurve));
+// }
+
+// template <class T> void BSplineCurve::drawArray(const std::vector<hpvec3>& points) const {
+// 	cerr << "[	";
+// 	if(points.size() != 0) {
+// 		for(hpuint i = 0; i < points.size() - 1; ++i) {
+// 			cerr << "[" << points[i].x << "," << points[i].y << "," << points[i].z <<"] |	";
+// 		}
+// 		cerr << "[" << points.back().x << "," << points.back().y << "," << points.back().z <<"]";
+// 	}
+// 	cerr << "	]" << endl;
+// }
+
+// template <class T> void BSplineCurve::drawArray(const std::vector<hpreal>& values) const {
+// 	cerr << "[	";
+// 	for(hpuint i = 0; i < values.size() - 1; ++i) {
+// 		cerr << values[i] << " |	";
+// 	}
+// 	cerr << values.back() << "	]" << endl;
+// }
+

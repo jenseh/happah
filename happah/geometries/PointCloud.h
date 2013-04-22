@@ -9,10 +9,11 @@ using namespace std;
 
 class PointCloud{
 public:
+	PointCloud(vector<hpvec2>* vertices);
 	PointCloud(vector<hpvec3>* vertices);
 	virtual ~PointCloud();
-    void handleSelection(){}
-    void handleSelection(int pointIndex){}
+	void handleSelection(){}
+	void handleSelection(int pointIndex){}
 
 	vector<hpvec3>*getVertices();
 

@@ -139,7 +139,7 @@ BSplineCurve_ptr BSplineCurveForm::getCurve() const {
 }
 
 void BSplineCurveForm::handleRay(Ray& ray) {
-	hpvec3 intersecPoint;
+		hpvec3 intersecPoint;
 	if( m_plane->intersect( ray, intersecPoint ) ) {
 		m_controlPointInput->setValue( intersecPoint );
 		addPoint();

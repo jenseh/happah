@@ -36,6 +36,22 @@ bool Ray::intersect(BBox& box, hpreal length){
     return checkLineBox(*(box.getMin()), *(box.getMax()), m_origin, m_origin + m_direction * length, hitPoint);
 }
 
+bool Ray::intersect(hpvec2 startLine, hpvec2 endLine, hpvec2& intersectionPoint) const {
+    hpvec2 x = startLine - endLine;
+    hpvec2 y = hpvec2(m_direction.x, m_direction.y);
+    hpvec2 z = startLine - hpvec2(m_origin.x, m_origin.y);
+    hpmat2x2 matrix = hpmat2x2(x, y);
+    if(glm::determinant(matrix) != 0) {
+        hpmat2x2 invMatrix = glm::inverse(matrix);
+        hpvec2 t = invMatrix * z;
+        if (0 <= t.x && 0 <= t.y && t.x <= 1) {
+            intersectionPoint = hpvec2(m_origin.x, m_origin.y) + t.y * y;
+            return true;
+        }
+    }
+    return false;
+}
+
 hpreal Ray::intersect(Triangle& triangle){
     hpvec3 hit;
     if( !intersectTriangle(triangle, hit) )

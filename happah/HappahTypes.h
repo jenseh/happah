@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
+typedef glm::mat2x2 hpmat2x2;
 typedef glm::mat3x3 hpmat3x3;
 typedef glm::mat4x4 hpmat4x4;
 typedef glm::mediump_float hpreal;

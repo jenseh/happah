@@ -28,6 +28,7 @@ public:
 	BSplineCurve();
 	BSplineCurve(const BSplineCurve& other);
 	BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots );
+	BSplineCurve( const std::vector<hpvec3>& controlPoints, const std::vector<hpreal>& knots );
 	~BSplineCurve();
 
 	void addControlPoint( hpvec3 newPoint );
@@ -49,11 +50,11 @@ private:
 	int findSpan( hpreal t, std::vector<hpreal>& knots) const;
 
 	std::vector<hpvec3> knotRefinement( hpreal minDist );
-	void refine(
+	void refine (
 		std::vector<hpreal>& knots,
 		std::vector<hpvec3>& points,
 		std::vector<hpreal>& newKnots
-	);
+	) const;
 
 public:
 	bool check( bool debugOutput ) const;
@@ -65,6 +66,8 @@ public:
 	std::vector<hpreal> getKnots() const;
 	int getDegree() const;
 	void getIntersectionPointsWithRay( const Ray& ray, std::vector<hpvec3>& intersectionPoints ) const;
+	hpuint getMultiplicityOfKnotValue( hpreal knotValue ) const;
+	hpuint getMultiplicity( hpuint knotIndex ) const;
 	unsigned int getNumberOfControlPoints() const;
 	void getParameterRange( float& t_low, float& t_high ) const;
 	bool getPeriodic() const;
@@ -93,9 +96,12 @@ public:
 
 	//TODO: methods and things below here are only here for short testing time!
 	//=> remove them!
-	void drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints);
-	std::vector<hpvec3> m_furtherDrawPoints;
-
+	// void drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints);
+	// std::vector<hpvec3> m_furtherDrawPoints;
+	// void drawArray(const std::vector<hpvec3>& points) const;
+	// void drawArray(const std::vector<hpreal>& values) const;
+	// void addAdditionalCurve(const BSplineCurve& bSplineCurve);
+	// std::vector<BSplineCurve*> m_additionalCurves;
 
 };
 

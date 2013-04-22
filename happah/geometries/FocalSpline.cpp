@@ -105,8 +105,8 @@ void FocalSpline::addControlPoint(hpvec3 point){
 	hpvec3 newPoint = HPUtils::cartesianToPolarCoordinates(point);
 	int insertionIndex;
 
-	for(int j= 0; j<m_controlPoints->size();j++){
-	for(int i=0; i < m_controlPoints->at(j)->size(); i++){
+	for(hpuint j = 0; j < m_controlPoints->size(); j++){
+	for(hpuint i = 0; i < m_controlPoints->at(j)->size(); i++){
 		if (newPoint.x < m_controlPoints->at(j)->at(i).x){
 			m_controlPoints->at(j)->insert(m_controlPoints->at(j)->begin()+i,newPoint);
 			adjustControlPoints(j,i);
@@ -127,7 +127,7 @@ void FocalSpline::addControlPoint(hpvec3 point){
 
 void FocalSpline::update(){
 	m_generatedSpline->clear();
-	for(int i = 0; i<m_focalBezierCurves.size();i++){
+	for(hpuint i = 0; i < m_focalBezierCurves.size(); i++){
 		generateFocalSpline(i);
 	}
 	cout << "Generated Spline Size: " << m_generatedSpline->size() << " detail: " << m_detail << endl;
@@ -165,7 +165,7 @@ void FocalSpline::adjustControlPoints(int bezierCurveIndex,int currentIndex){
 		m_phi = m_phiComplete/m_controlPoints->at(bezierCurveIndex)->size();
 	}
 
-	for(int i= 0; i < m_controlPoints->at(bezierCurveIndex)->size(); i++){
+	for(hpuint i= 0; i < m_controlPoints->at(bezierCurveIndex)->size(); i++){
 		hpreal phiPoint = m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x;
 		hpreal newPhi = 0.0f;
 		newPhi=phiPoint+(i-currentIndex)*m_phi;

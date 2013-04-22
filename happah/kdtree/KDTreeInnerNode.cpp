@@ -70,13 +70,13 @@ KDTreeInnerNode::KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, h
 
   //std::cout << "ratio: " << ((hpreal)leftTriangleSize / (hpreal)rightTriangleSize) << std::endl;
   // If all in one node
-  if( leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size() ){
+  if(leftTriangles->size() == triangles->size() || rightTriangles->size() == triangles->size()){
 	  // If all triangles are put in one node there should only be 2 more inner nodes untill the algorithm is forces to quit
 	  if( terminateDepth == -1 ) {
-		  terminateDepth = depth +2;
+		  terminateDepth = depth + 2;
 	  }
-	  if( depth == terminateDepth ) {
-		  m_leftChild = new KDTreeLeaf(triangles, depth +1);
+	  if((int) depth == terminateDepth) {
+		  m_leftChild = new KDTreeLeaf(triangles, depth + 1);
 	  }else {
 		  m_leftChild = new KDTreeInnerNode(triangles, leftBox, depth + 1, maxTrianglesPerBox, terminateDepth);
 	  }

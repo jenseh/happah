@@ -10,19 +10,19 @@ class BBox
 {
 public:
   BBox();
-  BBox(glm::vec3 min, glm::vec3 max);
+  BBox(hpvec3 min, hpvec3 max);
 
   void addTriangle(Triangle& t);
   bool intersects(BBox& other);
   //std::vector<BBox*> split(int axis, float axisValue);
-  glm::vec3* getMin();
-  void setMin(glm::vec3 min);
-  glm::vec3* getMax();
-  void setMax(glm::vec3 max);
+  hpvec3* getMin();
+  void setMin(hpvec3 min);
+  hpvec3* getMax();
+  void setMax(hpvec3 max);
 
 private:
-  glm::vec3 m_min;
-  glm::vec3 m_max;
+  hpvec3 m_min;
+  hpvec3 m_max;
 };
 
 #endif // BBOX_H

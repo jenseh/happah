@@ -12,27 +12,27 @@
 
 #include "happah/LoggingUtils.h"
 
-struct CirclePoint {
-  hpreal angle;
-  hpreal radius;
+//struct CirclePoint {
+//  hpreal angle;
+//  hpreal radius;
+//
+//  CirclePoint(hpreal angle_, hpreal radius_) {
+//    angle = angle_;
+//    radius = radius_;
+//  }
+//};
 
-  CirclePoint(hpreal angle_, hpreal radius_) {
-    angle = angle_;
-    radius = radius_;
-  }
-};
-
-struct CircleRange {
-  hpreal startAngle;
-  hpreal endAngle;
-  hpreal radius;
-
-  CircleRange(hpreal startAngle_, hpreal endAngle_, hpreal radius_) {
-    startAngle = startAngle_;
-    endAngle = endAngle_;
-    radius = radius_;
-  }
-};
+//struct CircleRange {
+//  hpreal startAngle;
+//  hpreal endAngle;
+//  hpreal radius;
+//
+//  CircleRange(hpreal startAngle_, hpreal endAngle_, hpreal radius_) {
+//    startAngle = startAngle_;
+//    endAngle = endAngle_;
+//    radius = radius_;
+//  }
+//};
 
 struct CircleHitResult {
   hpvec3 hitPointA;

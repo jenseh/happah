@@ -19,7 +19,7 @@ const string& GUIStateNode::getName() const {
 }
 
 GUIStateNode_ptr GUIStateNode::getptr() {
-	return static_pointer_cast<GUIStateNode>(shared_from_this());
+	return static_pointer_cast<GUIStateNode>(shared_from_this()); //TODO: what is this?
 }
 
 TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {

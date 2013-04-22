@@ -2,18 +2,19 @@
 #define BSPHERE_H
 
 #include <glm/glm.hpp>
+#include "happah/HappahTypes.h"
 
 class BSphere
 {
 public:
-  BSphere(glm::vec3 center, float radius);
+  BSphere(hpvec3 center, hpreal radius);
 
-  glm::vec3* getCenter();
-  float getRadius();
+  hpvec3* getCenter();
+  hpreal getRadius();
 
 private:
-  glm::vec3 m_center;
-  float m_radius;
+  hpvec3 m_center;
+  hpreal m_radius;
 };
 
 #endif // BSPHERE_H

@@ -29,7 +29,10 @@ Circle ZCircleCloud::computeOuterCircle(hpuint posZIdx) {
   hpvec3 center = hpvec3(0.0, 0.0, posZ);
   hpvec3 normal = hpvec3(0.0, 0.0, 1.0);
 
+  // We add an epsilon to max radius to detect intersections close to the worm
+//  std::cout << "m_maxRadius" << m_maxRadius << std::endl;
+  hpreal epsilon = m_maxRadius / 5.0;
   return Circle(center,
                 normal,
-                m_maxRadius);
+                m_maxRadius + epsilon);
 }

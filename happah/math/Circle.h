@@ -10,7 +10,7 @@
 #include "happah/kdtree/BBox.h"
 #include "happah/math/Triangle.h"
 
-#include "happah/LoggingUtils.h"
+//#include "happah/LoggingUtils.h"
 
 //struct CirclePoint {
 //  hpreal angle;

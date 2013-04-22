@@ -122,7 +122,7 @@ void WormGearGrind::calculateGrindingDepth(hpreal time) {
 void inline WormGearGrind::computeIntersectingTriangles(hpuint& posZIdx, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix) {
   Circle circle = m_wormCircleCloud->computeOuterCircle(posZIdx);
   Circle transformedCircle = transformCircle(circle, gearModelMatrix, wormModelMatrix);
-//  LoggingUtils::print(transformedCircle);
+  LoggingUtils::print(transformedCircle);
 
   m_kdTree->intersectAll(transformedCircle, hitResults);
 
@@ -141,7 +141,7 @@ hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformat
 // This transform a circle into the different space of the triangle.
 // Note that the radius is not transformed, since we forbid scaling.
 Circle WormGearGrind::transformCircle(Circle& circle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix) {
-  hpmat4x4 transformation = wormModelMatrix * glm::inverse(gearModelMatrix);
+  hpmat4x4 transformation = wormModelMatrix * glm::inverse(gearModelMatrix); //TODO: Check whether the matrices are valid
   return Circle(transformPoint(circle.m_center, transformation),
                 transformVector(circle.m_normal, transformation),
                 circle.m_radius);

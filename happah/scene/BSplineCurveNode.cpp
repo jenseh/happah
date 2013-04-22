@@ -1,6 +1,6 @@
 #include "happah/scene/BSplineCurveNode.h"
 
-BSplineCurveNode::BSplineCurveNode(BSplineCurve_ptr curve) : SimpleGeometryNode<BSplineCurve>(curve) {}
+BSplineCurveNode::BSplineCurveNode(BSplineCurve_ptr curve) : SimpleGeometryNode<BSplineCurve<hpvec3>>(curve) {}
 
 BSplineCurveNode::~BSplineCurveNode() {}
 

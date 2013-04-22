@@ -503,7 +503,7 @@ TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampl
 SimpleGear* InvoluteGear::toSimpleGear(hpuint toothSampleSize) {
 	vector<hpvec2> toothProfilePoints(toothSampleSize);
 	getToothProfile(toothProfilePoints);
-	BSplineCurve curveOfToothProfile;
+	BSplineCurve<hpvec3> curveOfToothProfile;
 	curveOfToothProfile.setClamped(true);
 	curveOfToothProfile.setPeriodic(false);
 	curveOfToothProfile.setDegree(3); // by using interpolation of BSplineCurve it is set to 3 anyway!

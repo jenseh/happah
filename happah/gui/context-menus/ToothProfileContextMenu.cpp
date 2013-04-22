@@ -26,7 +26,7 @@ void ToothProfileContextMenu::createSimpleGear() {
 }
 
 void ToothProfileContextMenu::newBSplineCurve() {
-	BSplineCurve* curve = new BSplineCurve(m_toothProfile->getCurve());
+	BSplineCurve<hpvec3>* curve = new BSplineCurve<hpvec3>(m_toothProfile->getCurve());
 	BSplineCurve_ptr bSplineCurve = BSplineCurve_ptr(curve);
 	m_guiManager.insert(bSplineCurve, 0x00000006);
 }

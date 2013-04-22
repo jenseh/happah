@@ -361,15 +361,15 @@ void SceneManager::doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> gu
 }
 
 void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
-	doInsert<BSplineCurve, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
+	doInsert<BSplineCurve<hpvec3>, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
 }
 
 PointCloudRenderStateNode_ptr SceneManager::insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color) {
-	return doInsert<BSplineCurve, BSplineCurveNode>(curve, pointCloud, color);
+	return doInsert<BSplineCurve<hpvec3>, BSplineCurveNode>(curve, pointCloud, color);
 }
 
 LineMeshRenderStateNode_ptr SceneManager::insert(BSplineCurve_ptr curve, LineMesh_ptr lineMesh, hpcolor& color) {
-	return doInsert<BSplineCurve, BSplineCurveNode>(curve, lineMesh, color);
+	return doInsert<BSplineCurve<hpvec3>, BSplineCurveNode>(curve, lineMesh, color);
 }
 
 void SceneManager::insert(FocalSpline_ptr focalSpline, FocalSplineGUIStateNode_ptr guiStateNode) {
@@ -402,7 +402,7 @@ void SceneManager::insert(Plane_ptr plane) {
 }
 
 void SceneManager::insert(Plane_ptr plane, BSplineCurve_ptr curve) {
-	doInsert<Plane, PlaneNode, BSplineCurve, BSplineCurveNode>(plane, curve);
+	doInsert<Plane, PlaneNode, BSplineCurve<hpvec3>, BSplineCurveNode>(plane, curve);
 }
 
 void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode) {

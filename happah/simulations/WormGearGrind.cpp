@@ -17,7 +17,7 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
 	hpreal rotY = 90.0;
 
 	hpreal x = m_worm->getModule() * M_PI / 4.0;
-	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius / 10.0;
+	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius / 1.5; //TODO: remove the factor
 	hpvec3 position = hpvec3(x, y, 0.0);
 
     m_wormMovement = Kinematic(
@@ -133,22 +133,9 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& posZIdx, std::li
 //  }
 }
 
-hpvec3 inline WormGearGrind::transformVector(hpvec3& vector, hpmat4x4& transformation) {
-  hpvec4 result = transformation * hpvec4(vector.x, vector.y, vector.z, 0.0);
-  return hpvec3(result.x, result.y, result.z);
-}
 hpvec3 inline WormGearGrind::transformPoint(hpvec3& point, hpmat4x4& transformation) {
   hpvec4 result = transformation * hpvec4(point.x, point.y, point.z, 1.0);
   return hpvec3(result.x, result.y, result.z);
-}
-
-// This transform a triangle into a different the space of the circle.
-// Note that normals are not transformed, since we don't use them here.
-Triangle WormGearGrind::transformTriangle(Triangle& triangle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix) {
-  hpmat4x4 transformation = gearModelMatrix * glm::inverse(wormModelMatrix);
-  return Triangle(transformPoint(triangle.vertices[0], transformation),
-                  transformPoint(triangle.vertices[1], transformation),
-                  transformPoint(triangle.vertices[2], transformation));
 }
 
 // This transform a circle into the different space of the triangle.
@@ -159,6 +146,22 @@ Circle WormGearGrind::transformCircle(Circle& circle, hpmat4x4 gearModelMatrix, 
                 transformVector(circle.m_normal, transformation),
                 circle.m_radius);
 }
+
+//// This transform a triangle into a different the space of the circle.
+//// Note that normals are not transformed, since we don't use them here.
+//Triangle WormGearGrind::transformTriangle(Triangle& triangle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix) {
+//  hpmat4x4 transformation = gearModelMatrix * glm::inverse(wormModelMatrix);
+//  return Triangle(transformPoint(triangle.vertices[0], transformation),
+//                  transformPoint(triangle.vertices[1], transformation),
+//                  transformPoint(triangle.vertices[2], transformation));
+//}
+
+hpvec3 inline WormGearGrind::transformVector(hpvec3& vector, hpmat4x4& transformation) {
+  hpvec4 result = transformation * hpvec4(vector.x, vector.y, vector.z, 0.0);
+  return hpvec3(result.x, result.y, result.z);
+}
+
+
 
 WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
     calculateGrindingDepth(time);
@@ -171,15 +174,17 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
     	hpvec3 point = verticesAndNormals->at(2 * indices->at(i));
     	hpuint posZIdx = m_wormCircleCloud->convertPosZToPosZIdx(point.z);
     	hpreal distance = simResult.getItem(point, posZIdx);
-    	hpreal distanceRatio =  distance / m_maxDistance;
+    	if (distance > m_maxDistance) distance = m_maxDistance;
+//    	hpreal distanceRatio =  distance / m_maxDistance;
 
     	if(distance >= 0) {
-    		m_gearColor->at(i) = hpcolor(0.0, distanceRatio, 1.0, 1.0);
+    		m_gearColor->at(i) = hpcolor(0.0, distance, 1.0, 1.0);
     	} else{
-            m_gearColor->at(i) = hpcolor(1.0, 1.0 + distanceRatio, 1.0 + distanceRatio, 1.0);
+            m_gearColor->at(i) = hpcolor(1.0, 1.0 + distance, 1.0 + distance, 1.0);
     	}
     }
-    return WormGearGrindResult(m_gear, m_gearColor, m_gearMesh, m_gearMovement.getRigidAffineTransformation(time),  m_worm, m_wormMesh, m_wormMovement.getRigidAffineTransformation(time));
+    return WormGearGrindResult(m_gear, m_gearColor, m_gearMesh, m_gearMovement.getRigidAffineTransformation(time),
+    						   m_worm, m_wormMesh, m_wormMovement.getRigidAffineTransformation(time));
 }
 
 WormGearGrindResult WormGearGrind::getSimulationResult(hpreal time){

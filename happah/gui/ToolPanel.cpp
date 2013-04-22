@@ -5,15 +5,15 @@ ToolPanel::ToolPanel(GUIManager& guiManager, QWidget* parent)
 	: QWidget(parent), 
 		m_forms(new QStackedWidget(this)),
 		m_bSplineCurveForm(new BSplineCurveForm(guiManager, m_forms)),
-		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
-		m_focalSplineForm(new FocalSplineForm(guiManager,m_forms)),
-		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
 		m_discForm(new DiscForm(guiManager, m_forms)),
+		m_focalSplineForm(new FocalSplineForm(guiManager,m_forms)),
+		m_involuteGearForm(new InvoluteGearForm(guiManager, m_forms)),
 		m_planeForm(new PlaneForm(guiManager, m_forms)),
+		m_simpleGearForm(new SimpleGearForm(guiManager, m_forms)),
 		m_simulationForm(new SimulationForm(guiManager, m_forms)),
+		m_spherePatchForm(new SpherePatchForm(guiManager,m_forms)),
 		m_toothProfileForm(new ToothProfileForm(guiManager, m_forms)),
-		m_wormForm(new WormForm(guiManager, m_forms)),
-		m_spherePatchForm(new SpherePatchForm(guiManager,m_forms)){
+		m_wormForm(new WormForm(guiManager, m_forms)) {
 	QGridLayout* buttonsLayout = new QGridLayout();
 	buttonsLayout->setSpacing(2);
 	QWidget* buttons = new QWidget(this);

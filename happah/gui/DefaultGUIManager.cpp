@@ -57,7 +57,7 @@ void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr invo
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
 
 	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(15, 4));
-	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
+	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(30, 100);
 	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, simpleGear, involuteGear->getReferenceRadius(), gearMesh));
 
 	QThread* thread = new QThread();

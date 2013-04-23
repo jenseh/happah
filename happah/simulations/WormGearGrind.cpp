@@ -1,6 +1,7 @@
 #include "happah/simulations/WormGearGrind.h"
 #include <glm/glm.hpp>
 
+
 WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh)
 	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(worm->getModule() / 4.0) {
 	init(gear->getReferenceRadius());
@@ -17,7 +18,7 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
 	hpreal rotY = 90.0;
 
 	hpreal x = -m_worm->getModule() * M_PI / 4.0; //TODO: adapt;
-	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius; //TODO: remove the factor
+	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius * 0.5; //TODO: remove the factor
 	hpvec3 position = hpvec3(x, y, 0.0);
 
     m_wormMovement = Kinematic(

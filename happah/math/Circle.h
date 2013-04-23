@@ -114,7 +114,6 @@ struct Circle {
 				if (triangleInside) {
 					// ..then the triangle is "inside" the circle
 				    // std::cout << distC01 << ", " << distC12 << ", " << distC02 << ", " << m_radius << std::endl;
-				    std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
 
 				    // Get point on triangle (edge) that is closest to center
 				    hpvec3* hitPoint;
@@ -129,14 +128,18 @@ struct Circle {
 
 				    CircleHitResult tempHitResult = CircleHitResult(*hitPoint, *hitPoint, triangle);
 				    hitResults->push_back(tempHitResult);
+
+				    std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
-						std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						CircleHitResult tempHitResult = CircleHitResult(m_center, m_center, triangle);
 						hitResults->push_back(tempHitResult);
+
+						std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						return true;
+					} else {
 						// std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
 						return false;
 					}
@@ -226,8 +229,9 @@ struct Circle {
 
 
 				    // Check whether the segments on the line overlap
-				    if ((floatBigger(*maxTv, *minCv) && floatBigger(*maxCv, *minTv))) {
-//						std::cout << "Success: Overlapping!" << std::endl;
+				    // We need a very low accuracy here due to the other dimensions
+				    if ((floatBigger(*maxTv, *minCv, 10e-2) && floatBigger(*maxCv, *minTv, 10e-2))) {
+						std::cout << "Success: Overlapping!" << std::endl;
 
 						// Compute the 2 "inner" points along line
 						hpvec3* minVec;
@@ -270,16 +274,16 @@ struct Circle {
 //						 std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
 //						 std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
 //						 std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
-						// std::cout << "Intersect inside: " << closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z << std::endl;
+						std::cout << "Success: Intersect inside: " /*<< closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z */ << std::endl;
 						return true;
 					}
 					else {
-						// std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
-						// std::cout << "Error: No overlap!" << std::endl;
+						 std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
+						 // std::cout << "Error: No overlap!" << std::endl;
 						return false;
 					}
 				} else {
-					    // std::cout << "Error: No intersection with triangle!" << std::endl;
+					     // std::cout << "Error: No intersection with triangle!" << std::endl;
 					return false;
 				}
 
@@ -288,12 +292,13 @@ struct Circle {
 				// std::cout << "linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
 				// std::cout << "lineDirection: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
 
-				// std::cout << "Error: Exiting due to: Line doesn't hit circle!" << m_radius << std::endl;
+				// std::cout << "Error: Exiting due to: Line doesn't hit circle!" << std::endl;
 				return false;
 			}
 		}
 
-		   // std::cout << "Error: Nothing happened!" << std::endl;
+		// std::cout << "Error: Nothing happened!" << std::endl;
+		assert(1 == 1);
 		return false;
 	}
 
@@ -528,6 +533,10 @@ struct Circle {
 	// A tolerance is added that makes overlapping more likely
 	bool inline floatBigger(hpreal a, hpreal b) {
 		const hpreal epsilon = 10e-06;
+		return floatBigger(a, b, epsilon);
+	}
+
+	bool inline floatBigger(hpreal a, hpreal b, hpreal epsilon) {
 		return a > b - epsilon;
 	}
 

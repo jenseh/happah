@@ -71,6 +71,13 @@ void LoggingUtils::print(SimpleGear& simpleGear) {
   cout << endl;
 }
 
+void LoggingUtils::print(const char* name, Triangle& triangle) {
+	cout << name << ": " << endl;
+	LoggingUtils::printVec("VertexA", triangle.vertices[0]);
+	LoggingUtils::printVec("VertexB", triangle.vertices[1]);
+	LoggingUtils::printVec("VertexC", triangle.vertices[2]);
+}
+
 void LoggingUtils::print(const char* name, Circle& circle) {
 	cout << name << ": " << endl;
 	LoggingUtils::printVec("center", circle.m_center);

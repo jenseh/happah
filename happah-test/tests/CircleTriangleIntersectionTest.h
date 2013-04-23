@@ -1,10 +1,11 @@
 #ifndef CIRCLETRIANGLEINTERSECTIONTEST_H
 #define CIRCLETRIANGLEINTERSECTIONTEST_H
 
-#include "../core/simulations/WormGearGrind.h"
-#include "../core/geometries/gears/InvoluteGear.h"
-#include "../core/primitives/Circle.h"
-#include "../core/primitives/Triangle.h"
+#include "happah/HappahTypes.h"
+#include "happah/simulations/WormGearGrind.h"
+#include "happah/geometries/gears/InvoluteGear.h"
+#include "happah/math/Circle.h"
+#include "happah/math/Triangle.h"
 
 class CircleTriangleIntersectionTest
 {

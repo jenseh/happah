@@ -41,10 +41,20 @@ bool Plane::intersect( Ray& ray, hpvec3& intersectionPoint ) {
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
 	m_normal = normal;
+	for( auto it = m_listeners.begin(); it != m_listeners.end(); it++ ) (*it)->normalChanged();
 }
 
 void Plane::setOrigin(hpvec3 origin) {
 	m_origin = origin;
+	for( auto it = m_listeners.begin(); it != m_listeners.end(); it++ ) (*it)->originChanged();
+}
+
+void Plane::registerListener(Listener* listener) {
+	m_listeners.push_back(listener);
+}
+
+void Plane::unregisterListener(Listener* listener) {
+	m_listeners.remove(listener);
 }
 
 TriangleMesh* Plane::toTriangleMesh() {

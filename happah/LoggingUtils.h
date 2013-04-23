@@ -32,6 +32,8 @@ public:
 
 	static void print(InvoluteGear& involuteGear);
 	static void print(SimpleGear& simpleGear);
+
+	static void print(const char* name, Circle& circle);
 	static void print(Circle& circle);
 };
 

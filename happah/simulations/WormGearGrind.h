@@ -129,7 +129,7 @@ private:
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
-  constexpr static size_t m_resultAngleSlotCount = 10;
+  constexpr static size_t m_resultAngleSlotCount = 360;
 };
 
 typedef std::shared_ptr<WormGearGrind> WormGearGrind_ptr;

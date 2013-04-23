@@ -3,11 +3,13 @@
 #include "happah/simulations/CircularSimulationResult.h"
 
 // This class is always relative to the worm center and in worm coordinates
-CircularSimulationResult::CircularSimulationResult(hpuint angleSteps, hpuint resolutionZ)
+CircularSimulationResult::CircularSimulationResult(hpuint angleSteps, hpreal startZ, hpreal endZ, hpuint resolutionZ)
 {
   m_angleSteps = angleSteps;
   m_angleRange = 2 * M_PI / m_angleSteps;
 
+  m_startZ = startZ;
+  m_endZ = endZ;
   m_resolutionZ = resolutionZ;
 
 
@@ -19,21 +21,29 @@ CircularSimulationResult::~CircularSimulationResult() {
 	delete m_entries;
 }
 
-void CircularSimulationResult::addItem(hpvec3 point, hpuint posZSlot) {
+void CircularSimulationResult::addItem(hpvec3 point) {
+	// Check whether the point is in our Z range, if not abort
+	if (!isInZRange(point)) {
+//		std::cout << "Rejecting point: " << point.x << " " << point.y << " " << point.z << std::endl;
+		return;
+	}
+	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << std::endl;
+
   // Compute the angles of the triangle points to the reference dir
   hpreal angle = computeAngle(point);
-  hpreal radius = glm::length(point);
-
-//  std::cout << "angle: " << angle << ", radius: " << radius << std::endl;
-
   hpuint angleSlot = round(angle / m_angleRange);
+
+  hpuint posZSlot = convertPosZToPosZIdx(point.z);
   hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
   assert(angleSlot < m_angleSteps);
   assert(posZSlot < m_resolutionZ);
 
+  hpreal radius = glm::length(point);
   hpreal oldRadius = getItem(slot, posZSlot);
   if (oldRadius > radius) {
+
+
       m_entries->erase(slot);
       m_entries->insert(std::pair<hpuint, hpreal>(slot, radius));
   }
@@ -57,10 +67,21 @@ hpreal CircularSimulationResult::computeAngle(hpvec3 point) {
 	  return angle;
 }
 
-hpreal CircularSimulationResult::getItem(hpvec3 point, hpuint posZSlot) {
+hpuint CircularSimulationResult::convertPosZToPosZIdx(hpreal posZ) {
+	return (hpuint) round((posZ - m_startZ) / (m_endZ - m_startZ));
+}
+
+hpreal CircularSimulationResult::getItem(hpvec3 point) {
+	// Check whether the point is in our Z range, if not abort and return positive infinity
+	if (!isInZRange(point)) {
+		return INFINITY;
+	}
+
 	  // Compute the angles of the triangle points to the reference dir
 	  hpreal angle = computeAngle(point);
 	  hpuint angleSlot = round(angle / m_angleRange);
+
+	  hpuint posZSlot = convertPosZToPosZIdx(point.z);
 	  hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
 	  assert(angleSlot < m_angleSteps);
@@ -72,4 +93,9 @@ hpreal CircularSimulationResult::getItem(hpvec3 point, hpuint posZSlot) {
 	  } else {
 	    return result->second;
 	  }
+}
+
+bool CircularSimulationResult::isInZRange(hpvec3 point) {
+	hpreal epsilon = 10e-7;
+	return m_startZ - epsilon <= point.z && point.z <= m_endZ + epsilon;
 }

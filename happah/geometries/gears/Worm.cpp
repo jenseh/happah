@@ -50,7 +50,7 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals(hpuint pointsPerTooth, hpuin
           
           hpreal posZ_RZ = m_module * M_PI * tooth 							   + profileTooth.at(posZIdx).x;
           hpreal posZ_RN = m_module * M_PI * (tooth + (hpuint) nextPointRatio) + profileTooth.at((posZIdx + 1) % pointsPerTooth).x;
-          
+
           hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ);
           hpvec3 pointRN = hpvec3(radiusRN * cos(angle),     radiusRN * sin(angle),     posZ_RN);
           hpvec3 pointNZ = hpvec3(radiusNZ * cos(nextAngle), radiusNZ * sin(nextAngle), posZ_RZ);

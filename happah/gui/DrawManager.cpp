@@ -55,7 +55,7 @@ void DrawManager::compileShader(GLuint shader, const char* filePath) {
 		cerr << "Failed to open source file." << endl;
 }
 
-void DrawManager::doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection) {
+void DrawManager::doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation, bool doSelection) {
 	// CHanged for geometry Shader Test ... reverse after successfull test
 	glUseProgram(m_program);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
@@ -99,7 +99,7 @@ void DrawManager::doDraw(ElementRenderStateNode_ptr elementRenderStateNode, Rigi
 	glBindVertexArray(0);
 }
 
-void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection){
+void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation, bool doSelection){
 	glUseProgram(m_pointCloudProgram);
 	m_modelMatrix = rigidAffineTransformation.toMatrix4x4();
 	m_normalMatrix = glm::inverse(glm::transpose(rigidAffineTransformation.getMatrix()));
@@ -110,7 +110,7 @@ void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode
 	glUniformMatrix4fv(m_pointCloudProjectionMatrixLocation, 1, GL_FALSE, (GLfloat*) &m_projectionMatrix);
 	glUniform1f(m_pointCloudPointRadiusLocation, (GLfloat)0.06f);
 	if(doSelection){
-		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex()/100.0f;
+		float colorIndex = (float)m_selectionVisitor.getCurrentSelectionIndex() / 100.0f;
 		hpcolor color = hpvec4(colorIndex,0.0f,0.0f,0.0f);
 		glUniform4f(m_pointCloudSelectionColorLocation, color.x, color.y, color.z, color.w);
 		glUniform1i(m_pointCloudDrawSelectionColors,1);
@@ -126,7 +126,7 @@ void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode
 
 void DrawManager::draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	m_modelMatrix = hpmat4x4(1.0f);
 	m_viewMatrix = viewMatrix;

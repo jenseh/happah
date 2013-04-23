@@ -2,6 +2,7 @@
 #define PLANE_H
 
 #include <memory>
+#include <list>
 
 using namespace std;
 
@@ -11,7 +12,19 @@ using namespace std;
 #include "happah/HappahTypes.h"
 #include "happah/math/Ray.h"
 
+class PlaneListener {
+	virtual void normalChanged() = 0;
+	virtual void originChanged() = 0;
+};
+
 class Plane : public Geometry {
+public:
+	class Listener {
+		public:
+		virtual void normalChanged() = 0;
+		virtual void originChanged() = 0;
+	};
+
 public:
 	Plane(hpvec3 origin, hpvec3 normal);
 	Plane(const Plane& other);
@@ -25,11 +38,16 @@ public:
 
 	Plane& operator=(const Plane& other);
 
+	void registerListener(Listener* listener);
+	void unregisterListener(Listener* listener);
+
 	TriangleMesh* toTriangleMesh();
 	LineMesh* toLineMesh();
 	PointCloud* toPointCloud();
 
 private:
+	std::list<Listener*> m_listeners;
+
 	hpvec3 m_normal;
 	hpvec3 m_origin;
 

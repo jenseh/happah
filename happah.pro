@@ -138,7 +138,7 @@ SOURCES += \
 	happah/HappahUtils.cpp\
 \
 #	happah/geometries/gears/BasicRack.cpp \
-#	happah/geometries/BSplineCurve.cpp \
+	happah/geometries/BSplineCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/DiscGenerator.cpp \

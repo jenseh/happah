@@ -110,5 +110,4 @@ public:
 
 typedef std::shared_ptr<BSplineCurve<hpvec3>> BSplineCurve_ptr;
 
-#include "happah/geometries/BSplineCurve.cpp"
 #endif // BSPLINECURVE_H

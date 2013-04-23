@@ -30,14 +30,18 @@ template <class T> BSplineCurve<T>::BSplineCurve( const std::vector<T>& controlP
   : m_controlPoints( controlPoints ),
 	m_knots( knots ),
 	m_normalizedKnots( knots ),
-	m_normalizedPoints( controlPoints ) {
-	
+	m_normalizedPoints( controlPoints )
+{
 	m_degree = m_knots.size() - m_controlPoints.size() - 1;
+	m_periodic = false;
+	m_uniform = false;
+	m_clamped = false;
 	if( m_degree <= 0 ) {
 		std::cerr << "Number of control points is too big for given knots!" << std::endl;
 	}
-	m_periodic = false;
-	m_uniform = false;
+	else {
+		calculateNormalization();
+	}
 }
 
 template <class T> BSplineCurve<T>::~BSplineCurve() {
@@ -107,7 +111,7 @@ template <class T> void BSplineCurve<T>::calculateNormalization() {
 //			m_normalizedKnots[i+m_degree] = i*( 1.0f/((hpreal) m_normalizedKnots.size() - 2*m_degree) );
 //		}
 	}
-	else if(m_uniform) {
+	else if(!m_clamped && m_uniform) {
 		hpreal fract = 1.0f/((hpreal) m_normalizedKnots.size() - 1);
 		for( int i = 0; i < m_normalizedKnots.size(); i++ ) {
 			m_normalizedKnots[i] = i*fract;
@@ -182,6 +186,103 @@ template <class T> int BSplineCurve<T>::getDegree() const {
 	return m_degree;
 }
 
+// TODO: better solution than template specialization would be overloading
+template <> void BSplineCurve<hpvec2>::getIntersectionPointsWithRay( const Ray& ray, std::vector<hpvec2>& intersectionPoints ) const {
+	intersectionPoints.resize(0); //ensure that no wrong values are returned
+
+	for(hpuint i = 0; i < m_controlPoints.size() - 1; ++i) {
+		hpvec2 startLine, endLine, intersectionPoint;
+		startLine = hpvec2(m_controlPoints[i]);
+		endLine = hpvec2(m_controlPoints[i + 1]);
+
+		if(ray.intersect(startLine, endLine, intersectionPoint)) {
+			if(m_degree == 1) {
+				intersectionPoints.push_back(intersectionPoint);
+			} else {
+				std::vector<hpreal> knots(m_normalizedKnots);
+				std::vector<hpvec2> points(m_normalizedPoints);
+
+				int startKnotIndex = i - (m_degree - 1);
+				if(startKnotIndex < m_degree)
+					startKnotIndex = m_degree;
+				int stopKnotIndex = i + m_degree + 1 + m_degree + 1;
+				if(stopKnotIndex > points.size())
+					stopKnotIndex = points.size();
+				bool newPointsInserted = false;
+				do {
+					std::vector<hpreal> newKnots;
+					for(hpuint j = startKnotIndex; j < stopKnotIndex; ++j) {
+						if(knots[j + 1] - knots[j] > 0.05f) {
+							hpreal newKnot = knots[j] + (knots[j + 1] - knots[j]) / 2.0f;
+							newKnots.push_back(newKnot);
+						}
+					}
+					stopKnotIndex += newKnots.size();
+					newPointsInserted = !newKnots.empty();
+					refine(knots, points, newKnots);
+				} while(newPointsInserted);
+
+				for(hpuint j = startKnotIndex; j < stopKnotIndex - m_degree - 1; ++j) {
+					hpvec2 startLine, endLine, intersectionPoint;
+					startLine = hpvec2(points[j]);
+					endLine = hpvec2(points[j + 1]);
+					if(ray.intersect(startLine, endLine, intersectionPoint)) {
+						intersectionPoints.push_back(intersectionPoint);
+					}
+				}
+			}
+		}
+	}
+}
+
+template <> void BSplineCurve<hpvec3>::getIntersectionPointsWithRay( const Ray& ray, std::vector<hpvec3>& intersectionPoints ) const {
+	intersectionPoints.resize(0); //ensure that no wrong values are returned
+
+	for(hpuint i = 0; i < m_controlPoints.size() - 1; ++i) {
+		hpvec2 startLine, endLine, intersectionPoint;
+		startLine = hpvec2(m_controlPoints[i]);
+		endLine = hpvec2(m_controlPoints[i + 1]);
+
+		if(ray.intersect(startLine, endLine, intersectionPoint)) {
+			if(m_degree == 1) {
+				intersectionPoints.push_back(hpvec3(intersectionPoint, 0.0f));
+			} else {
+				std::vector<hpreal> knots(m_normalizedKnots);
+				std::vector<hpvec3> points(m_normalizedPoints);
+
+				int startKnotIndex = i - (m_degree - 1);
+				if(startKnotIndex < m_degree)
+					startKnotIndex = m_degree;
+				int stopKnotIndex = i + m_degree + 1 + m_degree + 1;
+				if(stopKnotIndex > points.size())
+					stopKnotIndex = points.size();
+				bool newPointsInserted = false;
+				do {
+					std::vector<hpreal> newKnots;
+					for(hpuint j = startKnotIndex; j < stopKnotIndex; ++j) {
+						if(knots[j + 1] - knots[j] > 0.05f) {
+							hpreal newKnot = knots[j] + (knots[j + 1] - knots[j]) / 2.0f;
+							newKnots.push_back(newKnot);
+						}
+					}
+					stopKnotIndex += newKnots.size();
+					newPointsInserted = !newKnots.empty();
+					refine(knots, points, newKnots);
+				} while(newPointsInserted);
+
+				for(hpuint j = startKnotIndex; j < stopKnotIndex - m_degree - 1; ++j) {
+					hpvec2 startLine, endLine, intersectionPoint;
+					startLine = hpvec2(points[j]);
+					endLine = hpvec2(points[j + 1]);
+					if(ray.intersect(startLine, endLine, intersectionPoint)) {
+						intersectionPoints.push_back(hpvec3(intersectionPoint, 0.0f));
+					}
+				}
+			}
+		}
+	}
+}
+
 template <class T> void BSplineCurve<T>::getIntersectionPointsWithRay( const Ray& ray, std::vector<T>& intersectionPoints ) const {
 	intersectionPoints.resize(0); //ensure that no wrong values are returned
 
@@ -192,7 +293,7 @@ template <class T> void BSplineCurve<T>::getIntersectionPointsWithRay( const Ray
 
 		if(ray.intersect(startLine, endLine, intersectionPoint)) {
 			if(m_degree == 1) {
-				intersectionPoints.push_back(T(intersectionPoint));
+//				intersectionPoints.push_back(intersectionPoint);
 			} else {
 				std::vector<hpreal> knots(m_normalizedKnots);
 				std::vector<T> points(m_normalizedPoints);
@@ -222,7 +323,7 @@ template <class T> void BSplineCurve<T>::getIntersectionPointsWithRay( const Ray
 					startLine = hpvec2(points[j]);
 					endLine = hpvec2(points[j + 1]);
 					if(ray.intersect(startLine, endLine, intersectionPoint)) {
-						intersectionPoints.push_back(T(intersectionPoint));
+//						intersectionPoints.push_back(T(intersectionPoint));
 					}
 				}
 			}
@@ -580,7 +681,9 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 		indices->push_back( 0 );
 		indices->push_back( 0 );
 	}
+
 	// control polygon
+	/*
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
 		unsigned int nVData = verticesAndNormals->size();
@@ -598,6 +701,7 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 		(*verticesAndNormals)[nVData + 2*n-2] = m_controlPoints.back();
 		(*verticesAndNormals)[nVData + 2*n-1] = T(1.0f); //TODOTODOTODOTODOTODOTODOTODOhpvec3(1.0f,0.0f,0.0f);
 	}
+	*/
 
 	// tangents
 	/*
@@ -665,7 +769,7 @@ template <class T> BSplineCurve<hpvec3>* BSplineCurve<T>::to3dBSplineCurve() con
 
 	std::vector<hpvec3> controlPoints = std::vector<hpvec3>(m_controlPoints.size());
 	std::vector<hpvec3>::iterator it = controlPoints.begin();
-	for(std::vector<hpvec2>::const_iterator itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++itOther) {
+	for(auto itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++itOther) {
 		(*it) = hpvec3(itOther->x, itOther->y, 0.0f);
 		++it;
 	}
@@ -684,7 +788,7 @@ template <class T> BSplineCurve<hpvec2>* BSplineCurve<T>::to2dBSplineCurve() con
 
 	std::vector<hpvec2> controlPoints = std::vector<hpvec2>(m_controlPoints.size());
 	std::vector<hpvec2>::iterator it = controlPoints.begin();
-	for(std::vector<hpvec3>::const_iterator itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++itOther) {
+	for(auto itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++itOther) {
 		(*it) = hpvec2(itOther->x, itOther->y);
 		++it;
 	}
@@ -727,6 +831,7 @@ template <class T> std::vector<T> BSplineCurve<T>::knotRefinement( hpreal minDis
 	std::vector<hpreal> refinedKnots( m_normalizedKnots );
 	std::vector<T> refinedPoints( m_normalizedPoints );
 
+	// TODO: do not subdivide fixed number of steps, but until all segments have distance <= minDist 
 	int tmpHelper = 0;
 	do {
 		newKnots.clear();
@@ -763,6 +868,8 @@ template <class T> std::vector<T> BSplineCurve<T>::knotRefinement( hpreal minDis
 
 //	} while(newKnots.size() > 0);
 
+	refinedPoints.erase( refinedPoints.begin(), refinedPoints.begin()+m_degree-1 );
+	refinedPoints.erase( refinedPoints.end()-m_degree+1, refinedPoints.end() );
 	return refinedPoints;
 }
 
@@ -868,3 +975,5 @@ template <class T> void BSplineCurve<T>::refine(
 // 	cerr << values.back() << "	]" << endl;
 // }
 
+template class BSplineCurve<hpvec3>;
+template class BSplineCurve<hpvec2>;

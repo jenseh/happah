@@ -26,23 +26,6 @@ template <class T> BSplineCurve<T>::BSplineCurve( const BSplineCurve<T>& other )
 	m_uniform(other.m_uniform) {
 }
 
-template <class T> BSplineCurve<hpvec3>* BSplineCurve<T>::to3dBSplineCurve() const {
-
-	std::vector<hpvec3> controlPoints = std::vector<hpvec3>(m_controlPoints.size());
-	std::vector<hpvec3>::iterator it = controlPoints.begin();
-	for(std::vector<hpvec2>::const_iterator itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++it) {
-		(*it) = hpvec3(*itOther, 0.0f);
-	}
-	std::vector<hpreal> knots = std::vector<hpreal>(m_knots);
-
-	BSplineCurve<hpvec3>* curve3D = new BSplineCurve<hpvec3>(controlPoints, knots);
-	curve3D->setPeriodic( m_periodic );
-	curve3D->setUniform( m_uniform );
-	curve3D->setClamped( m_clamped );
-
-	return curve3D;
-}
-
 template <class T> BSplineCurve<T>::BSplineCurve( const std::vector<T>& controlPoints, const std::vector<hpreal>& knots )
   : m_controlPoints( controlPoints ),
 	m_knots( knots ),
@@ -677,6 +660,44 @@ template <class T> int BSplineCurve<T>::findSpan( hpreal t ) const {
 	*/
 }
 
+
+template <class T> BSplineCurve<hpvec3>* BSplineCurve<T>::to3dBSplineCurve() const {
+
+	std::vector<hpvec3> controlPoints = std::vector<hpvec3>(m_controlPoints.size());
+	std::vector<hpvec3>::iterator it = controlPoints.begin();
+	for(std::vector<hpvec2>::const_iterator itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++itOther) {
+		(*it) = hpvec3(itOther->x, itOther->y, 0.0f);
+		++it;
+	}
+	std::vector<hpreal> knots = std::vector<hpreal>(m_knots);
+
+	BSplineCurve<hpvec3>* curve3D = new BSplineCurve<hpvec3>(controlPoints, knots);
+	curve3D->setPeriodic( m_periodic );
+	curve3D->setUniform( m_uniform );
+	curve3D->setClamped( m_clamped );
+
+	return curve3D;
+}
+
+
+template <class T> BSplineCurve<hpvec2>* BSplineCurve<T>::to2dBSplineCurve() const {
+
+	std::vector<hpvec2> controlPoints = std::vector<hpvec2>(m_controlPoints.size());
+	std::vector<hpvec2>::iterator it = controlPoints.begin();
+	for(std::vector<hpvec3>::const_iterator itOther = m_controlPoints.begin(), endOther = m_controlPoints.end(); itOther != endOther; ++itOther) {
+		(*it) = hpvec2(itOther->x, itOther->y);
+		++it;
+	}
+	std::vector<hpreal> knots = std::vector<hpreal>(m_knots);
+
+	BSplineCurve<hpvec2>* curve2D = new BSplineCurve<hpvec2>(controlPoints, knots);
+	curve2D->setPeriodic( m_periodic );
+	curve2D->setUniform( m_uniform );
+	curve2D->setClamped( m_clamped );
+
+	return curve2D;
+}
+
 template <class T> int BSplineCurve<T>::findSpan( hpreal t, std::vector<hpreal>& knots ) const {
 	unsigned int l = 0;
 	while( l < knots.size() - 1 && knots[l+1] <= t ) {
@@ -809,15 +830,15 @@ template <class T> void BSplineCurve<T>::refine(
 }
 
 
-// template <class T> void BSplineCurve::drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints) {
+// template <class T> void BSplineCurve<T>::drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints) {
 // 	m_furtherDrawPoints = std::vector<hpvec3>(additionalPoints);
 // }
 
-// template <class T> void BSplineCurve::addAdditionalCurve(const BSplineCurve& bSplineCurve) {
+// template <class T> void BSplineCurve<T>::addAdditionalCurve(const BSplineCurve& bSplineCurve) {
 // 	m_additionalCurves.push_back(new BSplineCurve(bSplineCurve));
 // }
 
-// template <class T> void BSplineCurve::drawArray(const std::vector<hpvec3>& points) const {
+// template <class T> void BSplineCurve<T>::drawArray(const std::vector<hpvec3>& points) const {
 // 	cerr << "[	";
 // 	if(points.size() != 0) {
 // 		for(hpuint i = 0; i < points.size() - 1; ++i) {
@@ -828,7 +849,18 @@ template <class T> void BSplineCurve<T>::refine(
 // 	cerr << "	]" << endl;
 // }
 
-// template <class T> void BSplineCurve::drawArray(const std::vector<hpreal>& values) const {
+// template <class T> void BSplineCurve<T>::drawArray(const std::vector<hpvec2>& points) const {
+// 	cerr << "[	";
+// 	if(points.size() != 0) {
+// 		for(hpuint i = 0; i < points.size() - 1; ++i) {
+// 			cerr << "[" << points[i].x << "," << points[i].y << "] |	";
+// 		}
+// 		cerr << "[" << points.back().x << "," << points.back().y << "]";
+// 	}
+// 	cerr << "	]" << endl;
+// }
+
+// template <class T> void BSplineCurve<T>::drawArray(const std::vector<hpreal>& values) const {
 // 	cerr << "[	";
 // 	for(hpuint i = 0; i < values.size() - 1; ++i) {
 // 		cerr << values[i] << " |	";

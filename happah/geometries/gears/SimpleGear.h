@@ -14,6 +14,7 @@ class SimpleGear : public CylindricalGear {
 public:
 	SimpleGear(const ToothProfile& toothProfile, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const BSplineCurve<hpvec2>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(const BSplineCurve<hpvec3>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
 	~SimpleGear();
 
@@ -34,7 +35,7 @@ public:
 
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
-	void getTraverseProfile(hpreal z, BSplineCurve<hpvec2>& gearProfile);
+	void getTraverseProfile(hpreal z, BSplineCurve<hpvec3>& gearProfile);
 
 private:
 	ToothProfile_ptr m_toothProfile;

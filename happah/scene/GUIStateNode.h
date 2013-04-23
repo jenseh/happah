@@ -155,8 +155,8 @@ public:
 
 private:
 	InvoluteGear_ptr m_involuteGear;
-	InvoluteGearForm* m_involuteGearForm;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;
+	InvoluteGearForm* m_involuteGearForm;
 };
 
 #include "happah/geometries/Plane.h"
@@ -184,7 +184,7 @@ private:
 
 class SimpleGearGUIStateNode : public GUIStateNode {
 public:
-	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu,  string name);
+	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu, string name);
 	~SimpleGearGUIStateNode();
 
 	ContextMenu* getContextMenu() const;

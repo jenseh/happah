@@ -199,9 +199,9 @@ InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(
 	InvoluteGearContextMenu* contextMenu, 
 	string name
 ) : GUIStateNode(name), 
-	m_involuteGear(involuteGear), 
-	m_involuteGearForm(involuteGearForm), 
-	m_involuteGearContextMenu(contextMenu) {
+	m_involuteGear(involuteGear),
+	m_involuteGearContextMenu(contextMenu),
+	m_involuteGearForm(involuteGearForm) {
 }
 
 InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
@@ -256,7 +256,7 @@ Form* PlaneGUIStateNode::getForm() {
 // SimpleGear
 
 SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu, string name)
-	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm), m_simpleGearContextMenu(simpleGearContextMenu) {}
+	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearContextMenu(simpleGearContextMenu), m_simpleGearForm(simpleGearForm) {}
 
 SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
 	if(m_simpleGearForm->getSimpleGear() == m_simpleGear)

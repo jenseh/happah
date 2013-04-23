@@ -62,9 +62,10 @@ void LoggingUtils::print(SimpleGear& simpleGear) {
   cout << "helix angle = " << simpleGear.getHelixAngle() << endl;
   cout << "face width  = " << simpleGear.getFaceWidth() << endl;
   cout << "controlpoints: " << endl;
-  BSplineCurve<hpvec2> toothProfile = simpleGear.getToothProfile().getCurve();
+  BSplineCurve<hpvec3> toothProfile;
+  simpleGear.getToothProfile().getCurve(toothProfile);
   for(hpuint i = 0; i < toothProfile.getNumberOfControlPoints(); ++i) {
-    hpvec2 point = toothProfile.getControlPoint(i);
+    hpvec3 point = toothProfile.getControlPoint(i);
     LoggingUtils::printVec(point);
   }
   cout << endl;

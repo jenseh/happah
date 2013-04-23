@@ -10,7 +10,7 @@
 using namespace std;
 
 ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
-	: Form(parent), m_guiManager(guiManager), m_currentPointIndex(-1) {
+	: Form(parent), m_currentPointIndex(-1), m_guiManager(guiManager) {
 
 	QPushButton* show3dGearButton = new QPushButton("Show gear in 3D");
 	connect(show3dGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
@@ -90,7 +90,7 @@ void ToothProfileForm::handleRay(Ray& ray) {
 void ToothProfileForm::handleDrag(Ray& ray) {
 	hpvec3 intersectionPoint;
 	if(m_plane->intersect(ray, intersectionPoint)) {
-		m_toothProfile->setPointOfGear(m_currentPointIndex, hpvec2(intersectionPoint.x, intersectionPoint.y));
+		m_toothProfile->setPointOfGear(m_currentPointIndex, intersectionPoint);
 		m_guiManager.update(m_toothProfile);
 		emit toothProfileChanged(m_toothProfile);
 	}

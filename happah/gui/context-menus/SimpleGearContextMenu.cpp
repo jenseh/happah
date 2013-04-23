@@ -35,10 +35,9 @@ void SimpleGearContextMenu::createDiscGearGrind() {
 }
 
 void SimpleGearContextMenu::createCurveOfProfile() {
-	BSplineCurve<hpvec2>* profile = new BSplineCurve<hpvec2>();
+	BSplineCurve<hpvec3>* profile = new BSplineCurve<hpvec3>();
 	m_simpleGear->getTraverseProfile(0.0f, *profile);
-	BSplineCurve_ptr gearProfile = BSplineCurve_ptr(profile->to3dBSplineCurve());
-	delete profile;
+	BSplineCurve_ptr gearProfile = BSplineCurve_ptr(profile);
 	m_guiManager.insert(gearProfile, 0x00000006);
 }
 

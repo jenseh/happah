@@ -13,9 +13,9 @@
 template <class T>
 class BSplineCurve {
 protected:
-	std::vector<T>	m_controlPoints;
 	bool		m_clampedEnds;
 	bool		m_clamped;
+	std::vector<T>	m_controlPoints;
 	int		m_degree;
 	std::vector<hpreal>	m_knots;
 	std::vector<T>	m_normalizedPoints;
@@ -93,14 +93,16 @@ public:
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
 	BSplineCurve<hpvec3>* to3dBSplineCurve() const;
+	BSplineCurve<hpvec2>* to2dBSplineCurve() const;
 
 
 	// TODO: methods and things below here are only here for short testing time!
 	// => remove them!
-	// template <class T> void drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints);
+	// void drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints);
 	// std::vector<hpvec3> m_furtherDrawPoints;
-	// template <class T> void drawArray(const std::vector<hpvec3>& points) const;
-	// template <class T> void drawArray(const std::vector<hpreal>& values) const;
+	// void drawArray(const std::vector<hpvec3>& points) const;
+	// void drawArray(const std::vector<hpvec2>& points) const;
+	// void drawArray(const std::vector<hpreal>& values) const;
 	// void addAdditionalCurve(const BSplineCurve& bSplineCurve);
 	// std::vector<BSplineCurve*> m_additionalCurves;
 

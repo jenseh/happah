@@ -71,9 +71,20 @@ void LoggingUtils::print(SimpleGear& simpleGear) {
   cout << endl;
 }
 
-void LoggingUtils::print(Circle& circle) {
-	cout << "Circle: " << endl;
+void LoggingUtils::print(const char* name, Triangle& triangle) {
+	cout << name << ": " << endl;
+	LoggingUtils::printVec("VertexA", triangle.vertices[0]);
+	LoggingUtils::printVec("VertexB", triangle.vertices[1]);
+	LoggingUtils::printVec("VertexC", triangle.vertices[2]);
+}
+
+void LoggingUtils::print(const char* name, Circle& circle) {
+	cout << name << ": " << endl;
 	LoggingUtils::printVec("center", circle.m_center);
 	LoggingUtils::printVec("normal", circle.m_normal);
 	LoggingUtils::printVal("radius", circle.m_radius);
+}
+
+void LoggingUtils::print(Circle& circle) {
+	LoggingUtils::print("Circle", circle);
 }

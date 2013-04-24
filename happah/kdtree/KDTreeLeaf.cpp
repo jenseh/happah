@@ -25,6 +25,7 @@ bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult>* h
       std::vector<Triangle>::iterator pos = m_triangles->begin();
       std::vector<Triangle>::iterator end = m_triangles->end();
       bool hit = false;
+
       for (; pos != end; pos++) {
           Triangle triangle = *pos;
 

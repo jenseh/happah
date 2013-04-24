@@ -10,10 +10,10 @@ class SimpleGeometryNode : public Node {
 
 public:
 	SimpleGeometryNode(shared_ptr<G> geometry)
-		: m_geometry(geometry),m_selectListener(*this) {}
+		: m_geometry(geometry), m_selectListener(*this) {}
 
 	SimpleGeometryNode(shared_ptr<G> geometry, RigidAffineTransformation& transformation)
-		: m_geometry(geometry), m_rigidAffineTransformation(transformation),m_selectListener(*this) {}
+		: m_geometry(geometry), m_rigidAffineTransformation(transformation), m_selectListener(*this) {}
 
 	virtual ~SimpleGeometryNode() {}
 

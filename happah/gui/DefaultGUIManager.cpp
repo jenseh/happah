@@ -56,7 +56,7 @@ void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
 void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
 
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(15, 4));
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(15, 10));
 	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(30, 100);
 	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, simpleGear, involuteGear->getReferenceRadius(), gearMesh));
 
@@ -349,14 +349,6 @@ void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
 	doUpdate2D<SurfaceOfRevolution>(disc);
 }
 
-/*
-void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
-	m_sceneManager->removeContainingData(simulationResult.m_gear, simulationResult.m_gearMesh);
-	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	m_sceneManager->removeContainingData(simulationResult.m_tool, simulationResult.m_toolMesh);
-	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
-	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
-} */
 void DefaultGUIManager::update(FocalSpline_ptr focalSpline){
 	doUpdate0D<FocalSpline>(focalSpline);
 	doUpdate1D<FocalSpline>(focalSpline);

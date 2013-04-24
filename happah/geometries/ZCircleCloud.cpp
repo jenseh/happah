@@ -9,21 +9,8 @@ hpuint ZCircleCloud::getResolutionZ() {
   return m_resolutionZ;
 }
 
-hpvec2 ZCircleCloud::getReferenceDir() {
-  return m_referenceDir;
-}
-
 hpreal ZCircleCloud::getMaxRadius() {
 	return m_maxRadius;
-}
-
-bool ZCircleCloud::isInZRange(hpreal posZ) {
-	hpreal epsilon = 10e-7;
-	return m_startZ - epsilon <= posZ && posZ <= m_endZ + epsilon;
-}
-
-hpuint ZCircleCloud::convertPosZToPosZIdx(hpreal posZ) {
-	return (hpuint) round((posZ - m_startZ) / (m_endZ - m_startZ));
 }
 
 hpreal ZCircleCloud::convertPosZIdxToPosZ(hpuint posZIdx) {

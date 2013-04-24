@@ -12,28 +12,6 @@
 
 //#include "happah/LoggingUtils.h"
 
-//struct CirclePoint {
-//  hpreal angle;
-//  hpreal radius;
-//
-//  CirclePoint(hpreal angle_, hpreal radius_) {
-//    angle = angle_;
-//    radius = radius_;
-//  }
-//};
-
-//struct CircleRange {
-//  hpreal startAngle;
-//  hpreal endAngle;
-//  hpreal radius;
-//
-//  CircleRange(hpreal startAngle_, hpreal endAngle_, hpreal radius_) {
-//    startAngle = startAngle_;
-//    endAngle = endAngle_;
-//    radius = radius_;
-//  }
-//};
-
 struct CircleHitResult {
   hpvec3 hitPointA;
   hpvec3 hitPointB;
@@ -136,7 +114,6 @@ struct Circle {
 				if (triangleInside) {
 					// ..then the triangle is "inside" the circle
 				    // std::cout << distC01 << ", " << distC12 << ", " << distC02 << ", " << m_radius << std::endl;
-				    // std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
 
 				    // Get point on triangle (edge) that is closest to center
 				    hpvec3* hitPoint;
@@ -151,13 +128,16 @@ struct Circle {
 
 				    CircleHitResult tempHitResult = CircleHitResult(*hitPoint, *hitPoint, triangle);
 				    hitResults->push_back(tempHitResult);
+
+				    std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
-						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						CircleHitResult tempHitResult = CircleHitResult(m_center, m_center, triangle);
 						hitResults->push_back(tempHitResult);
+
+						std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						return true;
 					} else {
 						// std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
@@ -208,9 +188,6 @@ struct Circle {
 				     // std::cout << "Intersect circleB: " << circleIntersectionB.x << ", " << circleIntersectionB.y << ", " << circleIntersectionB.z << std::endl;
 
 
-
-
-
 				    hpreal distanceCA = computeDistanceOnLine(circleIntersectionA, linePoint, lineDirection);
 				    hpreal distanceCB = computeDistanceOnLine(circleIntersectionB, linePoint, lineDirection);
 				    hpreal distanceTA = computeDistanceOnLine(triangleIntersectionA, linePoint, lineDirection);
@@ -227,76 +204,86 @@ struct Circle {
 				    hpreal* maxTv;
 
 				    if (distanceCA < distanceCB) {
-					minCv = &distanceCA;
-					maxCv = &distanceCB;
-					minC = &circleIntersectionA;
-					maxC = &circleIntersectionB;
+						minCv = &distanceCA;
+						maxCv = &distanceCB;
+						minC = &circleIntersectionA;
+						maxC = &circleIntersectionB;
 				    } else {
-					minCv = &distanceCB;
-					maxCv = &distanceCA;
-					minC = &circleIntersectionB;
-					maxC = &circleIntersectionA;
+						minCv = &distanceCB;
+						maxCv = &distanceCA;
+						minC = &circleIntersectionB;
+						maxC = &circleIntersectionA;
 				    }
 
 				    if (distanceTA < distanceTB) {
-					minTv = &distanceTA;
-					maxTv = &distanceTB;
-					minT = &triangleIntersectionA;
-					maxT = &triangleIntersectionB;
+						minTv = &distanceTA;
+						maxTv = &distanceTB;
+						minT = &triangleIntersectionA;
+						maxT = &triangleIntersectionB;
 				    } else {
-					minTv = &distanceTB;
-					maxTv = &distanceTA;
-					minT = &triangleIntersectionB;
-					maxT = &triangleIntersectionA;
+						minTv = &distanceTB;
+						maxTv = &distanceTA;
+						minT = &triangleIntersectionB;
+						maxT = &triangleIntersectionA;
 				    }
 
 
 				    // Check whether the segments on the line overlap
-				    if ((floatBigger(*maxTv, *minCv) && floatBigger(*maxCv, *minTv))) {
-					// std::cout << "Success: Overlapping!" << std::endl;
+				    // We need a very low accuracy here due to the other dimensions
+				    if ((floatBigger(*maxTv, *minCv, 10e-2) && floatBigger(*maxCv, *minTv, 10e-2))) {
+						std::cout << "Success: Overlapping!" << std::endl;
 
-					// Compute the 2 "inner" points along line
-					hpvec3* minVec;
-					hpvec3* maxVec;
+						// Compute the 2 "inner" points along line
+						hpvec3* minVec;
+						hpvec3* maxVec;
 
-					if (*minTv < *minCv) {
-					    minVec = minC;
-					} else {
-					    minVec = minT;
+						if (*minTv < *minCv) {
+							minVec = minC;
+						} else {
+							minVec = minT;
+						}
+
+						if (*maxTv < *maxCv) {
+							maxVec = maxT;
+						} else {
+							maxVec = maxC;
+						}
+
+
+//						hpvec3 closestPointToCenter = glm::closestPointOnLine(m_center, *minVec, *maxVec); //TODO: why is this unused?
+//
+//						// In case min and max are equal, we would get tripple NAN
+//						if (!isValidVector(closestPointToCenter)) {
+//							closestPointToCenter = *minVec;
+//						}
+
+//						hpreal circleIntersectionDist = &maxCv-&minCv;
+//						std::cout << "circle intersecting on: " << circleIntersectionDist << std::endl;
+//
+//						hpreal triangleIntersectionDist = &maxTv-&minTv;
+//						std::cout << "triangle intersecting on: " << triangleIntersectionDist << std::endl;
+//
+//						hpreal resultIntersectionDist = glm::distance(*minVec, *maxVec);
+//						std::cout << "result intersecting on: " << resultIntersectionDist << std::endl;
+//
+//						assert (resultIntersectionDist <= triangleIntersectionDist && resultIntersectionDist <= circleIntersectionDist);
+
+						CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec, triangle);
+						hitResults->push_back(tempHitResult);
+//						 std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
+//						 std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
+//						 std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+//						 std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+						std::cout << "Success: Intersect inside: " /*<< closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z */ << std::endl;
+						return true;
 					}
-
-					if (*maxTv < *maxCv) {
-					    maxVec = maxT;
-					} else {
-					    maxVec = maxC;
+					else {
+						 std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
+						 // std::cout << "Error: No overlap!" << std::endl;
+						return false;
 					}
-
-
-					hpvec3 closestPointToCenter = glm::closestPointOnLine(m_center, *minVec, *maxVec);
-
-					// In case min and max are equal, we would get tripple NAN
-					if (!isValidVector(closestPointToCenter)) closestPointToCenter = *minVec;
-
-					CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec, triangle);
-					hitResults->push_back(tempHitResult);
-					// std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
-					// std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
-					// std::cout << "Intersect center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
-					// std::cout << "Intersect inside: " << closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z << std::endl;
-
-//					CircleHitResult* hitResult = hitResults->back();
-//					// std::cout << "Intersect outside1B: size " << hitResults->size() << std::endl;
-//					// std::cout << "Intersect outside1B: " << (hitResult != 0) << std::endl;
-//					// std::cout << "Intersect outside2B: " << hitResult->range.startAngle << ", " << hitResult->range.endAngle << ", " << hitResult->range.radius << std::endl;
-					return true;
-				    }
-				    else {
-					    // std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
-					    // std::cout << "Error: No overlap!" << std::endl;
-					return false;
-				    }
 				} else {
-					    // std::cout << "Error: No intersection with triangle!" << std::endl;
+					     // std::cout << "Error: No intersection with triangle!" << std::endl;
 					return false;
 				}
 
@@ -305,12 +292,13 @@ struct Circle {
 				// std::cout << "linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
 				// std::cout << "lineDirection: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
 
-				// std::cout << "Error: Exiting due to: Line doesn't hit circle!" << m_radius << std::endl;
+				// std::cout << "Error: Exiting due to: Line doesn't hit circle!" << std::endl;
 				return false;
 			}
 		}
 
-		   // std::cout << "Error: Nothing happened!" << std::endl;
+		// std::cout << "Error: Nothing happened!" << std::endl;
+		assert(1 == 1);
 		return false;
 	}
 
@@ -537,14 +525,18 @@ struct Circle {
 	// Check whether float a is smaller than float b
 	// A tolerance is added that makes overlapping more likely
 	bool inline floatSmaller(hpreal a, hpreal b) {
-		const hpreal epsilon = 10e-04;
+		const hpreal epsilon = 10e-06;
 		return a < b + epsilon;
 	}
 
 	// Check whether hpreal a is bigger than hpreal b
 	// A tolerance is added that makes overlapping more likely
 	bool inline floatBigger(hpreal a, hpreal b) {
-		const hpreal epsilon = 10e-04;
+		const hpreal epsilon = 10e-06;
+		return floatBigger(a, b, epsilon);
+	}
+
+	bool inline floatBigger(hpreal a, hpreal b, hpreal epsilon) {
 		return a > b - epsilon;
 	}
 

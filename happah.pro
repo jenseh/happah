@@ -128,8 +128,8 @@ HEADERS += \
 \
 	happah/transformations/RigidAffineTransformation.h \
 \	
-	happah-test/simulations/WormGearGrindTest.h
-
+	happah-test/simulations/WormGearGrindTest.h \
+	happah-test/tests/CircleTriangleIntersectionTest.h
 
 #KEEP SOURCES SORTED!!!
 SOURCES += \
@@ -139,7 +139,7 @@ SOURCES += \
 	happah/HappahUtils.cpp\
 \
 #	happah/geometries/gears/BasicRack.cpp \
-#	happah/geometries/BSplineCurve.cpp \
+	happah/geometries/BSplineCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/DiscGenerator.cpp \
@@ -243,7 +243,8 @@ SOURCES += \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
 \	
-	happah-test/simulations/WormGearGrindTest.cpp
+	happah-test/simulations/WormGearGrindTest.cpp \
+	happah-test/tests/CircleTriangleIntersectionTest.cpp
 	
 FORMS += 
 RESOURCES += 

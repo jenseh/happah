@@ -103,7 +103,7 @@ public:
 private:
   void init(hpreal gearReferenceRadius);
 
-  void inline computeIntersectingTriangles(hpuint& z, std::list<CircleHitResult>* hitResults, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix);
+  void inline computeIntersectingTriangles(hpuint& wormPosZIdx, CircularSimulationResult* simResult, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix);
 
   hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
   Circle transformCircle(Circle& circle, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix);
@@ -129,7 +129,7 @@ private:
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
-  constexpr static size_t m_resultAngleSlotCount = 10;
+  constexpr static size_t m_resultAngleSlotCount = 50;
 };
 
 typedef std::shared_ptr<WormGearGrind> WormGearGrind_ptr;

@@ -64,7 +64,7 @@ public:
 	//gear will consist of nPointsPerTooth * getNumberOfTeeth() points.
 	//nTraverseProfiles is the number of samples used to sample along the z axis
 	//whereas nTraverseProfiles = 10 means, that the TriangleMesh will consist of
-	//11 gear profiles with 10 intervals ??????? TODO: is that right?
+	//11 gear profiles with 10 intervals
 	TriangleMesh* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
 
 };

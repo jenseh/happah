@@ -16,6 +16,7 @@ public:
 
   void addItem(hpvec3 point);
   hpreal computeAngle(hpvec3 point);
+  hpreal computeRadiusXY(hpvec3 point);
   hpuint convertPosZToPosZIdx(hpreal posZ);
   hpreal getItem(hpuint angleSlot, hpuint posZSlot);
   hpreal getItem(hpvec3 point);

@@ -115,7 +115,7 @@ private:
 	/**
 	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
 	 */
-	static const int STEP_COUNT = 10;
+	static const int STEP_COUNT = 1;
 
 	Worm_ptr m_worm;
 	ZCircleCloud_ptr m_wormCircleCloud;

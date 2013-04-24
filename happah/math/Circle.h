@@ -129,7 +129,7 @@ struct Circle {
 				    CircleHitResult tempHitResult = CircleHitResult(*hitPoint, *hitPoint, triangle);
 				    hitResults->push_back(tempHitResult);
 
-				    std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
+				    // std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
 				    return true;
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
@@ -137,7 +137,7 @@ struct Circle {
 						CircleHitResult tempHitResult = CircleHitResult(m_center, m_center, triangle);
 						hitResults->push_back(tempHitResult);
 
-						std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
+						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						return true;
 					} else {
 						// std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
@@ -161,8 +161,8 @@ struct Circle {
 			// Normalize lineDirection for distance comparisons
 			lineDirection = glm::normalize(lineDirection);
 
-			    // std::cout << "Intersect linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
-			    // std::cout << "Intersect lineDir: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
+			     std::cout << "Intersect linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
+			     std::cout << "Intersect lineDir: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
 
 			// Check whether this line hits our sphere
 			// Check whether distance is shorter than the radius
@@ -231,7 +231,7 @@ struct Circle {
 				    // Check whether the segments on the line overlap
 				    // We need a very low accuracy here due to the other dimensions
 				    if ((floatBigger(*maxTv, *minCv, 10e-2) && floatBigger(*maxCv, *minTv, 10e-2))) {
-						std::cout << "Success: Overlapping!" << std::endl;
+						// std::cout << "Success: Overlapping!" << std::endl;
 
 						// Compute the 2 "inner" points along line
 						hpvec3* minVec;
@@ -274,11 +274,11 @@ struct Circle {
 //						 std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
 //						 std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
 //						 std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
-						std::cout << "Success: Intersect inside: " /*<< closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z */ << std::endl;
+						// std::cout << "Success: Intersect inside: " /*<< closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z */ << std::endl;
 						return true;
 					}
 					else {
-						 std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
+//						 std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
 						 // std::cout << "Error: No overlap!" << std::endl;
 						return false;
 					}
@@ -415,44 +415,65 @@ struct Circle {
 		return linePointB + t * lineDirectionB;
 	}
 
+	// this method intersects two non axis aligned planes
 	void inline intersectPlanes(hpvec3& t_normal, hpvec3& t_vertex, hpvec3& m_normal, hpvec3& m_vertex,
 			hpvec3& linePoint, hpvec3& lineDirection) {
-		// This was solved using paper and pen by setting the planes to be equal
+//		// This was solved using paper and pen by setting the planes to be equal
+//
+//		// Since there are 6 different combinations we setup indices to avoid dividing by 0
+//		int indexNNotNull = !floatEquals(t_normal.x, 0.0) ? 0 : 1;
+//
+//		int indexOther = 0 != indexNNotNull ? 0 : 1;
+//
+//
+//		// Determine plane parameters for triangle plane (n0*x0 + n1*x1 + n2*x2 =  nd)
+//		hpreal n0 = t_normal[indexNNotNull];
+//		hpreal n1 = t_normal[indexOther];
+//		hpreal n2 = t_normal[2];
+//		hpreal nd = n0 * t_vertex[indexNNotNull] + n1 * t_vertex[indexOther] + n2 * t_vertex[2];
+//
+//		// Determine plane parameters for circle plane (m0*x0 + m1*x1 + m2*x2 =  md)
+//		hpreal m0 = m_normal[indexNNotNull];
+//		hpreal m1 = m_normal[indexOther];
+//		hpreal m2 = m_normal[2];
+//		hpreal md = m0 * m_vertex[indexNNotNull] + m1 * m_vertex[indexOther] + m2 * m_vertex[2];
 
-		// Since there are 6 different combinations we setup indices to avoid dividing by 0
-		int indexNNotNull = !floatEquals(t_normal.x, 0.0) ? 0 : 1;
+//		// Some temporarily used values
+//		hpreal t = nd - n2 * md;
+//
+//		// This dimension was chosen as variable
+//		// Depends on nothing
+//		linePoint[2] = m_vertex[2]; // Simplification for XY planes
+//		lineDirection[2] = 0.0;
+//
+//		// Insert values for the other dimensions
+//		// Depends on n1, n2
+//		linePoint[indexOther] = 0.0;
+//		lineDirection[indexOther] = 1.0;
+//
+//		// Depends on n1, n2
+//		linePoint[indexNNotNull] = t / n0;
+//		lineDirection[indexNNotNull] = -n1 / n0;
 
-		int indexOther = 0 != indexNNotNull ? 0 : 1;
+		lineDirection = glm::cross(m_normal, t_normal);
+		hpvec3& point = lineDirection; //get a point on the cross product
+		hpreal m_d = computePointPlaneDistance(m_normal, m_vertex, point);
+		hpreal t_d = computePointPlaneDistance(t_normal, t_vertex, point);
+
+		linePoint = point - (m_d * m_normal);// - (t_d * t_normal);
 
 
-		// Determine plane parameters for triangle plane (n0*x0 + n1*x1 + n2*x2 =  nd)
-		hpreal n0 = t_normal[indexNNotNull];
-		hpreal n1 = t_normal[indexOther];
-		hpreal n2 = t_normal[2];
-		hpreal nd = n0 * t_vertex[indexNNotNull] + n1 * t_vertex[indexOther] + n2 * t_vertex[2];
+		std::cout << "m_d: " << m_d << std::endl;
+		std::cout << "t_d: " << t_d << std::endl;
+		std::cout << "Triangle vertex: " << t_vertex.x << ", " << t_vertex.y << ", " << t_vertex.z << std::endl;
+		std::cout << "Triangle normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
+		std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+		std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+	}
 
-		// Determine plane parameters for circle plane (m0*x0 + m1*x1 + m2*x2 =  md)
-		hpreal m0 = m_normal[indexNNotNull];
-		hpreal m1 = m_normal[indexOther];
-		hpreal m2 = m_normal[2];
-		hpreal md = m0 * m_vertex[indexNNotNull] + m1 * m_vertex[indexOther] + m2 * m_vertex[2];
 
-		// Some temporarily used values
-		hpreal t = nd - n2 * md;
-
-		// This dimension was chosen as variable
-		// Depends on nothing
-		linePoint[2] = m_vertex[2]; // Simplification for XY planes
-		lineDirection[2] = 0.0;
-
-		// Insert values for the other dimensions
-		// Depends on n1, n2
-		linePoint[indexOther] = 0.0;
-		lineDirection[indexOther] = 1.0;
-
-		// Depends on n1, n2
-		linePoint[indexNNotNull] = t / n0;
-		lineDirection[indexNNotNull] = -n1 / n0;
+	hpreal inline computePointPlaneDistance(hpvec3& p_normal, hpvec3& p_vertex, hpvec3& point) {
+		return glm::dot((point - p_vertex), glm::normalize(p_normal));
 	}
 
 	// Check whether 2 vectors are linear dependent

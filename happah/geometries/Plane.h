@@ -13,6 +13,8 @@ using namespace std;
 #include "happah/math/Ray.h"
 
 class PlaneListener {
+	virtual ~PlaneListener() {};
+
 	virtual void normalChanged() = 0;
 	virtual void originChanged() = 0;
 };

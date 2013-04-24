@@ -45,7 +45,8 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
                                         circle->m_center);
 
           // Triangle that intersects circle in at least one edge point
-          Triangle triangle2 = Triangle(circle->m_center + hpvec3(circle->m_radius, 0.0, 0.0),
+          hpvec3 orthogonalToNormal = glm::normalize(glm::cross(circle->m_normal, circle->m_normal + hpvec3(1.0, 0.0, 0.0)));
+          Triangle triangle2 = Triangle(circle->m_center + orthogonalToNormal * circle->m_radius,
   	  	  	  	  						hpvec3(0.210179, 0.127305, 0.189958),
   	  	  	  	  						hpvec3(0.721241, 0.0994734, 0.43038));
 //        		  	  	  	  	  	  	hpvec3(getRand(), getRand(), getRand()),

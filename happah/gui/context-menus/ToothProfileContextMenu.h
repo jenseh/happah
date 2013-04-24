@@ -21,6 +21,7 @@ private:
 private slots:
 	void createSimpleGear();
 	void newBSplineCurve();
+	void createMatingGear();
 };
 
 #endif // TOOTHPROFILECONTEXTMENU_H

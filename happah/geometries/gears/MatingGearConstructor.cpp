@@ -12,7 +12,11 @@ MatingGearConstructor::MatingGearConstructor()
 	m_originalGearCurve(new BSplineCurve<hpvec2>()),
 	m_originalToothCurve(new BSplineCurve<hpvec2>()),
 	m_matingProfile(new ToothProfile()),
-	m_allMatingPoints(new std::list<MatingPoint>()) {}
+	m_allMatingPoints(new std::list<MatingPoint>()) {
+}
+
+MatingGearConstructor::~MatingGearConstructor() {
+}
 
 void MatingGearConstructor::constructMatingTo(
 	const ToothProfile& toothProfile,
@@ -63,7 +67,9 @@ std::list< BSplineCurve<hpvec2>* >* MatingGearConstructor::getInformationSplines
 	for(std::list<MatingPoint>::iterator it = m_allMatingPoints->begin(), end = m_allMatingPoints->end(); it != end; ++it){
 		if(it->error != ErrorCode::NO_ERROR) {
 			originalUsedPoints->addControlPoint(it->originPoint);
-			matingPoints->addControlPoint(it->point);
+			matingPoints->addControlPoint(it->point + hpvec2(m_distanceOfCenters, 0.0f));
+			informationList->push_back(normalLine(it->originPoint, it->originNormal));
+			informationList->push_back(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal));
 		}
 	}
 	informationList->push_back(originalUsedPoints);
@@ -189,6 +195,9 @@ void MatingGearConstructor::insertThicknessInMatingPoint(MatingPoint& matingPoin
 
 hpvec2 MatingGearConstructor::getNormalAt(hpreal t) {
 	hpvec2 derivative = m_originalToothCurve->getDerivativeAt(t);
+	if(!m_originalToothProfile->pointsSavedInClockDirection()) {
+		derivative *= -1.0f;
+	}
 	return glm::normalize(hpvec2(-derivative.y, derivative.x));
 }
 

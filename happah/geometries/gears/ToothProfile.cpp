@@ -123,9 +123,6 @@ void ToothProfile::extendToGearCurve(BSplineCurve<hpvec3>& gearProfile) const {
 
 	hpuint nTeeth = getNumberOfTeeth();
 	hpuint degree = m_toothProfileCurve.getDegree();
-	hpreal direction = 1.0f;
-	if(pointsSavedInClockDirection())
-		direction = -1.0f;
 
 	std::vector<hpvec3> controlPoints = m_toothProfileCurve.getControlPoints();
 	std::vector<hpreal> knots = m_toothProfileCurve.getKnots();
@@ -145,6 +142,7 @@ void ToothProfile::extendToGearCurve(BSplineCurve<hpvec3>& gearProfile) const {
 	Plane* plane = getPlaneToothProfileLiesIn();
 	hpvec3 rotationAxis = plane->getNormal();
 	delete plane;
+
 	for(hpuint tooth = 0; tooth < nTeeth; ++tooth) {
 
 		lastKnotValue = *gearKnotIt;
@@ -155,7 +153,8 @@ void ToothProfile::extendToGearCurve(BSplineCurve<hpvec3>& gearProfile) const {
 			*(++gearKnotIt) = lastKnotValue + *it;
 		}
 
-		hpreal degreeRotation = direction * (tooth * 360.0f / nTeeth);
+		//In which direction the tooth is turned is included by the plane or respectively the rotationAxis
+		hpreal degreeRotation = -(tooth * 360.0f / nTeeth);
 		for(std::vector<hpvec3>::iterator it = controlPoints.begin(), end = --(controlPoints.end()); it != end; ++it) {
 			*gearPointIt = glm::rotate(*it, degreeRotation, rotationAxis);
 			++gearPointIt;

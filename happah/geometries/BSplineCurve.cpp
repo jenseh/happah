@@ -683,7 +683,6 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 	}
 
 	// control polygon
-	/*
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
 		unsigned int nVData = verticesAndNormals->size();
@@ -701,7 +700,6 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 		(*verticesAndNormals)[nVData + 2*n-2] = m_controlPoints.back();
 		(*verticesAndNormals)[nVData + 2*n-1] = T(1.0f); //TODOTODOTODOTODOTODOTODOTODOhpvec3(1.0f,0.0f,0.0f);
 	}
-	*/
 
 	// tangents
 	/*

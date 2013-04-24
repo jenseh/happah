@@ -537,7 +537,7 @@ void DrawManager::SelectionVisitor::draw(ElementRenderStateNode_ptr elementRende
 		m_drawManager.initialize(elementRenderStateNode);
 	m_currentSelectionIndex = m_currentSelectionIndex-1;
 	if (m_currentSelectionIndex < 0 ){
-		cerr << "To many Objects ";
+		cerr << "Too many objects! ";
 		return;
 	}
 
@@ -549,7 +549,7 @@ void DrawManager::SelectionVisitor::draw(PointCloudRenderStateNode_ptr pointClou
 		m_drawManager.initialize(pointCloudRenderStateNode);
 	m_currentSelectionIndex=m_currentSelectionIndex-1;
 	if (m_currentSelectionIndex < 0 ){
-		cerr << "To many Objects ";
+		cerr << "Too many objects! ";
 		return;
 	}
 

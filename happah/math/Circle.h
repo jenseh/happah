@@ -69,8 +69,8 @@ struct Circle {
 		    //LoggingUtils::printVec("EtriangleB", triangle->vertices[1]);
 		    //LoggingUtils::printVec("EtriangleC", triangle->vertices[2]);
 
-		    //LoggingUtils::printVec("t_normal", t_normal);
-		    //LoggingUtils::printVec("m_normal", m_normal);
+			 // std::cout << "m_normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+			 // std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
 
 		    return false;
 		    //exit(1);
@@ -83,7 +83,7 @@ struct Circle {
 		// std::cout << "Info: Collinear: " << collinear << std::endl;
 
 		if (collinear) {
-			std::cout << "Debug-Info: The very unlikely case of collinear Triangle-Circle intersection just happened!" << std::endl;
+			// std::cout << "Debug-Info: The very unlikely case of collinear Triangle-Circle intersection just happened!" << std::endl;
 		
 			//2: Check whether planes are identical or parallel
 			bool identical = floatEquals(glm::dot(m_center - triangle->vertices[2], t_normal), 0.0);
@@ -161,8 +161,8 @@ struct Circle {
 			// Normalize lineDirection for distance comparisons
 			lineDirection = glm::normalize(lineDirection);
 
-			     std::cout << "Intersect linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
-			     std::cout << "Intersect lineDir: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
+			     // std::cout << "Intersect linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
+			     // std::cout << "Intersect lineDir: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
 
 			// Check whether this line hits our sphere
 			// Check whether distance is shorter than the radius
@@ -258,27 +258,27 @@ struct Circle {
 //						}
 
 //						hpreal circleIntersectionDist = &maxCv-&minCv;
-//						std::cout << "circle intersecting on: " << circleIntersectionDist << std::endl;
+//						// std::cout << "circle intersecting on: " << circleIntersectionDist << std::endl;
 //
 //						hpreal triangleIntersectionDist = &maxTv-&minTv;
-//						std::cout << "triangle intersecting on: " << triangleIntersectionDist << std::endl;
+//						// std::cout << "triangle intersecting on: " << triangleIntersectionDist << std::endl;
 //
 //						hpreal resultIntersectionDist = glm::distance(*minVec, *maxVec);
-//						std::cout << "result intersecting on: " << resultIntersectionDist << std::endl;
+//						// std::cout << "result intersecting on: " << resultIntersectionDist << std::endl;
 //
 //						assert (resultIntersectionDist <= triangleIntersectionDist && resultIntersectionDist <= circleIntersectionDist);
 
 						CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec, triangle);
 						hitResults->push_back(tempHitResult);
-//						 std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
-//						 std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
-//						 std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
-//						 std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+//						 // std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
+//						 // std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
+//						 // std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+//						 // std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 						// std::cout << "Success: Intersect inside: " /*<< closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z */ << std::endl;
 						return true;
 					}
 					else {
-//						 std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
+//						 // std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
 						 // std::cout << "Error: No overlap!" << std::endl;
 						return false;
 					}
@@ -314,7 +314,7 @@ struct Circle {
 	   } else if (!floatEquals(lineDirection.y, 0.0)) {
 	       return (distancePoint.y - linePoint.y) / lineDirection.y;
 	   } else {
-	      return (distancePoint.z - linePoint.z) / lineDirection.z; //TODO: Only works if there is a z component
+	      return (distancePoint.z - linePoint.z) / lineDirection.z;
 	  }
 	}
 
@@ -390,9 +390,9 @@ struct Circle {
 
 		 // std::cout << "pSSCount: " << pSSCount << std::endl;
 
-		if (pSSCount == 3) {
-		    return false;
-		}
+//		if (pSSCount == 3) { //TODO: reflect about this
+//		    return false;
+//		}
 
 
 		if (!pSS01) {
@@ -463,12 +463,12 @@ struct Circle {
 		linePoint = point - (m_d * m_normal);// - (t_d * t_normal);
 
 
-		std::cout << "m_d: " << m_d << std::endl;
-		std::cout << "t_d: " << t_d << std::endl;
-		std::cout << "Triangle vertex: " << t_vertex.x << ", " << t_vertex.y << ", " << t_vertex.z << std::endl;
-		std::cout << "Triangle normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
-		std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
-		std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+		// std::cout << "m_d: " << m_d << std::endl;
+		// std::cout << "t_d: " << t_d << std::endl;
+		// std::cout << "Triangle vertex: " << t_vertex.x << ", " << t_vertex.y << ", " << t_vertex.z << std::endl;
+		// std::cout << "Triangle normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
+		// std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+		// std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 	}
 
 

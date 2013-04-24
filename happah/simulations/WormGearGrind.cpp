@@ -18,7 +18,7 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
 	hpreal rotY = 90.0;
 
 	hpreal x = -m_worm->getModule() * M_PI / 4.0; //TODO: adapt;
-	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius * 0.5; //TODO: remove the factor
+	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius * 0.9; //TODO: remove the factor
 	hpvec3 position = hpvec3(x, y, 0.0);
 
     m_wormMovement = Kinematic(
@@ -104,12 +104,12 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& wormPosZIdx, Cir
 
   std::list<CircleHitResult>* hitResults = new std::list<CircleHitResult>;
 
-  LoggingUtils::print("circle", circle);
+//  LoggingUtils::print("circle", circle);
 
   // Transform circle from worm coordinates to gear coordinates
   Circle transformedCircle = transformCircle(circle, gearModelMatrix, wormModelMatrix);
 
-  LoggingUtils::print("transformedCircle", transformedCircle); //TODO: circles seem to be correct in gear coordinates
+//  LoggingUtils::print("transformedCircle", transformedCircle); //TODO: circles seem to be correct in gear coordinates
 
   // Find all intersections between circle and triangles
   m_kdTree->intersectAll(transformedCircle, hitResults);

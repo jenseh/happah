@@ -36,7 +36,7 @@ WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 	m_worm = Worm_ptr(new Worm());
 	updateRanges();
 
-	CircleTriangleIntersectionTest(); //TODO:remove
+//	CircleTriangleIntersectionTest(); //TODO:remove
 }
 
 WormForm::~WormForm() {

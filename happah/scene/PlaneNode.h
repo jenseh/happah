@@ -23,11 +23,17 @@ public:
 	virtual ~PlaneNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);
+	void draw(DrawVisitor& drawVisitor, RigidAffineTransformation& rigidAffineTransformation);
 	void insertChild(BSplineCurveNode_ptr curveNode);
 	void insertChild(PlaneGUIStateNode_ptr planeGUIStateNode);
 	void insertChild(TriangleMeshNode_ptr triangleMeshNode);
 	void insertChild(PointCloudNode_ptr pointCloudNode);
 	void insertChild(LineMeshNode_ptr lineMeshNode);
+
+	void planeChanged();
+
+private:
+	RigidAffineTransformation m_xyPlaneToThisPlaneTransformation;
 
 };
 

@@ -38,23 +38,28 @@ bool Plane::intersect( Ray& ray, hpvec3& intersectionPoint ) {
 	return true;
 }
 
+bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
+	hpvec3 tmpPoint;
+	if( !intersect( ray, tmpPoint ) ) return false;
+
+	hpvec3 direction = hpvec3(1.f,0.f,0.f);
+	if( std::abs( m_normal.x ) > EPSILON || std::abs( m_normal.z ) > EPSILON ) {
+		direction = glm::normalize( glm::cross( m_normal, hpvec3(0.f, 1.f, 0.f) ));
+	}
+
+	intersectionPoint.x = glm::dot( direction, tmpPoint - m_origin );
+	intersectionPoint.y = glm::dot( glm::normalize( glm::cross( m_normal, direction )), tmpPoint - m_origin );
+
+	return true;
+}
+
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
 	m_normal = normal;
-	for( auto it = m_listeners.begin(); it != m_listeners.end(); it++ ) (*it)->normalChanged();
 }
 
 void Plane::setOrigin(hpvec3 origin) {
 	m_origin = origin;
-	for( auto it = m_listeners.begin(); it != m_listeners.end(); it++ ) (*it)->originChanged();
-}
-
-void Plane::registerListener(Listener* listener) {
-	m_listeners.push_back(listener);
-}
-
-void Plane::unregisterListener(Listener* listener) {
-	m_listeners.remove(listener);
 }
 
 TriangleMesh* Plane::toTriangleMesh() {
@@ -62,26 +67,22 @@ TriangleMesh* Plane::toTriangleMesh() {
 	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
-	hpvec3 normal = glm::normalize(m_normal);
-	hpvec3 a = hpvec3(1.f, 0.f, 0.f);
-	if( a == normal ) {
-		a = hpvec3(0.f, 0.f, 1.f);
-	}
-	a -= glm::dot(a,normal)*normal;
-	a = 0.5f*edgeLength*glm::normalize(a);
-	hpvec3 b = 0.5f*edgeLength*glm::normalize(glm::cross(a,normal));
+	hpvec3 normal = hpvec3(0.f, 0.f, 1.f);
+	hpvec3 origin = hpvec3(0.f, 0.f, 0.f);
+	hpvec3 a = 0.5f*edgeLength*hpvec3(1.f, 0.f, 0.f);
+	hpvec3 b = 0.5f*edgeLength*hpvec3(0.f, 1.f, 0.f);
 
 //	std::cout << a.x << a.y << a.z << std::endl;
 //	std::cout << b.x << b.y << b.z << std::endl;
 	
-	verticesAndNormals->push_back(m_origin + a + b);
-	verticesAndNormals->push_back(m_normal);
-	verticesAndNormals->push_back(m_origin - a + b);
-	verticesAndNormals->push_back(m_normal);
-	verticesAndNormals->push_back(m_origin - a - b);
-	verticesAndNormals->push_back(m_normal);
-	verticesAndNormals->push_back(m_origin + a - b);
-	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back(origin + 1.5f*a + 1.5f*b);
+	verticesAndNormals->push_back(normal);
+	verticesAndNormals->push_back(origin - a + b);
+	verticesAndNormals->push_back(normal);
+	verticesAndNormals->push_back(origin - a - b);
+	verticesAndNormals->push_back(normal);
+	verticesAndNormals->push_back(origin + a - b);
+	verticesAndNormals->push_back(normal);
 
 	indices->push_back(0);
 	indices->push_back(2);

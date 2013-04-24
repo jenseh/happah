@@ -23,7 +23,7 @@ SimpleGear::~SimpleGear() {}
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve<hpvec3>& gearProfile) {
+void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve<hpvec2>& gearProfile) {
 	hpreal rotation = -glm::tan(m_helixAngle) * z * 180.0f / M_PI;
 	m_toothProfile->rotate(rotation);
 	m_toothProfile->extendToGearCurve(gearProfile);

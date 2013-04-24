@@ -650,12 +650,12 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 				indices->resize(2*(knots.size()-1));
 				for( unsigned int i = 0; i < knots.size()-1; i++ ) {
 					(*verticesAndNormals)[2*i] = knots[i];
-					(*verticesAndNormals)[2*i+1] = T(1.0f); //TTODO TODO TODO TODO TODO TODO TODO TODO
+					(*verticesAndNormals)[2*i+1] = glm::normalize(T(1.0f));
 					(*indices)[2*i] = i;
 					(*indices)[2*i+1] = i+1;
 				}
 				*(verticesAndNormals->end()-2) = knots.back();
-				verticesAndNormals->back() = T(1.0f); //TODO TODOTODOTODOTODO must be equal to (1.0f,0.0f,0.0f); in 3d case!
+				verticesAndNormals->back() = glm::normalize(T(1.0f));
 			}
 		}
 		else {
@@ -665,12 +665,12 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 			hpreal stepSize = (tEnd - tBegin) / 100;
 			for( hpuint i = 0; i < 100; i++ ) {
 				(*verticesAndNormals)[2*i] = getValueAt(tBegin + i*stepSize);
-				(*verticesAndNormals)[2*i+1] = T(1.0f); //TODOTODOTODOTODOTODOTODO hpvec3(1.0f,0.0f,0.0f);
+				(*verticesAndNormals)[2*i+1] = glm::normalize(T(1.0f));
 				(*indices)[2*i] = i;
 				(*indices)[2*i+1] = i+1;
 			}
 			(*verticesAndNormals)[200] = getValueAt(tEnd);
-			(*verticesAndNormals)[201] = T(1.0f); //TODOTODOTODOTODOTODOTODO
+			(*verticesAndNormals)[201] = glm::normalize(T(1.0f));
 		}
 
 	}
@@ -683,7 +683,6 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 	}
 
 	// control polygon
-	/*
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
 		unsigned int nVData = verticesAndNormals->size();
@@ -694,14 +693,13 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 
 		for( hpuint i = 0; i < n-1; i++ ) {
 			(*verticesAndNormals)[nVData + 2*i] = m_controlPoints[i];
-			(*verticesAndNormals)[nVData + 2*i+1] = T(1.0f); //TODOTODOTODOTODOTODOTODO(1.0f,0.0f,0.0f);
+			(*verticesAndNormals)[nVData + 2*i+1] = glm::normalize(T(1.0f));
 			(*indices)[nIndices + 2*i] = nVData/2 + i;
 			(*indices)[nIndices + 2*i+1] = nVData/2 + i+1;
 		}
 		(*verticesAndNormals)[nVData + 2*n-2] = m_controlPoints.back();
-		(*verticesAndNormals)[nVData + 2*n-1] = T(1.0f); //TODOTODOTODOTODOTODOTODOTODOhpvec3(1.0f,0.0f,0.0f);
+		(*verticesAndNormals)[nVData + 2*n-1] = glm::normalize(T(1.0f));
 	}
-	*/
 
 	// tangents
 	/*

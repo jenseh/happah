@@ -94,7 +94,7 @@ void BSplineCurveForm::addPoint() {
 		hpvec3 origin = m_plane->getOrigin();
 		hpvec3 point = m_controlPointInput->getValue();
 		point = point + ( glm::dot(normal, origin-point ) )*normal;
-		m_curve->addControlPoint( point );
+//		m_curve->addControlPoint( point );
 		m_guiManager.update(m_curve);
 	}
 }
@@ -121,7 +121,7 @@ void BSplineCurveForm::changeDegree(int value) {
 
 void BSplineCurveForm::createCurve() {
 	if( m_curveInserted ) {
-		m_curve = BSplineCurve_ptr(new BSplineCurve<hpvec3>());
+		m_curve = BSplineCurve2D_ptr(new BSplineCurve<hpvec2>());
 		m_curve->setPeriodic(m_periodicCheckBox->checkState() == Qt::Checked);
 		m_curve->setUniform(m_uniformCheckBox->checkState() == Qt::Checked);
 		m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);
@@ -134,15 +134,22 @@ void BSplineCurveForm::createCurve() {
 	m_curveInserted = true;
 }
 
-BSplineCurve_ptr BSplineCurveForm::getCurve() const {
+BSplineCurve2D_ptr BSplineCurveForm::getCurve() const {
 	return m_curve;
 }
 
 void BSplineCurveForm::handleRay(Ray& ray) {
-		hpvec3 intersecPoint;
+/*		hpvec3 intersecPoint;
 	if( m_plane->intersect( ray, intersecPoint ) ) {
 		m_controlPointInput->setValue( intersecPoint );
 		addPoint();
+	}
+	*/
+	hpvec2 planePoint;
+	if( m_curveInserted && m_plane->intersect( ray, planePoint ) ) {
+		m_curve->addControlPoint( planePoint );
+		m_guiManager.update(m_curve);
+		std::cout << "Plane at: " << planePoint.x << " | " << planePoint.y << std::endl;
 	}
 }
 
@@ -163,7 +170,7 @@ void BSplineCurveForm::handleDrag(Ray& ray) {
 	}
 	if( m_pointMoving >= 0 ) {
 	*/
-		hpvec3 intersecPoint;
+		hpvec2 intersecPoint;
 		if( m_plane->intersect( ray, intersecPoint ) ) {
 			m_curve->setControlPoint( m_currentPointIndex, intersecPoint );
 			m_guiManager.update( m_curve );
@@ -183,7 +190,7 @@ void BSplineCurveForm::handleSelection(int pointIndex){
 }
 
 void BSplineCurveForm::reset() {
-	m_curve = BSplineCurve_ptr(new BSplineCurve<hpvec3>());
+	m_curve = BSplineCurve2D_ptr(new BSplineCurve<hpvec2>());
 	m_curve->setPeriodic(m_periodicCheckBox->checkState() == Qt::Checked);
 	m_curve->setUniform(m_uniformCheckBox->checkState() == Qt::Checked);
 	m_curve->setClamped(m_clampedCheckBox->checkState() == Qt::Checked);
@@ -198,7 +205,7 @@ void BSplineCurveForm::resetPlane() {
 	setPlane(Plane_ptr());
 }
 
-void BSplineCurveForm::setCurve(BSplineCurve_ptr curve) {
+void BSplineCurveForm::setCurve(BSplineCurve2D_ptr curve) {
 	m_curve = curve;
 	m_periodicCheckBox->setCheckState( curve->isPeriodic() ? Qt::Checked : Qt::Unchecked );
 	m_uniformCheckBox->setCheckState( curve->isUniform() ? Qt::Checked : Qt::Unchecked );

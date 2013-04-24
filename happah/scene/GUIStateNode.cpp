@@ -81,7 +81,7 @@ void GUIStateNode::triggerConnectionEvent(){
 // BSplineCurve
 
 BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(
-	BSplineCurve_ptr curve,
+	BSplineCurve2D_ptr curve,
 	BSplineCurveForm* bSplineCurveForm,
 	BSplineCurveContextMenu* bSplineCurveContextMenu,
 	string name

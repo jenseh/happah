@@ -35,16 +35,16 @@ void SimpleGearContextMenu::createDiscGearGrind() {
 }
 
 void SimpleGearContextMenu::createCurveOfProfile() {
-	BSplineCurve<hpvec3>* profile = new BSplineCurve<hpvec3>();
+	BSplineCurve<hpvec2>* profile = new BSplineCurve<hpvec2>();
 	m_simpleGear->getTraverseProfile(0.0f, *profile);
-	BSplineCurve_ptr gearProfile = BSplineCurve_ptr(profile);
-	m_guiManager.insert(gearProfile, 0x00000006);
+	BSplineCurve2D_ptr gearProfile = BSplineCurve2D_ptr(profile);
+	m_guiManager.insert(gearProfile, HP_LINE_MESH | HP_POINT_CLOUD );
 }
 
 void SimpleGearContextMenu::createToothProfile() {
 	ToothProfile* profile = new ToothProfile(m_simpleGear->getToothProfile());
 	ToothProfile_ptr toothProfile = ToothProfile_ptr(profile);
-	m_guiManager.insert(toothProfile, 0x00000006);
+	m_guiManager.insert(toothProfile, HP_LINE_MESH | HP_POINT_CLOUD );
 }
 
 void SimpleGearContextMenu::generateDisc() {

@@ -12,18 +12,7 @@ using namespace std;
 #include "happah/HappahTypes.h"
 #include "happah/math/Ray.h"
 
-class PlaneListener {
-	virtual void normalChanged() = 0;
-	virtual void originChanged() = 0;
-};
-
 class Plane : public Geometry {
-public:
-	class Listener {
-		public:
-		virtual void normalChanged() = 0;
-		virtual void originChanged() = 0;
-	};
 
 public:
 	Plane(hpvec3 origin, hpvec3 normal);
@@ -33,21 +22,17 @@ public:
 	hpvec3 getNormal() const;
 	hpvec3 getOrigin() const;
 	bool intersect( Ray& ray, hpvec3& intersectionPoint );
+	bool intersect( Ray& ray, hpvec2& intersectionPoint );
 	void setNormal(hpvec3 normal);
 	void setOrigin(hpvec3 origin);
 
 	Plane& operator=(const Plane& other);
-
-	void registerListener(Listener* listener);
-	void unregisterListener(Listener* listener);
 
 	TriangleMesh* toTriangleMesh();
 	LineMesh* toLineMesh();
 	PointCloud* toPointCloud();
 
 private:
-	std::list<Listener*> m_listeners;
-
 	hpvec3 m_normal;
 	hpvec3 m_origin;
 

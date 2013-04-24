@@ -38,21 +38,26 @@ public:
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	void generateWorm(InvoluteGear_ptr involuteGear);
 	bool init();
-	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
-	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
+//	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
+	template <class T> void insert(shared_ptr<BSplineCurve<T>> bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
+//	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
+//	void insert(BSplineCurve2D_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(FocalSpline_ptr focalSpline, hpuint drawMode = HP_LINE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
 	void insert(DiscGearGrind_ptr discGearGrind);
 	void insert(WormGearGrind_ptr wormGearGrind);
 	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
-	void insert(Plane_ptr plane, BSplineCurve_ptr curve);
+//	void insert(Plane_ptr plane, BSplineCurve_ptr curve);
+	void insert(Plane_ptr plane, BSplineCurve2D_ptr curve);
 	void insert(Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(ToothProfile_ptr toothProfile, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
-	void update(BSplineCurve_ptr bSplineCurve);
+//	void update(BSplineCurve_ptr bSplineCurve);
+	void update(BSplineCurve2D_ptr bSplineCurve);
 	//void update(DiscGearGrindResult simulationResult);
 	void update(SurfaceOfRevolution_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
@@ -68,7 +73,8 @@ public:
 	void visitScene(SceneVisitor& visitor);
 	void visitScene(SimulationVisitor& visitor);
 	const SceneManager_ptr getSceneManager();
-	virtual Plane_ptr getParentPlane(BSplineCurve_ptr bSplineCurve);
+//	virtual Plane_ptr getParentPlane(BSplineCurve_ptr bSplineCurve);
+	virtual Plane_ptr getParentPlane(BSplineCurve2D_ptr bSplineCurve);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {

@@ -35,6 +35,7 @@ HEADERS += \
 \
 	happah/geometries/gears/CylindricalGear.h \
 	happah/geometries/gears/InvoluteGear.h \
+	happah/geometries/gears/MatingGearConstructor.h \
 	happah/geometries/gears/SimpleGear.h \
 	happah/geometries/gears/ToothProfile.h \
 \
@@ -160,6 +161,7 @@ SOURCES += \
 \
 	happah/geometries/gears/CylindricalGear.cpp \
 	happah/geometries/gears/InvoluteGear.cpp \
+	happah/geometries/gears/MatingGearConstructor.cpp \
 	happah/geometries/gears/SimpleGear.cpp \
 	happah/geometries/gears/ToothProfile.cpp \
 \

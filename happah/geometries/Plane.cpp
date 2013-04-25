@@ -44,22 +44,6 @@ bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
 	hpvec3 tmpPoint;
 	if( !intersect( ray, tmpPoint ) ) return false;
 
-	/*
-	hpvec3 directionA = hpvec3(1.f,0.f,0.f);
-	hpvec3 directionB = hpvec3(0.f,1.f,0.f);
-	hpvec3 normal = glm::normalize( m_normal );
-	if( std::abs( m_normal.z ) < EPSILON && std::abs( m_normal.x ) < EPSILON ) {
-		directionB = hpvec3(0.f, 0.f, -1.f);
-	}
-	else if( std::abs( m_normal.z ) < EPSILON && std::abs( m_normal.y ) < EPSILON ) {
-		directionB = hpvec3(0.f, 0.f, 1.f);
-	}
-	directionB = directionB - glm::dot( directionB, normal )*normal;
-	directionB = glm::normalize( directionB );
-	directionA = directionA - glm::dot( directionA, normal )*normal;
-	directionA = glm::normalize( directionA );
-	*/
-
 	hpvec3 directionY = glm::cross( glm::normalize(m_normal), m_localSystemXVector );
 	intersectionPoint.x = glm::dot( m_localSystemXVector, tmpPoint - m_origin );
 	intersectionPoint.y = glm::dot( glm::normalize(directionY), tmpPoint - m_origin );
@@ -69,9 +53,27 @@ bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
 
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
-	// TODO: use rotation to calculate new localSystemXVector
-	setSystemXVector( m_localSystemXVector + normal - m_normal );
+	hpvec3 newNormal    = glm::normalize( normal );
+	hpvec3 normalAxis   = glm::normalize( m_normal );
+
+	// if normal was infinitesimally changed, no need for proper rotation
+	if( glm::length( normalAxis - newNormal ) < EPSILON ) {
+		m_normal = normal;
+		setSystemXVector( m_localSystemXVector );
+		return;
+	}
+
+	// rotate local system x-vector to fit to new normal
+	hpvec3 rotationAxis = glm::normalize( glm::cross( normal, m_normal ) );
+	hpvec3 thirdAxis    = glm::normalize( glm::cross( m_normal, rotationAxis ) );
+
+	// TODO rotation still wrong
+	hpvec3 newSystemXVector = rotationAxis * glm::dot(m_localSystemXVector, rotationAxis)
+		+ thirdAxis  * glm::dot(normalAxis, newNormal) * glm::dot(thirdAxis, m_localSystemXVector)
+		- normalAxis * glm::dot(thirdAxis, newNormal)  * glm::dot(thirdAxis, m_localSystemXVector);
+
 	m_normal = normal;
+	setSystemXVector( newSystemXVector );
 }
 
 void Plane::setOrigin(hpvec3 origin) {
@@ -100,10 +102,7 @@ TriangleMesh* Plane::toTriangleMesh() {
 	hpvec3 a = 0.5f*edgeLength*hpvec3(1.f, 0.f, 0.f);
 	hpvec3 b = 0.5f*edgeLength*hpvec3(0.f, 1.f, 0.f);
 
-//	std::cout << a.x << a.y << a.z << std::endl;
-//	std::cout << b.x << b.y << b.z << std::endl;
-	
-	verticesAndNormals->push_back(origin + 1.5f*a + 1.5f*b);
+	verticesAndNormals->push_back(origin + a + b);
 	verticesAndNormals->push_back(normal);
 	verticesAndNormals->push_back(origin - a + b);
 	verticesAndNormals->push_back(normal);

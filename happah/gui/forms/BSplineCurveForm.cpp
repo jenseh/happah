@@ -139,17 +139,10 @@ BSplineCurve2D_ptr BSplineCurveForm::getCurve() const {
 }
 
 void BSplineCurveForm::handleRay(Ray& ray) {
-/*		hpvec3 intersecPoint;
-	if( m_plane->intersect( ray, intersecPoint ) ) {
-		m_controlPointInput->setValue( intersecPoint );
-		addPoint();
-	}
-	*/
 	hpvec2 planePoint;
 	if( m_curveInserted && m_plane->intersect( ray, planePoint ) ) {
 		m_curve->addControlPoint( planePoint );
 		m_guiManager.update(m_curve);
-		std::cout << "Plane at: " << planePoint.x << " | " << planePoint.y << std::endl;
 	}
 }
 

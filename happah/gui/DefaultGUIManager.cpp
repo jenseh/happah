@@ -221,25 +221,7 @@ bool DefaultGUIManager::init() {
 //	m_sceneManager->insert(plane);
 	return true;
 }
-/*
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
-	insert<hpvec3>(bSplineCurve, drawMode);
-}
 
-template <class T> void DefaultGUIManager::insert(shared_ptr<BSplineCurve<T>> bSplineCurve, hpuint drawMode) {
-	if( drawMode & HP_LINE_MESH ) {
-		doInsert1D<BSplineCurve<T>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
-				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
-	}
-
-	if( drawMode & HP_POINT_CLOUD ) {
-		doInsert0D<BSplineCurve<T>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
-				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
-	}
-
-}
-*/
-// TODO: Erik wrap
 void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
@@ -342,23 +324,6 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 }
 
 void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve) {
-	/*
-	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
-	if(!guiStateNode) {
-		cerr << "GUI state node not found." << endl;
-		return;
-	}
-	// FIXME : old point cloud needs to be deleted
-	//m_sceneManager->removeContaining(bSplineCurve, guiStateNode->getPointCloud());
-
-	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
-	hpcolor color(0.0, 1.0, 0.0, 1.0);
-	//guiStateNode->setPointCloud( pointCloud );
-	m_sceneManager->insert(bSplineCurve, pointCloud, color);
-
-	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
-	m_sceneManager->insert(bSplineCurve, lineMesh, color);
-	*/
 	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
 	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
 }

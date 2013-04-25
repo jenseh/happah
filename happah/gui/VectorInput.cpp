@@ -8,13 +8,14 @@ VectorInput::VectorInput(const QString &title, bool showLength, bool zeroAllowed
 
 	this->setTitle(title);
 
+	double stepSize = 0.05f;
 	m_xValueBox = new QDoubleSpinBox();
-	m_xValueBox->setSingleStep(0.1f);
+	m_xValueBox->setSingleStep(stepSize);
 	m_xValueBox->setValue(0.0f);
 	m_xValueBox->setMinimum(-99.99f);
 	connect( m_xValueBox, SIGNAL(valueChanged(double)), this, SLOT(xValueChanged(double)) );
 	m_yValueBox = new QDoubleSpinBox();
-	m_yValueBox->setSingleStep(0.1f);
+	m_yValueBox->setSingleStep(stepSize);
 	if( !m_zeroAllowed ) {
 		m_yValueBox->setValue(1.0f);
 	}
@@ -24,7 +25,7 @@ VectorInput::VectorInput(const QString &title, bool showLength, bool zeroAllowed
 	m_yValueBox->setMinimum(-99.99f);
 	connect( m_yValueBox, SIGNAL(valueChanged(double)), this, SLOT(yValueChanged(double)) );
 	m_zValueBox = new QDoubleSpinBox();
-	m_zValueBox->setSingleStep(0.1f);
+	m_zValueBox->setSingleStep(stepSize);
 	m_zValueBox->setValue(0.0f);
 	m_zValueBox->setMinimum(-99.99f);
 	connect( m_zValueBox, SIGNAL(valueChanged(double)), this, SLOT(zValueChanged(double)) );

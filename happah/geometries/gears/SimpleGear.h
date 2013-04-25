@@ -35,7 +35,7 @@ public:
 
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
-	void getTraverseProfile(hpreal z, BSplineCurve<hpvec3>& gearProfile);
+	void getTraverseProfile(hpreal z, BSplineCurve<hpvec2>& gearProfile);
 
 private:
 	ToothProfile_ptr m_toothProfile;

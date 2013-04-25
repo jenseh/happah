@@ -118,6 +118,8 @@ void DrawManager::doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode
 		glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVerticesAndNormals()->size());
 		glBindFramebuffer(GL_FRAMEBUFFER,0);
 	}
+	hpvec4 color = pointCloudRenderStateNode->getColor();
+	glUniform4f(m_pointCloudColorComponent,color.x,color.y,color.z,color.w);
 	glUniform1i(m_pointCloudDrawSelectionColors,0);
 	glUniform1i(m_pointCloudSelectedLocation,pointCloudRenderStateNode->getSelected());
 	glDrawArrays(pointCloudRenderStateNode->getMode(), 0, pointCloudRenderStateNode->getVerticesAndNormals()->size());
@@ -453,6 +455,9 @@ bool DrawManager::initShaderPrograms() {
 	m_pointCloudSelectedLocation = glGetUniformLocation(m_pointCloudProgram,"selected");
 	if (m_pointCloudSelectedLocation < 0)
 				cerr << "Failed to find m_pointCloudSelectedLocation." << endl;
+	m_pointCloudColorComponent = glGetUniformLocation(m_pointCloudProgram,"colorComponent");
+	if (m_pointCloudColorComponent < 0)
+		cerr << "Failed to find m_pointCloudColorComponent." << endl;	
 	return true;
 }
 

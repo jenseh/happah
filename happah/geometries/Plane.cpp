@@ -7,6 +7,8 @@ using namespace std;
 
 Plane::Plane(hpvec3 origin, hpvec3 normal) 
 	: m_normal(check(normal)), m_origin(origin) {
+		setSystemXVector(hpvec3( 0.f, 0.f, -1.f ));
+		setSystemXVector(hpvec3( 1.f, 0.f, 0.f ));
 }
 
 Plane::Plane(const Plane& other)
@@ -38,23 +40,56 @@ bool Plane::intersect( Ray& ray, hpvec3& intersectionPoint ) {
 	return true;
 }
 
+bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
+	hpvec3 tmpPoint;
+	if( !intersect( ray, tmpPoint ) ) return false;
+
+	hpvec3 directionY = glm::cross( glm::normalize(m_normal), m_localSystemXVector );
+	intersectionPoint.x = glm::dot( m_localSystemXVector, tmpPoint - m_origin );
+	intersectionPoint.y = glm::dot( glm::normalize(directionY), tmpPoint - m_origin );
+
+	return true;
+}
+
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
+	hpvec3 newNormal    = glm::normalize( normal );
+	hpvec3 normalAxis   = glm::normalize( m_normal );
+
+	// if normal was infinitesimally changed, no need for proper rotation
+	if( glm::length( normalAxis - newNormal ) < EPSILON ) {
+		m_normal = normal;
+		setSystemXVector( m_localSystemXVector );
+		return;
+	}
+
+	// rotate local system x-vector to fit to new normal
+	hpvec3 rotationAxis = glm::normalize( glm::cross( normal, m_normal ) );
+	hpvec3 thirdAxis    = glm::normalize( glm::cross( m_normal, rotationAxis ) );
+
+	// TODO rotation still wrong
+	hpvec3 newSystemXVector = rotationAxis * glm::dot(m_localSystemXVector, rotationAxis)
+		+ thirdAxis  * glm::dot(normalAxis, newNormal) * glm::dot(thirdAxis, m_localSystemXVector)
+		- normalAxis * glm::dot(thirdAxis, newNormal)  * glm::dot(thirdAxis, m_localSystemXVector);
+
 	m_normal = normal;
-	for( auto it = m_listeners.begin(); it != m_listeners.end(); it++ ) (*it)->normalChanged();
+	setSystemXVector( newSystemXVector );
 }
 
 void Plane::setOrigin(hpvec3 origin) {
 	m_origin = origin;
-	for( auto it = m_listeners.begin(); it != m_listeners.end(); it++ ) (*it)->originChanged();
 }
 
-void Plane::registerListener(Listener* listener) {
-	m_listeners.push_back(listener);
+void Plane::setSystemXVector(hpvec3 systemXVector) {
+	hpvec3 normal = glm::normalize( m_normal );
+	if( glm::length( normal - glm::normalize(systemXVector) ) < EPSILON ) return;
+	if( glm::length( normal + glm::normalize(systemXVector) ) < EPSILON ) return;
+	systemXVector = systemXVector - glm::dot( normal, systemXVector ) * normal;
+	m_localSystemXVector = glm::normalize( systemXVector );
 }
 
-void Plane::unregisterListener(Listener* listener) {
-	m_listeners.remove(listener);
+hpvec3 Plane::getSystemXVector() {
+	return m_localSystemXVector;
 }
 
 TriangleMesh* Plane::toTriangleMesh() {
@@ -62,26 +97,19 @@ TriangleMesh* Plane::toTriangleMesh() {
 	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
-	hpvec3 normal = glm::normalize(m_normal);
-	hpvec3 a = hpvec3(1.f, 0.f, 0.f);
-	if( a == normal ) {
-		a = hpvec3(0.f, 0.f, 1.f);
-	}
-	a -= glm::dot(a,normal)*normal;
-	a = 0.5f*edgeLength*glm::normalize(a);
-	hpvec3 b = 0.5f*edgeLength*glm::normalize(glm::cross(a,normal));
+	hpvec3 normal = hpvec3(0.f, 0.f, 1.f);
+	hpvec3 origin = hpvec3(0.f, 0.f, 0.f);
+	hpvec3 a = 0.5f*edgeLength*hpvec3(1.f, 0.f, 0.f);
+	hpvec3 b = 0.5f*edgeLength*hpvec3(0.f, 1.f, 0.f);
 
-//	std::cout << a.x << a.y << a.z << std::endl;
-//	std::cout << b.x << b.y << b.z << std::endl;
-	
-	verticesAndNormals->push_back(m_origin + a + b);
-	verticesAndNormals->push_back(m_normal);
-	verticesAndNormals->push_back(m_origin - a + b);
-	verticesAndNormals->push_back(m_normal);
-	verticesAndNormals->push_back(m_origin - a - b);
-	verticesAndNormals->push_back(m_normal);
-	verticesAndNormals->push_back(m_origin + a - b);
-	verticesAndNormals->push_back(m_normal);
+	verticesAndNormals->push_back(origin + a + b);
+	verticesAndNormals->push_back(normal);
+	verticesAndNormals->push_back(origin - a + b);
+	verticesAndNormals->push_back(normal);
+	verticesAndNormals->push_back(origin - a - b);
+	verticesAndNormals->push_back(normal);
+	verticesAndNormals->push_back(origin + a - b);
+	verticesAndNormals->push_back(normal);
 
 	indices->push_back(0);
 	indices->push_back(2);

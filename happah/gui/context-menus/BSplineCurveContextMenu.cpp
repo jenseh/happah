@@ -16,7 +16,7 @@ BSplineCurveContextMenu::BSplineCurveContextMenu(
 
 BSplineCurveContextMenu::~BSplineCurveContextMenu() {}
 
-void BSplineCurveContextMenu::setBSplineCurve(BSplineCurve_ptr curve) {
+void BSplineCurveContextMenu::setBSplineCurve(BSplineCurve2D_ptr curve) {
 	m_curve = curve;
 }
 
@@ -36,5 +36,5 @@ void BSplineCurveContextMenu::createGearToothOfCurve() {
 	}
 	ToothProfile* toothProfile = new ToothProfile(*m_curve);
 	ToothProfile_ptr toothP = ToothProfile_ptr(toothProfile);
-	m_guiManager.insert(toothP, 0x00000006);
+	m_guiManager.insert(toothP, HP_LINE_MESH | HP_POINT_CLOUD );
 }

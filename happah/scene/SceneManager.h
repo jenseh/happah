@@ -29,9 +29,9 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode);
-	LineMeshRenderStateNode_ptr insert(BSplineCurve_ptr curve, LineMesh_ptr LineMesh, hpcolor&color);
-	PointCloudRenderStateNode_ptr insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color);
+	template <class T> void insert(shared_ptr<BSplineCurve<T>> curve, BSplineCurveGUIStateNode_ptr guiStateNode);
+	template <class T> LineMeshRenderStateNode_ptr insert(shared_ptr<BSplineCurve<T>> curve, LineMesh_ptr LineMesh, hpcolor&color);
+	template <class T> PointCloudRenderStateNode_ptr insert(shared_ptr<BSplineCurve<T>> curve, PointCloud_ptr pointCloud, hpcolor& color);
 	void insert(FocalSpline_ptr focalSpline, FocalSplineGUIStateNode_ptr guiStateNode);
 	PointCloudRenderStateNode_ptr insert(FocalSpline_ptr focalSpline, PointCloud_ptr pointCloud, hpcolor&color);
 	LineMeshRenderStateNode_ptr insert(FocalSpline_ptr focalSpline, LineMesh_ptr LineMesh, hpcolor&color);
@@ -47,7 +47,7 @@ public:
 	TriangleMeshRenderStateNode_ptr insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	PointCloudRenderStateNode_ptr insert(Plane_ptr plane, PointCloud_ptr pointCloud, hpcolor& color);
 	LineMeshRenderStateNode_ptr insert(Plane_ptr plane, LineMesh_ptr LineMesh,hpcolor&color);
-	void insert(Plane_ptr plane, BSplineCurve_ptr curve);
+	template <class T> void insert(Plane_ptr plane, shared_ptr<BSplineCurve<T>> curve);
 	LineMeshRenderStateNode_ptr insert(SimpleGear_ptr simpleGear, LineMesh_ptr lineMesh, hpcolor& color);
 	TriangleMeshRenderStateNode_ptr insert(SimpleGear_ptr gear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation);
 	void insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr simpleGearGUIStateNode);
@@ -66,6 +66,7 @@ public:
 	Node_ptr removeChildContainingData(shared_ptr<void> data);
 	Node_ptr removeContainingData(shared_ptr<void> parentData, shared_ptr<void> childData);
 	void unregisterSceneListener(SceneListener* sceneListener);
+	void update(Plane_ptr plane);
 
 private:
 	list<SceneListener*> m_listeners;

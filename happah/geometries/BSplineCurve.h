@@ -109,5 +109,6 @@ public:
 };
 
 typedef std::shared_ptr<BSplineCurve<hpvec3>> BSplineCurve_ptr;
+typedef std::shared_ptr<BSplineCurve<hpvec2>> BSplineCurve2D_ptr;
 
 #endif // BSPLINECURVE_H

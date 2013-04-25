@@ -16,10 +16,10 @@ public:
 	BSplineCurveForm(GUIManager& guiManager, QWidget* parent = NULL);
 	~BSplineCurveForm();
 
-	BSplineCurve_ptr getCurve() const;
+	BSplineCurve2D_ptr getCurve() const;
 	void handleRay(Ray& ray);
 	void handleDrag(Ray& ray);
-	void setCurve(BSplineCurve_ptr curve);
+	void setCurve(BSplineCurve2D_ptr curve);
 	void setPlane(Plane_ptr plane);
 	void handleSelection();
 	void handleSelection(int pointIndex);
@@ -42,7 +42,7 @@ public slots:
 private:
 	QCheckBox* m_clampedCheckBox;
 	VectorInput* m_controlPointInput;
-	BSplineCurve_ptr m_curve;
+	BSplineCurve2D_ptr m_curve;
 	bool m_curveInserted;
 	QSpinBox* m_degreeSpinBox;
 	GUIManager& m_guiManager;

@@ -32,6 +32,17 @@ struct MatingPoint {
 	// }
 };
 
+class CurveWithName {
+public:
+	CurveWithName(BSplineCurve<hpvec2>* curve, char* name) : m_curve(curve), m_name(name) {}
+	~CurveWithName() { delete m_curve; delete m_name; }
+	BSplineCurve<hpvec2>* getCurve() { return m_curve; }
+	char* getName() { return m_name; }
+private:
+	BSplineCurve<hpvec2>* m_curve;
+	char* m_name;
+};
+
 class MatingGearConstructor {
 public:
 	MatingGearConstructor();
@@ -45,7 +56,7 @@ public:
 		hpreal maxAngle,
 		hpreal infomationNormalLength = 1.0f);
 
-	std::list< BSplineCurve<hpvec2>* >* getInformationSplines();
+	std::list< CurveWithName* >* getInformationSplines();
 
 private:
 	void constructListsOfPossibleMatingPoints();

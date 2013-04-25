@@ -39,6 +39,8 @@ void PlaneNode::insertChild(LineMeshNode_ptr LineMeshNode) {
 
 void PlaneNode::planeChanged() {
 	hpvec3 normal = glm::normalize(m_geometry->getNormal());
+	hpvec3 v2 = m_geometry->getSystemXVector();
+	/*
 	hpvec3 v2 = hpvec3(1.f,0.f,0.f);
 	hpvec3 v3 = hpvec3(0.f,0.f,0.f);
 
@@ -47,7 +49,8 @@ void PlaneNode::planeChanged() {
 		v2 = glm::cross( normal, hpvec3(0.f, 1.f, 0.f) );
 		v2 = glm::normalize(v2);
 	}
-	v3 = glm::cross(normal, v2);
+	*/
+	hpvec3 v3 = glm::cross(normal, v2);
 	v3 = glm::normalize(v3);
 
 	hpmat3x3 transformation = hpmat3x3( v2, v3, normal );

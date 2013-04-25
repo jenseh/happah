@@ -32,9 +32,9 @@ void ToothProfileContextMenu::createMatingGear() {
 	matingGearConstructor.constructMatingTo(*m_toothProfile, radius, m_toothProfile->getNumberOfTeeth(), 30, 5.0f);
 	std::list< BSplineCurve<hpvec2>* >* informationCurves = matingGearConstructor.getInformationSplines();
 	for(std::list< BSplineCurve<hpvec2>* >::iterator it = informationCurves->begin(), end = informationCurves->end(); it != end; ++it) {
-		BSplineCurve_ptr curve3d = BSplineCurve_ptr((*it)->to3dBSplineCurve()); //TODO: insert with 2D?
-		m_guiManager.insert(curve3d, 0x00000006);
-		delete *it;
+		BSplineCurve2D_ptr curve = BSplineCurve2D_ptr((*it)); //TODO: insert with 2D?
+		m_guiManager.insert(curve, HP_LINE_MESH | HP_POINT_CLOUD );
+//		delete *it;
 	}
 }
 

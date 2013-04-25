@@ -18,7 +18,7 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
 	hpreal rotY = 90.0;
 
 	hpreal x = -m_worm->getModule() * M_PI / 4.0; //TODO: adapt;
-	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius * 0.5; //TODO: remove the factor
+	hpreal y = m_worm->getReferenceRadius() + gearReferenceRadius * 0.9; //TODO: remove the factor
 	hpvec3 position = hpvec3(x, y, 0.0);
 
     m_wormMovement = Kinematic(
@@ -193,7 +193,7 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
     	hpvec3 point = transformPoint(verticesAndNormals->at(2 * indices->at(i)), transformation);
 
 		hpreal resultRadius = simResult->getItem(point);
-		hpreal currentRadius = glm::length(hpvec2(point.x, point.y)); // TODO: dont use currentradius
+		hpreal currentRadius = simResult->computeRadiusXY(point); // TODO: dont use currentradius
 		hpreal distance = currentRadius - resultRadius;
 
 //			hpreal distance = resultRadius;

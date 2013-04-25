@@ -7,6 +7,8 @@ using namespace std;
 
 Plane::Plane(hpvec3 origin, hpvec3 normal) 
 	: m_normal(check(normal)), m_origin(origin) {
+		setSystemXVector(hpvec3( 0.f, 0.f, -1.f ));
+		setSystemXVector(hpvec3( 1.f, 0.f, 0.f ));
 }
 
 Plane::Plane(const Plane& other)
@@ -42,24 +44,50 @@ bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
 	hpvec3 tmpPoint;
 	if( !intersect( ray, tmpPoint ) ) return false;
 
-	hpvec3 direction = hpvec3(1.f,0.f,0.f);
-	if( std::abs( m_normal.x ) > EPSILON || std::abs( m_normal.z ) > EPSILON ) {
-		direction = glm::normalize( glm::cross( m_normal, hpvec3(0.f, 1.f, 0.f) ));
+	/*
+	hpvec3 directionA = hpvec3(1.f,0.f,0.f);
+	hpvec3 directionB = hpvec3(0.f,1.f,0.f);
+	hpvec3 normal = glm::normalize( m_normal );
+	if( std::abs( m_normal.z ) < EPSILON && std::abs( m_normal.x ) < EPSILON ) {
+		directionB = hpvec3(0.f, 0.f, -1.f);
 	}
+	else if( std::abs( m_normal.z ) < EPSILON && std::abs( m_normal.y ) < EPSILON ) {
+		directionB = hpvec3(0.f, 0.f, 1.f);
+	}
+	directionB = directionB - glm::dot( directionB, normal )*normal;
+	directionB = glm::normalize( directionB );
+	directionA = directionA - glm::dot( directionA, normal )*normal;
+	directionA = glm::normalize( directionA );
+	*/
 
-	intersectionPoint.x = glm::dot( direction, tmpPoint - m_origin );
-	intersectionPoint.y = glm::dot( glm::normalize( glm::cross( m_normal, direction )), tmpPoint - m_origin );
+	hpvec3 directionY = glm::cross( glm::normalize(m_normal), m_localSystemXVector );
+	intersectionPoint.x = glm::dot( m_localSystemXVector, tmpPoint - m_origin );
+	intersectionPoint.y = glm::dot( glm::normalize(directionY), tmpPoint - m_origin );
 
 	return true;
 }
 
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
+	// TODO: use rotation to calculate new localSystemXVector
+	setSystemXVector( m_localSystemXVector + normal - m_normal );
 	m_normal = normal;
 }
 
 void Plane::setOrigin(hpvec3 origin) {
 	m_origin = origin;
+}
+
+void Plane::setSystemXVector(hpvec3 systemXVector) {
+	hpvec3 normal = glm::normalize( m_normal );
+	if( glm::length( normal - glm::normalize(systemXVector) ) < EPSILON ) return;
+	if( glm::length( normal + glm::normalize(systemXVector) ) < EPSILON ) return;
+	systemXVector = systemXVector - glm::dot( normal, systemXVector ) * normal;
+	m_localSystemXVector = glm::normalize( systemXVector );
+}
+
+hpvec3 Plane::getSystemXVector() {
+	return m_localSystemXVector;
 }
 
 TriangleMesh* Plane::toTriangleMesh() {

@@ -23,33 +23,37 @@ CircularSimulationResult::~CircularSimulationResult() {
 
 void CircularSimulationResult::addItem(hpvec3 point) {
 	// Check whether the point is in our Z range, if not abort
-	if (!isInZRange(point)) {
+	if (!isInZRange(point) || glm::length(hpvec2(point.x, point.y)) < 10e-6) {
 //		std::cout << "Rejecting point: " << point.x << " " << point.y << " " << point.z << std::endl;
 		return;
 	}
-	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << std::endl;
 
   // Compute the angles of the triangle points to the reference dir
   hpreal angle = computeAngle(point);
-  hpuint angleSlot = round(angle / m_angleRange);
+  hpuint angleSlot = computeAngleSlot(angle);
 
   hpuint posZSlot = convertPosZToPosZIdx(point.z);
   hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
+//	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << "->" << posZSlot << std::endl;
+
   assert(angleSlot < m_angleSteps);
   assert(posZSlot < m_resolutionZ);
 
-  hpreal radius = glm::length(point);
-  hpreal oldRadius = getItem(slot, posZSlot);
+  hpreal radius = computeRadiusXY(point);
+//  std::cout << "angle: " << angle << ", radius: " << radius << std::endl;
+  hpreal oldRadius = getItem(angleSlot, posZSlot);
+
   if (oldRadius > radius) {
-
-
       m_entries->erase(slot);
       m_entries->insert(std::pair<hpuint, hpreal>(slot, radius));
   }
 }
 
 hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
+	assert(angleSlot < m_angleSteps);
+	assert(posZSlot < m_resolutionZ);
+
   int slot = posZSlot * m_angleSteps + angleSlot;
 
   std::unordered_map<hpuint, hpreal>::const_iterator result = m_entries->find(slot);
@@ -60,15 +64,32 @@ hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
   }
 }
 
+// This function computes a radius in the XY plane (ignoring Z)
+hpreal CircularSimulationResult::computeRadiusXY(hpvec3 point) {
+	return glm::sqrt(point.x * point.x + point.y * point.y);
+}
+
 hpreal CircularSimulationResult::computeAngle(hpvec3 point) {
 	  hpvec2 centerToPoint = glm::normalize(hpvec2(point.x, point.y));
-	  hpreal angle = acos(glm::dot(centerToPoint, m_referenceDir));
-	  if (centerToPoint.y < 0) angle = M_PI - angle;
+	  hpreal aCos = acos(centerToPoint.x);
+	  hpreal angle = centerToPoint.y >= 0 ? aCos : -aCos;
 	  return angle;
 }
 
+hpuint CircularSimulationResult::computeAngleSlot(hpreal angle) {
+	int result = round(angle / m_angleRange);
+
+	if (result < 0) return m_angleSteps + result;
+	else if (result >= (int) m_angleSteps) return result - m_angleSteps;
+	else return (hpuint) result;
+}
+
 hpuint CircularSimulationResult::convertPosZToPosZIdx(hpreal posZ) {
-	return (hpuint) round((posZ - m_startZ) / (m_endZ - m_startZ));
+	int result = round(m_resolutionZ * (posZ - m_startZ) / (m_endZ - m_startZ));
+
+	if (result < 0) return 0;
+	else if (result >= (int) m_resolutionZ) return m_resolutionZ - 1;
+	else return (hpuint) result;
 }
 
 hpreal CircularSimulationResult::getItem(hpvec3 point) {
@@ -79,7 +100,7 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 
 	  // Compute the angles of the triangle points to the reference dir
 	  hpreal angle = computeAngle(point);
-	  hpuint angleSlot = round(angle / m_angleRange);
+	  hpuint angleSlot = computeAngleSlot(angle);
 
 	  hpuint posZSlot = convertPosZToPosZIdx(point.z);
 	  hpuint slot = posZSlot * m_angleSteps + angleSlot;
@@ -96,6 +117,6 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 }
 
 bool CircularSimulationResult::isInZRange(hpvec3 point) {
-	hpreal epsilon = 10e-7;
-	return m_startZ - epsilon <= point.z && point.z <= m_endZ + epsilon;
+	hpreal halfIntervalWidth = (m_endZ - m_startZ) / (2.0 * m_resolutionZ);
+	return m_startZ - halfIntervalWidth <= point.z && point.z <= m_endZ + halfIntervalWidth;
 }

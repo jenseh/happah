@@ -98,6 +98,11 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
           bool results[7] = {1, 1, 1, 0, 0, 1, 1};
 
           for (unsigned int t = 0; t < triangles.size(); t++) {
+
+        	  if (c == 4 && t == 5) {
+        		  std::cout << "now!" << std::endl;
+        	  }
+
               bool result = circle->intersect(triangles[t], hitResults);
               bool matchesSolution = (result == results[t]);
 

@@ -174,8 +174,8 @@ struct Circle {
 				// Since the line hits our sphere we only need to check whether it also hits the triangle
 				hpvec3 triangleIntersectionA;
 				hpvec3 triangleIntersectionB;
-				bool intersectsTriangle = intersectPlanarLineTriangle(linePoint, lineDirection, triangle,
-						triangleIntersectionA, triangleIntersectionB);
+				bool intersectsTriangle = glm::intersectLineTriangle(linePoint, lineDirection, triangle->vertices[0], triangle->vertices[1], triangle->vertices[2], triangleIntersectionA); //intersectPlanarLineTriangle(linePoint, lineDirection, triangle,
+						//triangleIntersectionA, triangleIntersectionB);
 
 				std::cout << "Intersect triangleA: " << triangleIntersectionA.x << ", " << triangleIntersectionA.y << ", " << triangleIntersectionA.z << std::endl;
 				std::cout << "Intersect triangleB: " << triangleIntersectionB.x << ", " << triangleIntersectionB.y << ", " << triangleIntersectionB.z << std::endl;
@@ -386,30 +386,42 @@ struct Circle {
 		if (pSS12) pSSCount++;
 		if (pSS02) pSSCount++;
 
-		 // std::cout << "pSSCount: " << pSSCount << std::endl;
+		//Should be =2
+		  std::cout << "pSSCount: " << pSSCount << std::endl;
 
 //		if (pSSCount == 3) { //TODO: reflect about this
 //		    return false;
 //		}
 
+		hpvec3 p01 = p1 - p0;
+		hpvec3 p02 = p2 - p0;
+		hpvec3 p12 = p2 - p1;
 
 		if (!pSS01) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p0, p1 - p0);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p0, p2 - p0);
-		  } else if (!pSS12) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, p0 - p1);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p1, p2 - p1);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p02);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p12);
 		  } else if (!pSS02) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p2, p0 - p2);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, p1 - p2);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, lineDirection, p01);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p12);
+		  } else if (!pSS12) {
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, lineDirection, p01);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p02);
 		  }
 
 		  return true;
 	}
 
+	//TODO: change!
 	// This method computes the one and only one intersection point in XY plane (or parallel) of two lines when we know that it must exist
-	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionB) {
-		hpreal t = (linePointA.z - linePointB.z) / lineDirectionB.z;
+	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionA, hpvec3 lineDirectionB) {
+		hpreal t;
+		if (!floatEquals(lineDirectionB.x, 0.0)) {
+			t = (linePointA.x - linePointB.x) / lineDirectionB.x;
+		} else if (!floatEquals(lineDirectionB.y, 0.0)) {
+			t = (linePointA.y - linePointB.y) / lineDirectionB.y;
+		} else {
+			t = (linePointA.z - linePointB.z) / lineDirectionB.z;
+		}
 		return linePointB + t * lineDirectionB;
 	}
 

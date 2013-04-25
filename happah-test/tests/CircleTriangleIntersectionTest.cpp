@@ -16,6 +16,7 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
     Circle circle2 = Circle(hpvec3(0.0, 0.0, 0.026), hpvec3(0.0, 0.0, 1.0), 1.10031);
     Circle circle3 = Circle(hpvec3(0.0, 0.0, 0.021), hpvec3(0.0, 0.0, 1.0), 2.0);
     Circle circle4 = Circle(hpvec3(0.0, 0.0, 0.1),	 hpvec3(1.0, 0.0, 0.0), 1.0);
+    Circle circle5 = Circle(hpvec3(getRand(), getRand(), getRand()),	 hpvec3(getRand(), getRand(), getRand()), getRand());
 
     std::vector<Circle*> circles;
 
@@ -24,6 +25,7 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
     circles.push_back(&circle2);
     circles.push_back(&circle3);
     circles.push_back(&circle4);
+    circles.push_back(&circle5);
 
 
 
@@ -35,6 +37,7 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
       std::list<CircleHitResult>* hitResults = new std::list<CircleHitResult>;
       for (unsigned int c = 0; c < circles.size(); c++) {
           Circle* circle = circles[c];
+          circle->m_normal = glm::normalize(circle->m_normal);
 
           hpvec3 orthogonalToNormal1 = glm::normalize(glm::cross(circle->m_normal, circle->m_normal + hpvec3(getRand(), getRand(), getRand())));
           hpvec3 orthogonalToNormal2 = glm::normalize(glm::cross(circle->m_normal, orthogonalToNormal1));
@@ -99,17 +102,17 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
 
           for (unsigned int t = 0; t < triangles.size(); t++) {
 
-        	  if (c == 4 && t == 5) {
-        		  std::cout << "now!" << std::endl;
-        	  }
+//        	  if (c == 4 && t == 5) {
+//        		  std::cout << "now!" << std::endl;
+//        	  }
 
               bool result = circle->intersect(triangles[t], hitResults);
               bool matchesSolution = (result == results[t]);
 
-              if (t == 2 && !matchesSolution) {
-            	  Triangle triangle = *(triangles[t]);
-            	  LoggingUtils::print("Triangle2", triangle);
-              }
+//              if (t == 2 && !matchesSolution) {
+//            	  Triangle triangle = *(triangles[t]);
+//            	  LoggingUtils::print("Triangle2", triangle);
+//              }
 
               std::cout << "Result: [" << c << ", " << t << "]: " << result << " -> " << matchesSolution << std::endl;
               if (!matchesSolution) totalResult = false;

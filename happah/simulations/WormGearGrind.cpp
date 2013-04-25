@@ -80,7 +80,7 @@ CircularSimulationResult* WormGearGrind::calculateGrindingDepth(hpreal time) {
    for (hpuint wormPosZIdx = 0; wormPosZIdx < wormResolutionZ; wormPosZIdx++) {
        // Check upper bound
        computeIntersectingTriangles(wormPosZIdx, simResult, gearModelMatrix, wormModelMatrix, time);
-     }
+   }
 
    // Print out results
    for (hpuint posZSlot = 0; posZSlot < gearResolutionZ; posZSlot++) {
@@ -126,7 +126,7 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& wormPosZIdx, Cir
   }
 
   // Check whether
-  std::cout << "Intersect: " << wormPosZIdx << " time " << time << " intersections: " << hitResults->size() << std::endl;
+  if (hitResults->size() != 0) std::cout << "Intersect: " << wormPosZIdx << " time " << time << " intersections: " << hitResults->size() << std::endl;
 
   // Cleanup
   delete hitResults;

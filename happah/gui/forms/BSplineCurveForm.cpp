@@ -8,7 +8,7 @@
 BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), m_guiManager(guiManager), m_currentPointIndex(-1) {
 
-	m_controlPointInput = new VectorInput( "Next Point", true, true, this );
+	m_controlPointInput = new VectorInput( "Next Point", true, true, false, this );
 	m_controlPointInput->setValue( hpvec3(0.f, 0.f, 0.f) );
 	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(updateBSplineCurveOrigin()));
 	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(projectPointOntoPlane()) );

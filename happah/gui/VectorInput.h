@@ -1,9 +1,11 @@
 #ifndef VECTOR_INPUT_H
 #define VECTOR_INPUT_H
 
+#include <QDial>
+#include <QDoubleSpinBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QDoubleSpinBox>
+#include <QPushButton>
 
 #include "happah/HappahTypes.h"
 
@@ -11,7 +13,7 @@ class VectorInput : public QGroupBox {
 	Q_OBJECT
 
 public:
-	VectorInput(const QString &title, bool showLength, bool zeroAllowed, QWidget *parent = 0);
+	VectorInput(const QString &title, bool showLength, bool zeroAllowed, bool useDials, QWidget *parent = 0);
 
 	hpvec3 getValue();
 	hpreal getLength();
@@ -27,11 +29,18 @@ private slots:
 
 private:
 	bool m_showLength;
+	bool m_useDials;
 	bool m_zeroAllowed;
 	QLabel* m_lengthLabel;
 	QDoubleSpinBox* m_xValueBox;
 	QDoubleSpinBox* m_yValueBox;
 	QDoubleSpinBox* m_zValueBox;
+	QDial* m_azimuthDial;
+	QDial* m_longitudialDial;
+
+public slots:
+	void resetLength();
+	void dialValueChanged(int value);
 
 };
 

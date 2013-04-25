@@ -27,6 +27,7 @@ public:
 	virtual void generateWorm(InvoluteGear_ptr involuteGear) = 0;
 
 	virtual void insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode) = 0;
+	virtual void insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode) = 0;
 	virtual void insert(SurfaceOfRevolution_ptr disc, hpuint drawMode) = 0;
 	//virtual void insert(DiscGearGrindResult simulationResult) = 0;
 	virtual void insert(DiscGearGrind_ptr discGearGrind) = 0;

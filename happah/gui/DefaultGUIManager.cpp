@@ -236,6 +236,30 @@ void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode)
 
 }
 
+void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode) {
+	ostringstream labelStream;
+	labelStream << name << " BSplineCurve";
+	const char* label = labelStream.str().c_str();
+	if( drawMode & HP_LINE_MESH ) {
+		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
+			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
+		LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
+		guiStateNode->setLineMesh(lineMesh);
+		m_sceneManager->insert(bSplineCurve, guiStateNode);
+		LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(bSplineCurve, lineMesh, curveColor);
+		lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+	}
+	if( drawMode & HP_POINT_CLOUD ) {
+		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
+			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
+		PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
+		guiStateNode->setPointCloud(pointCloud);
+		m_sceneManager->insert(bSplineCurve, guiStateNode);
+		PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(bSplineCurve, pointCloud, curveColor);
+		pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+	}
+}
+
 void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SurfaceOfRevolution, DiscGUIStateNode, DiscForm, DiscContextMenu>(disc, "Disc",  m_toolPanel->getDiscForm(), m_mainWindow.getDiscContextMenu() );

@@ -39,7 +39,8 @@ public:
 	void generateWorm(InvoluteGear_ptr involuteGear);
 	bool init();
 
-	void insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
+	void insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode);
+	void insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode);
 	void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(FocalSpline_ptr focalSpline, hpuint drawMode = HP_LINE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);

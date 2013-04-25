@@ -4,6 +4,7 @@ using namespace std;
 
 #include "happah/geometries/Plane.h"
 #include "happah/HappahConstants.h"
+#include "happah/HappahUtils.h"
 
 Plane::Plane(hpvec3 origin, hpvec3 normal) 
 	: m_normal(check(normal)), m_origin(origin) {
@@ -53,13 +54,19 @@ bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
 
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
+	if( glm::length( normal ) < EPSILON ) return;
 	hpvec3 newNormal    = glm::normalize( normal );
 	hpvec3 normalAxis   = glm::normalize( m_normal );
 
 	// if normal was infinitesimally changed, no need for proper rotation
-	if( glm::length( normalAxis - newNormal ) < EPSILON ) {
+	if( glm::length( newNormal - normalAxis ) < EPSILON ) {
 		m_normal = normal;
 		setSystemXVector( m_localSystemXVector );
+		return;
+	}
+	if( glm::length( newNormal + normalAxis ) < EPSILON ) {
+		m_normal = normal;
+		setSystemXVector( -m_localSystemXVector );
 		return;
 	}
 

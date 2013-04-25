@@ -392,6 +392,7 @@ void DefaultGUIManager::update(Worm_ptr worm) {
 void DefaultGUIManager::useForBSpline(Plane_ptr plane) {
 	m_toolPanel->getBSplineCurveForm()->reset();
 	m_toolPanel->getBSplineCurveForm()->setPlane(plane);
+	m_toolPanel->setForm(m_toolPanel->getBSplineCurveForm());
 }
 
 //TODO: This should be removed since it is discriminating other simulations that dont have a disc..

@@ -2,6 +2,7 @@
 #define HAPPAH_UITLS_H_
 
 #include <cmath>
+#include <iostream>
 #include "happah/HappahTypes.h"
 
 namespace HPUtils{
@@ -14,6 +15,9 @@ namespace HPUtils{
     hpvec3   calculate2DLineIntersection(hpvec3 a1,hpvec3 a2, hpvec3 b1, hpvec3 b2);
 
 };
+
+std::ostream& operator<<( std::ostream& os, const hpvec3& vec );
+std::ostream& operator<<( std::ostream& os, const hpvec2& vec );
 
 
 

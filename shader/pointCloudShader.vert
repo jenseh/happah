@@ -6,6 +6,7 @@ in vec4 pointSelectionColor;
 
 uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
+uniform vec4 colorComponent;
 out vec4 vColor;
 out vec4 vPointSelectionColor;
 
@@ -13,6 +14,6 @@ void main(){
 	gl_TexCoord[0] = vec4(0.0f);
 	
 	gl_Position = modelViewMatrix * vertex;
-	vColor = vec4(1.0f,0.0f,0.0f,1.0f);
+	vColor = colorComponent;
 	vPointSelectionColor = pointSelectionColor;
 }

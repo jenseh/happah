@@ -38,8 +38,9 @@ public:
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	void generateWorm(InvoluteGear_ptr involuteGear);
 	bool init();
-	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
-	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
+	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
+	void insert(BSplineCurve_ptr bSplineCurve, const char* name, hpcolor curveColor = hpcolor(1, 0, 0, 1), hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
+	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
 	void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(FocalSpline_ptr focalSpline, hpuint drawMode = HP_LINE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);

@@ -1,4 +1,5 @@
 #include <memory>
+#include <vector>
 #include <QAction>
 
 #include "happah/gui/context-menus/ToothProfileContextMenu.h"
@@ -27,14 +28,41 @@ ToothProfileContextMenu::ToothProfileContextMenu(GUIManager& guiManager, QWidget
 ToothProfileContextMenu::~ToothProfileContextMenu() {}
 
 void ToothProfileContextMenu::createMatingGear() {
+
 	MatingGearConstructor matingGearConstructor;
 	hpreal radius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
 	matingGearConstructor.constructMatingTo(*m_toothProfile, radius, m_toothProfile->getNumberOfTeeth(), 30, 5.0f);
-	std::list< BSplineCurve<hpvec2>* >* informationCurves = matingGearConstructor.getInformationSplines();
-	for(std::list< BSplineCurve<hpvec2>* >::iterator it = informationCurves->begin(), end = informationCurves->end(); it != end; ++it) {
-		BSplineCurve_ptr curve3d = BSplineCurve_ptr((*it)->to3dBSplineCurve()); //TODO: insert with 2D?
-		m_guiManager.insert(curve3d, 0x00000006);
-		delete *it;
+	std::list< CurveWithName* >* informationCurves = matingGearConstructor.getInformationSplines();
+	// std::list<char*>* informationNames = matingGearConstructor.getInformationSplineNames();
+	// std::list<char*>::iterator nameIt = informationNames->begin();
+
+	std::vector<hpcolor> splineColors(informationCurves->size());
+	hpreal adaption = (255.0f * 3) / splineColors.size();
+	for(hpuint counter = 0; counter < splineColors.size(); ++counter) {
+		hpuint adaptedCounter = (counter * adaption);
+		hpuint red, green, blue;
+		if(adaptedCounter / 256 <= 0) {
+			red = adaptedCounter;
+			green = 255 - adaptedCounter / 2;
+			blue = 255 - adaptedCounter / 2;
+		} else if (adaptedCounter / 256 <= 1) {
+			red = 255 - (adaptedCounter - 256) / 2;
+			green = adaptedCounter - 256;
+			blue = 255 - (adaptedCounter - 256) / 2;
+		} else {
+			red = 255 - (adaptedCounter - 512) / 2;
+			green = 255 - (adaptedCounter - 512) / 2;
+			blue = adaptedCounter - 512;
+		}
+		hpcolor color = hpcolor(red, green, blue, 255) * (1.0f / 255.0f);
+		splineColors[counter] = color;
+	}
+	hpuint counter = 0;
+	for(std::list< CurveWithName* >::iterator it = informationCurves->begin(), end = informationCurves->end(); it != end; ++it) {
+		BSplineCurve_ptr curve3d = BSplineCurve_ptr((*it)->getCurve()->to3dBSplineCurve()); //TODO: insert with 2D?
+		m_guiManager.insert(curve3d, (*it)->getName(), splineColors[counter], HP_LINE_MESH | HP_POINT_CLOUD);
+		// delete *it;
+		++counter;
 	}
 }
 
@@ -47,7 +75,7 @@ void ToothProfileContextMenu::newBSplineCurve() {
 	BSplineCurve<hpvec3>* curve = new BSplineCurve<hpvec3>();
 	m_toothProfile->getCurve(*curve);
 	BSplineCurve_ptr bSplineCurve = BSplineCurve_ptr(curve);
-	m_guiManager.insert(bSplineCurve, 0x00000006);
+	m_guiManager.insert(bSplineCurve, HP_LINE_MESH | HP_POINT_CLOUD);
 }
 
 void ToothProfileContextMenu::setToothProfile(ToothProfile_ptr toothProfile) {

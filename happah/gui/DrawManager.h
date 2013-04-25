@@ -151,6 +151,7 @@ private:
 	GLint m_pointCloudDrawSelectionColors;
 	GLint m_pointCloudSelectionColorLocation;
 	GLint m_pointCloudSelectedLocation;
+	GLint m_pointCloudColorComponent;
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
 	void doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);

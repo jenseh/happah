@@ -58,22 +58,22 @@ void MatingGearConstructor::constructMatingTo(
 
 }
 
-std::list< BSplineCurve<hpvec2>* >* MatingGearConstructor::getInformationSplines() {
-	std::list< BSplineCurve<hpvec2>* >* informationList = new std::list< BSplineCurve<hpvec2>* >();
-	informationList->push_back(circle(m_originalRadius, hpvec2(0.0f, 0.0f))); //Reference circle of original gear
-	informationList->push_back(circle(m_matingRadius, hpvec2(m_distanceOfCenters, 0.0f))); //Reference circle of mating gear
+std::list< CurveWithName* >* MatingGearConstructor::getInformationSplines() {
+	std::list< CurveWithName* >* informationList = new std::list< CurveWithName* >();
+	informationList->push_back(new CurveWithName(circle(m_originalRadius, hpvec2(0.0f, 0.0f)), "Reference circle of original gear")); //Reference circle of original gear
+	informationList->push_back(new CurveWithName(circle(m_matingRadius, hpvec2(m_distanceOfCenters, 0.0f)), "Reference circle of mating gear")); //Reference circle of mating gear
 	BSplineCurve<hpvec2>* originalUsedPoints = new BSplineCurve<hpvec2>();
 	BSplineCurve<hpvec2>* matingPoints = new BSplineCurve<hpvec2>();
 	for(std::list<MatingPoint>::iterator it = m_allMatingPoints->begin(), end = m_allMatingPoints->end(); it != end; ++it){
 		if(it->error != ErrorCode::NO_ERROR) {
 			originalUsedPoints->addControlPoint(it->originPoint);
 			matingPoints->addControlPoint(it->point + hpvec2(m_distanceOfCenters, 0.0f));
-			informationList->push_back(normalLine(it->originPoint, it->originNormal));
-			informationList->push_back(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal));
+			informationList->push_back(new CurveWithName(normalLine(it->originPoint, it->originNormal), "Normal of original gear"));
+			informationList->push_back(new CurveWithName(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal), "Normal of mating gear"));
 		}
 	}
-	informationList->push_back(originalUsedPoints);
-	informationList->push_back(matingPoints);
+	informationList->push_back(new CurveWithName(originalUsedPoints, "Original used points"));
+	informationList->push_back(new CurveWithName(matingPoints, "Constructed mating gear points"));
 	return informationList;
 }
 

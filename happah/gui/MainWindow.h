@@ -56,6 +56,11 @@ private:
 	SimulationContextMenu* m_simulationContextMenu;
 	ToothProfileContextMenu* m_toothProfileContextMenu;
 
+	GUIManager* m_guiManager;
+
+private slots:
+	void importFile();
+
 };
 
 #include "happah/gui/ToolPanel.h"

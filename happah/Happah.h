@@ -2,7 +2,6 @@
 #define HP_H_
 
 #include <QApplication>
-
 #include "happah/scene/SceneManager.h"
 #include "happah/gui/DefaultGUIManager.h"
 

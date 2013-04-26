@@ -18,5 +18,4 @@ class ElementRenderStateNode;
 typedef std::shared_ptr<ElementRenderStateNode> ElementRenderStateNode_ptr;
 class PointCloudRenderStateNode;
 typedef std::shared_ptr<PointCloudRenderStateNode> PointCloudRenderStateNode_ptr;
-
 #endif // HP_TYPES_H

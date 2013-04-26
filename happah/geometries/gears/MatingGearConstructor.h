@@ -58,6 +58,28 @@ public:
 
 	std::list< CurveWithName* >* getInformationSplines();
 
+	//delete following lines for printing:
+	void print(hpvec2 point) {
+		cerr << "[" << point.x << ",	" << point.y << "]";
+	}
+
+	void print(const MatingPoint& m) {
+			cerr << endl << "MatingPoint:";
+			cerr << endl << "error:          " << static_cast<int>(m.error);
+		if(m.error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS)
+			cerr << endl << "point:          "; print(m.point);
+			cerr << endl << "original point: "; print(m.originPoint);
+		if(m.error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS)
+			cerr << endl << "normal:         "; print(m.normal);
+			cerr << endl << "original normal:"; print(m.originNormal);
+		if(m.error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS)
+			cerr << endl << "inters.Ref.rad.:" << m.intersectionRefRadiusAngle;
+		if(m.error == ErrorCode::NO_ERROR) {
+			cerr << endl << "forbid. length: " << m.forbiddenAreaLength;
+			cerr << endl << "forbid. endPoint"; print(m.forbiddenAreaEndPoint);
+		}
+	}
+
 private:
 	void constructListsOfPossibleMatingPoints();
 	hpreal referenceRadiusAngle();

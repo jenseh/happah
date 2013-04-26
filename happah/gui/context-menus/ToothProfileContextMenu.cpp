@@ -31,7 +31,7 @@ void ToothProfileContextMenu::createMatingGear() {
 
 	MatingGearConstructor matingGearConstructor;
 	hpreal radius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
-	matingGearConstructor.constructMatingTo(*m_toothProfile, radius, m_toothProfile->getNumberOfTeeth(), 30, 5.0f);
+	matingGearConstructor.constructMatingTo(*m_toothProfile, radius, m_toothProfile->getNumberOfTeeth(), 30, 5.0f, 0.5f);
 	std::list< CurveWithName* >* informationCurves = matingGearConstructor.getInformationSplines();
 	// std::list<char*>* informationNames = matingGearConstructor.getInformationSplineNames();
 	// std::list<char*>::iterator nameIt = informationNames->begin();

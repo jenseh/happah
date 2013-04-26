@@ -21,6 +21,10 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	quitAction->setShortcut(tr("CTRL+Q"));
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 	file->addAction(quitAction);
+	QAction* importAction = new QAction("&Import", this);
+	importAction->setShortcut(tr("CTRL+I"));
+	connect(importAction, SIGNAL(triggered()), this, SLOT(importFile()));
+	file->addAction(importAction);
 
 	QWidget* centralWidget = new QWidget(this);
 	QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
@@ -28,6 +32,8 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	centralWidgetLayout->addWidget(m_toolPanel);
 	centralWidgetLayout->addWidget(new Viewport(viewportListener, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
+
+	m_guiManager = &guiManager;
 
 	m_bSplineCurveContextMenu = new BSplineCurveContextMenu(guiManager, this);
 	m_defaultContextMenu = new ContextMenu(this);
@@ -81,6 +87,29 @@ SimulationContextMenu* MainWindow::getSimulationContextMenu() {
 
 ToothProfileContextMenu* MainWindow::getToothProfileContextMenu() {
 	return m_toothProfileContextMenu;
+}
+
+void MainWindow::importFile() {
+	QString fileName("");
+	QString selectedFilter("");
+	/*
+		use QFileDialog object instead of static method QFileDialog::getOpenFileName.
+		because there exist a memory leak bug for the static use on some qt versions
+	*/
+	QFileDialog dialog(this);
+	dialog.setNameFilter(tr("Wavefront 3D Object (*.obj)"));
+	//dialog.setDirectory("");
+	dialog.setWindowTitle("Import File...");
+	if (dialog.exec() == QDialog::Accepted)
+	{
+		fileName = dialog.selectedFiles().first();
+		selectedFilter = dialog.selectedNameFilter();
+	}
+
+	if (selectedFilter == "Wavefront 3D Object (*.obj)") {
+		std::cout << "call createTriangleMeshFromObjFile(fileName) in guiManager" << endl;
+		//m_guiManager
+	}
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

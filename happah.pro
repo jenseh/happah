@@ -127,6 +127,7 @@ HEADERS += \
 \
 	happah/transformations/RigidAffineTransformation.h \
 \	
+	happah-test/benchmarks/KDTreeBenchmark.cpp \
 	happah-test/simulations/WormGearGrindTest.h \
 	happah-test/tests/CircleTriangleIntersectionTest.h
 
@@ -241,6 +242,7 @@ SOURCES += \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
 \	
+	happah-test/benchmarks/KDTreeBenchmark.cpp \
 	happah-test/simulations/WormGearGrindTest.cpp \
 	happah-test/tests/CircleTriangleIntersectionTest.cpp
 	

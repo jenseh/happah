@@ -8,28 +8,39 @@
 BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), m_guiManager(guiManager), m_currentPointIndex(-1) {
 
-	m_controlPointInput = new VectorInput( "Next Point", true, true, false, this );
+	QVBoxLayout* layout = new QVBoxLayout();
+	this->setLayout(layout);
+
+	m_controlPointInput = new VectorInput( "Next Point", false, true, false, this );
 	m_controlPointInput->setValue( hpvec3(0.f, 0.f, 0.f) );
-	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(updateBSplineCurveOrigin()));
-	//connect(m_controlPointInput, SIGNAL(valueChanged()), this, SLOT(projectPointOntoPlane()) );
+	layout->addWidget(m_controlPointInput);
 
 	QPushButton* addPointButton  = new QPushButton("add control point");
 	connect(addPointButton, SIGNAL(clicked()), this, SLOT(addPoint()));
+	layout->addWidget(addPointButton);
 
-	QPushButton* interpolateButton  = new QPushButton("interpolate");
+	QPushButton* deletePointButton  = new QPushButton("delete current point");
+	connect(deletePointButton, SIGNAL(clicked()), this, SLOT(deletePoint()));
+	layout->addWidget(deletePointButton);
+
+	QPushButton* interpolateButton  = new QPushButton("interpolate control points");
 	connect(interpolateButton, SIGNAL(clicked()), this, SLOT(interpolate()));
+	layout->addWidget(interpolateButton);
 
 	m_periodicCheckBox = new QCheckBox("Periodic", this);
 	m_periodicCheckBox->setCheckState(Qt::Unchecked);
 	connect( m_periodicCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changePeriodic(int)) );
+	layout->addWidget(m_periodicCheckBox);
 
 	m_uniformCheckBox = new QCheckBox("Uniform", this);
 	m_uniformCheckBox->setCheckState(Qt::Unchecked);
 	connect( m_uniformCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changeUniform(int)) );
+	layout->addWidget(m_uniformCheckBox);
 
 	m_clampedCheckBox = new QCheckBox("Clamped", this);
 	m_clampedCheckBox->setCheckState(Qt::Unchecked);
 	connect( m_clampedCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changeClamped(int)) );
+	layout->addWidget(m_clampedCheckBox);
 
 	QWidget* degreeWidget = new QWidget(this);
 	m_degreeSpinBox = new QSpinBox(degreeWidget);
@@ -39,64 +50,49 @@ BSplineCurveForm::BSplineCurveForm(GUIManager& guiManager, QWidget* parent)
 	degreeLayout->addWidget( m_degreeSpinBox, 0,1 );
 	degreeWidget->setLayout(degreeLayout);
 	connect( m_degreeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeDegree(int)) );
+	layout->addWidget(degreeWidget);
 
 	QWidget* planeWidget = new QWidget(this);
+	layout->addWidget(planeWidget);
 	QGridLayout* planeLayout = new QGridLayout();
-	m_planeLabel = new QLabel("Using standard plane", planeWidget);
-	QPushButton* planeButton = new QPushButton("reset", planeWidget);
-	planeLayout->addWidget( m_planeLabel, 0,0 );
-	planeLayout->addWidget( planeButton, 0,1 );
 	planeWidget->setLayout( planeLayout );
+	m_planeLabel = new QLabel("Using standard plane", planeWidget);
+	planeLayout->addWidget( m_planeLabel, 0,0 );
+	/*
+	QPushButton* planeButton = new QPushButton("reset", planeWidget);
+	planeLayout->addWidget( planeButton, 0,1 );
+	connect( planeButton, SIGNAL(clicked()), this, SLOT(resetPlane()) );
+	*/
 	// TODO connect to resetPlane() instead of reset()
-	connect( planeButton, SIGNAL(clicked()), this, SLOT(reset()) );
 
 	QPushButton* createButton  = new QPushButton("create curve");
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createCurve()));
-
-	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(m_controlPointInput);
-	layout->addWidget(addPointButton);
-	layout->addWidget(interpolateButton);
-	layout->addWidget(degreeWidget);
-	layout->addWidget(m_periodicCheckBox);
-	layout->addWidget(m_uniformCheckBox);
-	layout->addWidget(m_clampedCheckBox);
-	layout->addWidget(planeWidget);
 	layout->addWidget(createButton);
-	this->setLayout(layout);
+
+	QPushButton* resetButton = new QPushButton("reset", this);
+	layout->addWidget(resetButton);
+	connect( resetButton, SIGNAL(clicked()), this, SLOT(reset()) );
+
+	QWidget* empty = new QWidget();
+	empty->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Expanding);
+	layout->addWidget(empty);
 	
 	reset();
 }
 
 BSplineCurveForm::~BSplineCurveForm() {}
 
-void BSplineCurveForm::projectPointOntoPlane() {
-	hpvec3 normal = m_plane->getNormal();
-	hpvec3 origin = m_plane->getOrigin();
-	hpvec3 point = m_controlPointInput->getValue();
-	point = point + ( glm::dot(normal, origin-point ) )*normal;
-	//m_controlPointInput->setValue(point); // does not work because m_controlPointInput emits valueChanged signal
-}
-
-void BSplineCurveForm::interpolate() {
-	m_curve->interpolateControlPoints( );
-	m_guiManager.update(m_curve);
-
-	m_degreeSpinBox->setValue( m_curve->getDegree() );
-	m_clampedCheckBox->setCheckState( m_curve->isClamped() ? Qt::Checked : Qt::Unchecked );
-	m_periodicCheckBox->setCheckState( m_curve->isPeriodic() ? Qt::Checked : Qt::Unchecked );
-	m_uniformCheckBox->setCheckState( m_curve->isUniform() ? Qt::Checked : Qt::Unchecked );
-}
-
 void BSplineCurveForm::addPoint() {
 	if( m_curveInserted ) {
 		hpvec3 normal = m_plane->getNormal();
-		hpvec3 origin = m_plane->getOrigin();
 		hpvec3 point = m_controlPointInput->getValue();
-		point = point + ( glm::dot(normal, origin-point ) )*normal;
-//		m_curve->addControlPoint( point );
+		Ray ray( point, normal );
+		hpvec2 planePoint;
+		m_plane->intersect( ray, planePoint );
+		m_curve->addControlPoint( planePoint );
 		m_guiManager.update(m_curve);
 	}
+	projectPointOntoPlane();
 }
 
 void BSplineCurveForm::changePeriodic(int state) {
@@ -134,16 +130,21 @@ void BSplineCurveForm::createCurve() {
 	m_curveInserted = true;
 }
 
-BSplineCurve2D_ptr BSplineCurveForm::getCurve() const {
-	return m_curve;
+void BSplineCurveForm::deletePoint() {
+	if( m_curveInserted ) {
+		if( m_currentPointIndex > -1 ) {
+			m_curve->removeControlPoint( m_currentPointIndex );
+			m_currentPointIndex = -1;
+		}
+		else {
+			m_curve->removeControlPoint( m_curve->getNumberOfControlPoints() - 1);
+		}
+		m_guiManager.update( m_curve );
+	}
 }
 
-void BSplineCurveForm::handleRay(Ray& ray) {
-	hpvec2 planePoint;
-	if( m_curveInserted && m_plane->intersect( ray, planePoint ) ) {
-		m_curve->addControlPoint( planePoint );
-		m_guiManager.update(m_curve);
-	}
+BSplineCurve2D_ptr BSplineCurveForm::getCurve() const {
+	return m_curve;
 }
 
 void BSplineCurveForm::handleDrag(Ray& ray) {
@@ -171,6 +172,13 @@ void BSplineCurveForm::handleDrag(Ray& ray) {
 	//}
 }
 
+void BSplineCurveForm::handleRay(Ray& ray) {
+	hpvec2 planePoint;
+	if( m_curveInserted && m_plane->intersect( ray, planePoint ) ) {
+		m_curve->addControlPoint( planePoint );
+		m_guiManager.update(m_curve);
+	}
+}
 
 void BSplineCurveForm::handleSelection(){
 	emit selected(this);
@@ -178,8 +186,26 @@ void BSplineCurveForm::handleSelection(){
 }
 
 void BSplineCurveForm::handleSelection(int pointIndex){
-		emit selected(this);
-		m_currentPointIndex = pointIndex;
+	emit selected(this);
+	m_currentPointIndex = pointIndex;
+}
+
+void BSplineCurveForm::interpolate() {
+	m_curve->interpolateControlPoints( );
+	m_guiManager.update(m_curve);
+
+	m_degreeSpinBox->setValue( m_curve->getDegree() );
+	m_clampedCheckBox->setCheckState( m_curve->isClamped() ? Qt::Checked : Qt::Unchecked );
+	m_periodicCheckBox->setCheckState( m_curve->isPeriodic() ? Qt::Checked : Qt::Unchecked );
+	m_uniformCheckBox->setCheckState( m_curve->isUniform() ? Qt::Checked : Qt::Unchecked );
+}
+
+void BSplineCurveForm::projectPointOntoPlane() {
+	hpvec3 normal = m_plane->getNormal();
+	hpvec3 origin = m_plane->getOrigin();
+	hpvec3 point = m_controlPointInput->getValue();
+	point = point + ( glm::dot(normal, origin-point ) )*normal;
+	m_controlPointInput->setValue(point);
 }
 
 void BSplineCurveForm::reset() {

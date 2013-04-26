@@ -532,6 +532,14 @@ template <class T> void BSplineCurve<T>::interpolatePoints( std::vector<T>& inpu
 	calculateNormalization();
 }
 
+template <class T> void BSplineCurve<T>::removeControlPoint( unsigned int index ) {
+	if( index < m_controlPoints.size() ) {
+		m_controlPoints.erase( m_controlPoints.begin() + index );
+		m_knots.resize( m_knots.size() - 1 );
+		calculateNormalization();
+	}
+}
+
 template <class T> void BSplineCurve<T>::removeControlPoints() {
 	m_controlPoints.clear();
 //	std::vector<T>().swap(m_controlPoints); // forces reallocation

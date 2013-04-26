@@ -35,40 +35,40 @@ VectorInput::VectorInput(const QString &title, bool showLength, bool zeroAllowed
 	gridLayout->setHorizontalSpacing(0);
 	gridLayout->setVerticalSpacing(0);
 	gridLayout->addWidget(new QLabel("x:", this), 0, 0, Qt::AlignRight);
-	gridLayout->addWidget(m_xValueBox, 0, 1);
+	gridLayout->addWidget(m_xValueBox, 0, 1 );
 	gridLayout->addWidget(new QLabel("y:", this), 0, 2, Qt::AlignRight);
-	gridLayout->addWidget(m_yValueBox, 0, 3);
+	gridLayout->addWidget(m_yValueBox, 0, 3 );
 	gridLayout->addWidget(new QLabel("z:", this), 0, 4, Qt::AlignRight);
-	gridLayout->addWidget(m_zValueBox, 0, 5);
+	gridLayout->addWidget(m_zValueBox, 0, 5 );
 
 	if(m_showLength) {
 		m_lengthLabel = new QLabel(this);
-		m_lengthLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 		QString lengthText;
 		lengthText.setNum(this->getLength());
 		lengthText = "Length: " + lengthText;
 		m_lengthLabel->setText( lengthText );
-		gridLayout->addWidget(m_lengthLabel, 1, 1, 1, 3, Qt::AlignTop);
-		QPushButton* resetLengthButton = new QPushButton("resize", this);
+		gridLayout->addWidget(m_lengthLabel, 1, 1, 1, 3);
+		QPushButton* resetLengthButton = new QPushButton("normalize", this);
 		connect( resetLengthButton, SIGNAL(clicked()), this, SLOT(resetLength()) );
-		gridLayout->addWidget(resetLengthButton, 1, 4, 1, 2, Qt::AlignTop);
+		gridLayout->addWidget(resetLengthButton, 1, 4, 1, 2);
 	}
 
 
 	if( m_useDials ) {
+		int gridRow = m_showLength ? 2 : 1;
 		m_azimuthDial = new QDial(this);
 		m_azimuthDial->setWrapping(true);
 		connect( m_azimuthDial, SIGNAL(valueChanged(int)), this, SLOT(dialValueChanged(int)) );
-		gridLayout->addWidget( m_azimuthDial, 2, 1, 1, 2, Qt::AlignTop );
-		gridLayout->addWidget( new QLabel("azimuth", this), 3,1,1,2, Qt::AlignTop | Qt::AlignCenter );
+		gridLayout->addWidget( m_azimuthDial, gridRow, 1, 1, 2, Qt::AlignTop );
+		gridLayout->addWidget( new QLabel("azimuth", this), gridRow+1,1,1,2, Qt::AlignTop | Qt::AlignCenter );
 
 		m_longitudialDial = new QDial(this);
 		m_longitudialDial->setWrapping(true);
 		m_longitudialDial->setRange(0, 100);
 		m_longitudialDial->setSingleStep(1);
 		connect( m_longitudialDial, SIGNAL(valueChanged(int)), this, SLOT(dialValueChanged(int)) );
-		gridLayout->addWidget( m_longitudialDial, 2, 4, 1, 2, Qt::AlignTop );
-		gridLayout->addWidget( new QLabel("longitude", this), 3,4,1,2, Qt::AlignTop | Qt::AlignCenter );
+		gridLayout->addWidget( m_longitudialDial, gridRow, 4, 1, 2, Qt::AlignTop );
+		gridLayout->addWidget( new QLabel("longitude", this), gridRow+1,4,1,2, Qt::AlignTop | Qt::AlignCenter );
 	}
 
 	this->setLayout(gridLayout);

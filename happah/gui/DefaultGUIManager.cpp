@@ -152,7 +152,7 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 }
 
 template<class G>
-void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
+void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry, hpcolor color) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
@@ -160,7 +160,6 @@ void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
 	}
 	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
 	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
-	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setLineMesh(lineMesh);
 	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
 	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
@@ -168,7 +167,7 @@ void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
 }
 
 template<class G>
-void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
+void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry, hpcolor color) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
@@ -176,7 +175,6 @@ void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
 	}
 	m_sceneManager->removeContainingData(geometry, guiStateNode->getPointCloud());
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
-	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setPointCloud(pointCloud);
 	PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(geometry, pointCloud, color);
 	pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
@@ -348,6 +346,11 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 }
 
 void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve) {
+	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
+	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
+}
+
+void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve, hpcolor curveColor) {
 	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
 	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
 }

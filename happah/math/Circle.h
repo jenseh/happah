@@ -373,7 +373,7 @@ struct Circle {
 		hpvec3 n1 = m_normal;
 		hpvec3 n2 = t_normal;
 
-		double dotProduct = glm::dot(n1, n2);
+		hpreal dotProduct = glm::dot(n1, n2);
 		hpvec3 c1 = (h1 - h2 * dotProduct) / (1.0f - dotProduct * dotProduct);
 		hpvec3 c2 = (h2 - h1 * dotProduct) / (1.0f - dotProduct * dotProduct);
 

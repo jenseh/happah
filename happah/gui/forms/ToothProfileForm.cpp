@@ -11,7 +11,7 @@
 using namespace std;
 
 ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
-	: Form(parent), m_currentPointIndex(-1), m_guiManager(guiManager) {
+	: Form(parent), m_currentPointIndex(-1), m_guiManager(guiManager), m_errorColor(hpcolor(1.0f, 0.0f, 0.0f, 0.5f)) {
 
 	QPushButton* show3dGearButton = new QPushButton("Show gear in 3D");
 	connect(show3dGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
@@ -43,7 +43,7 @@ ToothProfile_ptr ToothProfileForm::getToothProfile() {
 void ToothProfileForm::reset() {
 	m_toothProfile = ToothProfile_ptr(new ToothProfile());
 	m_plane = Plane_ptr(m_toothProfile->getPlaneToothProfileLiesIn());
-	m_informationCurves = nullptr; //new std::list< CurveWithName* >();
+	m_informationCurves = nullptr; //new std::list< MatingGearInformationPart* >();
 	m_splineColors = nullptr; //std::vector<hpcolor>();
 	m_matingStepButton->setEnabled(true);
 }
@@ -69,9 +69,9 @@ void ToothProfileForm::createMatingGear() {
 		constructMatingGear();
 
 	hpuint counter = 0;
-	for(std::list< CurveWithName* >::iterator it = m_informationCurves->begin(), end = m_informationCurves->end(); it != end; ++it) {
-		BSplineCurve_ptr curve3d = BSplineCurve_ptr((*it)->getCurve()->to3dBSplineCurve()); //TODO: insert with 2D?
-		m_guiManager.insert(curve3d, (*it)->getName(), (*m_splineColors)[counter], HP_LINE_MESH | HP_POINT_CLOUD);
+	for(std::list< MatingGearInformationPart* >::iterator it = m_informationCurves->begin(), end = m_informationCurves->end(); it != end; ++it) {
+		BSplineCurve2D_ptr curve2d = (*it)->getCurve(); //TODO: insert with 2D?
+		m_guiManager.insert(curve2d, (*it)->getName(), (*m_splineColors)[counter], HP_LINE_MESH | HP_POINT_CLOUD);
 
 		++counter;
 	}
@@ -108,6 +108,7 @@ void ToothProfileForm::constructMatingGear() {
 }
 
 void ToothProfileForm::showNextMatingStep() {
+	hpcolor halfVisible = hpcolor(1.0f, 1.0f, 0.8f, 0.5f);
 	if(!m_informationCurves || !m_splineColors) {
 		constructMatingGear();
 		m_stepCounter = 0;
@@ -116,10 +117,43 @@ void ToothProfileForm::showNextMatingStep() {
 	if(m_stepIterator == m_informationCurves->end() || m_stepCounter == m_splineColors->size()) {
 		m_matingStepButton->setEnabled(false);
 	} else {
-		BSplineCurve_ptr curve3d = BSplineCurve_ptr((*m_stepIterator)->getCurve()->to3dBSplineCurve()); //TODO: insert with 2D?
-		m_guiManager.insert(curve3d, (*m_stepIterator)->getName(), (*m_splineColors)[m_stepCounter], HP_LINE_MESH | HP_POINT_CLOUD);
-		++m_stepCounter;
-		++m_stepIterator;
+
+		BSplineCurve2D_ptr curve2d = (*m_stepIterator)->getCurve();
+
+		if((*m_stepIterator)->getError() == ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {
+			m_guiManager.insert(curve2d, (*m_stepIterator)->getName(), m_errorColor * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
+			++m_stepCounter;
+			++m_stepIterator;
+
+		} else {
+			BSplineCurve2D_ptr curve2d = (*m_stepIterator)->getCurve();
+			char* name = (*m_stepIterator)->getName();
+			MatingGearPart part = (*m_stepIterator)->getPart();
+			hpcolor color = (*m_splineColors)[m_stepCounter];
+			++m_stepCounter;
+			++m_stepIterator;
+			
+			switch(part) {
+				case MatingGearPart::MATING_REFERENCE_CIRCLE:
+					m_guiManager.insert(curve2d, name, color, HP_LINE_MESH);
+					return;
+				case MatingGearPart::ORIGIN_REFERENCE_CIRCLE:
+					m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH);
+					return;
+				case MatingGearPart::MATING_NORMAL:
+					m_guiManager.insert(curve2d, name, color, HP_LINE_MESH | HP_POINT_CLOUD);
+					return;
+				case MatingGearPart::ORIGIN_NORMAL:
+					m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
+					return;
+				case MatingGearPart::MATING_TOOTH_PROFILE:
+					m_guiManager.insert(curve2d, name, color, HP_LINE_MESH | HP_POINT_CLOUD);
+					return;
+				case MatingGearPart::ORIGIN_TOOTH_PROFILE:
+					m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
+					return;
+			}
+		}
 	}
 }
 

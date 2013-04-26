@@ -55,6 +55,7 @@ public:
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 
 	void update(BSplineCurve2D_ptr bSplineCurve);
+	void update(BSplineCurve2D_ptr bSplineCurve, hpcolor curveColor);
 	//void update(DiscGearGrindResult simulationResult);
 	void update(SurfaceOfRevolution_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
@@ -189,9 +190,9 @@ private:
 	template<class G>
 	void doUpdate2D(shared_ptr<G> geometry);
 	template<class G>
-	void doUpdate1D(shared_ptr<G> geometry);
+	void doUpdate1D(shared_ptr<G> geometry, hpcolor color = hpcolor(1.0, 0.0, 0.0, 1.0));
 	template<class G>
-	void doUpdate0D(shared_ptr<G> geometry);
+	void doUpdate0D(shared_ptr<G> geometry, hpcolor color = hpcolor(1.0f, 0.0f, 0.0f, 1.0f));
 
 	string toFinalLabel(const char* label);
 

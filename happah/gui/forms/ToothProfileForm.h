@@ -33,10 +33,11 @@ private:
 	ToothProfile_ptr m_toothProfile;
 
 	std::vector<hpcolor>* m_splineColors;
-	std::list< CurveWithName* >* m_informationCurves;
+	std::list< MatingGearInformationPart* >* m_informationCurves;
 	QPushButton* m_matingStepButton;
 	hpuint m_stepCounter;
-	std::list< CurveWithName* >::iterator m_stepIterator;
+	std::list< MatingGearInformationPart* >::iterator m_stepIterator;
+	hpcolor m_errorColor;
 
 private slots:
 	void toSimpleGear();

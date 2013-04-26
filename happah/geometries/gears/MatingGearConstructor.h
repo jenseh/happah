@@ -14,6 +14,15 @@ enum class ErrorCode {
 	NO_THICKNESS
 };
 
+enum class MatingGearPart {
+	MATING_NORMAL,
+	ORIGIN_NORMAL,
+	MATING_REFERENCE_CIRCLE,
+	ORIGIN_REFERENCE_CIRCLE,
+	MATING_TOOTH_PROFILE,
+	ORIGIN_TOOTH_PROFILE
+};
+
 struct MatingPoint {
 	hpvec2 point;
 	hpvec2 normal; //must be normalized!
@@ -32,15 +41,22 @@ struct MatingPoint {
 	// }
 };
 
-class CurveWithName {
+class MatingGearInformationPart {
 public:
-	CurveWithName(BSplineCurve<hpvec2>* curve, char* name) : m_curve(curve), m_name(name) {}
-	~CurveWithName() { delete m_curve; delete m_name; }
-	BSplineCurve<hpvec2>* getCurve() { return m_curve; }
+	MatingGearInformationPart(BSplineCurve2D_ptr curve, MatingGearPart part, char* name, ErrorCode error = ErrorCode::NO_ERROR) : m_curve(curve), m_error(error), m_name(name), m_part(part) {}
+	MatingGearInformationPart(BSplineCurve<hpvec2>* curve, MatingGearPart part, char* name, ErrorCode error = ErrorCode::NO_ERROR) : m_error(error), m_name(name), m_part(part) {
+		m_curve = BSplineCurve2D_ptr(curve);
+	}
+	~MatingGearInformationPart() { delete m_name; }
+	BSplineCurve2D_ptr getCurve() { return m_curve; }
+	ErrorCode getError() {return m_error; }
 	char* getName() { return m_name; }
+	MatingGearPart getPart() { return m_part; }
 private:
-	BSplineCurve<hpvec2>* m_curve;
+	BSplineCurve2D_ptr m_curve;
+	ErrorCode m_error;
 	char* m_name;
+	MatingGearPart m_part;
 };
 
 class MatingGearConstructor {
@@ -56,7 +72,7 @@ public:
 		hpreal maxAngle,
 		hpreal infomationNormalLength = 1.0f);
 
-	std::list< CurveWithName* >* getInformationSplines();
+	std::list< MatingGearInformationPart* >* getInformationSplines();
 
 	//delete following lines for printing:
 	void print(hpvec2 point) {

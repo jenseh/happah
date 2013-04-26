@@ -58,23 +58,25 @@ void MatingGearConstructor::constructMatingTo(
 
 }
 
-std::list< CurveWithName* >* MatingGearConstructor::getInformationSplines() {
-	std::list< CurveWithName* >* informationList = new std::list< CurveWithName* >();
-	informationList->push_back(new CurveWithName(circle(m_originalRadius, hpvec2(0.0f, 0.0f)), "Original gear ref circle")); //Reference circle of original gear
-	informationList->push_back(new CurveWithName(circle(m_matingRadius, hpvec2(m_distanceOfCenters, 0.0f)), "Mating gear ref circle")); //Reference circle of mating gear
+std::list< MatingGearInformationPart* >* MatingGearConstructor::getInformationSplines() {
+	std::list< MatingGearInformationPart* >* informationList = new std::list< MatingGearInformationPart* >();
+	informationList->push_back(new MatingGearInformationPart(circle(m_originalRadius, hpvec2(0.0f, 0.0f)), MatingGearPart::ORIGIN_REFERENCE_CIRCLE, "Original gear ref circle")); //Reference circle of original gear
+	informationList->push_back(new MatingGearInformationPart(circle(m_matingRadius, hpvec2(m_distanceOfCenters, 0.0f)),  MatingGearPart::MATING_REFERENCE_CIRCLE,"Mating gear ref circle")); //Reference circle of mating gear
 	BSplineCurve<hpvec2>* originalUsedPoints = new BSplineCurve<hpvec2>();
 	BSplineCurve<hpvec2>* matingPoints = new BSplineCurve<hpvec2>();
 	for(std::list<MatingPoint>::iterator it = m_allMatingPoints->begin(), end = m_allMatingPoints->end(); it != end; ++it){
 		if(it->error == ErrorCode::NO_ERROR) {
 			originalUsedPoints->addControlPoint(it->originPoint);
 			matingPoints->addControlPoint(it->point + hpvec2(m_distanceOfCenters, 0.0f));
-			informationList->push_back(new CurveWithName(normalLine(it->originPoint, it->originNormal), "Normal of original gear"));
-			informationList->push_back(new CurveWithName(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal), "Normal of mating gear"));
+			informationList->push_back(new MatingGearInformationPart(normalLine(it->originPoint, it->originNormal), MatingGearPart::ORIGIN_NORMAL, "Normal of original gear"));
+			informationList->push_back(new MatingGearInformationPart(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal), MatingGearPart::MATING_NORMAL, "Normal of mating gear"));
 			cerr << "ErrorCode: " << static_cast<int>(it->error) << endl;
+		} else {
+			informationList->push_back(new MatingGearInformationPart(normalLine(it->originPoint, it->originNormal), MatingGearPart::ORIGIN_NORMAL, "Normal of original gear", it->error));
 		}
 	}
-	informationList->push_back(new CurveWithName(originalUsedPoints, "Original used points"));
-	informationList->push_back(new CurveWithName(matingPoints, "Constructed mating gear points"));
+	informationList->push_back(new MatingGearInformationPart(originalUsedPoints, MatingGearPart::ORIGIN_TOOTH_PROFILE, "Original used points"));
+	informationList->push_back(new MatingGearInformationPart(matingPoints, MatingGearPart::MATING_TOOTH_PROFILE, "Constructed mating gear points"));
 	return informationList;
 }
 

@@ -32,7 +32,7 @@ void ToothProfileContextMenu::createMatingGear() {
 	MatingGearConstructor matingGearConstructor;
 	hpreal radius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
 	matingGearConstructor.constructMatingTo(*m_toothProfile, radius, m_toothProfile->getNumberOfTeeth(), 30, 5.0f, 0.5f);
-	std::list< CurveWithName* >* informationCurves = matingGearConstructor.getInformationSplines();
+	std::list< MatingGearInformationPart* >* informationCurves = matingGearConstructor.getInformationSplines();
 	// std::list<char*>* informationNames = matingGearConstructor.getInformationSplineNames();
 	// std::list<char*>::iterator nameIt = informationNames->begin();
 
@@ -58,8 +58,8 @@ void ToothProfileContextMenu::createMatingGear() {
 		splineColors[counter] = color;
 	}
 	hpuint counter = 0;
-	for(std::list< CurveWithName* >::iterator it = informationCurves->begin(), end = informationCurves->end(); it != end; ++it) {
-		BSplineCurve2D_ptr curve2d = BSplineCurve2D_ptr((*it)->getCurve()); //TODO: insert with 2D?
+	for(std::list< MatingGearInformationPart* >::iterator it = informationCurves->begin(), end = informationCurves->end(); it != end; ++it) {
+		BSplineCurve2D_ptr curve2d = (*it)->getCurve(); //TODO: insert with 2D?
 		m_guiManager.insert(curve2d, (*it)->getName(), splineColors[counter], HP_LINE_MESH | HP_POINT_CLOUD);
 		// delete *it;
 		++counter;

@@ -42,6 +42,7 @@ public:
 	virtual void insert(Worm_ptr worm, hpuint drawMode) = 0;
 
 	virtual void update(BSplineCurve2D_ptr bSplineCurve) = 0;
+	virtual void update(BSplineCurve2D_ptr bSplineCurve, hpcolor curveColor) = 0;
 	virtual void update(FocalSpline_ptr focalSpline) = 0;
 	//virtual void update(DiscGearGrindResult simulationResult) = 0;
 	virtual void update(SurfaceOfRevolution_ptr disc) = 0;

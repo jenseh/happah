@@ -23,7 +23,6 @@ HEADERS += \
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
 	happah/geometries/PointCloud.h\
-#	happah/geometries/RayCloud.h \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/gears/StandardProfile.h \
@@ -149,7 +148,6 @@ SOURCES += \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
 	happah/geometries/PointCloud.cpp\
-#	happah/geometries/RayCloud.cpp \
 #	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
 	happah/geometries/gears/StandardProfile.cpp \

@@ -126,6 +126,9 @@ HEADERS += \
 	happah/simulations/WormGearGrind.h \
 \
 	happah/transformations/RigidAffineTransformation.h \
+\
+	happah/triangulators/RayCloudTriangulator.h \
+	happah/triangulators/RayCloudTriangulatorBPA.h \
 \	
 	happah-test/simulations/WormGearGrindTest.h \
 	happah-test/tests/CircleTriangleIntersectionTest.h
@@ -240,6 +243,8 @@ SOURCES += \
 	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
+\
+	happah/triangulators/RayCloudTriangulatorBPA.cpp \
 \	
 	happah-test/simulations/WormGearGrindTest.cpp \
 	happah-test/tests/CircleTriangleIntersectionTest.cpp

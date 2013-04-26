@@ -2,7 +2,6 @@
 
 ZCircleCloud::ZCircleCloud(hpreal maxRadius, hpreal startZ, hpreal endZ, hpuint resolutionZ)
   : m_maxRadius(maxRadius), m_startZ(startZ), m_endZ(endZ), m_resolutionZ(resolutionZ) {
-	m_referenceDir = hpvec2(1.0, 0.0);
 }
 
 hpuint ZCircleCloud::getResolutionZ() {
@@ -14,7 +13,8 @@ hpreal ZCircleCloud::getMaxRadius() {
 }
 
 hpreal ZCircleCloud::convertPosZIdxToPosZ(hpuint posZIdx) {
-	return m_startZ + posZIdx * (m_endZ - m_startZ) / m_resolutionZ;
+	// Place posZ in the middle of the possible interval to avoid numerical problems
+	return m_startZ + (posZIdx + 0.5) * (m_endZ - m_startZ) / m_resolutionZ;
 }
 
 Circle ZCircleCloud::computeOuterCircle(hpuint posZIdx) {

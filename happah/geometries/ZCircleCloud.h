@@ -23,8 +23,6 @@ private:
   hpreal m_endZ;
   hpuint m_resolutionZ;
 
-  hpvec2 m_referenceDir;
-
   hpreal convertPosZIdxToPosZ(hpuint posZIdx);
 };
 

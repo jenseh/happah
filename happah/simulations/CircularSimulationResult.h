@@ -32,7 +32,6 @@ private:
   hpreal m_endZ;
   hpuint m_resolutionZ;
   hpreal m_angleRange;
-  hpvec2 m_referenceDir;
 };
 
 #endif // CIRCULARSIMULATIONRESULT_H

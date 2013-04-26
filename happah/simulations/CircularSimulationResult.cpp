@@ -11,10 +11,7 @@ CircularSimulationResult::CircularSimulationResult(hpuint angleSteps, hpreal sta
 	m_endZ = endZ;
 	m_resolutionZ = resolutionZ;
 
-	m_entries = new std::unordered_map<
-			hpuint,
-			hpreal>;
-	m_referenceDir = hpvec2(1.0, 0.0);
+	m_entries = new std::unordered_map<hpuint,hpreal>();
 }
 
 CircularSimulationResult::~CircularSimulationResult() {
@@ -36,7 +33,7 @@ bool CircularSimulationResult::addItem(hpvec3 point) {
 	hpuint posZSlot = convertPosZToPosZIdx(point.z);
 	hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
-//	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << " -> " << posZSlot << std::endl;
+	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << " -> " << angleSlot << " : " << posZSlot << std::endl;
 
 	assert(angleSlot < m_angleSteps);
 	assert(posZSlot < m_resolutionZ);
@@ -47,9 +44,7 @@ bool CircularSimulationResult::addItem(hpvec3 point) {
 
 	if (oldRadius > radius) {
 		m_entries->erase(slot);
-		m_entries->insert(std::pair<
-				hpuint,
-				hpreal>(slot, radius));
+		m_entries->insert(std::pair<hpuint,hpreal>(slot, radius));
 	}
 	return true;
 }
@@ -60,9 +55,7 @@ hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
 
 	int slot = posZSlot * m_angleSteps + angleSlot;
 
-	std::unordered_map<
-			hpuint,
-			hpreal>::const_iterator result = m_entries->find(slot);
+	std::unordered_map<hpuint,hpreal>::const_iterator result = m_entries->find(slot);
 	if (result == m_entries->end()) {
 		return INFINITY;
 	} else {
@@ -70,39 +63,55 @@ hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
 	}
 }
 
-// This function computes a radius in the XY plane (ignoring Z)
-hpreal CircularSimulationResult::computeRadiusXY(hpvec3 point) {
-	return glm::sqrt(point.x * point.x + point.y * point.y);
-}
-
 hpreal CircularSimulationResult::computeAngle(hpvec3 point) {
-	hpvec2 centerToPoint = glm::normalize(hpvec2(point.x, point.y));
-	hpreal aCos = acos(centerToPoint.x);
-	hpreal angle =
-			centerToPoint.y >= 0 ? aCos : -aCos;
+	// Double version: Works well
+	double x = point.x;
+	double y = point.y;
+
+	double length = sqrt(x * x);
+	double centerToPointX = x / length;
+
+	double aCos = centerToPointX >= 0.99 ? 0.0 : centerToPointX <= -0.99 ? M_PI : acos(centerToPointX);
+	double angle = y >= 0.0 ? aCos : 2 * M_PI - aCos;
+
 	return angle;
+
+	// Float version: Results in nasty bugs
+//	hpreal normalizedX = point.x / sqrt(point.x * point.x);
+//	hpreal aCos = normalizedX >= 0.99 ? 0.0 : normalizedX < -0.99 ? M_PI : acos(normalizedX);
+//	hpreal angle = point.y >= 0.0 ? aCos : 2 * M_PI - aCos;
+//	return angle;
 }
 
 hpuint CircularSimulationResult::computeAngleSlot(hpreal angle) {
-	int result = round(angle / m_angleRange);
+	hpreal result = angle / m_angleRange;
 
-	if (result < 0)
+	if (result < 0){
 		return m_angleSteps - 1 + result;
-	else if (result >= (int) m_angleSteps)
+	} else if (result > (int) m_angleSteps) {
 		return result - m_angleSteps;
-	else
+	} else if (result == m_angleSteps) {
+		return m_angleSteps - 1;
+	} else {
 		return (hpuint) result;
+	}
 }
 
 hpuint CircularSimulationResult::convertPosZToPosZIdx(hpreal posZ) {
-	int result = round((posZ - m_startZ) / (m_endZ - m_startZ) * m_resolutionZ);
+	int result = (posZ - m_startZ) / (m_endZ - m_startZ) * m_resolutionZ;
 
-	if (result < 0)
+	if (result < 0) {
 		return 0;
-	else if (result >= (int) m_resolutionZ)
+	} else if (result >= (int) m_resolutionZ) {
 		return m_resolutionZ - 1;
-	else
+	} else {
 		return (hpuint) result;
+	}
+}
+
+// This function computes a radius in the XY plane (ignoring Z)
+hpreal CircularSimulationResult::computeRadiusXY(hpvec3 point) {
+	return glm::sqrt(point.x * point.x + point.y * point.y);
 }
 
 hpreal CircularSimulationResult::getItem(hpvec3 point) {
@@ -119,7 +128,7 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 	hpuint posZSlot = convertPosZToPosZIdx(point.z);
 	hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
-	std::cout << "Getting point: " << point.x << " " << point.y << " " << point.z << " -> " << posZSlot << std::endl;
+//	std::cout << "Getting point: " << angle << " -> " << angleSlot << std::endl;
 
 	assert(angleSlot < m_angleSteps);
 	assert(posZSlot < m_resolutionZ);

@@ -41,7 +41,7 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
     		Polynom<double>(2, rotZStart, rotZEnd-rotZStart));
 
     // Convert to right representation
-    m_gearCircleCloud = m_gear->toZCircleCloud(4);
+    m_gearCircleCloud = m_gear->toZCircleCloud(m_resultPosZSlotCount);
 
     std::vector<Triangle>* triangles = m_wormMesh->toTriangles();
     hpuint gearVertexCount = m_gearMesh->getVertexCount();
@@ -69,7 +69,7 @@ CircularSimulationResult* WormGearGrind::calculateGrindingDepth(hpreal time) {
 
 
    hpuint gearResolutionZ = m_gearCircleCloud->getResolutionZ();
-   CircularSimulationResult* simResult = new CircularSimulationResult(m_resultAngleSlotCount, 0.0, m_gear->getFaceWidth(), 4); //replace 10 by gearResolutionZ
+   CircularSimulationResult* simResult = new CircularSimulationResult(m_resultAngleSlotCount, 0.0, m_gear->getFaceWidth(), gearResolutionZ);
 
 
 //   clock_t start, end;
@@ -85,9 +85,9 @@ CircularSimulationResult* WormGearGrind::calculateGrindingDepth(hpreal time) {
    for (hpuint posZSlot = 0; posZSlot < simResult->getResolutionZ(); posZSlot++) {
      for (hpuint angleSlot = 0; angleSlot < m_resultAngleSlotCount; angleSlot++) {
          hpreal radius = simResult->getItem(angleSlot, posZSlot);
-         if (radius != INFINITY) {
+//         if (radius != INFINITY) {
              std::cout << "angleSlot: " << angleSlot << ", posZSlot: " << posZSlot << ", radius: " << radius << std::endl;
-         }
+//         }
      }
    }
 
@@ -101,12 +101,14 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& gearPosZIdx, Cir
   // Retrieve outermost circle at current z position
   Circle circle = m_gearCircleCloud->computeOuterCircle(gearPosZIdx);
 
+  LoggingUtils::print(circle);
+
   std::list<CircleHitResult>* hitResults = new std::list<CircleHitResult>;
 
   // Transform circle from worm coordinates to gear coordinates
   Circle transformedCircle = transformCircle(circle, glm::inverse(wormModelMatrix) * gearModelMatrix);
 
-//  LoggingUtils::print(transformedCircle);
+  LoggingUtils::print(transformedCircle);
 
   // Find all intersections between circle and triangles
   m_kdTree->intersectAll(transformedCircle, hitResults);
@@ -174,12 +176,17 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 		hpreal resultRadius = simResult->getItem(point);
 		hpreal currentRadius = simResult->computeRadiusXY(point); // TODO: dont use currentradius
 		hpreal angle = simResult->computeAngle(point);
-		hpreal distance = currentRadius - resultRadius;
+//		hpreal distance = currentRadius - resultRadius;
+		hpreal distance = resultRadius;
+
 
 //			hpreal distance = resultRadius;
 //			if (resultRadius != INFINITY) {
 //				std::cout << resultRadius << " " << currentRadius << " " << distance << std::endl;
 //			}
+		hpuint angleSlot = simResult->computeAngleSlot(angle);
+		hpuint posZSlot = simResult->convertPosZToPosZIdx(point.z);
+
 		bool exists = resultRadius != INFINITY;
 //		std::cout << currentRadius << " " << angle << " -> " << exists << std::endl;
 //		std::cout << point.z << " " << angle << " -> " << exists << std::endl;
@@ -188,13 +195,25 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 		else if (distance < -m_maxDistance) distance = -m_maxDistance;
 		hpreal distanceRatio =  distance / m_maxDistance;
 
-//	    	std::cout << "ratio: " << distanceRatio  << std::endl;
+//		std::cout << point.x << ", " << point.y << " -> " << angle <<  std::endl;
 
-		if(distance >= 0) {
-			m_gearColor->at(i) = hpcolor(0.0, 0.5 * distanceRatio, 1.0 - distanceRatio, 1.0);
+//	    	std::cout << "ratio: " << distanceRatio  << std::endl;
+		if (!exists) {
+			m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
 		} else {
-			m_gearColor->at(i) = hpcolor(1.0 + distanceRatio, 0.5 * -distanceRatio, 0.0, 1.0);
+			m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);
 		}
+//		else if (distanceRatio >= 0) {
+//			m_gearColor->at(i) = hpcolor(0.0, 0.0, distanceRatio, 1.0);
+//		} else {
+//			m_gearColor->at(i) = hpcolor(-distanceRatio, 0.0, 0.0, 1.0);
+//		}
+
+//		if(distanceRatio >= 0) {
+//			m_gearColor->at(i) = hpcolor(0.0, 0.5 * distanceRatio, 1.0 - distanceRatio, 1.0);
+//		} else {
+//			m_gearColor->at(i) = hpcolor(1.0 + distanceRatio, 0.5 * (-distanceRatio), 0.0, 1.0);
+//		}
     }
 
     delete simResult;

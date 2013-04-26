@@ -5,23 +5,33 @@
 #include "happah/gui/forms/PlaneForm.h"
 
 PlaneForm::PlaneForm(GUIManager& guiManager, QWidget* parent)
-	: Form(parent), m_guiManager(guiManager) {
-	m_originInput = new VectorInput( "Origin", true, true, false, this );
+	: Form(parent), m_guiManager(guiManager)
+{
+	QVBoxLayout* layout = new QVBoxLayout();
+	this->setLayout(layout);
+	
+	m_originInput = new VectorInput( "Origin", false, true, false, this );
 	m_originInput->setValue( hpvec3(0.f, 0.f, 0.f) );
 	connect(m_originInput, SIGNAL(valueChanged()), this, SLOT(updatePlaneOrigin()));
+	layout->addWidget(m_originInput);
+
 	m_normalInput = new VectorInput( "Normal", true, false, true, this );
 	m_normalInput->setValue( hpvec3(0.f, 1.f, 0.f) );
 	connect(m_normalInput, SIGNAL(valueChanged()), this, SLOT(updatePlaneNormal()));
+	layout->addWidget(m_normalInput);
 
 	QPushButton* createButton  = new QPushButton("create plane");
 	connect(createButton, SIGNAL(clicked()), this, SLOT(createPlane()));
-
-	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(m_originInput);
-	layout->addWidget(m_normalInput);
 	layout->addWidget(createButton);
-	this->setLayout(layout);
-	
+
+	QPushButton* resetButton  = new QPushButton("reset");
+	connect(resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+	layout->addWidget(resetButton);
+
+	QWidget* empty = new QWidget();
+	empty->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Expanding);
+	layout->addWidget(empty);
+
 	m_plane = Plane_ptr(new Plane(m_originInput->getValue(), m_normalInput->getValue()));
 	m_planeInserted = false;
 }
@@ -42,6 +52,9 @@ Plane_ptr PlaneForm::getPlane() const {
 
 void PlaneForm::reset() {
 	m_plane = Plane_ptr(new Plane(m_originInput->getValue(), m_normalInput->getValue()));
+	m_originInput->setValue(hpvec3(0.f, 0.f, 0.f));
+	m_normalInput->setValue(hpvec3(0.f, 1.f, 0.f));
+
 	m_planeInserted = false;
 }
 

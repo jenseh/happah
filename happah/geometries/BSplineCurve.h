@@ -82,6 +82,7 @@ public:
 	bool isUniform() const;
 
 	void removeControlPoints();
+	void removeControlPoint( unsigned int index );
 	void resetKnotsToUniform();
 
 	void setClamped( bool clamped );

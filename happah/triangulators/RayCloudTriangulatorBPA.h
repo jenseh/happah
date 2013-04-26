@@ -9,8 +9,8 @@ public:
 	RayCloudTriangulatorBPA(hpreal radius);
 	~RayCloudTriangulatorBPA();
 
-	TriangleMesh* triangulate(RayCloud3D& rays);
-	TriangleMesh* triangulate(PointCloud2D& points, hpvec3& origin, hpvec3& normal);
+	TriangleMesh* triangulate(const RayCloud3D& rays);
+	TriangleMesh* triangulate(const PointCloud2D& points, const hpvec3& origin, const hpvec3& normal);
 
 private:
 	hpreal m_radius;

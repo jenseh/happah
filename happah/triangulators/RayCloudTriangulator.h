@@ -9,8 +9,8 @@ class RayCloudTriangulator {
 public:
 	virtual ~RayCloudTriangulator() {};
 
-	virtual TriangleMesh* triangulate(RayCloud3D& rays) = 0;
-	virtual TriangleMesh* triangulate(PointCloud2D& points, hpvec3& origin, hpvec3& normal) = 0;
+	virtual TriangleMesh* triangulate(const RayCloud3D& rays) = 0;
+	virtual TriangleMesh* triangulate(const PointCloud2D& points, const hpvec3& origin, const hpvec3& normal) = 0;
 
 };
 

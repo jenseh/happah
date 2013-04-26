@@ -176,8 +176,8 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 		hpreal resultRadius = simResult->getItem(point);
 		hpreal currentRadius = simResult->computeRadiusXY(point); // TODO: dont use currentradius
 		hpreal angle = simResult->computeAngle(point);
-//		hpreal distance = currentRadius - resultRadius;
-		hpreal distance = resultRadius;
+		hpreal distance = currentRadius - resultRadius;
+//		hpreal distance = resultRadius;
 
 
 //			hpreal distance = resultRadius;
@@ -203,10 +203,13 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 		} else {
 			m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);
 		}
-//		else if (distanceRatio >= 0) {
-//			m_gearColor->at(i) = hpcolor(0.0, 0.0, distanceRatio, 1.0);
+
+//		if (!exists) {
+//			m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
+//		} else if (distanceRatio >= 0) {
+//			m_gearColor->at(i) = hpcolor(0.0, 0.0, distanceRatio>=0, 1.0);
 //		} else {
-//			m_gearColor->at(i) = hpcolor(-distanceRatio, 0.0, 0.0, 1.0);
+//			m_gearColor->at(i) = hpcolor(distanceRatio<0, 0.0, 0.0, 1.0);
 //		}
 
 //		if(distanceRatio >= 0) {

@@ -33,7 +33,7 @@ bool CircularSimulationResult::addItem(hpvec3 point) {
 	hpuint posZSlot = convertPosZToPosZIdx(point.z);
 	hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
-	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << " -> " << angleSlot << " : " << posZSlot << std::endl;
+//	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << " -> " << angleSlot << " : " << posZSlot << std::endl;
 
 	assert(angleSlot < m_angleSteps);
 	assert(posZSlot < m_resolutionZ);
@@ -68,10 +68,12 @@ hpreal CircularSimulationResult::computeAngle(hpvec3 point) {
 	double x = point.x;
 	double y = point.y;
 
-	double length = sqrt(x * x);
-	double centerToPointX = x / length;
+	double length = sqrt(x * x + y * y);
 
-	double aCos = centerToPointX >= 0.99 ? 0.0 : centerToPointX <= -0.99 ? M_PI : acos(centerToPointX);
+	x /= length;
+	y /= length;
+
+	double aCos = x >= 1.0 ? 0.0 : x <= -1.0 ? M_PI : acos(x);
 	double angle = y >= 0.0 ? aCos : 2 * M_PI - aCos;
 
 	return angle;
@@ -88,7 +90,7 @@ hpuint CircularSimulationResult::computeAngleSlot(hpreal angle) {
 
 	if (result < 0){
 		return m_angleSteps - 1 + result;
-	} else if (result > (int) m_angleSteps) {
+	} else if (result >= m_angleSteps) {
 		return result - m_angleSteps;
 	} else if (result == m_angleSteps) {
 		return m_angleSteps - 1;

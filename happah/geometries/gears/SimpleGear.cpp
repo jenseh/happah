@@ -129,3 +129,14 @@ void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 		toothProfile[i] = point;
 	}
 }
+
+
+
+ZCircleCloud_ptr SimpleGear::toZCircleCloud(hpuint resolutionZ) {
+	hpreal maxRadius = m_toothProfile->getTipRadius();
+	hpreal startZ = 0.0;
+	hpreal endZ = getFaceWidth();
+
+	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ));
+	return result;
+}

@@ -25,7 +25,7 @@ public:
     /**
      * @brief m_gear The gear of the simulation.
      */
-	CylindricalGear_ptr m_gear;
+	SimpleGear_ptr m_gear;
     /**
      * @brief m_gearColor Vector with the color data of the gear.
      */
@@ -65,7 +65,7 @@ public:
      * @param toolMesh The triangle mesh mesh representing the tool.
      * @param toolTransformation The position/transformation of the tool.
      */
-	WormGearGrindResult(CylindricalGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
+	WormGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
 						Worm_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
 		m_gear(gear),
         m_gearColor(new std::vector<hpcolor>(*gearColor)),
@@ -81,7 +81,7 @@ public:
 class WormGearGrind : public Simulation
 {
 public:
-  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);
+//  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);
   WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh);
 
   ~WormGearGrind();
@@ -114,14 +114,16 @@ private:
 	/**
 	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
 	 */
-	static const int STEP_COUNT = 10;
+	static const int STEP_COUNT = 2;
 
 	Worm_ptr m_worm;
-	ZCircleCloud_ptr m_wormCircleCloud;
 	TriangleMesh_ptr m_wormMesh;
-	CylindricalGear_ptr m_gear;
+
+	SimpleGear_ptr m_gear;
 	vector<hpcolor>* m_gearColor;
 	TriangleMesh_ptr m_gearMesh;
+	ZCircleCloud_ptr m_gearCircleCloud;
+
 	Kinematic m_gearMovement;
 	Kinematic m_wormMovement;
 	KDTree* m_kdTree;

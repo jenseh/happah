@@ -103,8 +103,9 @@ void WormForm::setWorm(Worm_ptr worm) {
 }
 
 void WormForm::updateWorm() {
-	if(m_wormInserted)
+	if(m_wormInserted) {
 		m_guiManager.update(m_worm);
+	}
 }
 
 void WormForm::updateRanges() {

@@ -56,8 +56,8 @@ void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
 void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
 
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(150, 100));
-	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(30, 100);
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(150, 3));
+	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(10, 100);
 	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, simpleGear, involuteGear->getReferenceRadius(), gearMesh));
 
 	QThread* thread = new QThread();
@@ -334,7 +334,7 @@ void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
 	}
 }
 
-void DefaultGUIManager::insert(Worm_ptr worm,hpuint drawMode) {
+void DefaultGUIManager::insert(Worm_ptr worm, hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }

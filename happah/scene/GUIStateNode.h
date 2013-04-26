@@ -111,14 +111,14 @@ private:
 
 class BSplineCurveGUIStateNode : public GUIStateNode {
 public:
-	BSplineCurveGUIStateNode( BSplineCurve_ptr curve, BSplineCurveForm* bSplineCurveForm, BSplineCurveContextMenu* bSplineCurveContextMenu, string name);
+	BSplineCurveGUIStateNode( BSplineCurve2D_ptr curve, BSplineCurveForm* bSplineCurveForm, BSplineCurveContextMenu* bSplineCurveContextMenu, string name);
 	~BSplineCurveGUIStateNode();
 
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 private:
-	BSplineCurve_ptr m_curve;
+	BSplineCurve2D_ptr m_curve;
 	BSplineCurveContextMenu* m_bSplineCurveContextMenu;
 	BSplineCurveForm* m_bSplineCurveForm;
 };

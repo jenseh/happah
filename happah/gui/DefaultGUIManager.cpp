@@ -194,7 +194,7 @@ void DefaultGUIManager::generateWorm(InvoluteGear_ptr involuteGear) {
 }
 
 
-Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve_ptr bSplineCurve ) {
+Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve2D_ptr bSplineCurve ) {
 	Node_ptr parent = m_sceneManager->findContainingData(bSplineCurve)->getParent();
 	
 	PlaneNode_ptr planeNode = dynamic_pointer_cast<PlaneNode>(parent);
@@ -222,21 +222,21 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
+void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
-		doInsert1D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert1D<BSplineCurve<hpvec2>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 	if( drawMode & HP_POINT_CLOUD ) {
-		doInsert0D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert0D<BSplineCurve<hpvec2>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 }
 
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode) {
+void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode) {
 	ostringstream labelStream;
 	labelStream << name << " BSplineCurve";
 	const char* label = labelStream.str().c_str();
@@ -298,7 +298,7 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
 				involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
-void DefaultGUIManager::insert(Plane_ptr plane, BSplineCurve_ptr curve) {
+void DefaultGUIManager::insert(Plane_ptr plane, BSplineCurve2D_ptr curve) {
 	m_sceneManager->insert(plane, curve);
 }
 
@@ -347,26 +347,9 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 	return oss.str();
 }
 
-void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
-	/*
-	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
-	if(!guiStateNode) {
-		cerr << "GUI state node not found." << endl;
-		return;
-	}
-	// FIXME : old point cloud needs to be deleted
-	//m_sceneManager->removeContaining(bSplineCurve, guiStateNode->getPointCloud());
-
-	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
-	hpcolor color(0.0, 1.0, 0.0, 1.0);
-	//guiStateNode->setPointCloud( pointCloud );
-	m_sceneManager->insert(bSplineCurve, pointCloud, color);
-
-	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
-	m_sceneManager->insert(bSplineCurve, lineMesh, color);
-	*/
-	doUpdate0D<BSplineCurve<hpvec3>>(bSplineCurve);
-	doUpdate1D<BSplineCurve<hpvec3>>(bSplineCurve);
+void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve) {
+	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
+	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
@@ -386,6 +369,7 @@ void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 
 void DefaultGUIManager::update(Plane_ptr plane) {
 	doUpdate2D<Plane>(plane);
+	m_sceneManager->update(plane);
 }
 
 void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
@@ -408,6 +392,7 @@ void DefaultGUIManager::update(Worm_ptr worm) {
 void DefaultGUIManager::useForBSpline(Plane_ptr plane) {
 	m_toolPanel->getBSplineCurveForm()->reset();
 	m_toolPanel->getBSplineCurveForm()->setPlane(plane);
+	m_toolPanel->setForm(m_toolPanel->getBSplineCurveForm());
 }
 
 //TODO: This should be removed since it is discriminating other simulations that dont have a disc..

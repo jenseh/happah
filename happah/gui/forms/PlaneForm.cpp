@@ -6,10 +6,10 @@
 
 PlaneForm::PlaneForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent), m_guiManager(guiManager) {
-	m_originInput = new VectorInput( "Origin", true, true, this );
+	m_originInput = new VectorInput( "Origin", true, true, false, this );
 	m_originInput->setValue( hpvec3(0.f, 0.f, 0.f) );
 	connect(m_originInput, SIGNAL(valueChanged()), this, SLOT(updatePlaneOrigin()));
-	m_normalInput = new VectorInput( "Normal", true, false, this );
+	m_normalInput = new VectorInput( "Normal", true, false, true, this );
 	m_normalInput->setValue( hpvec3(0.f, 1.f, 0.f) );
 	connect(m_normalInput, SIGNAL(valueChanged()), this, SLOT(updatePlaneNormal()));
 

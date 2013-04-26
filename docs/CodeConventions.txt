@@ -1,5 +1,8 @@
 The following should be a minimum convention for how to write the code in Happah. All aspects listed here are still to be discussed:
 
+Indentation:
+- tabulators for code indentation
+
 Variables:
 - Constant variables are written in upper-case with underscores between each word.
 - All non-constant variables are written in camel-case.

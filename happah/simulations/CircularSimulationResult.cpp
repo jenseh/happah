@@ -35,7 +35,7 @@ void CircularSimulationResult::addItem(hpvec3 point) {
   hpuint posZSlot = convertPosZToPosZIdx(point.z);
   hpuint slot = posZSlot * m_angleSteps + angleSlot;
 
-//	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << "->" << posZSlot << std::endl;
+	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << "->" << posZSlot << std::endl;
 
   assert(angleSlot < m_angleSteps);
   assert(posZSlot < m_resolutionZ);

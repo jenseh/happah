@@ -59,8 +59,8 @@ void ToothProfileContextMenu::createMatingGear() {
 	}
 	hpuint counter = 0;
 	for(std::list< CurveWithName* >::iterator it = informationCurves->begin(), end = informationCurves->end(); it != end; ++it) {
-		BSplineCurve_ptr curve3d = BSplineCurve_ptr((*it)->getCurve()->to3dBSplineCurve()); //TODO: insert with 2D?
-		m_guiManager.insert(curve3d, (*it)->getName(), splineColors[counter], HP_LINE_MESH | HP_POINT_CLOUD);
+		BSplineCurve2D_ptr curve2d = BSplineCurve2D_ptr((*it)->getCurve()); //TODO: insert with 2D?
+		m_guiManager.insert(curve2d, (*it)->getName(), splineColors[counter], HP_LINE_MESH | HP_POINT_CLOUD);
 		// delete *it;
 		++counter;
 	}
@@ -68,14 +68,14 @@ void ToothProfileContextMenu::createMatingGear() {
 
 void ToothProfileContextMenu::createSimpleGear() {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(new SimpleGear(*m_toothProfile, 0.0f, 2.0f));
-	m_guiManager.insert(simpleGear, 0x00000001); //Attention please: ToothProfiles are connected!
+	m_guiManager.insert(simpleGear, HP_TRIANGLE_MESH ); //Attention please: ToothProfiles are connected!
 }
 
 void ToothProfileContextMenu::newBSplineCurve() {
-	BSplineCurve<hpvec3>* curve = new BSplineCurve<hpvec3>();
+	BSplineCurve<hpvec2>* curve = new BSplineCurve<hpvec2>();
 	m_toothProfile->getCurve(*curve);
-	BSplineCurve_ptr bSplineCurve = BSplineCurve_ptr(curve);
-	m_guiManager.insert(bSplineCurve, HP_LINE_MESH | HP_POINT_CLOUD);
+	BSplineCurve2D_ptr bSplineCurve = BSplineCurve2D_ptr(curve);
+	m_guiManager.insert(bSplineCurve, HP_LINE_MESH | HP_POINT_CLOUD );
 }
 
 void ToothProfileContextMenu::setToothProfile(ToothProfile_ptr toothProfile) {

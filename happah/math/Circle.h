@@ -53,30 +53,14 @@ struct Circle {
 	bool intersect(Triangle* triangle, std::list<CircleHitResult>* hitResults) {
 		hpvec3 t_normal = triangle->computeNormal();
 
-		//LoggingUtils::printVal("radius", m_radius);
-		//LoggingUtils::printVec("circle", m_center);
-
-
-
-
 		// Start with a plane-plane intersection
 
 		// Sanity check: If a normal vector is all 0, then abort
 		bool nullNormal = isNullVector(t_normal) || isNullVector(m_normal);
 		if (nullNormal) {
 		    std::cerr << "Error: One of the geometry's normals is a null vector!" << std::endl;
-		    //LoggingUtils::printVec("EtriangleA", triangle->vertices[0]);
-		    //LoggingUtils::printVec("EtriangleB", triangle->vertices[1]);
-		    //LoggingUtils::printVec("EtriangleC", triangle->vertices[2]);
-
-			 // std::cout << "m_normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
-			 // std::cout << "t_normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
-
 		    return false;
-		    //exit(1);
 		}
-		//LoggingUtils::printVec("t_normal", t_normal);
-		//LoggingUtils::printVec("m_normal", m_normal);
 
 		//1: Check collinearity of normal vectors
 		bool collinear = linearDependent(m_normal, t_normal);
@@ -91,7 +75,7 @@ struct Circle {
 
 			//2a: If planes are parallel, return false
 			if (!identical) {
-				// std::cout << "Error: Collinear | Planes are parallel!" << std::endl;
+				std::cout << "Error: Collinear | Planes are parallel!" << std::endl;
 				return false;
 			}
 
@@ -140,19 +124,12 @@ struct Circle {
 						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
 						return true;
 					} else {
-						// std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
+						std::cout << "Error: Collinear | Circle not inside triangle!" << std::endl;
 						return false;
 					}
 				}
 			}
 		} else {
-			// std::cout << "FtriangleA: " << triangle->vertices[0].x << ", " << triangle->vertices[0].y << ", " << triangle->vertices[0].z << std::endl;
-			// std::cout << "FtriangleB: " << triangle->vertices[1].x << ", " << triangle->vertices[1].y << ", " << triangle->vertices[1].z << std::endl;
-			// std::cout << "FtriangleC: " << triangle->vertices[2].x << ", " << triangle->vertices[2].y << ", " << triangle->vertices[2].z << std::endl;
-
-			// std::cout << "CCenter: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
-			// std::cout << "CNormal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
-
 			//2: Planes must collide in a common line
 			hpvec3 linePoint;
 			hpvec3 lineDirection;
@@ -161,76 +138,68 @@ struct Circle {
 			// Normalize lineDirection for distance comparisons
 			lineDirection = glm::normalize(lineDirection);
 
-			     // std::cout << "Intersect linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
-			     // std::cout << "Intersect lineDir: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
+			std::cout << "Intersect linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
+			std::cout << "Intersect lineDir: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
 
 			// Check whether this line hits our sphere
 			// Check whether distance is shorter than the radius
 			hpvec3 circleIntersectionA;
 			hpvec3 circleIntersectionB;
-			if (intersectPlanarLineCircle(m_center, m_radius, linePoint, lineDirection, circleIntersectionA, circleIntersectionB)) {
-
-
+			if (intersectPlanarLineCircle(linePoint, lineDirection, circleIntersectionA, circleIntersectionB)) {
 				// Since the line hits our sphere we only need to check whether it also hits the triangle
-				//TODO:
 				hpvec3 triangleIntersectionA;
 				hpvec3 triangleIntersectionB;
-				bool intersectsTriangle = intersectPlanarLineTriangle(linePoint, lineDirection, triangle,
-						triangleIntersectionA, triangleIntersectionB);
+				bool intersectsTriangle = intersectPlanarLineTriangle(linePoint, lineDirection, triangle, triangleIntersectionA, triangleIntersectionB);
 
-                                   // std::cout << "Intersect triangleA: " << triangleIntersectionA.x << ", " << triangleIntersectionA.y << ", " << triangleIntersectionA.z << std::endl;
-                                   // std::cout << "Intersect triangleB: " << triangleIntersectionB.x << ", " << triangleIntersectionB.y << ", " << triangleIntersectionB.z << std::endl;
+				std::cout << "Intersect triangleA: " << triangleIntersectionA.x << ", " << triangleIntersectionA.y << ", " << triangleIntersectionA.z << std::endl;
+				std::cout << "Intersect triangleB: " << triangleIntersectionB.x << ", " << triangleIntersectionB.y << ", " << triangleIntersectionB.z << std::endl;
 
 				if (intersectsTriangle) {
+					std::cout << "Intersect circleA: " << circleIntersectionA.x << ", " << circleIntersectionA.y << ", " << circleIntersectionA.z << std::endl;
+					std::cout << "Intersect circleB: " << circleIntersectionB.x << ", " << circleIntersectionB.y << ", " << circleIntersectionB.z << std::endl;
 
-
-				     // std::cout << "Intersect circleA: " << circleIntersectionA.x << ", " << circleIntersectionA.y << ", " << circleIntersectionA.z << std::endl;
-				     // std::cout << "Intersect circleB: " << circleIntersectionB.x << ", " << circleIntersectionB.y << ", " << circleIntersectionB.z << std::endl;
-
-
-				    hpreal distanceCA = computeDistanceOnLine(circleIntersectionA, linePoint, lineDirection);
-				    hpreal distanceCB = computeDistanceOnLine(circleIntersectionB, linePoint, lineDirection);
+					hpreal distanceCA = computeDistanceOnLine(circleIntersectionA, linePoint, lineDirection);
+					hpreal distanceCB = computeDistanceOnLine(circleIntersectionB, linePoint, lineDirection);
 				    hpreal distanceTA = computeDistanceOnLine(triangleIntersectionA, linePoint, lineDirection);
 				    hpreal distanceTB = computeDistanceOnLine(triangleIntersectionB, linePoint, lineDirection);
 
 				    hpvec3* minC;
 				    hpvec3* maxC;
 				    hpvec3* minT;
-				    hpvec3* maxT;
+					hpvec3* maxT;
 
-				    hpreal* minCv;
-				    hpreal* maxCv;
-				    hpreal* minTv;
-				    hpreal* maxTv;
+					hpreal* minCv;
+					hpreal* maxCv;
+					hpreal* minTv;
+					hpreal* maxTv;
 
-				    if (distanceCA < distanceCB) {
+					if (distanceCA < distanceCB) {
 						minCv = &distanceCA;
 						maxCv = &distanceCB;
 						minC = &circleIntersectionA;
 						maxC = &circleIntersectionB;
-				    } else {
+					} else {
 						minCv = &distanceCB;
 						maxCv = &distanceCA;
 						minC = &circleIntersectionB;
 						maxC = &circleIntersectionA;
-				    }
+					}
 
-				    if (distanceTA < distanceTB) {
+					if (distanceTA < distanceTB) {
 						minTv = &distanceTA;
 						maxTv = &distanceTB;
 						minT = &triangleIntersectionA;
 						maxT = &triangleIntersectionB;
-				    } else {
+					} else {
 						minTv = &distanceTB;
 						maxTv = &distanceTA;
 						minT = &triangleIntersectionB;
 						maxT = &triangleIntersectionA;
-				    }
+					}
 
-
-				    // Check whether the segments on the line overlap
-				    // We need a very low accuracy here due to the other dimensions
-				    if ((floatBigger(*maxTv, *minCv, 10e-2) && floatBigger(*maxCv, *minTv, 10e-2))) {
+					// Check whether the segments on the line overlap
+					// We need a very low accuracy here due to the other dimensions
+					if ((floatBigger(*maxTv, *minCv, 0.2) && floatBigger(*maxCv, *minTv, 0.2))) {
 						// std::cout << "Success: Overlapping!" << std::endl;
 
 						// Compute the 2 "inner" points along line
@@ -249,56 +218,25 @@ struct Circle {
 							maxVec = maxC;
 						}
 
-
-//						hpvec3 closestPointToCenter = glm::closestPointOnLine(m_center, *minVec, *maxVec); //TODO: why is this unused?
-//
-//						// In case min and max are equal, we would get tripple NAN
-//						if (!isValidVector(closestPointToCenter)) {
-//							closestPointToCenter = *minVec;
-//						}
-
-//						hpreal circleIntersectionDist = &maxCv-&minCv;
-//						// std::cout << "circle intersecting on: " << circleIntersectionDist << std::endl;
-//
-//						hpreal triangleIntersectionDist = &maxTv-&minTv;
-//						// std::cout << "triangle intersecting on: " << triangleIntersectionDist << std::endl;
-//
-//						hpreal resultIntersectionDist = glm::distance(*minVec, *maxVec);
-//						// std::cout << "result intersecting on: " << resultIntersectionDist << std::endl;
-//
-//						assert (resultIntersectionDist <= triangleIntersectionDist && resultIntersectionDist <= circleIntersectionDist);
-
 						CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec, triangle);
 						hitResults->push_back(tempHitResult);
-//						 // std::cout << "minVec: " << minVec->x << ", " << minVec->y << ", " << minVec->z << std::endl;
-//						 // std::cout << "maxVec: " << maxVec->x << ", " << maxVec->y << ", " << maxVec->z << std::endl;
-//						 // std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
-//						 // std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
-						// std::cout << "Success: Intersect inside: " /*<< closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z */ << std::endl;
 						return true;
-					}
-					else {
-//						 // std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
-						 // std::cout << "Error: No overlap!" << std::endl;
+					} else {
+						std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
+						std::cout << "Error: No overlap!" << std::endl;
 						return false;
 					}
 				} else {
-					     // std::cout << "Error: No intersection with triangle!" << std::endl;
+					std::cout << "Error: No intersection with triangle!" << std::endl;
 					return false;
 				}
-
 			} else {
-				// Since the line does not even hit the sphere we can quit directly
-				// std::cout << "linePoint: " << linePoint.x << ", " << linePoint.y << ", " << linePoint.z << std::endl;
-				// std::cout << "lineDirection: " << lineDirection.x << ", " << lineDirection.y << ", " << lineDirection.z << std::endl;
-
-				// std::cout << "Error: Exiting due to: Line doesn't hit circle!" << std::endl;
+				std::cout << "Error: Exiting due to: Line doesn't hit circle!" << std::endl;
 				return false;
 			}
 		}
 
-		// std::cout << "Error: Nothing happened!" << std::endl;
-		assert(1 == 1);
+		std::cout << "Error: Nothing happened!" << std::endl;
 		return false;
 	}
 
@@ -309,13 +247,13 @@ struct Circle {
 //	   hpvec3 difference = distancePoint - linePoint;
 //	   return glm::length(difference);
 
-	   if (!floatEquals(lineDirection.x, 0.0)) {
-	       return (distancePoint.x - linePoint.x) / lineDirection.x;
-	   } else if (!floatEquals(lineDirection.y, 0.0)) {
-	       return (distancePoint.y - linePoint.y) / lineDirection.y;
-	   } else {
-	      return (distancePoint.z - linePoint.z) / lineDirection.z;
-	  }
+		if (!floatEquals(lineDirection.x, 0.0)) {
+			return (distancePoint.x - linePoint.x) / lineDirection.x;
+		} else if (!floatEquals(lineDirection.y, 0.0)) {
+			return (distancePoint.y - linePoint.y) / lineDirection.y;
+		} else {
+			return (distancePoint.z - linePoint.z) / lineDirection.z;
+		}
 	}
 
 	// Compute max and min per 1d segment and check if they overlap
@@ -343,21 +281,21 @@ struct Circle {
 	}
 
 	// Intersect a line with a circle in a planar setup
-	bool inline intersectPlanarLineCircle(hpvec3& circleCenter, hpreal circleRadius, hpvec3& linePoint,
+	bool inline intersectPlanarLineCircle(hpvec3& linePoint,
 			hpvec3& lineDirection, hpvec3& intersectionA, hpvec3& intersectionB) {
 		//TODO: fix this by implementing a function for real lines (not segments)
 		hpreal highFactor = 10e3;
-		hpvec3 closestPoint = glm::closestPointOnLine(circleCenter, linePoint - lineDirection * highFactor, linePoint + lineDirection * highFactor);
+		hpvec3 closestPoint = glm::closestPointOnLine(m_center, linePoint - lineDirection * highFactor, linePoint + lineDirection * highFactor);
 
+		hpreal dist = glm::distance(closestPoint, m_center);
 
-		// std::cout << "closestPoint: " << closestPoint.x << ", " << closestPoint.y << ", " << closestPoint.z << std::endl;
-
-		hpreal dist = glm::distance(closestPoint, circleCenter);
-		if (floatSmaller(dist, circleRadius)) {
+		 std::cout << "closestPoint: " << closestPoint.x << ", " << closestPoint.y << ", " << closestPoint.z << std::endl;
+		 std::cout << "dist: " << dist << ", radius: " << m_radius << std::endl;
+		if (floatSmaller(dist, m_radius, 0.2)) {
 		    // Now we compute the intersection points
 		    // This is basically a pythagoras because the line is orthogonal to the center-closestPoint line
 		    // and the closestPoint lies in the middle of intersectionA and intersectionB
-		    hpvec3 replacement = glm::normalize(lineDirection) * glm::sqrt(circleRadius * circleRadius - dist * dist);
+		    hpvec3 replacement = glm::normalize(lineDirection) * glm::sqrt(m_radius * m_radius - dist * dist);
 		    intersectionA = closestPoint + replacement;
 		    intersectionB = closestPoint - replacement;
 
@@ -388,87 +326,64 @@ struct Circle {
 		if (pSS12) pSSCount++;
 		if (pSS02) pSSCount++;
 
-		 // std::cout << "pSSCount: " << pSSCount << std::endl;
+		//Should be =2
+		  std::cout << "pSSCount: " << pSSCount << std::endl;
 
 //		if (pSSCount == 3) { //TODO: reflect about this
 //		    return false;
 //		}
 
+		hpvec3 p01 = p1 - p0;
+		hpvec3 p02 = p2 - p0;
+		hpvec3 p12 = p2 - p1;
 
 		if (!pSS01) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p0, p1 - p0);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p0, p2 - p0);
-		  } else if (!pSS12) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, p0 - p1);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p1, p2 - p1);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p02);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p12);
 		  } else if (!pSS02) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p2, p0 - p2);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, p1 - p2);
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, lineDirection, p01);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p12);
+		  } else if (!pSS12) {
+		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, lineDirection, p01);
+		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p02);
 		  }
 
 		  return true;
 	}
 
-	// This method computes the one and only one intersection point in XY plane (or parallel) of two lines when we know that it must exist
-	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionB) {
-		hpreal t = (linePointA.z - linePointB.z) / lineDirectionB.z;
+	// This method computes the one and only one intersection point of two lines when we know that it must exist
+	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionA, hpvec3 lineDirectionB) {
+		hpreal t;
+		if (!floatEquals(lineDirectionB.x, 0.0)) {
+			t = (linePointA.x - linePointB.x) / lineDirectionB.x;
+		} else if (!floatEquals(lineDirectionB.y, 0.0)) {
+			t = (linePointA.y - linePointB.y) / lineDirectionB.y;
+		} else {
+			t = (linePointA.z - linePointB.z) / lineDirectionB.z;
+		}
 		return linePointB + t * lineDirectionB;
 	}
 
 	// this method intersects two non axis aligned planes
 	void inline intersectPlanes(hpvec3& t_normal, hpvec3& t_vertex, hpvec3& m_normal, hpvec3& m_vertex,
 			hpvec3& linePoint, hpvec3& lineDirection) {
-//		// This was solved using paper and pen by setting the planes to be equal
-//
-//		// Since there are 6 different combinations we setup indices to avoid dividing by 0
-//		int indexNNotNull = !floatEquals(t_normal.x, 0.0) ? 0 : 1;
-//
-//		int indexOther = 0 != indexNNotNull ? 0 : 1;
-//
-//
-//		// Determine plane parameters for triangle plane (n0*x0 + n1*x1 + n2*x2 =  nd)
-//		hpreal n0 = t_normal[indexNNotNull];
-//		hpreal n1 = t_normal[indexOther];
-//		hpreal n2 = t_normal[2];
-//		hpreal nd = n0 * t_vertex[indexNNotNull] + n1 * t_vertex[indexOther] + n2 * t_vertex[2];
-//
-//		// Determine plane parameters for circle plane (m0*x0 + m1*x1 + m2*x2 =  md)
-//		hpreal m0 = m_normal[indexNNotNull];
-//		hpreal m1 = m_normal[indexOther];
-//		hpreal m2 = m_normal[2];
-//		hpreal md = m0 * m_vertex[indexNNotNull] + m1 * m_vertex[indexOther] + m2 * m_vertex[2];
 
-//		// Some temporarily used values
-//		hpreal t = nd - n2 * md;
-//
-//		// This dimension was chosen as variable
-//		// Depends on nothing
-//		linePoint[2] = m_vertex[2]; // Simplification for XY planes
-//		lineDirection[2] = 0.0;
-//
-//		// Insert values for the other dimensions
-//		// Depends on n1, n2
-//		linePoint[indexOther] = 0.0;
-//		lineDirection[indexOther] = 1.0;
-//
-//		// Depends on n1, n2
-//		linePoint[indexNNotNull] = t / n0;
-//		lineDirection[indexNNotNull] = -n1 / n0;
+		hpvec3 h1 = m_vertex;
+		hpvec3 h2 = t_vertex;
+		hpvec3 n1 = m_normal;
+		hpvec3 n2 = t_normal;
 
+		double dotProduct = glm::dot(n1, n2);
+		hpvec3 c1 = (h1 - h2 * dotProduct) / (1.0f - dotProduct * dotProduct);
+		hpvec3 c2 = (h2 - h1 * dotProduct) / (1.0f - dotProduct * dotProduct);
+
+		linePoint = c1 * n1 + c2 * n2;
 		lineDirection = glm::cross(m_normal, t_normal);
-		hpvec3& point = lineDirection; //get a point on the cross product
-		hpreal m_d = computePointPlaneDistance(m_normal, m_vertex, point);
-		hpreal t_d = computePointPlaneDistance(t_normal, t_vertex, point);
 
-		linePoint = point - (m_d * m_normal);// - (t_d * t_normal);
-
-
-		// std::cout << "m_d: " << m_d << std::endl;
-		// std::cout << "t_d: " << t_d << std::endl;
-		// std::cout << "Triangle vertex: " << t_vertex.x << ", " << t_vertex.y << ", " << t_vertex.z << std::endl;
-		// std::cout << "Triangle normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
-		// std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
-		// std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
+		 std::cout << "Triangle vertex: " << t_vertex.x << ", " << t_vertex.y << ", " << t_vertex.z << std::endl;
+		 std::cout << "Triangle normal: " << t_normal.x << ", " << t_normal.y << ", " << t_normal.z << std::endl;
+		 std::cout << "Circle center: " << m_center.x << ", " << m_center.y << ", " << m_center.z << std::endl;
+		 std::cout << "Circle normal: " << m_normal.x << ", " << m_normal.y << ", " << m_normal.z << std::endl;
 	}
 
 
@@ -547,6 +462,12 @@ struct Circle {
 	// A tolerance is added that makes overlapping more likely
 	bool inline floatSmaller(hpreal a, hpreal b) {
 		const hpreal epsilon = 10e-06;
+		return floatSmaller(a, b, epsilon);
+	}
+
+	// Check whether float a is smaller than float b
+	// A tolerance is added that makes overlapping more likely
+	bool inline floatSmaller(hpreal a, hpreal b, hpreal epsilon) {
 		return a < b + epsilon;
 	}
 

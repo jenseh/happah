@@ -36,6 +36,7 @@ public:
 	SimpleGearContextMenu* getSimpleGearContextMenu();
 	SimulationContextMenu* getSimulationContextMenu();
 	ToothProfileContextMenu* getToothProfileContextMenu();
+	TriangleMeshContextMenu* getTriangleMeshContextMenu();
 
 protected:
 	void keyPressEvent(QKeyEvent* event);
@@ -44,22 +45,21 @@ private:
 	static const int DEFAULT_WINDOW_HEIGHT = 800;
 	static const int DEFAULT_WINDOW_WIDTH = 1200;
 
-	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
-	ToolPanel* m_toolPanel;
-
 	BSplineCurveContextMenu* m_bSplineCurveContextMenu;
 	ContextMenu* m_defaultContextMenu;
 	DiscContextMenu* m_discContextMenu;
+	GUIManager& m_guiManager;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;
 	PlaneContextMenu* m_planeContextMenu;
+	SceneGraphExplorerPanel* m_sceneGraphExplorerPanel;
 	SimpleGearContextMenu* m_simpleGearContextMenu;
 	SimulationContextMenu* m_simulationContextMenu;
+	ToolPanel* m_toolPanel;
 	ToothProfileContextMenu* m_toothProfileContextMenu;
-
-	GUIManager* m_guiManager;
+	TriangleMeshContextMenu* m_triangleMeshContextMenu;
 
 private slots:
-	void importFile();
+	void handleImportActionTriggeredEvent();
 
 };
 

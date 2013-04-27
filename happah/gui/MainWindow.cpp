@@ -43,6 +43,7 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
 	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
 	m_toothProfileContextMenu = new ToothProfileContextMenu(guiManager, this);
+	m_triangleMeshContextMenu = new TriangleMeshContextMenu(guiManager, this);
 
 	setCentralWidget(centralWidget);
 }
@@ -89,6 +90,10 @@ ToothProfileContextMenu* MainWindow::getToothProfileContextMenu() {
 	return m_toothProfileContextMenu;
 }
 
+TriangleMeshContextMenu* MainWindow::getTriangleMeshContextMenu() {
+	return m_triangleMeshContextMenu;
+}
+
 void MainWindow::importFile() {
 	QString fileName("");
 	QString selectedFilter("");
@@ -113,7 +118,7 @@ void MainWindow::importFile() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {
-	if (event->key() == Qt::Key_Escape)
+	if(event->key() == Qt::Key_Escape)
 		qApp->quit();
 	QMainWindow::keyPressEvent(event);
 }

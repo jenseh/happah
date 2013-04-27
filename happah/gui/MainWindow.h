@@ -36,6 +36,7 @@ public:
 	SimpleGearContextMenu* getSimpleGearContextMenu();
 	SimulationContextMenu* getSimulationContextMenu();
 	ToothProfileContextMenu* getToothProfileContextMenu();
+	TriangleMeshContextMenu* getTriangleMeshContextMenu();
 
 protected:
 	void keyPressEvent(QKeyEvent* event);
@@ -55,6 +56,7 @@ private:
 	SimpleGearContextMenu* m_simpleGearContextMenu;
 	SimulationContextMenu* m_simulationContextMenu;
 	ToothProfileContextMenu* m_toothProfileContextMenu;
+	TriangleMeshContextMenu* m_triangleMeshContextMenu;
 
 	GUIManager* m_guiManager;
 

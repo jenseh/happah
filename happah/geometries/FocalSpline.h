@@ -35,17 +35,21 @@ public:
 private:
 
     void   generateNewControlPoints();
-    void   adjustControlPoints(int bezierCurveIndex,int currentIndex);
+    void   adjustControlPoints(int bezierCurveIndex,int currentIndex,int direction = 0);
     int    calculateFocalBezierCurveIndexFromPointIndex(int pointIndex);
     int    calculatePointIndexFromBezierIndex(int bezierIndex, int pointIndex);
     void generateFocalSpline(int i);
+    void generateLaneRiesenfeld(int n,int m);
+    vector<hpvec3>* duplicatePointsOfPolygon(vector<hpvec3>*points);
+    vector<hpvec3>* findMidPointsOfPolygon(vector<hpvec3>*points);
+    hpvec3 findMidPointOf(hpvec3 point1, hpvec3 point2);
     vector<FocalBezierCurve*> m_focalBezierCurves;
 	vector<vector<hpvec3>*>* m_controlPoints;
 	vector<hpvec3>* m_generatedSpline;
 	hpvec3 m_center;
 	hpreal m_phi;
 	hpreal m_phiComplete;
-	hpreal m_fraction;
+	bool   m_doLaneRiesenfeld;
 	int    m_detail;
 
 };

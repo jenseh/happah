@@ -56,4 +56,5 @@ hpvec3 calculate2DLineIntersection(hpvec3 a1,hpvec3 a2, hpvec3 b1, hpvec3 b2){
 
 
 
+
 }

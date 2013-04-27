@@ -39,10 +39,11 @@ FocalSplineForm::~FocalSplineForm() {
 }
 
 void FocalSplineForm::createFocalSpline(){
-
+		m_currentPointIndex=-1;
 		m_focalSpline =  FocalSpline_ptr(new FocalSpline());
 		m_focalSpline->init(0);
 		m_guiManager.insert(m_focalSpline,HP_LINE_MESH|HP_POINT_CLOUD);
+		cout << " Creating Spline CAME HERE !!" << endl;
 		m_focalSpline->addControlPoint(m_currentPointIndex);
 		for(int i = 0 ; i < m_degreeSpinBox->getValue();i++){
 			m_focalSpline->addControlPoint(m_currentPointIndex);

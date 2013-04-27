@@ -9,16 +9,15 @@
 #include "happah/math/Circle.h"
 #include "happah/kdtree/KDTreeInnerNode.h"
 #include "happah/kdtree/BBox.h"
-#include "happah/kdtree/BSphere.h"
 
 
 class KDTree
 {
 public:
-  KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox = 1000);
+  KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox = 50);
   ~KDTree();
 
-  bool intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults);
+  bool intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);
   hpuint countTriangles();
 

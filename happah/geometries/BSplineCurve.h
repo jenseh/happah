@@ -8,17 +8,18 @@
 #include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
+#include "happah/math/Ray.h"
 
 template <class T>
 class BSplineCurve {
 protected:
-	std::vector<T>	m_controlPoints;
 	bool		m_clampedEnds;
 	bool		m_clamped;
+	std::vector<T>	m_controlPoints;
 	int		m_degree;
+	std::vector<hpreal>	m_knots;
 	std::vector<T>	m_normalizedPoints;
-	std::vector<float>	m_normalizedKnots;
-	std::vector<float>	m_knots;
+	std::vector<hpreal>	m_normalizedKnots;
 	bool		m_periodic;
 	bool		m_uniformKnots;
 	bool		m_uniform;
@@ -26,8 +27,8 @@ protected:
 
 public:
 	BSplineCurve();
-	BSplineCurve(const BSplineCurve& other);
-	BSplineCurve( const std::vector<hpvec2>& controlPoints, const std::vector<hpreal>& knots );
+	BSplineCurve( const BSplineCurve& other );
+	BSplineCurve( const std::vector<T>& controlPoints, const std::vector<hpreal>& knots );
 	~BSplineCurve();
 
 	void addControlPoint( T newPoint );
@@ -41,43 +42,47 @@ public:
 	  * 	If the parameter is negative, it will be set to zero.
 	  * @see getUniform(), setUniform( bool uniform )
 	  */
-	void addControlPoint( T newPoint, float distanceFromLast );
+	void addControlPoint( T newPoint, hpreal distanceFromLast );
 
 private:
 	void calculateNormalization();
 	int findSpan( hpreal t ) const;
 	int findSpan( hpreal t, std::vector<hpreal>& knots) const;
 
-	std::vector<hpvec3> knotRefinement( hpreal minDist );
-	void refine(
+	std::vector<T> knotRefinement( hpreal minDist );
+	void refine (
 		std::vector<hpreal>& knots,
-		std::vector<hpvec3>& points,
+		std::vector<T>& points,
 		std::vector<hpreal>& newKnots
-	);
+	) const;
 
 public:
 	bool check( bool debugOutput ) const;
 
-	virtual void getBoundingBox( hpvec2* min, hpvec2* max ) const;
+	void getBoundingBox( hpvec2* min, hpvec2* max ) const;
 	bool getClamped() const;
 	T getControlPoint( unsigned int index ) const;
 	std::vector<T> getControlPoints() const;
 	std::vector<hpreal> getKnots() const;
 	int getDegree() const;
+	void getIntersectionPointsWithRay( const Ray& ray, std::vector<T>& intersectionPoints ) const;
+	hpuint getMultiplicityOfKnotValue( hpreal knotValue ) const;
+	hpuint getMultiplicity( hpuint knotIndex ) const;
 	unsigned int getNumberOfControlPoints() const;
-	void getParameterRange( float& t_low, float& t_high ) const;
+	void getParameterRange( hpreal& t_low, hpreal& t_high ) const;
 	bool getPeriodic() const;
 	bool getUniform() const;
 	T getDerivativeAt( hpreal t ) const;
 	T getValueAt( hpreal t ) const;
 	void interpolateControlPoints();
-	void interpolatePoints( std::vector<hpvec2>& points );
+	// void interpolatePoints( std::vector<hpvec2>& points );
 	void interpolatePoints( std::vector<T>& points );
 	bool isClamped() const;
 	bool isPeriodic() const;
 	bool isUniform() const;
 
 	void removeControlPoints();
+	void removeControlPoint( unsigned int index );
 	void resetKnotsToUniform();
 
 	void setClamped( bool clamped );
@@ -88,11 +93,23 @@ public:
 	void setUniform( bool uniform );
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
+	BSplineCurve<hpvec3>* to3dBSplineCurve() const;
+	BSplineCurve<hpvec2>* to2dBSplineCurve() const;
 
+
+	// TODO: methods and things below here are only here for short testing time!
+	// => remove them!
+	// void drawAdditionalPoints(const std::vector<hpvec3>& additionalPoints);
+	// std::vector<hpvec3> m_furtherDrawPoints;
+	// void drawArray(const std::vector<hpvec3>& points) const;
+	// void drawArray(const std::vector<hpvec2>& points) const;
+	// void drawArray(const std::vector<hpreal>& values) const;
+	// void addAdditionalCurve(const BSplineCurve& bSplineCurve);
+	// std::vector<BSplineCurve*> m_additionalCurves;
 
 };
 
 typedef std::shared_ptr<BSplineCurve<hpvec3>> BSplineCurve_ptr;
+typedef std::shared_ptr<BSplineCurve<hpvec2>> BSplineCurve2D_ptr;
 
-#include "happah/geometries/BSplineCurve.cpp"
 #endif // BSPLINECURVE_H

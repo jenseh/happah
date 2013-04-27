@@ -45,6 +45,7 @@ private:
 	void setZoom(float zoom);
 
 	QTimer *m_timer;
+	ViewportListener& m_viewportListener;
 	DrawManager& m_drawManager;
 
 	bool m_draggingActive;
@@ -52,7 +53,6 @@ private:
 	hpmat4x4 m_projectionMatrix;
 	hpvec3 m_camera, m_center, m_up;
 	QPoint m_mousePos;
-	ViewportListener& m_viewportListener;
 	hpreal m_theta, m_phi;
 
 	const hpreal DISTANCE_TO_CENTER;

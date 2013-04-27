@@ -1,6 +1,9 @@
 #ifndef TOOTHPROFILEFORM_H
 #define TOOTHPROFILEFORM_H
 
+#include <QPushButton>
+
+#include "happah/geometries/gears/MatingGearConstructor.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/forms/Form.h"
@@ -22,14 +25,23 @@ public:
 	void setToothProfile(ToothProfile_ptr toothProfile);
 
 private:
+	void constructMatingGear();
+
 	int m_currentPointIndex;
 	GUIManager& m_guiManager;
 	Plane_ptr m_plane;
 	ToothProfile_ptr m_toothProfile;
 
+	std::vector<hpcolor>* m_splineColors;
+	std::list< MatingGearInformationPart* >* m_informationCurves;
+	QPushButton* m_matingStepButton;
+	hpuint m_stepCounter;
+	std::list< MatingGearInformationPart* >::iterator m_stepIterator;
+	hpcolor m_errorColor;
+
 private slots:
 	void toSimpleGear();
-	void showMatingGear();
+	void createMatingGear();
 	void showNextMatingStep();
 
 signals:

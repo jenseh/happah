@@ -89,13 +89,14 @@ public:
      */
     ~DiscGearGrind();
 
+
     /**
      * @brief getSimulationResult returns the simulation result at a certain time.
      *        There are only discrete number of time step precalculated, so the latest result before time is returned.
      * @param time The time of the simulation result ( time has to be in the interval [0,1] ).
      * @return The simulation result with all the information needed to display the simulation at the given time.
      */
-    DiscGearGrindResult getSimulationResult(double time);
+    DiscGearGrindResult getSimulationResult(hpreal time);
     /**
      * @brief runSimulation precalculates the STEP_COUNT simulation steps and stores them in private member m_precalcResults.
      */
@@ -105,7 +106,7 @@ private:
     /**
      * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
      */
-	static const int STEP_COUNT = 5;
+	static const int STEP_COUNT = 1;
 
     SurfaceOfRevolution_ptr m_disc;
     TriangleMesh_ptr m_discMesh;

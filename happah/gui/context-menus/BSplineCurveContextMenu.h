@@ -11,11 +11,11 @@ public:
 	BSplineCurveContextMenu(GUIManager& guiManager, QWidget* parent);
 	~BSplineCurveContextMenu();
 
-	void setBSplineCurve(BSplineCurve_ptr bSplineCurve);
+	void setBSplineCurve(BSplineCurve2D_ptr bSplineCurve);
 
 private:
 	GUIManager& m_guiManager;
-	BSplineCurve_ptr m_curve;
+	BSplineCurve2D_ptr m_curve;
 
 private slots:
 	void createGearToothOfCurve();

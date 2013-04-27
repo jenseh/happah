@@ -22,7 +22,7 @@ SceneManager::~SceneManager() {}
 
 template<class G, class N>
 void SceneManager::doInsert(shared_ptr<G> geometry) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 	if(!node){
 		shared_ptr<N> geometryNode = shared_ptr<N>(new N(geometry));
 		insertChild( geometryNode );
@@ -59,7 +59,7 @@ void SceneManager::doInsert(shared_ptr<G1> geometry1, shared_ptr<G2> geometry2) 
 
 template<class G, class N, class S>
 void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
-	Node_ptr node = findChildContainingData(data);
+	Node_ptr node = findContainingData(data);
 
 	Node_ptr root = guiStateNode;
 	shared_ptr<N> dataNode;
@@ -82,7 +82,7 @@ void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 
 template<class G, class N>
 TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
 	if(node) {
@@ -115,7 +115,7 @@ TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, T
 
 template<class G, class N>
 TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 		Node_ptr root;
 		shared_ptr<N> geometryNode;
@@ -149,7 +149,7 @@ TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, T
 
 template<class G, class N>
 TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
@@ -182,7 +182,7 @@ TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, T
 }
 template<class G, class N>
 LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
@@ -216,7 +216,7 @@ LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineM
 
 template<class G, class N>
 LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 		Node_ptr root;
 		shared_ptr<N> geometryNode;
@@ -250,7 +250,7 @@ LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineM
 
 template<class G, class N>
 LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation) {
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
@@ -285,7 +285,7 @@ LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineM
 
 template<class G, class N>
 PointCloudRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color, RigidAffineTransformation& transformation){
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
@@ -320,7 +320,7 @@ PointCloudRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, Poi
 template<class G, class N>
 
 PointCloudRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, PointCloud_ptr pointCloud, hpcolor& color){
-	Node_ptr node = findChildContainingData(geometry);
+	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
@@ -360,17 +360,20 @@ void SceneManager::doInsertSimulation(shared_ptr<S> simulation, shared_ptr<G> gu
 	triggerSubtreeInsertedEvent(simulationNode);
 }
 
-void SceneManager::insert(BSplineCurve_ptr curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
-	doInsert<BSplineCurve<hpvec3>, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
+template <class T> void SceneManager::insert(shared_ptr<BSplineCurve<T>> curve, BSplineCurveGUIStateNode_ptr guiStateNode) {
+	doInsert<BSplineCurve<T>, BSplineCurveNode, BSplineCurveGUIStateNode>(curve, guiStateNode);
 }
+template void SceneManager::insert(shared_ptr<BSplineCurve<hpvec2>> curve, BSplineCurveGUIStateNode_ptr guiStateNode);
 
-PointCloudRenderStateNode_ptr SceneManager::insert(BSplineCurve_ptr curve, PointCloud_ptr pointCloud, hpcolor& color) {
-	return doInsert<BSplineCurve<hpvec3>, BSplineCurveNode>(curve, pointCloud, color);
+template <class T> PointCloudRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<T>> curve, PointCloud_ptr pointCloud, hpcolor& color) {
+	return doInsert<BSplineCurve<T>, BSplineCurveNode>(curve, pointCloud, color);
 }
+template PointCloudRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<hpvec2>> curve, PointCloud_ptr pointCloud, hpcolor& color);
 
-LineMeshRenderStateNode_ptr SceneManager::insert(BSplineCurve_ptr curve, LineMesh_ptr lineMesh, hpcolor& color) {
-	return doInsert<BSplineCurve<hpvec3>, BSplineCurveNode>(curve, lineMesh, color);
+template <class T> LineMeshRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<T>> curve, LineMesh_ptr lineMesh, hpcolor& color) {
+	return doInsert<BSplineCurve<T>, BSplineCurveNode>(curve, lineMesh, color);
 }
+template LineMeshRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<hpvec2>> curve, LineMesh_ptr lineMesh, hpcolor& color);
 
 void SceneManager::insert(FocalSpline_ptr focalSpline, FocalSplineGUIStateNode_ptr guiStateNode) {
 	doInsert<FocalSpline, FocalSplineNode, FocalSplineGUIStateNode>(focalSpline, guiStateNode);
@@ -401,9 +404,10 @@ void SceneManager::insert(Plane_ptr plane) {
 	doInsert<Plane, PlaneNode>(plane);
 }
 
-void SceneManager::insert(Plane_ptr plane, BSplineCurve_ptr curve) {
-	doInsert<Plane, PlaneNode, BSplineCurve<hpvec3>, BSplineCurveNode>(plane, curve);
+template <class T> void SceneManager::insert(Plane_ptr plane, shared_ptr<BSplineCurve<T>> curve) {
+	doInsert<Plane, PlaneNode, BSplineCurve<T>, BSplineCurveNode>(plane, curve);
 }
+template void SceneManager::insert(Plane_ptr plane, shared_ptr<BSplineCurve<hpvec2>> curve);
 
 void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNode) {
 	doInsert<Plane, PlaneNode, PlaneGUIStateNode>(plane, planeGUIStateNode);
@@ -457,6 +461,34 @@ LineMeshRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, 
 }
 PointCloudRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, PointCloud_ptr pointCloud, hpcolor& color) {
 	return doInsert<ToothProfile, ToothProfileNode>(toothProfile, pointCloud, color);
+}
+
+void SceneManager::insert(TriangleMesh_ptr triangleMesh, TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode) {
+	doInsert<TriangleMesh, TriangleMeshNode, TriangleMeshGUIStateNode>(triangleMesh, triangleMeshGUIStateNode);
+}
+
+TriangleMeshRenderStateNode_ptr SceneManager::insert(TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	Node_ptr node = findContainingData(triangleMesh);
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode;
+	if(node) {
+		TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+		TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
+		if(triangleMeshRenderStateNode) {
+			triangleMeshRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(triangleMeshRenderStateNode);
+		} else {
+			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+			triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+			triggerSubtreeInsertedEvent(triangleMeshRenderStateNode);
+		}
+	} else {
+		TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
+		TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+		triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+		insertChild(triangleMeshNode);
+		triggerSubtreeInsertedEvent(triangleMeshNode);
+	}
+	return triangleMeshRenderStateNode;
 }
 
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {
@@ -536,6 +568,14 @@ void SceneManager::triggerSubtreeUpdatedEvent(Node_ptr root) {
 void SceneManager::triggerSubtreesUpdatedEvent(vector<Node_ptr>& roots) {
 	for(list<SceneListener*>::iterator i = m_listeners.begin(), end = m_listeners.end(); i != end; ++i)
 		(*i)->handleSubtreesUpdatedEvent(roots);
+}
+
+void SceneManager::update( Plane_ptr plane ) {
+	Node_ptr node = findContainingData(plane);
+	if( node ) {
+		PlaneNode_ptr planeNode = static_pointer_cast<PlaneNode>( node );
+		planeNode->planeChanged();
+	}
 }
 
 void SceneManager::unregisterSceneListener(SceneListener* sceneListener) {

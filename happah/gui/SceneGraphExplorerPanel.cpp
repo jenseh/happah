@@ -80,10 +80,10 @@ void SceneGraphExplorerPanel::handleCreateDiscGearGrindButtonClickedEvent() {
 			gear = SimpleGear_ptr(gearGUIStateNode->getInvoluteGear()->toSimpleGear());
 		} else {
 			SimpleGearGUIStateNode_ptr gearGUIStateNode;
-			if( getSelected<SimpleGearGUIStateNode>(gearGUIStateNode) ) {
+			if(getSelected<SimpleGearGUIStateNode>(gearGUIStateNode)) {
 				gear = gearGUIStateNode->getSimpleGear();
-			}else{
-				return;
+			} else{
+				throw std::string("Error: DiscGearGrind only supports involute or simple gears!");
 			}
 		}
 		disc = discGUIStateNode->getSurfaceOfRevolution();
@@ -101,8 +101,8 @@ void SceneGraphExplorerPanel::handleCreateWormGearGrindButtonClickedEvent() {
 
 		// We only allow InvoluteGears for WormGearGrind, no SimpleGears!
 		if(getSelected<InvoluteGearGUIStateNode>(gearGUIStateNode)) {
-			gear = gearGUIStateNode->getInvoluteGear();
-		} else{
+			gear = InvoluteGear_ptr(gearGUIStateNode->getInvoluteGear());
+		} else {
 			throw std::string("Error: WormGearGrind only supports involute gears!");
 		}
 		worm = wormGUIStateNode->getWorm();

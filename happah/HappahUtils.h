@@ -2,6 +2,7 @@
 #define HAPPAH_UITLS_H_
 
 #include <cmath>
+#include <iostream>
 #include "happah/HappahTypes.h"
 
 namespace HPUtils{
@@ -18,6 +19,9 @@ namespace HPUtils{
         return (T(0) < val) - (val < T(0));
     }
 };
+
+std::ostream& operator<<( std::ostream& os, const hpvec3& vec );
+std::ostream& operator<<( std::ostream& os, const hpvec2& vec );
 
 
 

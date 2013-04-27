@@ -11,10 +11,10 @@
 #include "happah/scene/SceneVisitor.h"
 #include "happah/scene/SimpleGeometryNode.h"
 
-class BSplineCurveNode : public SimpleGeometryNode<BSplineCurve<hpvec3>> {
+class BSplineCurveNode : public SimpleGeometryNode<BSplineCurve<hpvec2>> {
 
 public:
-	BSplineCurveNode(BSplineCurve_ptr curve);
+	BSplineCurveNode(BSplineCurve2D_ptr curve);
 	~BSplineCurveNode();
 
 	void accept(SceneVisitor& sceneVisitor);

@@ -54,7 +54,15 @@ hpvec3 calculate2DLineIntersection(hpvec3 a1,hpvec3 a2, hpvec3 b1, hpvec3 b2){
 	return hpvec3(x,y,0.0f);
 }
 
-
-
-
 }
+
+std::ostream& operator<<( std::ostream& os, const hpvec3& vec ) {
+	os << "( " << vec.x << " | " << vec.y << " | " << vec.z << " )";
+	return os;
+}
+
+std::ostream& operator<<( std::ostream& os, const hpvec2& vec ) {
+	os << "( " << vec.x << " | " << vec.y << " )";
+	return os;
+}
+

@@ -1,7 +1,7 @@
 #include "happah/simulations/DiscGearGrind.h"
 
 DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh)
-	: m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.05)
+	: m_disc(disc), m_discMesh(discMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.025)
 {
 	hpreal alpha = m_gear->getHelixAngle();
 	hpreal z = -m_gear->getFaceWidth();
@@ -45,18 +45,22 @@ void DiscGearGrind::calculateGrindingDepth(double time){
 
 DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     calculateGrindingDepth(time);
+
     // Fill color
-    for( size_t i = 0; i < m_gearColor->size(); i++){
+    for(size_t i = 0; i < m_gearColor->size(); i++){
     	if( m_distances[i] >= 0 ){
     		m_gearColor->at(i) = hpcolor(0.0, m_distances[i], 1.0, 1.0);
     	}else{
             m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
     	}
     }
-    return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  RigidAffineTransformation(),  m_disc, m_discMesh, m_gearMovement.getRigidAffineTransformation(time).inverse());
+
+    return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  RigidAffineTransformation(),
+    						   m_disc, m_discMesh, m_gearMovement.getRigidAffineTransformation(time).inverse());
 }
 
-DiscGearGrindResult DiscGearGrind::getSimulationResult(double time){
+
+DiscGearGrindResult DiscGearGrind::getSimulationResult(hpreal time){
 	map<hpreal,DiscGearGrindResult>::iterator it = m_precalcResults.lower_bound(time);
 	if( it == m_precalcResults.end() ){
 		it--;
@@ -72,3 +76,4 @@ void DiscGearGrind::runSimulation(){
 		m_precalcResults.insert(pair<hpreal, DiscGearGrindResult>(t, calculateSimulationResult(t)));
 	}
 }
+

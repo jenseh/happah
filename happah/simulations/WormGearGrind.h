@@ -25,7 +25,7 @@ public:
     /**
      * @brief m_gear The gear of the simulation.
      */
-	InvoluteGear_ptr m_gear;
+	SimpleGear_ptr m_gear;
     /**
      * @brief m_gearColor Vector with the color data of the gear.
      */
@@ -65,23 +65,24 @@ public:
      * @param toolMesh The triangle mesh mesh representing the tool.
      * @param toolTransformation The position/transformation of the tool.
      */
-	WormGearGrindResult(InvoluteGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
+	WormGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
 						Worm_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
 		m_gear(gear),
-        m_gearColor(new std::vector<hpcolor>(*gearColor) ),
+        m_gearColor(new std::vector<hpcolor>(*gearColor)),
 		m_gearMesh(gearMesh),
 		m_gearTransformation(gearTransformation),
 		m_tool(tool),
-        m_toolColor(hpvec4(0.5, 0.5, 0.5, 1.0)),
+        m_toolColor(hpvec4(0.95, 0.4, 0.4, 1.0)),
 		m_toolMesh(toolMesh),
 		m_toolTransformation(toolTransformation){
 	}
 };
 
-class WormGearGrind
+class WormGearGrind : public Simulation
 {
 public:
-  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);
+//  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, InvoluteGear_ptr gear, TriangleMesh_ptr gearMesh);
+  WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh);
 
   ~WormGearGrind();
 
@@ -97,39 +98,41 @@ public:
   WormGearGrindResult getSimulationResult(hpreal time);
 
   void runSimulation();
-  void calculateGrindingDepth(hpreal time);
+  CircularSimulationResult* calculateGrindingDepth(hpreal time);
 
 private:
-  hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
+  void init(hpreal gearReferenceRadius);
+
+  void inline computeIntersectingTriangles(hpuint& wormPosZIdx, CircularSimulationResult* simResult, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix, hpreal time);
+
+  Circle inline transformCircle(Circle& circle, hpmat4x4 transformation);
   hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
-  void inline computeIntersectingTriangles(hpuint& z, std::list<CircleHitResult*>* hitResults, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
-
-
+  hpvec3 inline transformVector(hpvec3& vector, hpmat4x4& transformation);
   Triangle translateTriangle(Triangle& triangle, hpvec3& vector);
-  Triangle transformTriangle(Triangle& triangle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
-  Circle transformCircle(Circle& circle, hpmat4x4 gearModelMatrix, hpmat4x4 wormModelMatrix);
 
 private:
 	/**
 	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
 	 */
-	static const int STEP_COUNT = 10;
+	static const int STEP_COUNT = 1;
 
 	Worm_ptr m_worm;
-	ZCircleCloud_ptr m_wormCircleCloud;
 	TriangleMesh_ptr m_wormMesh;
-	InvoluteGear_ptr m_gear;
+
+	SimpleGear_ptr m_gear;
 	vector<hpcolor>* m_gearColor;
 	TriangleMesh_ptr m_gearMesh;
+	ZCircleCloud_ptr m_gearCircleCloud;
+
 	Kinematic m_gearMovement;
 	Kinematic m_wormMovement;
 	KDTree* m_kdTree;
-
-	CircularSimulationResult simResult;
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
-  constexpr static size_t m_resultAngleSlotCount = 100;
+	constexpr static size_t m_resultAngleSlotCount = 400;
+	constexpr static size_t m_resultPosZSlotCount = 100;
+
 };
 
 typedef std::shared_ptr<WormGearGrind> WormGearGrind_ptr;

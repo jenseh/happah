@@ -7,18 +7,18 @@ using namespace std;
 
 #include "happah/geometries/BSplineCurve.h"
 #include "happah/geometries/gears/ToothProfile.h"
+#include "happah/geometries/ZCircleCloud.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 
 class SimpleGear : public CylindricalGear {
 
 public:
 	SimpleGear(const ToothProfile& toothProfile, hpreal helixAngle, hpreal faceWidth);
+	SimpleGear(const BSplineCurve<hpvec2>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const BSplineCurve<hpvec3>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth);
 	SimpleGear(const SimpleGear& other);
 	~SimpleGear();
 
-	// void getTraverseProfile(hpreal z, BSplineCurve<hpvec3>* gearProfile);
-	BSplineCurve<hpvec3>* toTransverseToothProfileSystem(hpreal z);
 	ToothProfile_ptr getCopyWithBeginOfToothAtTop() const;
 
 	hpreal getAngularPitch();
@@ -36,7 +36,10 @@ public:
 
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
-	void getTraverseProfile(hpreal z, BSplineCurve<hpvec3>& gearProfile);
+	void getTraverseProfile(hpreal z, BSplineCurve<hpvec2>& gearProfile);
+
+	// Used by WormGearGrind simulation
+	ZCircleCloud_ptr toZCircleCloud(hpuint resolutionZ = 100);
 
 private:
 	ToothProfile_ptr m_toothProfile;

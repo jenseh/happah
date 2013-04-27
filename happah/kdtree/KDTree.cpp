@@ -13,7 +13,7 @@ KDTree::~KDTree(){
 	delete m_root;
 }
 
-bool KDTree::intersectAll(Circle& intersector, std::list<CircleHitResult*>* hitResults) {
+bool KDTree::intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults) {
   BBox intersectorBox = intersector.computeBoundingBox();
   return m_root->intersectAll(intersector, hitResults, intersectorBox, 0);
 }

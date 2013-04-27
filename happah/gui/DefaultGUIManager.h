@@ -18,11 +18,12 @@ using namespace std;
 #include "happah/gui/ViewportListener.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/geometries/WormGenerator.h"
-#include "happah/simulations/WormGearGrind.h"
 #include "happah/HappahTypes.h"
 #include "happah/HappahConstants.h"
 #include "happah/scene/RayIntersectionVisitor.h"
 #include "happah/scene/SceneManager.h"
+#include "happah/simulations/DiscGearGrind.h"
+#include "happah/simulations/WormGearGrind.h"
 
 class DefaultGUIManager : public GUIManager {
 
@@ -37,21 +38,25 @@ public:
 	void generateDisc(CylindricalGear_ptr cylindricalGear);
 	void generateWorm(InvoluteGear_ptr involuteGear);
 	bool init();
-	void insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode = HP_TRIANGLE_MESH);
-	void insert(BSplineCurve_ptr bSplineCurve, Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
+
+	void insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode);
+	void insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode);
 	void insert(SurfaceOfRevolution_ptr disc,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(FocalSpline_ptr focalSpline, hpuint drawMode = HP_LINE_MESH);
 	//void insert(DiscGearGrindResult simulationResult);
 	void insert(DiscGearGrind_ptr discGearGrind);
 	void insert(WormGearGrind_ptr wormGearGrind);
 	void insert(InvoluteGear_ptr involuteGear,hpuint drawMode = HP_TRIANGLE_MESH);
-	void insert(Plane_ptr plane, BSplineCurve_ptr curve);
+	void insert(Plane_ptr plane, BSplineCurve2D_ptr curve);
 	void insert(Plane_ptr plane, hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(ToothProfile_ptr toothProfile, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
+	void insert(TriangleMesh_ptr triangleMesh);
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
-	void update(BSplineCurve_ptr bSplineCurve);
+
+	void update(BSplineCurve2D_ptr bSplineCurve);
+	void update(BSplineCurve2D_ptr bSplineCurve, hpcolor curveColor);
 	//void update(DiscGearGrindResult simulationResult);
 	void update(SurfaceOfRevolution_ptr disc);
 	void update(InvoluteGear_ptr involuteGear);
@@ -61,13 +66,14 @@ public:
 	void update(SpherePatch_ptr spherePatch);
 	void update(ToothProfile_ptr toothProfile);
 	void update(Worm_ptr worm);
+
 	void useForBSpline(Plane_ptr plane);
-	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
-	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+//	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
+//	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
 	void visitScene(SimulationVisitor& visitor);
 	const SceneManager_ptr getSceneManager();
-	virtual Plane_ptr getParentPlane(BSplineCurve_ptr bSplineCurve);
+	virtual Plane_ptr getParentPlane(BSplineCurve2D_ptr bSplineCurve);
 
 private:
 	class DefaultSceneGraphExplorerListener : public SceneGraphExplorerListener {
@@ -77,6 +83,7 @@ private:
 
 		void createDiscGearGrind(SurfaceOfRevolution_ptr surfaceOfRevolution, SimpleGear_ptr simpleGear);
 		void createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear);
+		void createWormGearGrind(Worm_ptr worm, SimpleGear_ptr simpleGear);
 		void handleGUIStateNodesDeletedEvent(vector<GUIStateNode_ptr>& guiStateNodes);
 		void handleGUIStateNodeSelectedEvent(GUIStateNode_ptr guiStateNode);
 
@@ -184,9 +191,9 @@ private:
 	template<class G>
 	void doUpdate2D(shared_ptr<G> geometry);
 	template<class G>
-	void doUpdate1D(shared_ptr<G> geometry);
+	void doUpdate1D(shared_ptr<G> geometry, hpcolor color = hpcolor(1.0, 0.0, 0.0, 1.0));
 	template<class G>
-	void doUpdate0D(shared_ptr<G> geometry);
+	void doUpdate0D(shared_ptr<G> geometry, hpcolor color = hpcolor(1.0f, 0.0f, 0.0f, 1.0f));
 
 	string toFinalLabel(const char* label);
 

@@ -23,7 +23,6 @@ HEADERS += \
 	happah/geometries/Mesh.h\
 	happah/geometries/Plane.h \
 	happah/geometries/PointCloud.h\
-#	happah/geometries/RayCloud.h \
 #	happah/geometries/Sphere.h \
 	happah/geometries/SpherePatch.h \
 	happah/geometries/gears/StandardProfile.h \
@@ -35,6 +34,7 @@ HEADERS += \
 \
 	happah/geometries/gears/CylindricalGear.h \
 	happah/geometries/gears/InvoluteGear.h \
+	happah/geometries/gears/MatingGearConstructor.h \
 	happah/geometries/gears/SimpleGear.h \
 	happah/geometries/gears/ToothProfile.h \
 \
@@ -60,6 +60,7 @@ HEADERS += \
 	happah/gui/context-menus/SimpleGearContextMenu.h \
 	happah/gui/context-menus/SimulationContextMenu.h \
 	happah/gui/context-menus/ToothProfileContextMenu.h \
+	happah/gui/context-menus/TriangleMeshContextMenu.h \
 \
 	happah/gui/forms/BSplineCurveForm.h \
 	happah/gui/forms/DiscForm.h \
@@ -73,6 +74,7 @@ HEADERS += \
 	happah/gui/forms/ToothProfileForm.h \
 	happah/gui/forms/WormForm.h \
 \
+	happah/gui/widgets/FileDialog.h \
 	happah/gui/widgets/LabeledIntegerSlider.h \
 	happah/gui/widgets/LabeledRealValuedSlider.h \
 	happah/gui/widgets/LabeledIntegerSpinBox.h\
@@ -126,9 +128,15 @@ HEADERS += \
 	happah/simulations/WormGearGrind.h \
 \
 	happah/transformations/RigidAffineTransformation.h \
-\	
-	happah-test/simulations/WormGearGrindTest.h
-
+\
+	happah/triangulators/RayCloudTriangulator.h \
+	happah/triangulators/RayCloudTriangulatorBPA.h \
+\
+	happah/utilities/GeometryReader.h \
+\
+	happah-test/benchmarks/KDTreeBenchmark.cpp \
+	happah-test/simulations/WormGearGrindTest.h \
+	happah-test/tests/CircleTriangleIntersectionTest.h
 
 #KEEP SOURCES SORTED!!!
 SOURCES += \
@@ -138,7 +146,7 @@ SOURCES += \
 	happah/HappahUtils.cpp\
 \
 #	happah/geometries/gears/BasicRack.cpp \
-#	happah/geometries/BSplineCurve.cpp \
+	happah/geometries/BSplineCurve.cpp \
 #	happah/geometries/CircleCloud.cpp \
 #	happah/geometries/ControlNet2.cpp \
 	happah/geometries/DiscGenerator.cpp \
@@ -148,7 +156,6 @@ SOURCES += \
 	happah/geometries/Mesh.cpp\
 	happah/geometries/Plane.cpp \
 	happah/geometries/PointCloud.cpp\
-#	happah/geometries/RayCloud.cpp \
 #	happah/geometries/Sphere.cpp \
 	happah/geometries/SpherePatch.cpp \
 	happah/geometries/gears/StandardProfile.cpp \
@@ -160,6 +167,7 @@ SOURCES += \
 \
 	happah/geometries/gears/CylindricalGear.cpp \
 	happah/geometries/gears/InvoluteGear.cpp \
+	happah/geometries/gears/MatingGearConstructor.cpp \
 	happah/geometries/gears/SimpleGear.cpp \
 	happah/geometries/gears/ToothProfile.cpp \
 \
@@ -182,6 +190,7 @@ SOURCES += \
 	happah/gui/context-menus/SimpleGearContextMenu.cpp \
 	happah/gui/context-menus/SimulationContextMenu.cpp \
 	happah/gui/context-menus/ToothProfileContextMenu.cpp \
+	happah/gui/context-menus/TriangleMeshContextMenu.cpp \
 \
 	happah/gui/forms/BSplineCurveForm.cpp \
 	happah/gui/forms/DiscForm.cpp \
@@ -195,6 +204,7 @@ SOURCES += \
 	happah/gui/forms/ToothProfileForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
+	happah/gui/widgets/FileDialog.cpp \
 	happah/gui/widgets/LabeledIntegerSlider.cpp \
 	happah/gui/widgets/LabeledRealValuedSlider.cpp \
 	happah/gui/widgets/LabeledIntegerSpinBox.cpp\
@@ -240,8 +250,14 @@ SOURCES += \
 	happah/simulations/WormGearGrind.cpp \
 \
 	happah/transformations/RigidAffineTransformation.cpp \
+\
+	happah/triangulators/RayCloudTriangulatorBPA.cpp \
+\
+	happah/utilities/GeometryReader.cpp \
 \	
-	happah-test/simulations/WormGearGrindTest.cpp
+	happah-test/benchmarks/KDTreeBenchmark.cpp \
+	happah-test/simulations/WormGearGrindTest.cpp \
+	happah-test/tests/CircleTriangleIntersectionTest.cpp
 	
 FORMS += 
 RESOURCES += 

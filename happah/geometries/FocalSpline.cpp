@@ -100,8 +100,8 @@ void FocalSpline::addControlPoint(hpvec3 point){
 	hpvec3 newPoint = HPUtils::cartesianToPolarCoordinates(point);
 	int insertionIndex;
 
-	for(int j= 0; j<m_controlPoints->size();j++){
-	for(int i=0; i < m_controlPoints->at(j)->size(); i++){
+	for(hpuint j = 0; j < m_controlPoints->size(); j++){
+	for(hpuint i = 0; i < m_controlPoints->at(j)->size(); i++){
 		if (newPoint.x < m_controlPoints->at(j)->at(i).x){
 			m_controlPoints->at(j)->insert(m_controlPoints->at(j)->begin()+i,newPoint);
 			adjustControlPoints(j,i);
@@ -121,7 +121,7 @@ void FocalSpline::addControlPoint(hpvec3 point){
 }
 
 void FocalSpline::update(){
-	m_generatedSpline->clear();
+	m_generatedSpline->clear();i
 	if(!m_doLaneRiesenfeld){
 		for(int i = 0; i<m_focalBezierCurves.size();i++){
 			generateFocalSpline(i);
@@ -170,6 +170,7 @@ void FocalSpline::adjustControlPoints(int bezierCurveIndex,int currentIndex,int 
 
 	}
 	for(int i= 0; i < m_controlPoints->at(bezierCurveIndex)->size(); i++){
+	
 		hpreal phiPoint = m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x;
 		hpreal newPhi = 0.0f;
 		newPhi=phiPoint+(i-currentIndex)*phi;
@@ -421,7 +422,6 @@ hpvec3 FocalSpline::findMidPointOf(hpvec3 p1,hpvec3 p2){
 	std::cout << "Midpoint: "<< p1.x+deltaPhi<<" "<<radius << endl;
 	return  hpvec3(p1.x+deltaPhi,0,radius);
 }
-
 
 
 

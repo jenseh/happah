@@ -50,13 +50,12 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals(hpuint pointsPerTooth, hpuin
           
           hpreal posZ_RZ = m_module * M_PI * tooth 							   + profileTooth.at(posZIdx).x;
           hpreal posZ_RN = m_module * M_PI * (tooth + (hpuint) nextPointRatio) + profileTooth.at((posZIdx + 1) % pointsPerTooth).x;
-          
+
           hpvec3 pointRZ = hpvec3(radiusRZ * cos(angle),     radiusRZ * sin(angle),     posZ_RZ);
           hpvec3 pointRN = hpvec3(radiusRN * cos(angle),     radiusRN * sin(angle),     posZ_RN);
           hpvec3 pointNZ = hpvec3(radiusNZ * cos(nextAngle), radiusNZ * sin(nextAngle), posZ_RZ);
           hpvec3 pointNN = hpvec3(radiusNN * cos(nextAngle), radiusNN * sin(nextAngle), posZ_RN);
           
-          // TODO: create real normals
           hpvec2 normalTempRZ = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
           hpvec2 normalTempRN = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
           hpvec2 normalTempNZ = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
@@ -157,9 +156,8 @@ ZCircleCloud_ptr Worm::toZCircleCloud(hpuint pointsPerTooth) {
 
 	// Determine resolution (important for following simulations)
 	hpuint resolutionZ = m_toothCount * pointsPerTooth;
-	hpvec3 referenceDir = hpvec3(1.0, 0.0, 0.0);
 
-	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ, referenceDir));
+	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ));
 	return result;
 }
 

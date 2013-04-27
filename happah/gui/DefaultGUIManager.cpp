@@ -26,7 +26,7 @@ DefaultGUIManager::~DefaultGUIManager() {
 }
 
 void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(300, 100));
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
 	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
@@ -49,21 +49,16 @@ void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, Simple
 }
 
 void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh(15, 4));
 	Worm_ptr worm = WormGenerator::generateWormFrom(involuteGear);
-	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
-	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, involuteGear, gearMesh));
-
-	QThread* thread = new QThread();
-	WormGearGrindWorkerListener* listener = new WormGearGrindWorkerListener(this);
-	WormGearGrindWorker* wormGearGrindWorker = new WormGearGrindWorker(simulation, thread, listener);
-	thread->start();
+	createWormGearGrind(worm, involuteGear);
 }
 
 void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(involuteGear->toTriangleMesh(15, 4));
-	TriangleMesh_ptr wormMesh = worm->toTriangleMesh();
-	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, involuteGear, gearMesh));
+	SimpleGear_ptr simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
+
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(150, 100));
+	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(10, 100);
+	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, simpleGear, involuteGear->getReferenceRadius(), gearMesh));
 
 	QThread* thread = new QThread();
 	WormGearGrindWorkerListener* listener = new WormGearGrindWorkerListener(this);
@@ -132,7 +127,7 @@ template<class G, class S, class F>
 void DefaultGUIManager::doInsert0D(shared_ptr<G> geometry, const char* label, F* form) {
 	shared_ptr<S> guiStateNode = shared_ptr<S>(new S(geometry, form, toFinalLabel(label)));
 	// TODO : guiStateNode->registerForm
-	doInsert0D(geometry, guiStateNode);
+	doInsert0D<G, S>(geometry, guiStateNode);
 }
 
 template<class G, class S, class F, class M>
@@ -157,7 +152,7 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 }
 
 template<class G>
-void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
+void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry, hpcolor color) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
@@ -165,7 +160,6 @@ void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
 	}
 	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
 	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
-	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setLineMesh(lineMesh);
 	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
 	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
@@ -173,7 +167,7 @@ void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry) {
 }
 
 template<class G>
-void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
+void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry, hpcolor color) {
 	GUIStateNode_ptr guiStateNode = m_guiStateNodes[geometry];
 	if(!guiStateNode) {
 		cerr << "GUI state node not found." << endl;
@@ -181,7 +175,6 @@ void DefaultGUIManager::doUpdate0D(shared_ptr<G> geometry) {
 	}
 	m_sceneManager->removeContainingData(geometry, guiStateNode->getPointCloud());
 	PointCloud_ptr pointCloud = PointCloud_ptr(geometry->toPointCloud());
-	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setPointCloud(pointCloud);
 	PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(geometry, pointCloud, color);
 	pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
@@ -199,7 +192,7 @@ void DefaultGUIManager::generateWorm(InvoluteGear_ptr involuteGear) {
 }
 
 
-Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve_ptr bSplineCurve ) {
+Plane_ptr DefaultGUIManager::getParentPlane( BSplineCurve2D_ptr bSplineCurve ) {
 	Node_ptr parent = m_sceneManager->findContainingData(bSplineCurve)->getParent();
 	
 	PlaneNode_ptr planeNode = dynamic_pointer_cast<PlaneNode>(parent);
@@ -227,18 +220,42 @@ bool DefaultGUIManager::init() {
 	return true;
 }
 
-void DefaultGUIManager::insert(BSplineCurve_ptr bSplineCurve, hpuint drawMode) {
+void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode) {
 
 	if( drawMode & HP_LINE_MESH ) {
-		doInsert1D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert1D<BSplineCurve<hpvec2>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
 	if( drawMode & HP_POINT_CLOUD ) {
-		doInsert0D<BSplineCurve<hpvec3>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
+		doInsert0D<BSplineCurve<hpvec2>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
 
+}
+
+void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode) {
+	ostringstream labelStream;
+	labelStream << name << " BSplineCurve";
+	const char* label = labelStream.str().c_str();
+	if( drawMode & HP_LINE_MESH ) {
+		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
+			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
+		LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
+		guiStateNode->setLineMesh(lineMesh);
+		m_sceneManager->insert(bSplineCurve, guiStateNode);
+		LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(bSplineCurve, lineMesh, curveColor);
+		lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+	}
+	if( drawMode & HP_POINT_CLOUD ) {
+		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
+			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
+		PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
+		guiStateNode->setPointCloud(pointCloud);
+		m_sceneManager->insert(bSplineCurve, guiStateNode);
+		PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(bSplineCurve, pointCloud, curveColor);
+		pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+	}
 }
 
 void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
@@ -279,7 +296,7 @@ void DefaultGUIManager::insert(InvoluteGear_ptr involuteGear,hpuint drawMode) {
 				involuteGear, "Involute Gear", m_toolPanel->getInvoluteGearForm(), m_mainWindow.getInvoluteGearContextMenu());
 }
 
-void DefaultGUIManager::insert(Plane_ptr plane, BSplineCurve_ptr curve) {
+void DefaultGUIManager::insert(Plane_ptr plane, BSplineCurve2D_ptr curve) {
 	m_sceneManager->insert(plane, curve);
 }
 
@@ -303,6 +320,7 @@ void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
+
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
@@ -317,7 +335,15 @@ void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
 	}
 }
 
-void DefaultGUIManager::insert(Worm_ptr worm,hpuint drawMode) {
+void DefaultGUIManager::insert(TriangleMesh_ptr triangleMesh) {
+	TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode = TriangleMeshGUIStateNode_ptr(new TriangleMeshGUIStateNode(triangleMesh, m_mainWindow.getTriangleMeshContextMenu(), toFinalLabel("Triangle Mesh")));
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = m_sceneManager->insert(triangleMesh, color);
+	triangleMeshGUIStateNode->setTriangleMesh(triangleMesh);
+	m_sceneManager->insert(triangleMesh, triangleMeshGUIStateNode);
+}
+
+void DefaultGUIManager::insert(Worm_ptr worm, hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }
@@ -328,40 +354,20 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 	return oss.str();
 }
 
-void DefaultGUIManager::update(BSplineCurve_ptr bSplineCurve) {
-	/*
-	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
-	if(!guiStateNode) {
-		cerr << "GUI state node not found." << endl;
-		return;
-	}
-	// FIXME : old point cloud needs to be deleted
-	//m_sceneManager->removeContaining(bSplineCurve, guiStateNode->getPointCloud());
+void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve) {
+	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
+	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
+}
 
-	PointCloud_ptr pointCloud = PointCloud_ptr(bSplineCurve->toPointCloud());
-	hpcolor color(0.0, 1.0, 0.0, 1.0);
-	//guiStateNode->setPointCloud( pointCloud );
-	m_sceneManager->insert(bSplineCurve, pointCloud, color);
-
-	LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
-	m_sceneManager->insert(bSplineCurve, lineMesh, color);
-	*/
-	doUpdate0D<BSplineCurve<hpvec3>>(bSplineCurve);
-	doUpdate1D<BSplineCurve<hpvec3>>(bSplineCurve);
+void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve, hpcolor curveColor) {
+	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
+	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {
 	doUpdate2D<SurfaceOfRevolution>(disc);
 }
 
-/*
-void DefaultGUIManager::update(DiscGearGrindResult simulationResult) {
-	m_sceneManager->removeContainingData(simulationResult.m_gear, simulationResult.m_gearMesh);
-	m_sceneManager->insert(simulationResult.m_gear, simulationResult.m_gearMesh, simulationResult.m_gearColor, simulationResult.m_gearTransformation);
-	m_sceneManager->removeContainingData(simulationResult.m_tool, simulationResult.m_toolMesh);
-	hpcolor toolColor = hpcolor(1.0, 0.5, 0.5, 0.1);
-	m_sceneManager->insert(simulationResult.m_tool, simulationResult.m_toolMesh, toolColor, simulationResult.m_toolTransformation);
-} */
 void DefaultGUIManager::update(FocalSpline_ptr focalSpline){
 	doUpdate0D<FocalSpline>(focalSpline);
 	doUpdate1D<FocalSpline>(focalSpline);
@@ -375,6 +381,7 @@ void DefaultGUIManager::update(InvoluteGear_ptr involuteGear) {
 
 void DefaultGUIManager::update(Plane_ptr plane) {
 	doUpdate2D<Plane>(plane);
+	m_sceneManager->update(plane);
 }
 
 void DefaultGUIManager::update(SimpleGear_ptr simpleGear) {
@@ -397,15 +404,17 @@ void DefaultGUIManager::update(Worm_ptr worm) {
 void DefaultGUIManager::useForBSpline(Plane_ptr plane) {
 	m_toolPanel->getBSplineCurveForm()->reset();
 	m_toolPanel->getBSplineCurveForm()->setPlane(plane);
+	m_toolPanel->setForm(m_toolPanel->getBSplineCurveForm());
 }
 
-void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
-	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
-}
-
-void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
-	m_toolPanel->getSimulationForm()->setGear(gear, gearMesh);
-}
+//TODO: This should be removed since it is discriminating other simulations that dont have a disc..
+//void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
+//	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
+//}
+//
+//void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
+//	m_toolPanel->getSimulationForm()->setGear(gear, gearMesh);
+//}
 
 void DefaultGUIManager::visitScene(SceneVisitor& visitor) {
 	m_sceneManager->accept(visitor);
@@ -483,7 +492,7 @@ void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handle
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
 	if( intersectionVisitor.hasGotIntersection() ) {
-		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
+//		hpvec3 secPoint = intersectionVisitor.getFirstIntersection();
 		//std::cout << "(" << secPoint.x << ", " << secPoint.y << ", " << secPoint.z << ")" << std::endl;
 	}
 	else {

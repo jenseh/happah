@@ -4,6 +4,8 @@
 #include "happah/geometries/gears/Worm.h"
 #include "happah/gui/forms/WormForm.h"
 
+#include "happah-test/tests/CircleTriangleIntersectionTest.h" //TODO:remove
+
 WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 	: Form(parent),
 		m_guiManager(guiManager),
@@ -33,6 +35,8 @@ WormForm::WormForm(GUIManager& guiManager, QWidget* parent)
 
 	m_worm = Worm_ptr(new Worm());
 	updateRanges();
+
+//	CircleTriangleIntersectionTest(); //TODO:remove
 }
 
 WormForm::~WormForm() {
@@ -99,8 +103,9 @@ void WormForm::setWorm(Worm_ptr worm) {
 }
 
 void WormForm::updateWorm() {
-	if(m_wormInserted)
+	if(m_wormInserted) {
 		m_guiManager.update(m_worm);
+	}
 }
 
 void WormForm::updateRanges() {

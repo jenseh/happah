@@ -6,6 +6,11 @@ SimpleGear::SimpleGear(const ToothProfile& toothProfile, hpreal helixAngle, hpre
 	m_toothProfile(ToothProfile_ptr(new ToothProfile(toothProfile))), m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 }
 
+SimpleGear::SimpleGear(const BSplineCurve<hpvec2>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
+	m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
+	m_toothProfile = ToothProfile_ptr(new ToothProfile(toothProfileCurve));
+}
+
 SimpleGear::SimpleGear(const BSplineCurve<hpvec3>& toothProfileCurve, hpreal helixAngle, hpreal faceWidth) :
 	m_helixAngle(helixAngle), m_faceWidth(faceWidth) {
 	m_toothProfile = ToothProfile_ptr(new ToothProfile(toothProfileCurve));
@@ -18,7 +23,7 @@ SimpleGear::~SimpleGear() {}
 
 // Um einen Grundschrägungswinkel beta (helixAngle) zu erzielen, muss das Stirnprofil bei
 // Verschiebung um z in Richtung der Zahnradachse um den Winkel(!) z * tan(beta) gedreht werden.
-void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve<hpvec3>& gearProfile) {
+void SimpleGear::getTraverseProfile(hpreal z, BSplineCurve<hpvec2>& gearProfile) {
 	hpreal rotation = -glm::tan(m_helixAngle) * z * 180.0f / M_PI;
 	m_toothProfile->rotate(rotation);
 	m_toothProfile->extendToGearCurve(gearProfile);
@@ -97,30 +102,41 @@ void SimpleGear::setToothProfile(ToothProfile* curve) {
 }
 
 void SimpleGear::getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile) {
-	BSplineCurve<hpvec3> splineXY = getCopyWithBeginOfToothAtTop()->getCurve();
+	BSplineCurve<hpvec2> curve;
+	m_toothProfile->getCurve(curve);
 	hpreal low,high;
-	splineXY.getParameterRange(low, high);
+	curve.getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(toothSpaceProfile.capacity() - 1); // -1 so whole thooth is sampled
-	for(int i = toothSpaceProfile.capacity()/2-1;  i >= 0; i--) {
-		hpvec3 point = splineXY.getValueAt(low + i*delta);
+	for(int i = toothSpaceProfile.capacity() / 2 - 1;  i >= 0; i--) {
+		hpvec2 point = curve.getValueAt(low + i * delta);
 		toothSpaceProfile.push_back(hpvec2(-point.x, point.y));
 	}
 	for(uint i = 0; i < toothSpaceProfile.capacity()/2; i++) {
-		hpvec3 point = splineXY.getValueAt(low + i*delta);
-		toothSpaceProfile.push_back(hpvec2(point.x, point.y));
+		hpvec2 point = curve.getValueAt(low + i*delta);
+		toothSpaceProfile.push_back(point);
 	}
-	//delete splineXY;
 }
 
 void SimpleGear::getToothProfile(vector<hpvec2>& toothProfile) {
 	hpuint nPointsPerTooth = toothProfile.size();
-	BSplineCurve<hpvec3> splineXY = getCopyWithBeginOfToothAtTop()->getCurve();
+	BSplineCurve<hpvec2> curve;
+	m_toothProfile->getCurve(curve);
 	hpreal low,high;
-	splineXY.getParameterRange(low, high);
+	curve.getParameterRange(low, high);
 	hpreal delta = (high - low) / (hpreal)(nPointsPerTooth - 1); // -1 so whole thooth is sampled
 	for(hpuint i = 0; i < nPointsPerTooth; ++i) {
-		hpvec3 point = splineXY.getValueAt(low + (hpreal) (i * delta));
-		toothProfile[i] = hpvec2(point.x, point.y);
+		hpvec2 point = curve.getValueAt(low + (hpreal) (i * delta));
+		toothProfile[i] = point;
 	}
-	//delete splineXY;
+}
+
+
+
+ZCircleCloud_ptr SimpleGear::toZCircleCloud(hpuint resolutionZ) {
+	hpreal maxRadius = m_toothProfile->getTipRadius();
+	hpreal startZ = 0.0;
+	hpreal endZ = getFaceWidth();
+
+	ZCircleCloud_ptr result = ZCircleCloud_ptr(new ZCircleCloud(maxRadius, startZ, endZ, resolutionZ));
+	return result;
 }

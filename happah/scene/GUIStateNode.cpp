@@ -19,7 +19,7 @@ const string& GUIStateNode::getName() const {
 }
 
 GUIStateNode_ptr GUIStateNode::getptr() {
-	return static_pointer_cast<GUIStateNode>(shared_from_this());
+	return static_pointer_cast<GUIStateNode>(shared_from_this()); //TODO: what is this?
 }
 
 TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
@@ -81,7 +81,7 @@ void GUIStateNode::triggerConnectionEvent(){
 // BSplineCurve
 
 BSplineCurveGUIStateNode::BSplineCurveGUIStateNode(
-	BSplineCurve_ptr curve,
+	BSplineCurve2D_ptr curve,
 	BSplineCurveForm* bSplineCurveForm,
 	BSplineCurveContextMenu* bSplineCurveContextMenu,
 	string name
@@ -145,8 +145,9 @@ DiscGearGrindGUIStateNode::DiscGearGrindGUIStateNode(DiscGearGrind_ptr discGearG
 	:	GUIStateNode(name), m_discGearGrind(discGearGrind), m_simulationForm(simulationForm), m_simulationContextMenu(simulationContextMenu) {}
 
 DiscGearGrindGUIStateNode::~DiscGearGrindGUIStateNode() {
-	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind)
+//	if(m_simulationForm->getDiscGearGrind() == m_discGearGrind) {
 		m_simulationForm->reset();
+//	}
 }
 
 ContextMenu* DiscGearGrindGUIStateNode::getContextMenu() const {
@@ -159,7 +160,7 @@ shared_ptr<void> DiscGearGrindGUIStateNode::getData() const {
 }
 
 Form* DiscGearGrindGUIStateNode::getForm() {
-	m_simulationForm->setDiscGearGrind(m_discGearGrind);
+//	m_simulationForm->setDiscGearGrind(m_discGearGrind);
 	return m_simulationForm;
 }
 
@@ -198,9 +199,9 @@ InvoluteGearGUIStateNode::InvoluteGearGUIStateNode(
 	InvoluteGearContextMenu* contextMenu, 
 	string name
 ) : GUIStateNode(name), 
-	m_involuteGear(involuteGear), 
-	m_involuteGearForm(involuteGearForm), 
-	m_involuteGearContextMenu(contextMenu) {
+	m_involuteGear(involuteGear),
+	m_involuteGearContextMenu(contextMenu),
+	m_involuteGearForm(involuteGearForm) {
 }
 
 InvoluteGearGUIStateNode::~InvoluteGearGUIStateNode() {
@@ -255,7 +256,7 @@ Form* PlaneGUIStateNode::getForm() {
 // SimpleGear
 
 SimpleGearGUIStateNode::SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu, string name)
-	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearForm(simpleGearForm), m_simpleGearContextMenu(simpleGearContextMenu) {}
+	: GUIStateNode(name), m_simpleGear(simpleGear), m_simpleGearContextMenu(simpleGearContextMenu), m_simpleGearForm(simpleGearForm) {}
 
 SimpleGearGUIStateNode::~SimpleGearGUIStateNode() {
 	if(m_simpleGearForm->getSimpleGear() == m_simpleGear)
@@ -333,6 +334,26 @@ Form* ToothProfileGUIStateNode::getForm() {
 	return m_toothProfileForm;
 }
 
+// TriangleMesh
+
+TriangleMeshGUIStateNode::TriangleMeshGUIStateNode (TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name) 
+	: GUIStateNode(name), m_triangleMesh(triangleMesh), m_triangleMeshContextMenu(triangleMeshContextMenu) {}
+
+TriangleMeshGUIStateNode::~TriangleMeshGUIStateNode() {}
+
+ContextMenu* TriangleMeshGUIStateNode::getContextMenu() const {
+	m_triangleMeshContextMenu->setTriangleMesh(m_triangleMesh);
+	return m_triangleMeshContextMenu;
+}
+
+shared_ptr<void> TriangleMeshGUIStateNode::getData() const {
+	return m_triangleMesh;
+}
+
+Form* TriangleMeshGUIStateNode::getForm() {
+	return 0;
+}
+
 // Worm
 
 WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name)
@@ -368,7 +389,7 @@ WormGearGrindGUIStateNode::~WormGearGrindGUIStateNode() {
 }
 
 ContextMenu* WormGearGrindGUIStateNode::getContextMenu() const {
-//	m_simulationContextMenu->setSimulation(m_wormGearGrind); //TODO
+	m_simulationContextMenu->setSimulation(m_wormGearGrind);
 	return m_simulationContextMenu;
 }
 

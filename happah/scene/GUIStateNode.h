@@ -36,6 +36,9 @@ typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
 class ToothProfileGUIStateNode;
 typedef shared_ptr<ToothProfileGUIStateNode> ToothProfileGUIStateNode_ptr;
 
+class TriangleMeshGUIStateNode;
+typedef shared_ptr<TriangleMeshGUIStateNode> TriangleMeshGUIStateNode_ptr;
+
 class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
@@ -111,14 +114,14 @@ private:
 
 class BSplineCurveGUIStateNode : public GUIStateNode {
 public:
-	BSplineCurveGUIStateNode( BSplineCurve_ptr curve, BSplineCurveForm* bSplineCurveForm, BSplineCurveContextMenu* bSplineCurveContextMenu, string name);
+	BSplineCurveGUIStateNode( BSplineCurve2D_ptr curve, BSplineCurveForm* bSplineCurveForm, BSplineCurveContextMenu* bSplineCurveContextMenu, string name);
 	~BSplineCurveGUIStateNode();
 
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 private:
-	BSplineCurve_ptr m_curve;
+	BSplineCurve2D_ptr m_curve;
 	BSplineCurveContextMenu* m_bSplineCurveContextMenu;
 	BSplineCurveForm* m_bSplineCurveForm;
 };
@@ -155,8 +158,8 @@ public:
 
 private:
 	InvoluteGear_ptr m_involuteGear;
-	InvoluteGearForm* m_involuteGearForm;
 	InvoluteGearContextMenu* m_involuteGearContextMenu;
+	InvoluteGearForm* m_involuteGearForm;
 };
 
 #include "happah/geometries/Plane.h"
@@ -184,7 +187,7 @@ private:
 
 class SimpleGearGUIStateNode : public GUIStateNode {
 public:
-	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu,  string name);
+	SimpleGearGUIStateNode(SimpleGear_ptr simpleGear, SimpleGearForm* simpleGearForm, SimpleGearContextMenu* simpleGearContextMenu, string name);
 	~SimpleGearGUIStateNode();
 
 	ContextMenu* getContextMenu() const;
@@ -274,6 +277,21 @@ private:
 	ToothProfile_ptr m_toothProfile;
 	ToothProfileContextMenu* m_toothProfileContextMenu;
 	ToothProfileForm* m_toothProfileForm;
+};
+
+#include "happah/gui/context-menus/TriangleMeshContextMenu.h"
+
+class TriangleMeshGUIStateNode : public GUIStateNode {
+public:
+	TriangleMeshGUIStateNode(TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name);
+	~TriangleMeshGUIStateNode();
+	
+	ContextMenu* getContextMenu() const;
+	shared_ptr<void> getData() const;
+	Form* getForm();
+private:
+	TriangleMesh_ptr m_triangleMesh;
+	TriangleMeshContextMenu* m_triangleMeshContextMenu;
 };
 
 #include "happah/gui/context-menus/SimulationContextMenu.h"

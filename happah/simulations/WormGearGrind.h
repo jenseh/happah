@@ -103,7 +103,7 @@ public:
 private:
   void init(hpreal gearReferenceRadius);
 
-  void inline computeIntersectingTriangles(hpuint& wormPosZIdx, CircularSimulationResult* simResult, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix, hpreal time);
+  void inline computeIntersectingTriangles(hpuint& wormPosZIdx, CircularSimulationResult* simResult, hpmat4x4& gearModelMatrix, hpmat4x4& wormModelMatrix, hpreal& time);
 
   Circle inline transformCircle(Circle& circle, hpmat4x4 transformation);
   hpvec3 inline transformPoint(hpvec3& point, hpmat4x4& transformation);
@@ -114,7 +114,7 @@ private:
 	/**
 	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
 	 */
-	static const int STEP_COUNT = 10;
+	static const int STEP_COUNT = 20;
 
 	Worm_ptr m_worm;
 	TriangleMesh_ptr m_wormMesh;
@@ -131,7 +131,7 @@ private:
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
 	constexpr static size_t m_resultAngleSlotCount = 10;
-	constexpr static size_t m_resultPosZSlotCount = 100;
+	constexpr static size_t m_resultPosZSlotCount = 10;
 
 };
 

@@ -121,7 +121,7 @@ void FocalSpline::addControlPoint(hpvec3 point){
 }
 
 void FocalSpline::update(){
-	m_generatedSpline->clear();i
+	m_generatedSpline->clear();
 	if(!m_doLaneRiesenfeld){
 		for(int i = 0; i<m_focalBezierCurves.size();i++){
 			generateFocalSpline(i);

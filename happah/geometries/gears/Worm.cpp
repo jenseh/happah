@@ -20,7 +20,7 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals(hpuint pointsPerTooth, hpuin
     
     std::vector<hpvec2> profileTooth = std::vector<hpvec2>();
     profileTooth.reserve(pointsPerTooth);
-    m_standardProfile->getProfilePartition(profileTooth);
+    m_standardProfile->getToothSpaceProfile(profileTooth);
 
     
     for(hpuint angleStep = 0; angleStep < angleResolution; angleStep++) {

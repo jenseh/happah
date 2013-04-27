@@ -129,7 +129,7 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 
 	// Compute the angles of the triangle points to the reference dir
 	hpreal angle = computeAngle(point);
-	hpuint angleSlot = computeAngleSlot(angle);
+	hpuint angleSlot = computeAngleSlot(angle); //angleSlot = (hpuint) (angleSlot + m_angleSteps * 0.75) % m_angleSteps;
 
 	hpuint posZSlot = convertPosZToPosZSlot(point.z);
 	hpuint slot = computeSlot(angleSlot, posZSlot);

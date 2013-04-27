@@ -16,7 +16,7 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
     Circle circle2 = Circle(hpvec3(0.0, 0.0, 0.026), hpvec3(0.0, 0.0, 1.0), 1.10031);
     Circle circle3 = Circle(hpvec3(0.0, 0.0, 0.021), hpvec3(0.0, 0.0, 1.0), 2.0);
     Circle circle4 = Circle(hpvec3(0.0, 0.0, 0.1),	 hpvec3(1.0, 0.0, 0.0), 1.0);
-    Circle circle5 = Circle(hpvec3(getRand(), getRand(), getRand()),	 hpvec3(getRand(), getRand(), getRand()), getRand());
+    Circle circle5 = Circle(hpvec3(1.1, 4.3, 3.7),	 hpvec3(-0.7, 1.1, 0.5), 0.37);
 
     std::vector<Circle> circles;
 
@@ -44,8 +44,8 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
 
           // Triangle with same center point
           Triangle triangle0 = Triangle(circle.m_center,
-                                        hpvec3(getRand(), getRand(), getRand()),
-                                        hpvec3(getRand(), getRand(), getRand()));
+                                        hpvec3(17.1, 4.2, 7.1),
+                                        hpvec3(3.9, 0.9, 2.9));
 
 
           LoggingUtils::printVec("orthogonalToNormal1", orthogonalToNormal1);
@@ -60,10 +60,6 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
           Triangle triangle2 = Triangle(circle.m_center + orthogonalToNormal1 * circle.m_radius,
   	  	  	  	  						hpvec3(1.0, 1.0, 3.0),
   	  	  	  	  						hpvec3(-1.0, 2.0, 1.0));
-//        		  	  	  	  	  	  	hpvec3(getRand(), getRand(), getRand()),
-//        		                        hpvec3(getRand(), getRand(), getRand()));
-//        		  	  	  	  	  	  	circle.m_center + hpvec3(2.0 * circle.m_radius, -1.0, 0.0),
-//        		  	  	  	  	  	    circle.m_center + hpvec3(2.0 * circle.m_radius, 1.0, 0.0));
 
           // Triangle that is in the same plane but too far away
           Triangle triangle3 = Triangle(circle.m_center + orthogonalToNormal1 * circle.m_radius * 2.0f,
@@ -101,17 +97,8 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
           bool results[7] = {1, 1, 1, 0, 0, 1, 1};
 
           for (unsigned int t = 0; t < triangles.size(); t++) {
-
-//        	  if (c == 4 && t == 5) {
-//        		  std::cout << "now!" << std::endl;
-//        	  }
-
               bool result = circle.intersect(triangles[t], hitResults);
               bool matchesSolution = (result == results[t]);
-
-//              if (t == 2 && !matchesSolution) {
-//            	  Triangle triangle = *(triangles[t]);
-//            	  LoggingUtils::print("Triangle2", triangle);
 //              }
 
               std::cout << "Result: [" << c << ", " << t << "]: " << result << " -> " << matchesSolution << std::endl;

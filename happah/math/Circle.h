@@ -242,7 +242,7 @@ struct Circle {
 	// Note that the values are not normalized (too expensive) and can only
 	// be compared to other values from this method.
 	// In effect we compute the ratio between the direction vector and the point difference vector.
-	hpreal inline computeDistanceOnLine(hpvec3& distancePoint, hpvec3& linePoint, hpvec3& lineDirection) {
+	hpreal computeDistanceOnLine(hpvec3& distancePoint, hpvec3& linePoint, hpvec3& lineDirection) {
 //	   hpvec3 difference = distancePoint - linePoint;
 //	   return glm::length(difference);
 
@@ -256,7 +256,7 @@ struct Circle {
 	}
 
 	// Compute max and min per 1d segment and check if they overlap
-	bool inline overlapSegments(hpreal& a1, hpreal& a2, hpreal& b1, hpreal& b2) {
+	bool overlapSegments(hpreal& a1, hpreal& a2, hpreal& b1, hpreal& b2) {
 	  hpreal maxA, minA, maxB, minB;
 	  // No epsilon comparison required since we need to make a decision anyway
 	  if (a1 < a2) {
@@ -280,31 +280,11 @@ struct Circle {
 	}
 
 	// Intersect a line with a circle in a planar setup
-	bool inline intersectPlanarLineCircle(hpvec3& linePoint,
+	bool intersectPlanarLineCircle(hpvec3& linePoint,
 			hpvec3& lineDirection, hpvec3& intersectionA, hpvec3& intersectionB) {
-		//TODO: fix this by implementing a function for real lines (not segments)
-//		hpreal highFactor = 10e6;
-//		hpvec3 closestPoint = glm::closestPointOnLine(m_center, linePoint - lineDirection * highFactor, linePoint + lineDirection * highFactor);
-//
-//		hpreal dist = glm::distance(closestPoint, m_center);
-//
-//		 // // std::cout << "closestPoint: " << closestPoint.x << ", " << closestPoint.y << ", " << closestPoint.z << std::endl;
-//		  // std::cout << "dist: " << dist << ", radius: " << m_radius << std::endl;
-//		if (floatSmaller(dist, m_radius, 0.0001)) {
-//		    // Now we compute the intersection points
-//		    // This is basically a pythagoras because the line is orthogonal to the center-closestPoint line
-//		    // and the closestPoint lies in the middle of intersectionA and intersectionB
-//		    hpvec3 replacement = lineDirection * glm::sqrt(m_radius * m_radius - dist * dist);
-//		    intersectionA = closestPoint + replacement;
-//		    intersectionB = closestPoint - replacement;
-//
-//		    return true;
-//		} else {
-//		    return false;
-//		}
-
 		hpvec3 centerToLineDir = glm::normalize(glm::cross(lineDirection, m_normal));
-		hpvec3 closestPointToCenter = computeKnownPlanarLineLineIntersection(linePoint, m_center, lineDirection, centerToLineDir);
+		// std::cout << "centerToLineDir: " << centerToLineDir.x << ", " << centerToLineDir.y << ", " << centerToLineDir.z << std::endl;
+		hpvec3 closestPointToCenter = computeClosestLineLineIntersection(linePoint, m_center, lineDirection, centerToLineDir);
 		hpreal dist = glm::distance(closestPointToCenter, m_center);
 
 		// std::cout << "closestPointToCenter: " << closestPointToCenter.x << ", " << closestPointToCenter.y << ", " << closestPointToCenter.z << std::endl;
@@ -324,67 +304,88 @@ struct Circle {
 		}
 	}
 
+	bool computeClosestLineSegmentIntersection(hpvec3& linePoint, hpvec3& lineDirection, hpvec3& segmentPointA, hpvec3& segmentPointB, hpvec3& closestIntersection) {
+		closestIntersection = computeClosestLineLineIntersection(linePoint, segmentPointA, lineDirection, segmentPointB - segmentPointA);
+
+		hpreal segmentPointADistance = computeDistanceOnLine(segmentPointA, linePoint, lineDirection);
+		hpreal segmentPointBDistance = computeDistanceOnLine(segmentPointB, linePoint, lineDirection);
+
+		hpreal intersectionDistance = computeDistanceOnLine(closestIntersection, linePoint, lineDirection);
+
+		if ( (floatBigger(intersectionDistance, segmentPointBDistance) && floatSmaller(intersectionDistance, segmentPointADistance))
+				|| (floatBigger(intersectionDistance, segmentPointADistance) && floatSmaller(intersectionDistance, segmentPointBDistance)) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// This method checks whether a (planar) line hits a triangle.
 	// If so, the intersection points are stored in the parameters.
 	// Note that the planes are not necessarily axis aligned.
-	bool inline intersectPlanarLineTriangle(hpvec3& linePoint, hpvec3& lineDirection, Triangle& triangle,
+	bool intersectPlanarLineTriangle(hpvec3& linePoint, hpvec3& lineDirection, Triangle& triangle,
 			hpvec3& intersectionA, hpvec3& intersectionB) {
-		hpvec3 a = linePoint;
-		hpvec3 b = a + lineDirection;
-
 		hpvec3 p0 = triangle.vertices[0];
 		hpvec3 p1 = triangle.vertices[1];
 		hpvec3 p2 = triangle.vertices[2];
 
-		bool pSS01 = pointsOnSameSideOfLineNonTolerant(p0, p1, a, b);
-		bool pSS12 = pointsOnSameSideOfLineNonTolerant(p1, p2, a, b);
-		bool pSS02 = pointsOnSameSideOfLineNonTolerant(p0, p2, a, b);
+		hpvec3 closestIntersection01;
+		hpvec3 closestIntersection02;
+		hpvec3 closestIntersection12;
 
-		int pSSCount = 0;
-		if (pSS01) pSSCount++;
-		if (pSS12) pSSCount++;
-		if (pSS02) pSSCount++;
+		bool intersects01 = computeClosestLineSegmentIntersection(linePoint, lineDirection, p0, p1, closestIntersection01); //TODO: check the distance to line
+		bool intersects02 = computeClosestLineSegmentIntersection(linePoint, lineDirection, p0, p2, closestIntersection02);
+		bool intersects12 = computeClosestLineSegmentIntersection(linePoint, lineDirection, p1, p2, closestIntersection12);
 
-		//Should be =2
-		  // // std::cout << "pSSCount: " << pSSCount << std::endl;
 
-		if (pSSCount == 3) { //TODO: reflect about this
-		    return false;
+		// std::cout << "closestIntersection01: " << closestIntersection01.x << ", " << closestIntersection01.y << ", " << closestIntersection01.z << std::endl;
+		// std::cout << "closestIntersection02: " << closestIntersection02.x << ", " << closestIntersection02.y << ", " << closestIntersection02.z << std::endl;
+		// std::cout << "closestIntersection12: " << closestIntersection12.x << ", " << closestIntersection12.y << ", " << closestIntersection12.z << std::endl;
+
+		hpuint intersectCount = 0;
+		if (intersects01) intersectCount++;
+		if (intersects02) intersectCount++;
+		if (intersects12) intersectCount++;
+
+
+		// std::cout << "intersectCount:" << intersectCount << std::endl;
+
+		if (intersectCount <= 1) {
+			return false;
+		} else {
+
+			if (intersects01) {
+				intersectionA = closestIntersection01;
+			} else {
+				intersectionA = closestIntersection02;
+			}
+
+			if (intersects12) {
+				intersectionB = closestIntersection12;
+			} else {
+				intersectionB = closestIntersection02;
+			}
+
+			return true;
 		}
-
-		hpvec3 p01 = p1 - p0;
-		hpvec3 p02 = p2 - p0;
-		hpvec3 p12 = p2 - p1;
-
-		if (!pSS01) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p02);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p12);
-		  } else if (!pSS02) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, lineDirection, p01);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p12);
-		  } else if (!pSS12) {
-		    intersectionA = computeKnownPlanarLineLineIntersection(linePoint, p1, lineDirection, p01);
-		    intersectionB = computeKnownPlanarLineLineIntersection(linePoint, p2, lineDirection, p02);
-		  }
-
-		  return true;
 	}
 
 	// This method computes the one and only one intersection point of two lines when we know that it must exist
-	hpvec3 inline computeKnownPlanarLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionA, hpvec3 lineDirectionB) {
+	hpvec3 computeClosestLineLineIntersection(hpvec3& linePointA, hpvec3& linePointB, hpvec3 lineDirectionA, hpvec3 lineDirectionB) {
 		hpreal t;
 		if (!floatEquals(lineDirectionB.x, 0.0)) {
-			t = (linePointA.x - linePointB.x) / lineDirectionB.x;
+			t = (linePointB.x - linePointA.x) / lineDirectionB.x;
 		} else if (!floatEquals(lineDirectionB.y, 0.0)) {
-			t = (linePointA.y - linePointB.y) / lineDirectionB.y;
+			t = (linePointB.y - linePointA.y) / lineDirectionB.y;
 		} else {
-			t = (linePointA.z - linePointB.z) / lineDirectionB.z;
+			t = (linePointB.z - linePointA.z) / lineDirectionB.z;
 		}
-		return linePointB + t * lineDirectionB;
+		hpvec3 intersectionPoint = linePointB + t * lineDirectionB;
+		return intersectionPoint;
 	}
 
 	// this method intersects two non axis aligned planes
-	void inline intersectPlanes(hpvec3& t_normal, hpvec3& t_vertex, hpvec3& m_normal, hpvec3& m_vertex,
+	void intersectPlanes(hpvec3& t_normal, hpvec3& t_vertex, hpvec3& m_normal, hpvec3& m_vertex,
 			hpvec3& linePoint, hpvec3& lineDirection) {
 
 		hpvec3 h1 = m_vertex;
@@ -406,12 +407,12 @@ struct Circle {
 	}
 
 
-	hpreal inline computePointPlaneDistance(hpvec3& p_normal, hpvec3& p_vertex, hpvec3& point) {
+	hpreal computePointPlaneDistance(hpvec3& p_normal, hpvec3& p_vertex, hpvec3& point) {
 		return glm::dot((point - p_vertex), glm::normalize(p_normal));
 	}
 
 	// Check whether 2 vectors are linear dependent
-	bool inline linearDependent(hpvec3& a, hpvec3& b) {
+	bool linearDependent(hpvec3& a, hpvec3& b) {
 		if (floatEquals(a.x, 0.0) ^ floatEquals(b.x, 0.0))
 			return false;
 		if (floatEquals(a.y, 0.0) ^ floatEquals(b.y, 0.0))
@@ -441,19 +442,19 @@ struct Circle {
 	}
 
 	// Check whether two hpreals are equal plus minus a tolerance value
-	bool inline floatEquals(hpreal a, hpreal b) {
+	bool floatEquals(hpreal a, hpreal b) {
 		const hpreal epsilon = 10e-07;
 		return (a > b - epsilon) && (a < b + epsilon);
 	}
 
 	// Check whether two floats are equal plus minus a tolerance value
-	bool inline floatEquals(hpreal a, hpreal b, hpreal epsilon) {
+	bool floatEquals(hpreal a, hpreal b, hpreal epsilon) {
 		return (a > b - epsilon) && (a < b + epsilon);
 	}
 
 	// Check whether a vector has only zeros
 	// This requires a very small epsilon (i.e. 10-e7) to avoid misinterpretation of small normals
-	bool inline isNullVector(hpvec3& vector) {
+	bool isNullVector(hpvec3& vector) {
 	  hpreal epsilon = 10e-10;
 		if (floatEquals(vector.x, 0.0, epsilon) && floatEquals(vector.y, 0.0, epsilon) && floatEquals(vector.z, 0.0, epsilon)) {
 			return true;
@@ -463,7 +464,7 @@ struct Circle {
 	}
 
 	// Check whether a vector has only valid entries
-	bool inline isValidVector(hpvec3& vector) {
+	bool isValidVector(hpvec3& vector) {
 		if (std::isinf(vector.x) || std::isnan(vector.x)) {
 		    return false;
 		}
@@ -479,30 +480,30 @@ struct Circle {
 
 	// Check whether float a is smaller than float b
 	// A tolerance is added that makes overlapping more likely
-	bool inline floatSmaller(hpreal a, hpreal b) {
+	bool floatSmaller(hpreal a, hpreal b) {
 		const hpreal epsilon = 10e-06;
 		return floatSmaller(a, b, epsilon);
 	}
 
 	// Check whether float a is smaller than float b
 	// A tolerance is added that makes overlapping more likely
-	bool inline floatSmaller(hpreal a, hpreal b, hpreal epsilon) {
+	bool floatSmaller(hpreal a, hpreal b, hpreal epsilon) {
 		return a < b + epsilon;
 	}
 
 	// Check whether hpreal a is bigger than hpreal b
 	// A tolerance is added that makes overlapping more likely
-	bool inline floatBigger(hpreal a, hpreal b) {
+	bool floatBigger(hpreal a, hpreal b) {
 		const hpreal epsilon = 10e-06;
 		return floatBigger(a, b, epsilon);
 	}
 
-	bool inline floatBigger(hpreal a, hpreal b, hpreal epsilon) {
+	bool floatBigger(hpreal a, hpreal b, hpreal epsilon) {
 		return a > b - epsilon;
 	}
 
 	// Check whether a given point lies inside a triangle, assuming that they lie already in one plane
-	bool inline pointInTriangle(hpvec3& p, Triangle& triangle) {
+	bool pointInTriangle(hpvec3& p, Triangle& triangle) {
 		hpvec3 a = triangle.vertices[0];
 		hpvec3 b = triangle.vertices[1];
 		hpvec3 c = triangle.vertices[2];
@@ -517,7 +518,7 @@ struct Circle {
 
 	// Check whether 2 points p1 and p2 are on the same side of the line between a and b
 	// If p1 or p2 is on the line, it counts as not being on the same side
-	bool inline pointsOnSameSideOfLineTolerant(hpvec3& p1, hpvec3& p2, hpvec3& a, hpvec3& b) {
+	bool pointsOnSameSideOfLineTolerant(hpvec3& p1, hpvec3& p2, hpvec3& a, hpvec3& b) {
 		hpvec3 cp1 = glm::cross(b - a, p1 - a);
 		hpvec3 cp2 = glm::cross(b - a, p2 - a);
 
@@ -532,7 +533,7 @@ struct Circle {
 
 	// Check whether 2 points p1 and p2 are on the same side of the line between a and b
 	// If p1 or p2 is on the line, it counts as being on the same side
-	bool inline pointsOnSameSideOfLineNonTolerant(hpvec3& p1, hpvec3& p2, hpvec3& a, hpvec3& b) {
+	bool pointsOnSameSideOfLineNonTolerant(hpvec3& p1, hpvec3& p2, hpvec3& a, hpvec3& b) {
 		hpvec3 cp1 = glm::cross(b - a, p1 - a);
 		hpvec3 cp2 = glm::cross(b - a, p2 - a);
 

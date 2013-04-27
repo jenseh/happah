@@ -57,8 +57,6 @@ public :
      * @return the RigidAffineTransformation to the given time t.
      */
     RigidAffineTransformation getRigidAffineTransformation(double t);
-
-
 };
 
 #endif // KINEMATIC_H

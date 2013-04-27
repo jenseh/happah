@@ -334,6 +334,26 @@ Form* ToothProfileGUIStateNode::getForm() {
 	return m_toothProfileForm;
 }
 
+// TriangleMesh
+
+TriangleMeshGUIStateNode::TriangleMeshGUIStateNode (TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name) 
+	: GUIStateNode(name), m_triangleMesh(triangleMesh), m_triangleMeshContextMenu(triangleMeshContextMenu) {}
+
+TriangleMeshGUIStateNode::~TriangleMeshGUIStateNode() {}
+
+ContextMenu* TriangleMeshGUIStateNode::getContextMenu() const {
+	m_triangleMeshContextMenu->setTriangleMesh(m_triangleMesh);
+	return m_triangleMeshContextMenu;
+}
+
+shared_ptr<void> TriangleMeshGUIStateNode::getData() const {
+	return m_triangleMesh;
+}
+
+Form* TriangleMeshGUIStateNode::getForm() {
+	return 0;
+}
+
 // Worm
 
 WormGUIStateNode::WormGUIStateNode(Worm_ptr worm, WormForm* wormForm, string name)

@@ -57,6 +57,8 @@ public:
 	void insert(ToothProfile_ptr toothProfile, ToothProfileGUIStateNode_ptr toothProfileGuiStateNode);
 	LineMeshRenderStateNode_ptr insert(ToothProfile_ptr toothProfile, LineMesh_ptr lineMesh, hpcolor& color);
 	PointCloudRenderStateNode_ptr insert(ToothProfile_ptr toothProfile, PointCloud_ptr pointCloud, hpcolor& color);
+	void insert(TriangleMesh_ptr triangleMesh, TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode);
+	TriangleMeshRenderStateNode_ptr insert(TriangleMesh_ptr triangleMesh, hpcolor& color);
 	TriangleMeshRenderStateNode_ptr insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color);
 	void insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode);
 	void registerSceneListener(SceneListener* sceneListener);

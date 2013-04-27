@@ -15,9 +15,8 @@
 struct CircleHitResult {
   hpvec3 hitPointA;
   hpvec3 hitPointB;
-  Triangle* object;
 
-  CircleHitResult(hpvec3 hitPointA_, hpvec3 hitPointB_, Triangle* object_) : hitPointA(hitPointA_), hitPointB(hitPointB_), object(object_) {
+  CircleHitResult(hpvec3 hitPointA_, hpvec3 hitPointB_) : hitPointA(hitPointA_), hitPointB(hitPointB_) {
   }
 };
 
@@ -109,7 +108,7 @@ struct Circle {
 				    	hitPoint = &closestPoint02;
 				    }
 
-				    CircleHitResult tempHitResult = CircleHitResult(*hitPoint, *hitPoint, triangle);
+				    CircleHitResult tempHitResult = CircleHitResult(*hitPoint, *hitPoint);
 				    hitResults->push_back(tempHitResult);
 
 				    // std::cout << "Success: Collinear | Triangle inside circle!" << std::endl;
@@ -117,7 +116,7 @@ struct Circle {
 				} else {
 					// Now there is either no intersection or the circle is inside the triangle
 					if (pointInTriangle(m_center, triangle)) {
-						CircleHitResult tempHitResult = CircleHitResult(m_center, m_center, triangle);
+						CircleHitResult tempHitResult = CircleHitResult(m_center, m_center);
 						hitResults->push_back(tempHitResult);
 
 						// std::cout << "Success: Collinear | Circle inside triangle!" << std::endl;
@@ -218,7 +217,7 @@ struct Circle {
 						}
 
 						// std::cout << *maxTv << ", " << *minCv << ", " << *maxCv << ", " << *minTv << std::endl;
-						CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec, triangle);
+						CircleHitResult tempHitResult = CircleHitResult(*minVec, *maxVec);
 						hitResults->push_back(tempHitResult);
 						return true;
 					} else {

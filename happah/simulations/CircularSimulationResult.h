@@ -18,7 +18,8 @@ public:
   hpreal computeAngle(hpvec3 point);
   hpuint computeAngleSlot(hpreal angle);
   hpreal computeRadiusXY(hpvec3 point);
-  hpuint convertPosZToPosZIdx(hpreal posZ);
+  hpuint computeSlot(hpuint angleSlot, hpuint posZSlot);
+  hpuint convertPosZToPosZSlot(hpreal posZ);
   hpreal getItem(hpuint angleSlot, hpuint posZSlot);
   hpreal getItem(hpvec3 point);
   hpuint getResolutionZ();

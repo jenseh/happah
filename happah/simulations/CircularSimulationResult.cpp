@@ -30,8 +30,8 @@ bool CircularSimulationResult::addItem(hpvec3 point) {
 	hpreal angle = computeAngle(point);
 	hpuint angleSlot = computeAngleSlot(angle);
 
-	hpuint posZSlot = convertPosZToPosZIdx(point.z);
-	hpuint slot = posZSlot * m_angleSteps + angleSlot;
+	hpuint posZSlot = convertPosZToPosZSlot(point.z);
+	hpuint slot = computeSlot(angleSlot, posZSlot);
 
 //	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << " -> " << angleSlot << " : " << posZSlot << std::endl;
 
@@ -53,7 +53,7 @@ hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
 	assert(angleSlot < m_angleSteps);
 	assert(posZSlot < m_resolutionZ);
 
-	int slot = posZSlot * m_angleSteps + angleSlot;
+	hpuint slot = computeSlot(angleSlot, posZSlot);
 
 	std::unordered_map<hpuint,hpreal>::const_iterator result = m_entries->find(slot);
 	if (result == m_entries->end()) {
@@ -99,7 +99,12 @@ hpuint CircularSimulationResult::computeAngleSlot(hpreal angle) {
 	}
 }
 
-hpuint CircularSimulationResult::convertPosZToPosZIdx(hpreal posZ) {
+hpuint CircularSimulationResult::computeSlot(hpuint angleSlot, hpuint posZSlot) {
+	hpuint slot = posZSlot * m_angleSteps + angleSlot;
+	return slot;
+}
+
+hpuint CircularSimulationResult::convertPosZToPosZSlot(hpreal posZ) {
 	int result = (posZ - m_startZ) / (m_endZ - m_startZ) * m_resolutionZ;
 
 	if (result < 0) {
@@ -119,7 +124,6 @@ hpreal CircularSimulationResult::computeRadiusXY(hpvec3 point) {
 hpreal CircularSimulationResult::getItem(hpvec3 point) {
 	// Check whether the point is in our Z range, if not abort and return positive infinity
 	if (!isInZRange(point)) {
-		std::cout << "Point not in Z Range!" << std::endl;
 		return INFINITY;
 	}
 
@@ -127,8 +131,8 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 	hpreal angle = computeAngle(point);
 	hpuint angleSlot = computeAngleSlot(angle);
 
-	hpuint posZSlot = convertPosZToPosZIdx(point.z);
-	hpuint slot = posZSlot * m_angleSteps + angleSlot;
+	hpuint posZSlot = convertPosZToPosZSlot(point.z);
+	hpuint slot = computeSlot(angleSlot, posZSlot);
 
 //	std::cout << "Getting point: " << angle << " -> " << angleSlot << std::endl;
 

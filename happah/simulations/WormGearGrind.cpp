@@ -8,7 +8,7 @@
 //}
 
 WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh)
-	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(0.4) { //TODO:worm->getModule() / 4.0
+	: m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(worm->getModule() / 4.0) { //TODO: or 0.4?
 	init(gearReferenceRadius);
 }
 
@@ -72,6 +72,8 @@ CircularSimulationResult* WormGearGrind::calculateGrindingDepth(hpreal time) {
    CircularSimulationResult* simResult = new CircularSimulationResult(m_resultAngleSlotCount, 0.0, m_gear->getFaceWidth(), gearResolutionZ);
 
 
+
+
 //   clock_t start, end;
 //   start = clock();
 
@@ -101,14 +103,14 @@ void inline WormGearGrind::computeIntersectingTriangles(hpuint& gearPosZIdx, Cir
   // Retrieve outermost circle at current z position
   Circle circle = m_gearCircleCloud->computeOuterCircle(gearPosZIdx);
 
-  LoggingUtils::print(circle);
+//  LoggingUtils::print(circle);
 
   std::list<CircleHitResult>* hitResults = new std::list<CircleHitResult>;
 
   // Transform circle from worm coordinates to gear coordinates
   Circle transformedCircle = transformCircle(circle, glm::inverse(wormModelMatrix) * gearModelMatrix);
 
-  LoggingUtils::print(transformedCircle);
+//  LoggingUtils::print(transformedCircle);
 
   // Find all intersections between circle and triangles
   m_kdTree->intersectAll(transformedCircle, hitResults);
@@ -167,14 +169,31 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 	CircularSimulationResult* simResult = calculateGrindingDepth(time);
 
 	vector<hpvec3>* verticesAndNormals = m_gearMesh->getVerticesAndNormals();
-	vector<hpuint>* indices = m_gearMesh->getIndices();
+
+//	std::cout << "Starting tests" << std::endl;
+//	for (hpuint x=0; x<100;x++) {
+//		for (hpuint y=0; y<100;y++) {
+//			hpreal xVal = (x/100.0-0.5)*4.0;
+//			hpreal yVal = (y/100.0-0.5)*4.0;
+//			hpreal angle = simResult->computeAngle(hpvec3(xVal, yVal, 0.1));
+//			hpuint angleSlot = simResult->computeAngleSlot(angle);
+//			std::cout << "Test angle: " << xVal << " " << yVal << " " << angle << " " << angleSlot << std::endl;
+//		}
+//	}
+
+//	for (hpuint z=0; z<1000;z++) {
+//		hpreal zVal = (z/1000.0-0.5);
+//		hpuint posZSlot = simResult->convertPosZToPosZSlot(zVal);
+//		std::cout << "zVal " << zVal << " " << posZSlot << std::endl;
+//	}
+//	std::cout << "Ending tests" << std::endl;
 
     // Fill color
-    for(hpuint i = 0; i < m_gearMesh->getVertexCount(); i++){
-    	hpvec3 point = verticesAndNormals->at(2 * indices->at(i));
+    for(hpuint i = 0; i < verticesAndNormals->size()/2; i++){
+    	hpvec3 point = verticesAndNormals->at(2*i);
 
 		hpreal resultRadius = simResult->getItem(point);
-		hpreal currentRadius = simResult->computeRadiusXY(point); // TODO: dont use currentradius
+		hpreal currentRadius = simResult->computeRadiusXY(point);
 		hpreal angle = simResult->computeAngle(point);
 		hpreal distance = currentRadius - resultRadius;
 //		hpreal distance = resultRadius;
@@ -185,7 +204,7 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 //				std::cout << resultRadius << " " << currentRadius << " " << distance << std::endl;
 //			}
 		hpuint angleSlot = simResult->computeAngleSlot(angle);
-		hpuint posZSlot = simResult->convertPosZToPosZIdx(point.z);
+		hpuint posZSlot = simResult->convertPosZToPosZSlot(point.z);
 
 		bool exists = resultRadius != INFINITY;
 //		std::cout << currentRadius << " " << angle << " -> " << exists << std::endl;
@@ -199,6 +218,7 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 
 //	    	std::cout << "ratio: " << distanceRatio  << std::endl;
 		if (!exists) {
+//			std::cout << point.x << ", " << point.y << " " << point.z << std::endl;
 			m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
 		} else {
 			m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);

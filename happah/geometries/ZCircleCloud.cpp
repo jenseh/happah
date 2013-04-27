@@ -12,18 +12,18 @@ hpreal ZCircleCloud::getMaxRadius() {
 	return m_maxRadius;
 }
 
-hpreal ZCircleCloud::convertPosZIdxToPosZ(hpuint posZIdx) {
+hpreal ZCircleCloud::convertPosZSlotToPosZ(hpuint posZSlot) {
 	// Place posZ in the middle of the possible interval to avoid numerical problems
-	return m_startZ + (posZIdx + 0.5) * (m_endZ - m_startZ) / m_resolutionZ;
+	return m_startZ + (posZSlot + 0.5) * (m_endZ - m_startZ) / m_resolutionZ;
 }
 
-Circle ZCircleCloud::computeOuterCircle(hpuint posZIdx) {
-  hpreal posZ = convertPosZIdxToPosZ(posZIdx);
+Circle ZCircleCloud::computeOuterCircle(hpuint posZSlot) {
+  hpreal posZ = convertPosZSlotToPosZ(posZSlot);
   hpvec3 center = hpvec3(0.0, 0.0, posZ);
   hpvec3 normal = hpvec3(0.0, 0.0, 1.0);
 
   // We add an epsilon to max radius to detect intersections close to the circles
-  hpreal epsilon = m_maxRadius / 5.0;
+  hpreal epsilon = m_maxRadius / 10.0;
   return Circle(center,
                 normal,
                 m_maxRadius + epsilon);

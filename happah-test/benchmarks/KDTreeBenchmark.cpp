@@ -15,12 +15,15 @@ KDTreeBenchmark::KDTreeBenchmark() {
 		vector<Triangle>* discTriangles = disc->toTriangleMesh(20*i)->toTriangles();
 		//cout<<"Triangles count:"<< discTriangles->size()<<endl;
 		cout<<discTriangles->size();
-		KDTree tree(discTriangles);
+		//KDTree tree(discTriangles);
 		vector<Ray>* rays = gear->toTriangleMesh()->toRays();
 		//cout<<"Rays:"<<rays->size()<<endl;
 		clock_t start = clock();
-		for( auto it: *rays) {
-			tree.intersectFirst(it, 0.18);
+		for( size_t j = 0; j < rays->size(); j++) {
+			//tree.intersectFirst(it, 0.18);
+			for( vector<Triangle>::iterator it = discTriangles->begin(); it != discTriangles->end(); ++it) {
+				rays->at(j).intersect(*it);
+			}
 		}
 		clock_t end = clock();
 		cout<<"; "<<(double)(end - start) / (double)rays->size() <<endl;

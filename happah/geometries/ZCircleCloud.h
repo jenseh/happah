@@ -14,7 +14,7 @@ public:
   hpuint getResolutionZ();
   hpreal getMaxRadius();
 
-  Circle computeOuterCircle(hpuint posZIdx);
+  Circle computeOuterCircle(hpuint posZSlot);
 
 private:
   hpreal m_maxRadius;
@@ -23,7 +23,7 @@ private:
   hpreal m_endZ;
   hpuint m_resolutionZ;
 
-  hpreal convertPosZIdxToPosZ(hpuint posZIdx);
+  hpreal convertPosZSlotToPosZ(hpuint posZSlot);
 };
 
 typedef std::shared_ptr<ZCircleCloud> ZCircleCloud_ptr;

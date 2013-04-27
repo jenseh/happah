@@ -13,7 +13,7 @@ SurfaceOfRevolution_ptr DiscGenerator::generateDiscFrom(CylindricalGear& cylindr
 SurfaceOfRevolution_ptr DiscGenerator::generateDiscFrom(StandardProfile profile) {
     std::vector<hpvec2> verticesAndNormals;
     verticesAndNormals.reserve(150);
-    profile.getProfilePartition(verticesAndNormals);
+    profile.getToothSpaceProfile(verticesAndNormals);
     invertProfile(verticesAndNormals);
     return SurfaceOfRevolution_ptr(new SurfaceOfRevolution(verticesAndNormals));
 }

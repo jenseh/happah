@@ -17,6 +17,9 @@ struct Triangle{
       vertices[1] = vertexB;
       vertices[2] = vertexC;
     }
+
+    ~Triangle() {}
+
     /**
      * @brief computeNormal computes the normal with the cross product of the span vectors of the triangle.
      * @return unnormalized normal of the triangle.

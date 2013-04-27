@@ -71,6 +71,18 @@ void LoggingUtils::print(SimpleGear& simpleGear) {
   cout << endl;
 }
 
+void LoggingUtils::print(const char* name, hpmat4x4& matrix) {
+	cout << name << ": " << endl;
+	for (int y = 0; y < 4; y++) {
+		for (int x = 0; x < 4; x++) {
+			hpreal value = matrix[x][y];
+			if (abs(value) < 10e-5) value = 0.0;
+			cout << value << " ";
+		}
+		cout << endl;
+	}
+}
+
 void LoggingUtils::print(const char* name, Triangle& triangle) {
 	cout << name << ": " << endl;
 	LoggingUtils::printVec("VertexA", triangle.vertices[0]);

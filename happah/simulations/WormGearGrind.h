@@ -114,7 +114,7 @@ private:
 	/**
 	 * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
 	 */
-	static const int STEP_COUNT = 1;
+	static const int STEP_COUNT = 10;
 
 	Worm_ptr m_worm;
 	TriangleMesh_ptr m_wormMesh;
@@ -130,8 +130,8 @@ private:
 	hpreal m_maxDistance;
 	std::map<hpreal, WormGearGrindResult> m_precalcResults;
 
-	constexpr static size_t m_resultAngleSlotCount = 6;
-	constexpr static size_t m_resultPosZSlotCount = 1;
+	constexpr static size_t m_resultAngleSlotCount = 10;
+	constexpr static size_t m_resultPosZSlotCount = 100;
 
 };
 

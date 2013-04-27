@@ -130,7 +130,8 @@ HEADERS += \
 \
 	happah/triangulators/RayCloudTriangulator.h \
 	happah/triangulators/RayCloudTriangulatorBPA.h \
-\	
+\		
+	happah-test/benchmarks/DiscGearGrindBenchmark.h \
 	happah-test/benchmarks/KDTreeBenchmark.cpp \
 	happah-test/simulations/WormGearGrindTest.h \
 	happah-test/tests/CircleTriangleIntersectionTest.h
@@ -249,6 +250,7 @@ SOURCES += \
 \
 	happah/triangulators/RayCloudTriangulatorBPA.cpp \
 \	
+	happah-test/benchmarks/DiscGearGrindBenchmark.cpp \
 	happah-test/benchmarks/KDTreeBenchmark.cpp \
 	happah-test/simulations/WormGearGrindTest.cpp \
 	happah-test/tests/CircleTriangleIntersectionTest.cpp

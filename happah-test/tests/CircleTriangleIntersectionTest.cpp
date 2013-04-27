@@ -18,14 +18,14 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
     Circle circle4 = Circle(hpvec3(0.0, 0.0, 0.1),	 hpvec3(1.0, 0.0, 0.0), 1.0);
     Circle circle5 = Circle(hpvec3(getRand(), getRand(), getRand()),	 hpvec3(getRand(), getRand(), getRand()), getRand());
 
-    std::vector<Circle*> circles;
+    std::vector<Circle> circles;
 
-    circles.push_back(&circle0);
-    circles.push_back(&circle1);
-    circles.push_back(&circle2);
-    circles.push_back(&circle3);
-    circles.push_back(&circle4);
-    circles.push_back(&circle5);
+    circles.push_back(circle0);
+    circles.push_back(circle1);
+    circles.push_back(circle2);
+    circles.push_back(circle3);
+    circles.push_back(circle4);
+    circles.push_back(circle5);
 
 
 
@@ -36,14 +36,14 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
 
       std::list<CircleHitResult>* hitResults = new std::list<CircleHitResult>;
       for (unsigned int c = 0; c < circles.size(); c++) {
-          Circle* circle = circles[c];
-          circle->m_normal = glm::normalize(circle->m_normal);
+          Circle circle = circles[c];
+          circle.m_normal = glm::normalize(circle.m_normal);
 
-          hpvec3 orthogonalToNormal1 = glm::normalize(glm::cross(circle->m_normal, circle->m_normal + hpvec3(getRand(), getRand(), getRand())));
-          hpvec3 orthogonalToNormal2 = glm::normalize(glm::cross(circle->m_normal, orthogonalToNormal1));
+          hpvec3 orthogonalToNormal1 = glm::normalize(glm::cross(circle.m_normal, circle.m_normal + hpvec3(5.8, 2.1, 3.1)));
+          hpvec3 orthogonalToNormal2 = glm::normalize(glm::cross(circle.m_normal, orthogonalToNormal1));
 
           // Triangle with same center point
-          Triangle triangle0 = Triangle(circle->m_center,
+          Triangle triangle0 = Triangle(circle.m_center,
                                         hpvec3(getRand(), getRand(), getRand()),
                                         hpvec3(getRand(), getRand(), getRand()));
 
@@ -52,50 +52,50 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
           LoggingUtils::printVec("orthogonalToNormal2", orthogonalToNormal2);
 
           // Triangle that is included in circle
-          Triangle triangle1 = Triangle(circle->m_center + orthogonalToNormal1 * circle->m_radius * 0.5f,
-                                        circle->m_center + orthogonalToNormal2 * circle->m_radius * 0.5f,
-                                        circle->m_center);
+          Triangle triangle1 = Triangle(circle.m_center + orthogonalToNormal1 * circle.m_radius * 0.5f,
+                                        circle.m_center + orthogonalToNormal2 * circle.m_radius * 0.5f,
+                                        circle.m_center);
 
           // Triangle that intersects circle in at least one edge point
-          Triangle triangle2 = Triangle(circle->m_center + orthogonalToNormal1 * circle->m_radius,
+          Triangle triangle2 = Triangle(circle.m_center + orthogonalToNormal1 * circle.m_radius,
   	  	  	  	  						hpvec3(1.0, 1.0, 3.0),
   	  	  	  	  						hpvec3(-1.0, 2.0, 1.0));
 //        		  	  	  	  	  	  	hpvec3(getRand(), getRand(), getRand()),
 //        		                        hpvec3(getRand(), getRand(), getRand()));
-//        		  	  	  	  	  	  	circle->m_center + hpvec3(2.0 * circle->m_radius, -1.0, 0.0),
-//        		  	  	  	  	  	    circle->m_center + hpvec3(2.0 * circle->m_radius, 1.0, 0.0));
+//        		  	  	  	  	  	  	circle.m_center + hpvec3(2.0 * circle.m_radius, -1.0, 0.0),
+//        		  	  	  	  	  	    circle.m_center + hpvec3(2.0 * circle.m_radius, 1.0, 0.0));
 
           // Triangle that is in the same plane but too far away
-          Triangle triangle3 = Triangle(circle->m_center + orthogonalToNormal1 * circle->m_radius * 2.0f,
-                                        circle->m_center + orthogonalToNormal1 * circle->m_radius * 4.0f,
-                                        circle->m_center + orthogonalToNormal2 * circle->m_radius * 2.0f);
+          Triangle triangle3 = Triangle(circle.m_center + orthogonalToNormal1 * circle.m_radius * 2.0f,
+                                        circle.m_center + orthogonalToNormal1 * circle.m_radius * 4.0f,
+                                        circle.m_center + orthogonalToNormal2 * circle.m_radius * 2.0f);
 
           // Triangle that is parallel to circle
-          Triangle triangle4 = Triangle(circle->m_center + circle->m_normal + orthogonalToNormal1 * circle->m_radius,
-                                        circle->m_center + circle->m_normal + orthogonalToNormal2 * circle->m_radius,
-                                        circle->m_center + circle->m_normal);
+          Triangle triangle4 = Triangle(circle.m_center + circle.m_normal + orthogonalToNormal1 * circle.m_radius,
+                                        circle.m_center + circle.m_normal + orthogonalToNormal2 * circle.m_radius,
+                                        circle.m_center + circle.m_normal);
 
           // Triangle that cuts through the circle plane
-          Triangle triangle5 = Triangle(circle->m_center - circle->m_normal * circle->m_radius,
-                                        circle->m_center + circle->m_normal * circle->m_radius,
-                                        circle->m_center + orthogonalToNormal2 * circle->m_radius);
+          Triangle triangle5 = Triangle(circle.m_center - circle.m_normal * circle.m_radius,
+                                        circle.m_center + circle.m_normal * circle.m_radius,
+                                        circle.m_center + orthogonalToNormal2 * circle.m_radius);
 
           // Triangle that is included in circle
-          Triangle triangle6 = Triangle(circle->m_center + orthogonalToNormal1 * circle->m_radius * 5.0f,
-                  	  	  	  	  	    circle->m_center + orthogonalToNormal2 * circle->m_radius * 5.0f,
-                  	  	  	  	  	    circle->m_center - orthogonalToNormal2 * circle->m_radius * 5.0f - orthogonalToNormal1 * circle->m_radius * 5.0f);
+          Triangle triangle6 = Triangle(circle.m_center + orthogonalToNormal1 * circle.m_radius * 5.0f,
+                  	  	  	  	  	    circle.m_center + orthogonalToNormal2 * circle.m_radius * 5.0f,
+                  	  	  	  	  	    circle.m_center - orthogonalToNormal2 * circle.m_radius * 5.0f - orthogonalToNormal1 * circle.m_radius * 5.0f);
 
           // Triangle that os
 
 
-          std::vector<Triangle*> triangles;
-          triangles.push_back(&triangle0);
-          triangles.push_back(&triangle1);
-          triangles.push_back(&triangle2);
-          triangles.push_back(&triangle3);
-          triangles.push_back(&triangle4);
-          triangles.push_back(&triangle5);
-          triangles.push_back(&triangle6);
+          std::vector<Triangle> triangles;
+          triangles.push_back(triangle0);
+          triangles.push_back(triangle1);
+          triangles.push_back(triangle2);
+          triangles.push_back(triangle3);
+          triangles.push_back(triangle4);
+          triangles.push_back(triangle5);
+          triangles.push_back(triangle6);
 
           // Define the vector that holds the results
           bool results[7] = {1, 1, 1, 0, 0, 1, 1};
@@ -106,7 +106,7 @@ CircleTriangleIntersectionTest::CircleTriangleIntersectionTest() {
 //        		  std::cout << "now!" << std::endl;
 //        	  }
 
-              bool result = circle->intersect(triangles[t], hitResults);
+              bool result = circle.intersect(triangles[t], hitResults);
               bool matchesSolution = (result == results[t]);
 
 //              if (t == 2 && !matchesSolution) {

@@ -23,7 +23,7 @@ Circle ZCircleCloud::computeOuterCircle(hpuint posZSlot) {
   hpvec3 normal = hpvec3(0.0, 0.0, 1.0);
 
   // We add an epsilon to max radius to detect intersections close to the circles
-  hpreal epsilon = m_maxRadius / 10.0;
+  hpreal epsilon = m_maxRadius / 100.0;
   return Circle(center,
                 normal,
                 m_maxRadius + epsilon);

@@ -21,6 +21,7 @@ public:
 	hpreal getPressureAngle() const;
 
     void getProfilePartition(std::vector<hpvec2>& partition);
+    void getToothSpaceProfile(std::vector<hpvec2>& partition);
 
 private:
     hpreal m_module;

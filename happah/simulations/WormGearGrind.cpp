@@ -209,7 +209,6 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 		hpreal currentRadius = simResult->computeRadiusXY(point);
 		hpreal angle = simResult->computeAngle(point);
 		hpreal distance = currentRadius - resultRadius;
-//		hpreal distance = resultRadius;
 
 
 //			hpreal distance = resultRadius;
@@ -235,11 +234,11 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 			distanceRatio = distance / m_maxDistance;
 		}
 
-		if (!exists) {
-			m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
-		} else {
-			m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);
-		}
+//		if (!exists) {
+//			m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
+//		} else {
+//			m_gearColor->at(i) = hpcolor(0.0, 0.0, 1.0, 1.0);
+//		}
 
 //		if (!exists) {
 //			m_gearColor->at(i) = hpcolor(0.0, 1.0, 0.0, 1.0);
@@ -249,13 +248,13 @@ WormGearGrindResult WormGearGrind::calculateSimulationResult(hpreal time){
 //			m_gearColor->at(i) = hpcolor(distanceRatio<0, 0.0, 0.0, 1.0);
 //		}
 
-//		if (!exists) {
-//			m_gearColor->at(i) = hpcolor(0.0, 0.5, 0.0, 1.0);
-//		} else if (distanceRatio >= 0) {
-//			m_gearColor->at(i) = hpcolor(0.0, 0.5 * distanceRatio, 1.0 - distanceRatio, 1.0);
-//		} else {
-//			m_gearColor->at(i) = hpcolor(-distanceRatio, 0.5 * (1.0+distanceRatio), 0.0, 1.0);
-//		}
+		if (!exists) {
+			m_gearColor->at(i) = hpcolor(0.0, 0.5, 0.0, 1.0);
+		} else if (distanceRatio >= 0) {
+			m_gearColor->at(i) = hpcolor(0.0, 0.5 * distanceRatio, 1.0 - distanceRatio, 1.0);
+		} else {
+			m_gearColor->at(i) = hpcolor(-distanceRatio, 0.5 * (1.0+distanceRatio), 0.0, 1.0);
+		}
     }
 
     delete simResult;

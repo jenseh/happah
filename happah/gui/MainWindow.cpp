@@ -1,3 +1,4 @@
+#include <fstream>
 #include <QAction>
 #include <QApplication>
 #include <QMenu>
@@ -5,26 +6,30 @@
 
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/Viewport.h"
+#include "happah/gui/widgets/FileDialog.h"
+#include "happah/utilities/GeometryReader.h"
+
+using namespace std;
 
 MainWindow::MainWindow(GUIManager& guiManager, 
 	ViewportListener& viewportListener,
 	SceneGraphExplorerListener& sceneGraphExplorerListener,
 	DrawManager& drawManager
-) : m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
+) : m_guiManager(guiManager), m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
 	m_toolPanel(new ToolPanel(guiManager, this)) {
 	
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 
 	QMenu* file = menuBar()->addMenu("&File");
+	QAction* importAction = new QAction("&Import...", this);
+	importAction->setShortcut(tr("CTRL+I"));
+	connect(importAction, SIGNAL(triggered()), this, SLOT(handleImportActionTriggeredEvent()));
+	file->addAction(importAction);
 	QAction* quitAction = new QAction("&Quit", this);
 	quitAction->setShortcut(tr("CTRL+Q"));
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 	file->addAction(quitAction);
-	QAction* importAction = new QAction("&Import", this);
-	importAction->setShortcut(tr("CTRL+I"));
-	connect(importAction, SIGNAL(triggered()), this, SLOT(importFile()));
-	file->addAction(importAction);
 
 	QWidget* centralWidget = new QWidget(this);
 	QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
@@ -32,8 +37,6 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	centralWidgetLayout->addWidget(m_toolPanel);
 	centralWidgetLayout->addWidget(new Viewport(viewportListener, drawManager, this), 1);
 	centralWidgetLayout->addWidget(m_sceneGraphExplorerPanel);
-
-	m_guiManager = &guiManager;
 
 	m_bSplineCurveContextMenu = new BSplineCurveContextMenu(guiManager, this);
 	m_defaultContextMenu = new ContextMenu(this);
@@ -94,26 +97,27 @@ TriangleMeshContextMenu* MainWindow::getTriangleMeshContextMenu() {
 	return m_triangleMeshContextMenu;
 }
 
-void MainWindow::importFile() {
-	QString fileName("");
-	QString selectedFilter("");
-	/*
-		use QFileDialog object instead of static method QFileDialog::getOpenFileName.
-		because there exist a memory leak bug for the static use on some qt versions
-	*/
-	QFileDialog dialog(this);
-	dialog.setNameFilter(tr("Wavefront 3D Object (*.obj)"));
-	//dialog.setDirectory("");
-	dialog.setWindowTitle("Import File...");
-	if (dialog.exec() == QDialog::Accepted)
-	{
-		fileName = dialog.selectedFiles().first();
-		selectedFilter = dialog.selectedNameFilter();
-	}
-
-	if (selectedFilter == "Wavefront 3D Object (*.obj)") {
-		std::cout << "call createTriangleMeshFromObjFile(fileName) in guiManager" << endl;
-		//m_guiManager
+void MainWindow::handleImportActionTriggeredEvent() {
+	FileDialog fileDialog("Import...", this);
+	fileDialog.setNameFilters(FileDialog::WAVEFRONT_TRIANGLE_MESH_3D);
+	fileDialog.setFileMode(QFileDialog::ExistingFile);
+	if(fileDialog.exec() == QDialog::Accepted) {
+		QString path = fileDialog.selectedFiles().first();
+		hpuint contentType = FileDialog::getContentType(path);
+		if(contentType != 0) {
+			switch(contentType) {
+			case FileDialog::WAVEFRONT_TRIANGLE_MESH_3D: {
+				TriangleMesh* triangleMesh;
+				ifstream file(path.toStdString().c_str());
+				GeometryReader::readWavefrontObj(file, triangleMesh);
+				if(triangleMesh != 0)
+					m_guiManager.insert(TriangleMesh_ptr(triangleMesh));
+				return;
+			}
+			default:
+				return;
+			}
+		}
 	}
 }
 

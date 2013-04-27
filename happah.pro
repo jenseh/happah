@@ -74,6 +74,7 @@ HEADERS += \
 	happah/gui/forms/ToothProfileForm.h \
 	happah/gui/forms/WormForm.h \
 \
+	happah/gui/widgets/FileDialog.h \
 	happah/gui/widgets/LabeledIntegerSlider.h \
 	happah/gui/widgets/LabeledRealValuedSlider.h \
 	happah/gui/widgets/LabeledIntegerSpinBox.h\
@@ -130,7 +131,9 @@ HEADERS += \
 \
 	happah/triangulators/RayCloudTriangulator.h \
 	happah/triangulators/RayCloudTriangulatorBPA.h \
-\	
+\
+	happah/utilities/GeometryReader.h \
+\
 	happah-test/benchmarks/KDTreeBenchmark.cpp \
 	happah-test/simulations/WormGearGrindTest.h \
 	happah-test/tests/CircleTriangleIntersectionTest.h
@@ -201,6 +204,7 @@ SOURCES += \
 	happah/gui/forms/ToothProfileForm.cpp \
 	happah/gui/forms/WormForm.cpp \
 \
+	happah/gui/widgets/FileDialog.cpp \
 	happah/gui/widgets/LabeledIntegerSlider.cpp \
 	happah/gui/widgets/LabeledRealValuedSlider.cpp \
 	happah/gui/widgets/LabeledIntegerSpinBox.cpp\
@@ -248,6 +252,8 @@ SOURCES += \
 	happah/transformations/RigidAffineTransformation.cpp \
 \
 	happah/triangulators/RayCloudTriangulatorBPA.cpp \
+\
+	happah/utilities/GeometryReader.cpp \
 \	
 	happah-test/benchmarks/KDTreeBenchmark.cpp \
 	happah-test/simulations/WormGearGrindTest.cpp \

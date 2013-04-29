@@ -106,7 +106,7 @@ private:
     /**
      * @brief STEP_COUNT Number of time steps calculated for the simulation ( eg. if STEP_COUNT = 3 then steps t = 0, t = 0.5, t = 1 are calculated ).
      */
-	static const int STEP_COUNT = 5;
+	static const int STEP_COUNT = 10;
 
     SurfaceOfRevolution_ptr m_disc;
     TriangleMesh_ptr m_discMesh;

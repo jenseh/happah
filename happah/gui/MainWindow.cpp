@@ -7,7 +7,7 @@
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/Viewport.h"
 #include "happah/gui/widgets/FileDialog.h"
-#include "happah/utilities/GeometryReader.h"
+#include "happah/io/WavefrontGeometryReaderOBJ.h"
 
 using namespace std;
 
@@ -109,7 +109,7 @@ void MainWindow::handleImportActionTriggeredEvent() {
 			case FileDialog::WAVEFRONT_TRIANGLE_MESH_3D: {
 				TriangleMesh* triangleMesh;
 				ifstream file(path.toStdString().c_str());
-				GeometryReader::readWavefrontObj(file, triangleMesh);
+				WavefrontGeometryReaderOBJ::read(file, triangleMesh);
 				if(triangleMesh != 0)
 					m_guiManager.insert(TriangleMesh_ptr(triangleMesh));
 				return;

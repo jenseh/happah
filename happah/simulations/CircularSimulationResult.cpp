@@ -3,13 +3,13 @@
 #include "happah/simulations/CircularSimulationResult.h"
 
 // This class is always relative to the worm center and in worm coordinates
-CircularSimulationResult::CircularSimulationResult(hpuint angleSteps, hpreal startZ, hpreal endZ, hpuint resolutionZ) {
+CircularSimulationResult::CircularSimulationResult(hpuint angleSteps, hpreal startZ, hpreal endZ, hpuint posZSteps) {
 	m_angleSteps = angleSteps;
 	m_angleRange = 2 * M_PI / m_angleSteps;
 
 	m_startZ = startZ;
 	m_endZ = endZ;
-	m_resolutionZ = resolutionZ;
+	m_posZSteps = posZSteps;
 
 	m_entries = new std::unordered_map<hpuint,hpreal>();
 }
@@ -22,7 +22,6 @@ CircularSimulationResult::~CircularSimulationResult() {
 bool CircularSimulationResult::addItem(hpvec3 point) {
 	// Check whether the point is in our Z range, if not abort
 	if (!isInZRange(point)) {
-		std::cout << "Rejecting point: " << point.x << " " << point.y << " " << point.z << std::endl;
 		return false;
 	}
 
@@ -33,13 +32,10 @@ bool CircularSimulationResult::addItem(hpvec3 point) {
 	hpuint posZSlot = convertPosZToPosZSlot(point.z);
 	hpuint slot = computeSlot(angleSlot, posZSlot);
 
-//	std::cout << "Adding point: " << point.x << " " << point.y << " " << point.z << " -> " << angleSlot << " : " << posZSlot << std::endl;
-
 	assert(angleSlot < m_angleSteps);
-	assert(posZSlot < m_resolutionZ);
+	assert(posZSlot < m_posZSteps);
 
 	hpreal radius = computeRadiusXY(point);
-//  std::cout << "angle: " << angle << ", radius: " << radius << std::endl;
 	hpreal oldRadius = getItem(angleSlot, posZSlot);
 
 	if (oldRadius > radius) {
@@ -51,7 +47,7 @@ bool CircularSimulationResult::addItem(hpvec3 point) {
 
 hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
 	assert(angleSlot < m_angleSteps);
-	assert(posZSlot < m_resolutionZ);
+	assert(posZSlot < m_posZSteps);
 
 	hpuint slot = computeSlot(angleSlot, posZSlot);
 
@@ -64,7 +60,7 @@ hpreal CircularSimulationResult::getItem(hpuint angleSlot, hpuint posZSlot) {
 }
 
 hpreal CircularSimulationResult::computeAngle(hpvec3 point) {
-	// Double version: Works well
+	// Double version: Avoids floating point issues
 	double x = point.x;
 	double y = point.y;
 
@@ -77,12 +73,6 @@ hpreal CircularSimulationResult::computeAngle(hpvec3 point) {
 	double angle = y >= 0.0 ? aCos : 2 * M_PI - aCos;
 
 	return angle;
-
-	// Float version: Results in nasty bugs
-//	hpreal normalizedX = point.x / sqrt(point.x * point.x);
-//	hpreal aCos = normalizedX >= 0.99 ? 0.0 : normalizedX < -0.99 ? M_PI : acos(normalizedX);
-//	hpreal angle = point.y >= 0.0 ? aCos : 2 * M_PI - aCos;
-//	return angle;
 }
 
 hpuint CircularSimulationResult::computeAngleSlot(hpreal angle) {
@@ -105,12 +95,12 @@ hpuint CircularSimulationResult::computeSlot(hpuint angleSlot, hpuint posZSlot) 
 }
 
 hpuint CircularSimulationResult::convertPosZToPosZSlot(hpreal posZ) {
-	int result = (posZ - m_startZ) / (m_endZ - m_startZ) * m_resolutionZ;
+	int result = (posZ - m_startZ) / (m_endZ - m_startZ) * m_posZSteps;
 
 	if (result < 0) {
 		return 0;
-	} else if (result >= (int) m_resolutionZ) {
-		return m_resolutionZ - 1;
+	} else if (result >= (int) m_posZSteps) {
+		return m_posZSteps - 1;
 	} else {
 		return (hpuint) result;
 	}
@@ -129,15 +119,13 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 
 	// Compute the angles of the triangle points to the reference dir
 	hpreal angle = computeAngle(point);
-	hpuint angleSlot = computeAngleSlot(angle); //angleSlot = (hpuint) (angleSlot + m_angleSteps * 0.75) % m_angleSteps;
+	hpuint angleSlot = computeAngleSlot(angle);
 
 	hpuint posZSlot = convertPosZToPosZSlot(point.z);
 	hpuint slot = computeSlot(angleSlot, posZSlot);
 
-//	std::cout << "Getting point: " << angle << " -> " << angleSlot << std::endl;
-
 	assert(angleSlot < m_angleSteps);
-	assert(posZSlot < m_resolutionZ);
+	assert(posZSlot < m_posZSteps);
 
 	std::unordered_map<hpuint,hpreal>::const_iterator result = m_entries->find(slot);
 	if (result == m_entries->end()) {
@@ -147,11 +135,11 @@ hpreal CircularSimulationResult::getItem(hpvec3 point) {
 	}
 }
 
-hpuint CircularSimulationResult::getResolutionZ() {
-	return m_resolutionZ;
+hpuint CircularSimulationResult::getPosZSteps() {
+	return m_posZSteps;
 }
 
 bool CircularSimulationResult::isInZRange(hpvec3 point) {
-	hpreal halfIntervalWidth = (m_endZ - m_startZ) / (2.0 * m_resolutionZ);
+	hpreal halfIntervalWidth = (m_endZ - m_startZ) / (2.0 * m_posZSteps);
 	return m_startZ - halfIntervalWidth <= point.z && point.z <= m_endZ + halfIntervalWidth;
 }

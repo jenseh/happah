@@ -31,16 +31,21 @@ public:
 	BSplineCurve( const std::vector<T>& controlPoints, const std::vector<hpreal>& knots );
 	~BSplineCurve();
 
+	/**
+	  * Adds a new control point to the curve.
+	  *
+	  * @param newPoint Control point to be added.
+	  */
 	void addControlPoint( T newPoint );
 
 	/**
-	  * Adds a control new point to the curve.
+	  * Adds a new control point with a knot value to the curve.
 	  *
 	  * @param newPoint Control point to be added.
 	  * @param distanceFromLast Distance of the corresponding added knot from currently last knot
 	  * 	in the knot vector. If the curve is uniform, this parameter will be ignored.
 	  * 	If the parameter is negative, it will be set to zero.
-	  * @see getUniform(), setUniform( bool uniform )
+	  * @see isUniform(), setUniform( bool uniform )
 	  */
 	void addControlPoint( T newPoint, hpreal distanceFromLast );
 
@@ -57,40 +62,117 @@ private:
 	) const;
 
 public:
+	/**
+	  * Checks the curve for consistency and gives debug output.
+	  *
+	  * @param debugOutput Give debug output if true.
+	  * @return True if curve is consistent.
+	  */
 	bool check( bool debugOutput ) const;
 
-	void getBoundingBox( hpvec2* min, hpvec2* max ) const;
-	bool getClamped() const;
+	/**
+	  * Gives the i-th control point.
+	  */
 	T getControlPoint( unsigned int index ) const;
+
+	/**
+	  * Gives vector of all control points of this curve.
+	  */
 	std::vector<T> getControlPoints() const;
+
+	/**
+	  * Gives knot vector.
+	  */
 	std::vector<hpreal> getKnots() const;
+
+	/**
+	  * Gives the curve's degree.
+	  */
 	int getDegree() const;
+
 	void getIntersectionPointsWithRay( const Ray& ray, std::vector<T>& intersectionPoints ) const;
 	hpuint getMultiplicityOfKnotValue( hpreal knotValue ) const;
 	hpuint getMultiplicity( hpuint knotIndex ) const;
+
+	/**
+	  * Gives number of control points of this curve.
+	  */
 	unsigned int getNumberOfControlPoints() const;
+
+	/**
+	  * Gives lower and upper limit for parameter values this curve can be evaluated for.
+	  * @param [out] t_low,t_high Lower and upper limit of the parameter range. If the number
+	 	 of knots is to small, both limits will be equal.
+	  * @see getValueAt( hpreal t ), getDerivativeAt( hpreal t )
+	  */
 	void getParameterRange( hpreal& t_low, hpreal& t_high ) const;
-	bool getPeriodic() const;
-	bool getUniform() const;
+
+	/**
+	  * Gives the tangent vector at a parameter value.
+	  * @param t Parameter value. If not in parameter range, the lower / upper limit is assumed.
+	  * @return Vector of the tangent's direction.
+	  * @see getParameterRange( hpreal& t_low, hpreal& t_high )
+	  */
 	T getDerivativeAt( hpreal t ) const;
+
+	/**
+	  * Gives the curve's position at a parameter value.
+	  * @param t Parameter value. If not in parameter range, the lower / upper limit is assumed.
+	  * @see getParameterRange( hpreal& t_low, hpreal& t_high )
+	  */
 	T getValueAt( hpreal t ) const;
+
+	/**
+	  * Interpolates the control points of this curve with a third degree B-spline and 
+	  	calculate new control points.
+	  */
 	void interpolateControlPoints();
 	// void interpolatePoints( std::vector<hpvec2>& points );
+
+	/**
+	  * Interpolate a given number of control points with a third degree B-spline.
+	  */
 	void interpolatePoints( std::vector<T>& points );
+
 	bool isClamped() const;
 	bool isPeriodic() const;
 	bool isUniform() const;
 
+	/**
+	  * Removes all control points.
+	  */
 	void removeControlPoints();
+
+	/**
+	  * Remove the i-th control point.
+	  * @param index Index of the control point. If not in range, curve will not be altered.
+	  */
 	void removeControlPoint( unsigned int index );
+
+	/**
+	  * Distributes all knots equal-distant between 0 and 1.
+	  */
 	void resetKnotsToUniform();
 
 	void setClamped( bool clamped );
+
+	/**
+	  * Sets the value of the i-th control point.
+	  * @param index Index of the control point. If not in range, curve will not be altered.
+	  */
 	void setControlPoint( unsigned int index, T newValue );
+
+	/**
+	  * Sets values of all control points.
+	  * @param points Vector of new control point values. If number of entries is not equal
+	  	to number of control points of this curve, the courve will not be altered.
+	  */
 	void setControlPoints( const std::vector<T>& points );
+
 	void setDegree( unsigned int degree );
 	void setPeriodic( bool periodic );
 	void setUniform( bool uniform );
+
 	PointCloud* toPointCloud();
 	LineMesh* toLineMesh();
 	BSplineCurve<hpvec3>* to3dBSplineCurve() const;

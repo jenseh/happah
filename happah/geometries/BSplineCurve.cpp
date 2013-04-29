@@ -120,7 +120,6 @@ template <class T> void BSplineCurve<T>::calculateNormalization() {
 }
 
 template <class T> bool BSplineCurve<T>::check( bool debugOutput ) const {
-	m_controlPoints.size() == m_degree + 1; // Bezier-curve property per segment
 	if( debugOutput ) {
 		std::cout << "BSplineCurve checking routine\n";
 		std::cout << "degree:\t " << m_degree << " \t control points:\t " << m_controlPoints.size() << std::endl;
@@ -141,30 +140,6 @@ template <class T> bool BSplineCurve<T>::check( bool debugOutput ) const {
 		}
 	}
 	return true;
-}
-
-template <class T> void BSplineCurve<T>::getBoundingBox( hpvec2* min, hpvec2* max ) const {
-	if( m_controlPoints.size() > 0 ) {
-		// TODO: Use iterator
-		min->x = m_controlPoints[0].x;
-		max->x = m_controlPoints[0].x;
-		min->y = m_controlPoints[0].y;
-		max->y = m_controlPoints[0].y;
-		for( unsigned int i = 1; i < m_controlPoints.size(); i++ ) {
-			if( m_controlPoints[i].x < min->x )
-				min->x = m_controlPoints[i].x;
-			if( m_controlPoints[i].x > max->x )
-				max->x = m_controlPoints[i].x;
-			if( m_controlPoints[i].y < min->y )
-				min->y = m_controlPoints[i].y;
-			if( m_controlPoints[i].y > max->y )
-				max->y = m_controlPoints[i].y;
-		}
-	}
-}
-
-template <class T> bool BSplineCurve<T>::getClamped() const {
-	return m_clamped;
 }
 
 template <class T> T BSplineCurve<T>::getControlPoint( unsigned int index ) const {
@@ -358,14 +333,6 @@ template <class T> void BSplineCurve<T>::getParameterRange( hpreal& t_low, hprea
 
 	t_low =  m_normalizedKnots[m_degree];
 	t_high = m_normalizedKnots[m_normalizedPoints.size()];
-}
-
-template <class T> bool BSplineCurve<T>::getPeriodic() const {
-	return m_periodic;
-}
-
-template <class T> bool BSplineCurve<T>::getUniform() const {
-	return m_uniform;
 }
 
 template <class T> T BSplineCurve<T>::getDerivativeAt( hpreal t ) const {
@@ -691,6 +658,8 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 	}
 
 	// control polygon
+	// TODO Control polygon shouldn't be part of the line mesh -> function controlPolygonToLineMesh()
+	//      But at the moment guiStateNode can handle only one single line mesh.
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
 		unsigned int nVData = verticesAndNormals->size();
@@ -710,6 +679,7 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 	}
 
 	// tangents
+	// TODO The same as for the control polygon.
 	/*
 	if( m_normalizedKnots.size() > 2*m_degree && m_degree > 1 ) {
 		unsigned int n = m_normalizedKnots.size() - 2*m_degree;
@@ -758,7 +728,7 @@ template <class T> int BSplineCurve<T>::findSpan( hpreal t ) const {
 	return l;
 
 	/*
-	// newer version. doesn't work with knot refinement?
+	// newer better version. doesn't work with knot refinement?
 	if( t < m_normalizedKnots.front() ) return -1;
 
 	//unsigned int l = 0;

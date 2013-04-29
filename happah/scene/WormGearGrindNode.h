@@ -4,7 +4,6 @@
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimulationNode.h"
 #include "happah/scene/TriangleMeshNode.h"
-#include "happah/scene/ZCircleCloudNode.h"
 #include "happah/simulations/WormGearGrind.h"
 
 

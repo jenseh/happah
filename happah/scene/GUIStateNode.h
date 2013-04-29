@@ -324,7 +324,7 @@ public:
 
 	shared_ptr<void> getData() const;
 	Form* getForm();
-	Worm_ptr getWorm()const;
+	Worm_ptr getWorm() const;
 
 private:
 	Worm_ptr m_worm;

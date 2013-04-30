@@ -44,7 +44,7 @@ void PlaneNode::planeChanged() {
 	hpvec3 v2 = hpvec3(1.f,0.f,0.f);
 	hpvec3 v3 = hpvec3(0.f,0.f,0.f);
 
-	if( std::abs( normal.x ) > EPSILON || std::abs( normal.z ) > EPSILON )
+	if( std::abs( normal.x ) > HP_EPSILON || std::abs( normal.z ) > HP_EPSILON )
 	{
 		v2 = glm::cross( normal, hpvec3(0.f, 1.f, 0.f) );
 		v2 = glm::normalize(v2);

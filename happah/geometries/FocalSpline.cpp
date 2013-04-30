@@ -1,5 +1,6 @@
 #include "happah/geometries/FocalSpline.h"
 #include "happah/HappahUtils.h"
+#include "happah/HappahConstants.h"
 #include <iostream>
 #define RADIUS 1.0f
 
@@ -8,7 +9,7 @@ using namespace std;
 
 
 FocalSpline::FocalSpline()
-	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_detail(20),m_phi(0),m_phiComplete(0),m_doLaneRiesenfeld(true) {
+	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_detail(20),m_phi(0),m_phiComplete(0),m_doLaneRiesenfeld(false),m_LRIterations(0),m_LRDegree(0),m_showControlPolygon(true),m_showCircle(true) {
 	m_controlPoints = new vector<vector<hpvec3>*>;
 	m_generatedSpline = new vector<hpvec3>;
 
@@ -122,15 +123,13 @@ void FocalSpline::addControlPoint(hpvec3 point){
 
 void FocalSpline::update(){
 	m_generatedSpline->clear();
-	if(!m_doLaneRiesenfeld){
+	if(m_doLaneRiesenfeld==false){
 		for(int i = 0; i<m_focalBezierCurves.size();i++){
 			generateFocalSpline(i);
 		}
 	}
 	else{
-		int n = 3;
-		int m = 2;
-		generateLaneRiesenfeld(n,m);
+		generateLaneRiesenfeld(m_LRDegree,m_LRIterations);
 	}
 
 }
@@ -140,10 +139,7 @@ void FocalSpline::generateFocalSpline(int index){
 	if (m_controlPoints->at(index)->size() <1){
 		return;
 	}
-
-
 	hpreal delta = 0.0f;
-	cout << "EVALUATING SPLINE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
 	for(int i = 0 ; i < m_detail;i++){
 		delta = i* 1.0f/((hpreal)m_detail-1.0f);
 		m_generatedSpline->push_back(m_focalBezierCurves.at(index)->evaluate(delta));
@@ -157,18 +153,18 @@ void FocalSpline::generateFocalSpline(int index){
 void FocalSpline::adjustControlPoints(int bezierCurveIndex,int currentIndex,int direction){
 	int updateTo = direction;
 	hpreal phi;
+	if(bezierCurveIndex != 0 && currentIndex != 0 && m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x <= m_controlPoints->at(0)->at(1).x)
+		m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x += 2*M_PI;
+
 	if (currentIndex == 0)
 		phi = m_controlPoints->at(bezierCurveIndex)->at(currentIndex+1).x - m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x;
 	else
 		phi = m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x - m_controlPoints->at(bezierCurveIndex)->at(currentIndex-1).x;
 	if (phi < 0)
 		phi = 0.0f;
-	hpreal phiComplete = phi*m_controlPoints->at(bezierCurveIndex)->size();
-	if (phiComplete > 2*M_PI){
-		phiComplete = 2*M_PI;
-		phi = phiComplete/m_controlPoints->at(bezierCurveIndex)->size();
 
-	}
+	if (phi >= M_PI)
+		phi = M_PI - HP_EPSILON;
 	for(int i= 0; i < m_controlPoints->at(bezierCurveIndex)->size(); i++){
 	
 		hpreal phiPoint = m_controlPoints->at(bezierCurveIndex)->at(currentIndex).x;
@@ -193,7 +189,7 @@ LineMesh* FocalSpline::toLineMesh(){
 
 	//draw controlpolygon
 	int i = 0;
-	/*
+	if(m_showControlPolygon){
 	for(vector<vector<hpvec3>*>::iterator iter=m_controlPoints->begin();iter !=m_controlPoints->end();++iter){
 		if ((*iter)->size()>0){
 		for(vector<hpvec3>::iterator it = (*iter)->begin(); it != (*iter)->end(); ++it){
@@ -210,27 +206,28 @@ LineMesh* FocalSpline::toLineMesh(){
 		indices->pop_back();
 		}
 	}
-	*/
-	// draw Circle
-	int iTemp = i;
-	int detail = 30;
-	hpreal phi_c = (2*M_PI)/(float)detail;
-	for (int j = 0; j < detail ; j++){
-		hpvec3 vertexPosition = HPUtils::polarToCartesianCoordinates(hpvec3(j*phi_c,0.0f,RADIUS));
-		hpvec3 vertexNormal = vertexPosition - m_center;
-
-		verticesAndNormals->push_back(vertexPosition);
-		verticesAndNormals->push_back(vertexNormal);
-		if (j != 0){
-			indices->push_back(i);
-		}
-		indices->push_back(i);
-		i++;
 	}
-	indices->push_back(iTemp);
+	// draw Circle
+	if(m_showCircle){
+		int iTemp = i;
+		int detail = 30;
+		hpreal phi_c = (2*M_PI)/(float)detail;
+		for (int j = 0; j < detail ; j++){
+			hpvec3 vertexPosition = HPUtils::polarToCartesianCoordinates(hpvec3(j*phi_c,0.0f,RADIUS));
+			hpvec3 vertexNormal = vertexPosition - m_center;
 
+			verticesAndNormals->push_back(vertexPosition);
+			verticesAndNormals->push_back(vertexNormal);
+			if (j != 0){
+				indices->push_back(i);
+			}
+			indices->push_back(i);
+			i++;
+		}
+		indices->push_back(iTemp);
+	}
 	//draw generated Spline
-	if(!m_doLaneRiesenfeld){
+	if(m_doLaneRiesenfeld == false){
 	if (m_generatedSpline->size()>0){
 		int j=m_detail;
 		for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
@@ -250,7 +247,7 @@ LineMesh* FocalSpline::toLineMesh(){
 
 	}
 	}
-	if(m_doLaneRiesenfeld){
+	if(m_doLaneRiesenfeld == true){
 		if (m_generatedSpline->size()>0){
 
 			for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
@@ -291,7 +288,8 @@ PointCloud* FocalSpline::toPointCloud(){
 	}
 	*/
 	// draw Center
-	vertices->push_back(m_center);
+	if(m_showCircle)
+		vertices->push_back(m_center);
 	return new PointCloud(vertices);
 }
 
@@ -328,7 +326,8 @@ void FocalSpline::removeControlPoint(int FocalBezierIndex, int pointIndex){
 
 void FocalSpline::setDetail(int detail){
 	m_detail = detail;
-	update();
+	if(!m_doLaneRiesenfeld)
+		update();
 }
 
 int FocalSpline::calculateFocalBezierCurveIndexFromPointIndex(int pointIndex){
@@ -347,7 +346,6 @@ int FocalSpline::calculatePointIndexFromBezierIndex(int bezierIndex, int pointIn
   for(int i=0; i<bezierIndex; i++){
 	  finalIndex = finalIndex-m_controlPoints->at(i)->size();
   }
-  cout << "Index Of Point in FocalBezierCurve: " << finalIndex << endl;
   return finalIndex;
 }
 
@@ -363,7 +361,6 @@ void FocalSpline::extendSpline(){
 }
 
 void FocalSpline::generateLaneRiesenfeld(int n,int m){
-	std::cout << " Starting Lane Riesenfeld" << endl;
 	vector<hpvec3>* lrControlPoints = new vector<hpvec3>;
 	for(int i=0;i<m_controlPoints->size();i++){
 		for(int j=0; j<m_controlPoints->at(i)->size();j++){
@@ -385,9 +382,8 @@ vector<hpvec3>* FocalSpline::duplicatePointsOfPolygon(vector<hpvec3>* polygonPoi
 	vector<hpvec3>* doublePoints = new vector<hpvec3>;
 	for(int i=0; i < polygonPoints->size();i++){
 		doublePoints->push_back(polygonPoints->at(i));
-		std::cout << "pushed Back: "<< doublePoints->at(2*i).x <<" "<< doublePoints->at(2*i).z <<endl;
 		doublePoints->push_back(polygonPoints->at(i));
-		std::cout << "pushed Back: "<< doublePoints->at(2*i+1).x <<" "<< doublePoints->at(2*i+1).z <<endl;
+
 	}
 	return doublePoints;
 }
@@ -405,7 +401,6 @@ vector<hpvec3>* FocalSpline::findMidPointsOfPolygon(vector<hpvec3>* polygonPoint
 }
 
 hpvec3 FocalSpline::findMidPointOf(hpvec3 p1,hpvec3 p2){
-	std::cout << "P1: "<<p1.x <<" "<< p1.z<<" " << "P2: "<<p2.x << " "<<p2.z << endl;
 	hpreal phi = p2.x - p1.x;
 	if (phi == 0 && p1.z == p2.z)
 		return p1;
@@ -419,11 +414,51 @@ hpvec3 FocalSpline::findMidPointOf(hpvec3 p1,hpvec3 p2){
 	hpreal beta = acos((r2quad-r1quad-aquad)/(-2*r1*a));
 	hpreal gamma = M_PI-deltaPhi-beta;
 	hpreal radius = r1*sin(beta)/sin(gamma);
-	std::cout << "Midpoint: "<< p1.x+deltaPhi<<" "<<radius << endl;
 	return  hpvec3(p1.x+deltaPhi,0,radius);
 }
 
+void FocalSpline::doLaneRiesenfeld(bool checked){
+	m_doLaneRiesenfeld = checked;
+	update();
+}
 
+void FocalSpline::setLRDegree(int degree){
+	m_LRDegree = degree;
+	if(m_doLaneRiesenfeld)
+		update();
+}
 
+int FocalSpline::getLRDegree(){
+	return m_LRDegree;
+}
 
+void FocalSpline::setLRIterations(int iterations){
+	m_LRIterations = iterations;
+	if(m_doLaneRiesenfeld)
+		update();
+}
+
+int FocalSpline::getLRIterations(){
+	return m_LRIterations;
+}
+
+int FocalSpline::getPhi(int index){
+	int bezierCurveIndex;
+	if (index < 0){
+		bezierCurveIndex = 0;
+	}
+	else
+		bezierCurveIndex=calculateFocalBezierCurveIndexFromPointIndex(index);
+	return m_focalBezierCurves.at(bezierCurveIndex)->getPhi() ;
+}
+
+void FocalSpline::showControlPolygon(bool checked){
+	m_showControlPolygon = checked;
+	update();
+}
+
+void FocalSpline::showCircle(bool checked){
+	m_showCircle = checked;
+	update();
+}
 

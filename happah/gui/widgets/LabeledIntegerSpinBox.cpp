@@ -10,7 +10,8 @@ LabeledIntegerSpinBox::LabeledIntegerSpinBox(const QString& label, QWidget* pare
 	QGridLayout *gridLayout = new QGridLayout;
 	gridLayout->addWidget(m_label,0,0);
 	gridLayout->addWidget(m_spinBox,0,1);
-
+	gridLayout->setSpacing(0);
+	gridLayout->setMargin(0);
 	this->setLayout(gridLayout);
 }
 

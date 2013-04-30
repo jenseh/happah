@@ -29,8 +29,14 @@ public:
 	int getDegree(int index);
 	void setDetail(int detail);
 	void extendSpline();
-
-
+	void doLaneRiesenfeld(bool checked);
+	void setLRIterations(int degree);
+	int  getLRIterations();
+	void setLRDegree(int degree);
+	int getLRDegree();
+	int getPhi(int index);
+	void showControlPolygon(bool checked);
+	void showCircle(bool checked);
 
 private:
 
@@ -51,6 +57,10 @@ private:
 	hpreal m_phiComplete;
 	bool   m_doLaneRiesenfeld;
 	int    m_detail;
+	int m_LRIterations;
+	int m_LRDegree;
+	bool  m_showControlPolygon;
+	bool  m_showCircle;
 
 };
 typedef shared_ptr<FocalSpline> FocalSpline_ptr;

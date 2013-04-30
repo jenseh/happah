@@ -617,7 +617,7 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
-	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
+	if( tEnd - tBegin > HP_EPSILON && m_degree > 1 ) {
 		if( m_clamped && !m_periodic ) {
 			std::vector<T> knots = knotRefinement( 0.05f );
 			if( knots.size() > 1 ) {
@@ -813,7 +813,7 @@ template <class T> std::vector<T> BSplineCurve<T>::knotRefinement( hpreal minDis
 	do {
 		newKnots.clear();
 		for( int i = m_degree; i < refinedKnots.size() - m_degree - 1; i++ ) {
-			if( refinedKnots[i+1] - refinedKnots[i] > EPSILON ) {
+			if( refinedKnots[i+1] - refinedKnots[i] > HP_EPSILON ) {
 				bool refineCurrent = false;
 				for( int k = i - m_degree; k < i; k++ )
 				{
@@ -879,7 +879,7 @@ template <class T> void BSplineCurve<T>::refine(
 		for( int l = 1; l <= p; l++ ) {
 			int ind = k - p + l;
 			hpreal alpha = refinedKnots[k+l] - *newKnotIt;
-			if( std::abs(alpha) < EPSILON ) {
+			if( std::abs(alpha) < HP_EPSILON ) {
 				refinedPoints[ind-1] = refinedPoints[ind];
 			} else {
 				alpha = alpha / ( refinedKnots[k+l] - knots[i-p+l]);

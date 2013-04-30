@@ -15,7 +15,6 @@ FocalBezierCurve::~FocalBezierCurve() {
 }
 
 hpvec3 FocalBezierCurve::evaluate(hpreal delta){
-std::cout << "evaluating for delta : " << delta << std::endl;
 	m_currentDegree = (m_controlPoints->size()-1);
 	*m_currentControlPoints = *m_controlPoints;
 	while(m_currentDegree > 0){
@@ -49,6 +48,7 @@ void FocalBezierCurve::generateNewControlPoints(hpreal delta){
 		hpreal radius = r1*sin(beta)/sin(gamma);
 
 		m_currentControlPoints->at(i) = hpvec3(p1.x+deltaPhi,0,radius);
+
 	}
 	/*
 	// Erstelle Schnittpunkte d1...dn mit dem Kreis
@@ -74,12 +74,7 @@ void FocalBezierCurve::generateNewControlPoints(hpreal delta){
 		m_currentControlPoints->at(i)= result[i];
 	}
 	*/
-	std::cout << "next level " << std::endl;
 	m_currentDegree--;
-
-}
-
-hpvec3 FocalBezierCurve::calcPointOnLine(hpvec3 a,hpvec3 b,hpreal deltaPhi){
 
 }
 

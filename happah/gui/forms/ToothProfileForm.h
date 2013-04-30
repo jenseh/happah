@@ -21,15 +21,17 @@ public:
 	~ToothProfileForm();
 
 	ToothProfile_ptr getToothProfile();
-	void handleRay(Ray& ray);
 	void handleDrag(Ray& ray);
+	void handleRay(Ray& ray);
 	void handleSelection();
 	void handleSelection(int pointIndex);
 	void reset();
 	void setToothProfile(ToothProfile_ptr toothProfile);
 
 private:
+	void setAllMatingWidgetsEnabled(bool enable);
 	void setMatingWidgetsEnabled(bool enable);
+	void updateFormWithMatingGearInformation();
 	void updateNormals();
 
 	int m_currentPointIndex;
@@ -40,7 +42,7 @@ private:
 	// std::vector<hpcolor>* m_splineColors;
 	// std::list< MatingGearInformationPart* >* m_informationCurves;
 	QPushButton* m_matingGearButton;
-	QPushButton* m_matingStepButton;
+	QPushButton* m_showNextMatingStepButton;
 	QPushButton* m_toSimpleGearButton;
 	QPushButton* m_showMatingGearButton;
 
@@ -61,14 +63,13 @@ private:
 	// hpcolor m_errorColor;
 
 private slots:
-	void toSimpleGear();
-	void createMatingGear();
-	void constructMatingGear();
-	void showNextMatingStep();
-	void darkenNormals();
-	void showMatingGear();
 	void changeNormalsVisiblity(int state);
 	void changeNormalLength(double length);
+	void constructMatingGear();
+	void darkenNormals();
+	void showMatingGear();
+	void showNextMatingStep();
+	void toSimpleGear();
 
 signals:
 	void selected(Form* form);

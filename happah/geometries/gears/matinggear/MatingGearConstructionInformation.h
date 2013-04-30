@@ -12,21 +12,19 @@ public:
 	MatingGearConstructionInformation(MatingGearConstructor* constructor);
 	~MatingGearConstructionInformation();
 
-	void setAdditionalOriginColor(hpcolor color);
-	void setAdditionalMatingColor(hpcolor color);
-	void setMaskingColor(hpcolor color);
-	void setNormalLength(hpreal length);
-	void setDarkingOfNormals(bool darkened);
-
+	std::vector<BothGearInformation*>* getNormals();
 	BothGearInformation* getReferenceCircles();
 	BothGearInformation* getToothProfiles();
-	std::vector<BothGearInformation*>* getNormals();
 
-
+	void setAdditionalMatingColor(hpcolor color);
+	void setAdditionalOriginColor(hpcolor color);
+	void setDarkingOfNormals(bool darkened);
+	void setMaskingColor(hpcolor color);
+	void setNormalLength(hpreal length);
 
 private:
-	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal);
 	BSplineCurve<hpvec2>* circle(hpreal radius, hpvec2 offset);
+	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal);
 	void recolorNormals();
 
 	std::vector<BSplineCurve2D_ptr> m_matingNormals;

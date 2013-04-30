@@ -109,56 +109,18 @@ MatingGearConstructionInformation::MatingGearConstructionInformation(MatingGearC
 			BSplineCurve2D_ptr(originalUsedPoints),
 			m_toothProfileColor * m_additionalOriginColor,
 			"Used Points Of Original Gear",
-			HP_POINT_CLOUD);
+			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
 	MatingGearConstructionInformationPart matingToothProfile =
 		MatingGearConstructionInformationPart(
 			BSplineCurve2D_ptr(matingPoints),
 			m_toothProfileColor * m_additionalMatingColor,
 			"Constructed Points Of Mating Gear",
-			HP_POINT_CLOUD);
+			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
 	
 	m_toothProfiles = new BothGearInformation(originalToothProfile, matingToothProfile);
 }
 
 MatingGearConstructionInformation::~MatingGearConstructionInformation() {}
-
-void MatingGearConstructionInformation::setNormalLength(hpreal length) {
-	m_normalLength = length;
-}
-
-void MatingGearConstructionInformation::setDarkingOfNormals(bool darkened) {
-	m_maskNormalsActivated = darkened;
-	recolorNormals();
-}
-
-void MatingGearConstructionInformation::setAdditionalOriginColor(hpcolor color) {
-	m_additionalOriginColor = color;
-	recolorNormals();
-	m_referenceCircles->originPart.color = m_referenceCircleColor * m_additionalOriginColor;
-	m_toothProfiles->originPart.color = m_toothProfileColor * m_additionalOriginColor;
-}
-
-void MatingGearConstructionInformation::setAdditionalMatingColor(hpcolor color) {
-	m_additionalMatingColor = color;
-	recolorNormals();
-	m_referenceCircles->matingPart.color = m_referenceCircleColor * m_additionalMatingColor;
-	m_toothProfiles->matingPart.color = m_toothProfileColor * m_additionalMatingColor;
-}
-
-void MatingGearConstructionInformation::setMaskingColor(hpcolor color) {
-	m_maskingColor = color;
-}
-
-void MatingGearConstructionInformation::recolorNormals() {
-	assert(m_normals->size() == m_normalColors.size());
-	for(hpuint i = 0; i < m_normals->size(); ++i) {
-		hpcolor color = (m_maskAllActivated || m_maskNormalsActivated) ? m_maskingColor : m_normalColors[i];
-		(*m_normals)[i]->originPart.color = color * m_additionalOriginColor;
-		if((*m_normals)[i]->hasTwoParts) {
-			(*m_normals)[i]->matingPart.color = m_normalColors[i] * m_additionalMatingColor;
-		}
-	}
-}
 
 //TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 //Use shared ptr instead of this, as no one knows when these things should and will be deleted!!!
@@ -172,16 +134,31 @@ std::vector<BothGearInformation*>* MatingGearConstructionInformation::getNormals
 	return m_normals;
 }
 
+void MatingGearConstructionInformation::setAdditionalMatingColor(hpcolor color) {
+	m_additionalMatingColor = color;
+	recolorNormals();
+	m_referenceCircles->matingPart.color = m_referenceCircleColor * m_additionalMatingColor;
+	m_toothProfiles->matingPart.color = m_toothProfileColor * m_additionalMatingColor;
+}
 
+void MatingGearConstructionInformation::setAdditionalOriginColor(hpcolor color) {
+	m_additionalOriginColor = color;
+	recolorNormals();
+	m_referenceCircles->originPart.color = m_referenceCircleColor * m_additionalOriginColor;
+	m_toothProfiles->originPart.color = m_toothProfileColor * m_additionalOriginColor;
+}
 
-BSplineCurve<hpvec2>* MatingGearConstructionInformation::normalLine(hpvec2 start, hpvec2 normal) {
-	BSplineCurve<hpvec2>* line = new BSplineCurve<hpvec2>();
-	line->setDegree(1);
-	line->setPeriodic(false);
-	line->addControlPoint(start);
-	line->addControlPoint(start + m_normalLength * 0.8f * normal);
-	line->addControlPoint(start + m_normalLength * normal);
-	return line;
+void MatingGearConstructionInformation::setDarkingOfNormals(bool darkened) {
+	m_maskNormalsActivated = darkened;
+	recolorNormals();
+}
+
+void MatingGearConstructionInformation::setMaskingColor(hpcolor color) {
+	m_maskingColor = color;
+}
+
+void MatingGearConstructionInformation::setNormalLength(hpreal length) {
+	m_normalLength = length;
 }
 
 BSplineCurve<hpvec2>* MatingGearConstructionInformation::circle(hpreal radius, hpvec2 offset) {
@@ -195,3 +172,25 @@ BSplineCurve<hpvec2>* MatingGearConstructionInformation::circle(hpreal radius, h
 	circle->setPeriodic(true);
 	return circle;
 }
+
+BSplineCurve<hpvec2>* MatingGearConstructionInformation::normalLine(hpvec2 start, hpvec2 normal) {
+	BSplineCurve<hpvec2>* line = new BSplineCurve<hpvec2>();
+	line->setDegree(1);
+	line->setPeriodic(false);
+	line->addControlPoint(start);
+	line->addControlPoint(start + m_normalLength * 0.8f * normal);
+	line->addControlPoint(start + m_normalLength * normal);
+	return line;
+}
+
+void MatingGearConstructionInformation::recolorNormals() {
+	assert(m_normals->size() == m_normalColors.size());
+	for(hpuint i = 0; i < m_normals->size(); ++i) {
+		hpcolor color = (m_maskAllActivated || m_maskNormalsActivated) ? m_maskingColor : m_normalColors[i];
+		(*m_normals)[i]->originPart.color = color * m_additionalOriginColor;
+		if((*m_normals)[i]->hasTwoParts) {
+			(*m_normals)[i]->matingPart.color = m_normalColors[i] * m_additionalMatingColor;
+		}
+	}
+}
+

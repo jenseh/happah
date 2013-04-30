@@ -234,10 +234,10 @@ void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode)
 
 }
 
-void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* name, hpcolor curveColor, hpuint drawMode) {
-	ostringstream labelStream;
-	labelStream << name << " BSplineCurve";
-	const char* label = labelStream.str().c_str();
+void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* label, hpcolor curveColor, hpuint drawMode) {
+	// ostringstream labelStream;
+	// labelStream << name << " BSplineCurve";
+	// const char* label = labelStream.str().c_str();
 	if( drawMode & HP_LINE_MESH ) {
 		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
 			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));

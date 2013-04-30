@@ -1,9 +1,13 @@
 #ifndef TOOTHPROFILEFORM_H
 #define TOOTHPROFILEFORM_H
 
+#include <QCheckBox>
+#include <QDoubleSpinBox>
 #include <QPushButton>
+#include <QSpinBox>
 
-#include "happah/geometries/gears/MatingGearConstructor.h"
+#include "happah/geometries/gears/matinggear/MatingGearConstructor.h"
+#include "happah/geometries/gears/matinggear/MatingGearConstructionInformation.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/gui/GUIManager.h"
 #include "happah/gui/forms/Form.h"
@@ -25,24 +29,46 @@ public:
 	void setToothProfile(ToothProfile_ptr toothProfile);
 
 private:
-	void constructMatingGear();
+	void setMatingWidgetsEnabled(bool enable);
+	void updateNormals();
 
 	int m_currentPointIndex;
 	GUIManager& m_guiManager;
 	Plane_ptr m_plane;
 	ToothProfile_ptr m_toothProfile;
 
-	std::vector<hpcolor>* m_splineColors;
-	std::list< MatingGearInformationPart* >* m_informationCurves;
+	// std::vector<hpcolor>* m_splineColors;
+	// std::list< MatingGearInformationPart* >* m_informationCurves;
+	QPushButton* m_matingGearButton;
 	QPushButton* m_matingStepButton;
-	hpuint m_stepCounter;
-	std::list< MatingGearInformationPart* >::iterator m_stepIterator;
-	hpcolor m_errorColor;
+	QPushButton* m_toSimpleGearButton;
+	QPushButton* m_showMatingGearButton;
+
+	QDoubleSpinBox* m_matingRadiusSpinBox;
+	QDoubleSpinBox* m_matingConstrMaxAngleBox;
+	QSpinBox* m_matingNTeethSpinBox;
+	QSpinBox* m_matingConstrSamplRateBox;
+	QDoubleSpinBox* m_matingNormalsLengthBox;
+
+	QCheckBox* m_matingDarkenNormalsBox;
+
+	std::vector<QWidget*> m_matingWidgetList;
+
+	MatingGearConstructionInformation* m_matingGearInformation;
+
+	// hpuint m_stepCounter;
+	// std::list< MatingGearInformationPart* >::iterator m_partIterator;
+	// hpcolor m_errorColor;
 
 private slots:
 	void toSimpleGear();
 	void createMatingGear();
+	void constructMatingGear();
 	void showNextMatingStep();
+	void darkenNormals();
+	void showMatingGear();
+	void changeNormalsVisiblity(int state);
+	void changeNormalLength(double length);
 
 signals:
 	void selected(Form* form);

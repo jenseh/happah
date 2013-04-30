@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "happah/HappahTypes.h"
+#include "happah/geometries/gears/matinggear/MatingGearConstructionInformationPart.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/BSplineCurve.h"
 
@@ -14,14 +15,14 @@ enum class ErrorCode {
 	NO_THICKNESS
 };
 
-enum class MatingGearPart {
-	MATING_NORMAL,
-	ORIGIN_NORMAL,
-	MATING_REFERENCE_CIRCLE,
-	ORIGIN_REFERENCE_CIRCLE,
-	MATING_TOOTH_PROFILE,
-	ORIGIN_TOOTH_PROFILE
-};
+// enum class MatingGearPart {
+// 	MATING_NORMAL,
+// 	ORIGIN_NORMAL,
+// 	MATING_REFERENCE_CIRCLE,
+// 	ORIGIN_REFERENCE_CIRCLE,
+// 	MATING_TOOTH_PROFILE,
+// 	ORIGIN_TOOTH_PROFILE
+// };
 
 struct MatingPoint {
 	hpvec2 point;
@@ -32,52 +33,52 @@ struct MatingPoint {
 	hpreal forbiddenAreaLength;
 	hpvec2 forbiddenAreaEndPoint;
 	ErrorCode error;
-	//enum with type of point (if an origin point exists and so on)
-	// bool operator==(MatingCandidate const& other) {
-	// 	return (other.angleInGear == angleInGear
-	// 		&& other.distanceToCenter == distanceToCenter
-	// 		&& other.originPoint == originPoint
-	// 		&& other.point == point);
-	// }
 };
 
-class MatingGearInformationPart {
-public:
-	MatingGearInformationPart(BSplineCurve2D_ptr curve, MatingGearPart part, char* name, ErrorCode error = ErrorCode::NO_ERROR) : m_curve(curve), m_error(error), m_name(name), m_part(part) {}
-	MatingGearInformationPart(BSplineCurve<hpvec2>* curve, MatingGearPart part, char* name, ErrorCode error = ErrorCode::NO_ERROR) : m_error(error), m_name(name), m_part(part) {
-		m_curve = BSplineCurve2D_ptr(curve);
-	}
-	~MatingGearInformationPart() { delete m_name; }
-	BSplineCurve2D_ptr getCurve() { return m_curve; }
-	ErrorCode getError() {return m_error; }
-	char* getName() { return m_name; }
-	MatingGearPart getPart() { return m_part; }
-private:
-	BSplineCurve2D_ptr m_curve;
-	ErrorCode m_error;
-	char* m_name;
-	MatingGearPart m_part;
-};
+// class MatingGearInformationPart {
+// public:
+// 	MatingGearInformationPart(BSplineCurve2D_ptr curve, MatingGearPart part, char* name, ErrorCode error = ErrorCode::NO_ERROR) : m_curve(curve), m_error(error), m_name(name), m_part(part) {}
+// 	MatingGearInformationPart(BSplineCurve<hpvec2>* curve, MatingGearPart part, char* name, ErrorCode error = ErrorCode::NO_ERROR) : m_error(error), m_name(name), m_part(part) {
+// 		m_curve = BSplineCurve2D_ptr(curve);
+// 	}
+// 	~MatingGearInformationPart() { delete m_name; }
+// 	BSplineCurve2D_ptr getCurve() { return m_curve; }
+// 	ErrorCode getError() {return m_error; }
+// 	char* getName() { return m_name; }
+// 	MatingGearPart getPart() { return m_part; }
+// private:
+// 	BSplineCurve2D_ptr m_curve;
+// 	ErrorCode m_error;
+// 	char* m_name;
+// 	MatingGearPart m_part;
+// };
+
+class MatingGearConstructionInformation;
 
 class MatingGearConstructor {
 public:
-	MatingGearConstructor();
-	~MatingGearConstructor();
-	
-	void constructMatingTo(
-		const ToothProfile& toothProfile,
-		hpreal radius,
+	MatingGearConstructor(
+		const ToothProfile& originalGearToothProfile,
+		hpreal originalGearRadius,
 		hpuint matingGearNTeeth,
-		hpuint samplingRate,
 		hpreal maxAngle,
-		hpreal infomationNormalLength = 1.0f);
+		hpuint samplingRate
+		);
+	~MatingGearConstructor();
 
-	std::list< MatingGearInformationPart* >* getInformationSplines();
+	MatingGearConstructionInformation* getInformation();
+
+	std::list< MatingPoint >* getMatingPointList();
+	hpreal getMatingGearReferenceRadius();
+	hpreal getOriginalGearReferenceRadius();
 
 	//delete following lines for printing:
 	void print(hpvec2 point) {
 		cerr << "[" << point.x << ",	" << point.y << "]";
 	}
+
+	static hpreal getMinRadiusForOriginGear(const ToothProfile& toothProfile, hpuint matingNTeeth);
+	static hpuint getMinNumberOfTeethForMatingGear(const ToothProfile& toothProfile, hpreal originRadius);
 
 	void print(const MatingPoint& m) {
 			cerr << endl << "MatingPoint:";
@@ -103,8 +104,6 @@ private:
 	void insertThicknessInMatingPoint(MatingPoint& matingPoint);
 	hpvec2 getNormalAt(hpreal t);
 	hpvec2 getValueAt(hpreal t);
-	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal);
-	BSplineCurve<hpvec2>* circle(hpreal radius, hpvec2 offset);
 
 	std::list<MatingPoint>* m_allMatingPoints;
 	ToothProfile* m_originalToothProfile;

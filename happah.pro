@@ -35,9 +35,12 @@ HEADERS += \
 \
 	happah/geometries/gears/CylindricalGear.h \
 	happah/geometries/gears/InvoluteGear.h \
-	happah/geometries/gears/MatingGearConstructor.h \
 	happah/geometries/gears/SimpleGear.h \
 	happah/geometries/gears/ToothProfile.h \
+\
+	happah/geometries/gears/matinggear/MatingGearConstructionInformation.h \
+	happah/geometries/gears/matinggear/MatingGearConstructionInformationPart.h \
+	happah/geometries/gears/matinggear/MatingGearConstructor.h \
 \
 	happah/gui/DefaultGUIManager.h \
 	happah/gui/DiscGearGrindWorker.h \
@@ -161,9 +164,11 @@ SOURCES += \
 \
 	happah/geometries/gears/CylindricalGear.cpp \
 	happah/geometries/gears/InvoluteGear.cpp \
-	happah/geometries/gears/MatingGearConstructor.cpp \
 	happah/geometries/gears/SimpleGear.cpp \
 	happah/geometries/gears/ToothProfile.cpp \
+\
+	happah/geometries/gears/matinggear/MatingGearConstructionInformation.cpp \
+	happah/geometries/gears/matinggear/MatingGearConstructor.cpp \
 \
 	happah/gui/DefaultGUIManager.cpp \
 	happah/gui/DiscGearGrindWorker.cpp \

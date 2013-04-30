@@ -1,32 +1,108 @@
+#include <QGroupBox>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QGridLayout>
 
 #include <iostream>
 #include <list>
-#include "happah/geometries/gears/MatingGearConstructor.h"
 #include "happah/geometries/gears/SimpleGear.h"
+#include "happah/geometries/gears/matinggear/MatingGearConstructionInformationPart.h"
 #include "happah/geometries/BSplineCurve.h"
 #include "happah/gui/forms/ToothProfileForm.h"
 
 using namespace std;
 
 ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
-	: Form(parent), m_currentPointIndex(-1), m_guiManager(guiManager), m_errorColor(hpcolor(1.0f, 0.0f, 0.0f, 0.5f)) {
+	: Form(parent),m_currentPointIndex(-1), m_guiManager(guiManager) {
 
-	QPushButton* show3dGearButton = new QPushButton("Show gear in 3D");
-	connect(show3dGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
+	// : Form(parent), m_currentPointIndex(-1), m_guiManager(guiManager), m_errorColor(hpcolor(1.0f, 0.0f, 0.0f, 0.5f)) {
 
-	QPushButton* matingGearButton = new QPushButton("Construct mating gear");
-	connect(matingGearButton, SIGNAL(clicked()), this, SLOT(createMatingGear()));
+	m_toSimpleGearButton = new QPushButton("3D gear of 2D profile");
+	connect(m_toSimpleGearButton, SIGNAL(clicked()), this, SLOT(toSimpleGear()));
+
+	m_matingGearButton = new QPushButton("Construct mating gear");
+	connect(m_matingGearButton, SIGNAL(clicked()), this, SLOT(constructMatingGear()));
+
+	m_showMatingGearButton = new QPushButton("Show mating gear");
+	connect(m_showMatingGearButton, SIGNAL(clicked()), this, SLOT(showMatingGear()));
 
 	m_matingStepButton = new QPushButton("Next mating gear step");
 	connect(m_matingStepButton, SIGNAL(clicked()), this, SLOT(showNextMatingStep()));
 
+	m_matingRadiusSpinBox = new QDoubleSpinBox(this);
+	m_matingRadiusSpinBox->setDecimals(3);
+	QLabel* matingRadiusLabel = new QLabel(tr("Reference radius"));
+	matingRadiusLabel->setToolTip(tr("Define the reference radius of the original gear, with which the mating gear construction should be done."));
+
+	m_matingNTeethSpinBox = new QSpinBox(this);
+	QLabel* matingNTeethLabel = new QLabel(tr("Number of teeth"));
+	matingNTeethLabel->setToolTip(tr("Specify the number of teeth the mating gear should have."));
+
+	m_matingConstrMaxAngleBox = new QDoubleSpinBox(this);
+	m_matingConstrMaxAngleBox->setDecimals(3);
+	m_matingConstrMaxAngleBox->setSuffix(tr(" degree"));
+	m_matingConstrMaxAngleBox->setRange(0.1f, 20.0f);
+	m_matingConstrMaxAngleBox->setSingleStep(0.1f);
+	QLabel* matingConstrMaxAngleLabel = new QLabel(tr("Max angle"));
+	matingConstrMaxAngleLabel->setToolTip(tr("The maximum angle in degrees used for the construction of the mating gear. The smaller the angle is, the more accurate the gear will be sampled, but also the more costly!"));
+
+	m_matingConstrSamplRateBox = new QSpinBox(this);
+	m_matingConstrSamplRateBox->setRange(5, 200);
+	QLabel* matingConstrSamplRateLabel = new QLabel(tr("Sampling Rate"));
+	matingConstrSamplRateLabel->setToolTip(tr("The sampling rate used in the construction of the mating gear. For bigger values a better accurancy is achieved, but with adverse effect on calculation time."));
+
+	m_matingDarkenNormalsBox = new QCheckBox(tr("Darken normals"), this);
+	connect(m_matingDarkenNormalsBox, SIGNAL(stateChanged(int)), this, SLOT(changeNormalsVisiblity(int)));
+
+	m_matingNormalsLengthBox = new QDoubleSpinBox(this);
+	m_matingNormalsLengthBox->setDecimals(3);
+	m_matingNormalsLengthBox->setMinimum(0.0f);
+	m_matingNormalsLengthBox->setSingleStep(0.25f);
+	QLabel* matingNormalsLength = new QLabel(tr("Length of normals"));
+	connect(m_matingNormalsLengthBox, SIGNAL(valueChanged(double)), this, SLOT(changeNormalLength(double)));
+
+	QGridLayout* gridLayout = new QGridLayout(this);
+	gridLayout->setHorizontalSpacing(0);
+	gridLayout->setVerticalSpacing(2);
+	gridLayout->setRowStretch(10, 2);
+
+	gridLayout->addWidget(matingRadiusLabel,          1, 0);
+	gridLayout->addWidget(m_matingRadiusSpinBox,      1, 1, Qt::AlignTop);
+	
+	gridLayout->addWidget(matingNTeethLabel,          2, 0);
+	gridLayout->addWidget(m_matingNTeethSpinBox,      2, 1, Qt::AlignTop);
+	
+	gridLayout->addWidget(matingConstrMaxAngleLabel,  3, 0);
+	gridLayout->addWidget(m_matingConstrMaxAngleBox,  3, 1, Qt::AlignTop);
+	
+	gridLayout->addWidget(matingConstrSamplRateLabel, 4, 0);
+	gridLayout->addWidget(m_matingConstrSamplRateBox, 4, 1, Qt::AlignTop);
+	
+	gridLayout->addWidget(m_matingGearButton,         5, 0, Qt::AlignTop);
+	gridLayout->addWidget(m_showMatingGearButton,     6, 0, Qt::AlignTop);
+	gridLayout->addWidget(m_matingStepButton,         7, 0, Qt::AlignTop);
+
+	gridLayout->addWidget(m_matingDarkenNormalsBox,     8, 0, Qt::AlignTop);
+
+	gridLayout->addWidget(matingNormalsLength,        9, 0);
+	gridLayout->addWidget(m_matingNormalsLengthBox,   9, 1, Qt::AlignTop);
+	
+	QGroupBox* matingCollection = new QGroupBox(tr("Mating gear construction options"));
+	matingCollection->setAlignment(Qt::AlignLeft);
+	matingCollection->setLayout(gridLayout);
+
 	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(show3dGearButton);
-	layout->addWidget(matingGearButton);
-	layout->addWidget(m_matingStepButton);
+	layout->addWidget(m_toSimpleGearButton);
+	layout->addWidget(matingCollection);
 	this->setLayout(layout);
+
+	m_matingWidgetList.push_back(m_matingGearButton);
+	m_matingWidgetList.push_back(m_matingRadiusSpinBox);
+	m_matingWidgetList.push_back(m_matingNTeethSpinBox);
+	m_matingWidgetList.push_back(m_matingConstrSamplRateBox);
+	m_matingWidgetList.push_back(m_matingConstrMaxAngleBox);
+	m_matingWidgetList.push_back(m_matingNormalsLengthBox);
+	m_matingWidgetList.push_back(m_matingDarkenNormalsBox);
 
 	reset();
 }
@@ -43,118 +119,166 @@ ToothProfile_ptr ToothProfileForm::getToothProfile() {
 void ToothProfileForm::reset() {
 	m_toothProfile = ToothProfile_ptr(new ToothProfile());
 	m_plane = Plane_ptr(m_toothProfile->getPlaneToothProfileLiesIn());
-	m_informationCurves = nullptr; //new std::list< MatingGearInformationPart* >();
-	m_splineColors = nullptr; //std::vector<hpcolor>();
-	m_matingStepButton->setEnabled(true);
+	// m_informationCurves = nullptr; //new std::list< MatingGearInformationPart* >();
+	// m_splineColors = nullptr; //std::vector<hpcolor>();
+	setMatingWidgetsEnabled(false);
+	m_showMatingGearButton->setEnabled(false);
+	m_matingStepButton->setEnabled(false);
+	m_matingConstrMaxAngleBox->setValue(5.0f);
+	m_matingNormalsLengthBox->setValue(1.0f);
+	m_matingConstrSamplRateBox->setValue(30);
+	m_matingDarkenNormalsBox->setChecked(false);
+}
+
+void ToothProfileForm::setMatingWidgetsEnabled(bool enable) {
+	for(std::vector<QWidget*>::iterator it = m_matingWidgetList.begin(), end = m_matingWidgetList.end(); it != end; ++it) {
+		(*it)->setEnabled(enable);
+	}
 }
 
 void ToothProfileForm::setToothProfile(ToothProfile_ptr toothProfile) {
 	m_toothProfile = toothProfile;
-}
+	m_plane = Plane_ptr(m_toothProfile->getPlaneToothProfileLiesIn());
+	m_toSimpleGearButton->setEnabled(true);
 
-void ToothProfileForm::toSimpleGear() {
-	// SimpleGear* gear = new SimpleGear(new BSplineGearCurve(*m_currentCurve), 0.0f, 0.2f);
-	// TriangleMesh* gearMesh = gear->toTriangleMesh();
-	// gearMesh->setMaterial(0.25f, 0.5f, 1.0f, 10.0f); //ka, kd, ks, phong
-	// RenderItem3D* item3d = new RenderItem3D(gear, gearMesh, m_currentCurve->getName());
-	// deleteCurrentAndEmitNew(item3d);
-}
-void ToothProfileForm::createMatingGear() {
-	// for(unsigned int i = 0; i < gearComponents.size(); ++i) {
-	// 	usleep(8000);
-	// 	emitComponent(gearComponents[i]);
-	// 	std::cerr << "sleep over" << std::endl;
-	// }
-	if(!m_informationCurves || !m_splineColors)
-		constructMatingGear();
+	hpuint nTeeth = m_toothProfile->getNumberOfTeeth();
+	hpreal radius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
+	hpreal minRadius = MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth);
 
-	hpuint counter = 0;
-	for(std::list< MatingGearInformationPart* >::iterator it = m_informationCurves->begin(), end = m_informationCurves->end(); it != end; ++it) {
-		BSplineCurve2D_ptr curve2d = (*it)->getCurve(); //TODO: insert with 2D?
-		m_guiManager.insert(curve2d, (*it)->getName(), (*m_splineColors)[counter], HP_LINE_MESH | HP_POINT_CLOUD);
+	if(radius >= minRadius) {
+		m_matingRadiusSpinBox->setValue(radius);
+		m_matingRadiusSpinBox->setMinimum(MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth));
 
-		++counter;
+		m_matingNTeethSpinBox->setValue(nTeeth);
+		m_matingNTeethSpinBox->setMinimum(MatingGearConstructor::getMinNumberOfTeethForMatingGear(*m_toothProfile, radius));
+
+		setMatingWidgetsEnabled(true);
 	}
 }
 
+void ToothProfileForm::toSimpleGear() {
+	SimpleGear_ptr simpleGear = SimpleGear_ptr(new SimpleGear(*m_toothProfile, 0.0f, 2.0f));
+	m_guiManager.insert(simpleGear, HP_TRIANGLE_MESH );
+}
+void ToothProfileForm::createMatingGear() {
+//TODO: remove this method and use constructMatingGear instead!!!
+	constructMatingGear();
+}
+
 void ToothProfileForm::constructMatingGear() {
-	MatingGearConstructor matingGearConstructor;
-	hpreal radius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
-	matingGearConstructor.constructMatingTo(*m_toothProfile, radius, m_toothProfile->getNumberOfTeeth(), 30, 5.0f, 0.5f);
+	MatingGearConstructor matingGearConstructor(
+		*m_toothProfile,
+		m_matingRadiusSpinBox->value(),
+		m_matingNTeethSpinBox->value(),
+		m_matingConstrMaxAngleBox->value(),
+		m_matingConstrSamplRateBox->value());
 
-	m_informationCurves = matingGearConstructor.getInformationSplines();
-	m_splineColors = new std::vector<hpcolor>(m_informationCurves->size());
+	m_matingGearInformation = matingGearConstructor.getInformation();
 
-	hpreal adaption = (255.0f * 3) / m_splineColors->size();
-	for(hpuint counter = 0; counter < m_splineColors->size(); ++counter) {
-		hpuint adaptedCounter = (counter * adaption);
-		hpuint red, green, blue;
-		if(adaptedCounter / 256 <= 0) {
-			red = adaptedCounter;
-			green = 255 - adaptedCounter / 2;
-			blue = 255 - adaptedCounter / 2;
-		} else if (adaptedCounter / 256 <= 1) {
-			red = 255 - (adaptedCounter - 256) / 2;
-			green = adaptedCounter - 256;
-			blue = 255 - (adaptedCounter - 256) / 2;
-		} else {
-			red = 255 - (adaptedCounter - 512) / 2;
-			green = 255 - (adaptedCounter - 512) / 2;
-			blue = adaptedCounter - 512;
-		}
-		hpcolor color = hpcolor(red, green, blue, 255) * (1.0f / 255.0f);
-		(*m_splineColors)[counter] = color;
+	m_showMatingGearButton->setEnabled(true);
+	m_matingStepButton->setEnabled(true);
+}
+
+void ToothProfileForm::darkenNormals() {
+	// for(auto it : m_informationCurves) {
+	// 	if((*m_partIterator)->getPart() == ORIGIN_NORMAL ||
+	// 		(*m_partIterator)->getPart() == MATING_NORMAL) {
+	// 		BSplineCurve2D_ptr curve2d = (*m_partIterator)->getCurve();
+	// 		m_guiManager.update(curve2d, darkenColor);
+	// 	}
+	// }
+}
+
+void ToothProfileForm::showMatingGear() {
+	BothGearInformation* both = m_matingGearInformation->getReferenceCircles();
+	m_guiManager.insert(both->originPart.curve, both->originPart.name, both->originPart.color, both->originPart.drawModes);
+	if(both->hasTwoParts)
+		m_guiManager.insert(both->matingPart.curve, both->matingPart.name, both->matingPart.color, both->matingPart.drawModes);
+
+	both = m_matingGearInformation->getToothProfiles();
+	m_guiManager.insert(both->originPart.curve, both->originPart.name, both->originPart.color, both->originPart.drawModes);
+	if(both->hasTwoParts)
+		m_guiManager.insert(both->matingPart.curve, both->matingPart.name, both->matingPart.color, both->matingPart.drawModes);
+	
+	std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
+	for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
+		m_guiManager.insert((*it)->originPart.curve, (*it)->originPart.name, (*it)->originPart.color, (*it)->originPart.drawModes);
+		if((*it)->hasTwoParts)
+			m_guiManager.insert((*it)->matingPart.curve, (*it)->matingPart.name, (*it)->matingPart.color, (*it)->matingPart.drawModes);
+	}
+}
+
+void ToothProfileForm::changeNormalsVisiblity(int state) {
+	bool visible = true;
+	if(state == Qt::Checked)
+		visible = false;
+	cerr << "ToothProfileForm::changeNormalsVisiblity() called " << visible << endl;
+	m_matingGearInformation->setDarkingOfNormals(visible);
+	updateNormals();
+}
+
+void ToothProfileForm::changeNormalLength(double length) {
+	// m_matingGearInformation->setNormalLength(length);
+	// updateNormals();
+}
+
+void ToothProfileForm::updateNormals() {
+	std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
+	for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
+		m_guiManager.update((*it)->originPart.curve, (*it)->originPart.color);
+		if((*it)->hasTwoParts)
+			m_guiManager.update((*it)->matingPart.curve, (*it)->matingPart.color);
 	}
 }
 
 void ToothProfileForm::showNextMatingStep() {
-	hpcolor halfVisible = hpcolor(1.0f, 1.0f, 0.8f, 0.5f);
-	if(!m_informationCurves || !m_splineColors) {
-		constructMatingGear();
-		m_stepCounter = 0;
-		m_stepIterator = m_informationCurves->begin();
-	}
-	if(m_stepIterator == m_informationCurves->end() || m_stepCounter == m_splineColors->size()) {
-		m_matingStepButton->setEnabled(false);
-	} else {
+	// hpcolor halfVisible = hpcolor(1.0f, 1.0f, 0.8f, 0.5f);
+	// if(!m_informationCurves || !m_splineColors) {
+	// 	constructMatingGear();
+	// 	m_stepCounter = 0;
+	// 	m_partIterator = m_informationCurves->begin();
+	// }
+	// if(m_partIterator == m_informationCurves->end() || m_stepCounter == m_splineColors->size()) {
+	// 	m_matingStepButton->setEnabled(false);
+	// } else {
 
-		BSplineCurve2D_ptr curve2d = (*m_stepIterator)->getCurve();
+	// 	BSplineCurve2D_ptr curve2d = (*m_partIterator)->getCurve();
 
-		if((*m_stepIterator)->getError() == ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {
-			m_guiManager.insert(curve2d, (*m_stepIterator)->getName(), m_errorColor * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
-			++m_stepCounter;
-			++m_stepIterator;
+	// 	if((*m_partIterator)->getError() == ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {
+	// 		m_guiManager.insert(curve2d, (*m_partIterator)->getName(), m_errorColor * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
+	// 		++m_stepCounter;
+	// 		++m_partIterator;
 
-		} else {
-			BSplineCurve2D_ptr curve2d = (*m_stepIterator)->getCurve();
-			char* name = (*m_stepIterator)->getName();
-			MatingGearPart part = (*m_stepIterator)->getPart();
-			hpcolor color = (*m_splineColors)[m_stepCounter];
-			++m_stepCounter;
-			++m_stepIterator;
+	// 	} else {
+	// 		BSplineCurve2D_ptr curve2d = (*m_partIterator)->getCurve();
+	// 		char* name = (*m_partIterator)->getName();
+	// 		MatingGearPart part = (*m_partIterator)->getPart();
+	// 		hpcolor color = (*m_splineColors)[m_stepCounter];
+	// 		++m_stepCounter;
+	// 		++m_partIterator;
 			
-			switch(part) {
-				case MatingGearPart::MATING_REFERENCE_CIRCLE:
-					m_guiManager.insert(curve2d, name, color, HP_LINE_MESH);
-					return;
-				case MatingGearPart::ORIGIN_REFERENCE_CIRCLE:
-					m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH);
-					return;
-				case MatingGearPart::MATING_NORMAL:
-					m_guiManager.insert(curve2d, name, color, HP_LINE_MESH | HP_POINT_CLOUD);
-					return;
-				case MatingGearPart::ORIGIN_NORMAL:
-					m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
-					return;
-				case MatingGearPart::MATING_TOOTH_PROFILE:
-					m_guiManager.insert(curve2d, name, color, HP_LINE_MESH | HP_POINT_CLOUD);
-					return;
-				case MatingGearPart::ORIGIN_TOOTH_PROFILE:
-					m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
-					return;
-			}
-		}
-	}
+	// 		switch(part) {
+	// 			case MatingGearPart::MATING_REFERENCE_CIRCLE:
+	// 				m_guiManager.insert(curve2d, name, color, HP_LINE_MESH);
+	// 				return;
+	// 			case MatingGearPart::ORIGIN_REFERENCE_CIRCLE:
+	// 				m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH);
+	// 				return;
+	// 			case MatingGearPart::MATING_NORMAL:
+	// 				m_guiManager.insert(curve2d, name, color, HP_LINE_MESH | HP_POINT_CLOUD);
+	// 				return;
+	// 			case MatingGearPart::ORIGIN_NORMAL:
+	// 				m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
+	// 				return;
+	// 			case MatingGearPart::MATING_TOOTH_PROFILE:
+	// 				m_guiManager.insert(curve2d, name, color, HP_LINE_MESH | HP_POINT_CLOUD);
+	// 				return;
+	// 			case MatingGearPart::ORIGIN_TOOTH_PROFILE:
+	// 				m_guiManager.insert(curve2d, name, color * halfVisible, HP_LINE_MESH | HP_POINT_CLOUD);
+	// 				return;
+	// 		}
+	// 	}
+	// }
 }
 
 void ToothProfileForm::handleRay(Ray& ray) {

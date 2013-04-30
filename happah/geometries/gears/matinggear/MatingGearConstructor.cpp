@@ -1,4 +1,5 @@
-#include "happah/geometries/gears/MatingGearConstructor.h"
+#include "happah/geometries/gears/matinggear/MatingGearConstructor.h"
+#include "happah/geometries/gears/matinggear/MatingGearConstructionInformation.h"
 
 #include <cmath>
 
@@ -7,78 +8,104 @@
 #include "happah/math/Ray.h"
 
 
-MatingGearConstructor::MatingGearConstructor()
-  : m_originalToothProfile(new ToothProfile()),
-	m_originalGearCurve(new BSplineCurve<hpvec2>()),
-	m_originalToothCurve(new BSplineCurve<hpvec2>()),
-	m_matingProfile(new ToothProfile()),
-	m_allMatingPoints(new std::list<MatingPoint>()) {
-}
-
-MatingGearConstructor::~MatingGearConstructor() {
-}
-
-void MatingGearConstructor::constructMatingTo(
-	const ToothProfile& toothProfile,
-	hpreal radius,
+MatingGearConstructor::MatingGearConstructor(
+	const ToothProfile& originalGearToothProfile,
+	hpreal originalGearRadius,
 	hpuint matingGearNTeeth,
-	hpuint samplingRate,
 	hpreal maxAngle,
-	hpreal infomationNormalLength) {
-
-	delete m_originalToothProfile;
-	delete m_originalGearCurve;
-	delete m_originalToothCurve;
-	delete m_matingProfile;
-	delete m_allMatingPoints;
-
-	m_informationNormalLength = infomationNormalLength;
-
-	m_originalToothProfile = new ToothProfile(toothProfile);
-	m_originalGearCurve = new BSplineCurve<hpvec2>;
-	m_originalToothProfile->extendToGearCurve(*m_originalGearCurve);
-	m_originalToothCurve = new BSplineCurve<hpvec2>;
-	m_originalToothProfile->getCurve(*m_originalToothCurve);
-	m_originalRadius = radius;
+	hpuint samplingRate
+) : m_allMatingPoints(new std::list<MatingPoint>()),
+	m_matingNTeeth(matingGearNTeeth),
+	m_maxDiffAngle(maxAngle * M_PI / 180.0f),
+	m_matingProfile(new ToothProfile()),
+	m_originalToothProfile(new ToothProfile(originalGearToothProfile)),
+	m_originalRadius(originalGearRadius),
+	m_samplingRate(samplingRate) {
 
 	m_module = 2.0f * m_originalRadius / m_originalToothProfile->getNumberOfTeeth();
 
-	m_matingNTeeth = matingGearNTeeth;
 	m_matingRadius = m_module * m_matingNTeeth / 2.0f;
 	m_distanceOfCenters = m_originalRadius + m_matingRadius;
 	m_matingProfile = new ToothProfile();
 
-	m_originalToothCurve->getParameterRange(m_startKnots, m_stopKnots);
-	m_samplingRate = samplingRate;
-	m_stepSize = (m_stopKnots - m_startKnots) / (m_samplingRate - 1);
+	m_originalGearCurve = new BSplineCurve<hpvec2>;
+	m_originalToothProfile->extendToGearCurve(*m_originalGearCurve);
+	m_originalToothCurve = new BSplineCurve<hpvec2>;
+	m_originalToothProfile->getCurve(*m_originalToothCurve);
 
-	m_maxDiffAngle = maxAngle * M_PI / 180.0f;
+	m_originalToothCurve->getParameterRange(m_startKnots, m_stopKnots);
+	m_stepSize = (m_stopKnots - m_startKnots) / (m_samplingRate - 1);
 
 	constructListsOfPossibleMatingPoints();
 
 }
 
-std::list< MatingGearInformationPart* >* MatingGearConstructor::getInformationSplines() {
-	std::list< MatingGearInformationPart* >* informationList = new std::list< MatingGearInformationPart* >();
-	informationList->push_back(new MatingGearInformationPart(circle(m_originalRadius, hpvec2(0.0f, 0.0f)), MatingGearPart::ORIGIN_REFERENCE_CIRCLE, "Original gear ref circle")); //Reference circle of original gear
-	informationList->push_back(new MatingGearInformationPart(circle(m_matingRadius, hpvec2(m_distanceOfCenters, 0.0f)),  MatingGearPart::MATING_REFERENCE_CIRCLE,"Mating gear ref circle")); //Reference circle of mating gear
-	BSplineCurve<hpvec2>* originalUsedPoints = new BSplineCurve<hpvec2>();
-	BSplineCurve<hpvec2>* matingPoints = new BSplineCurve<hpvec2>();
-	for(std::list<MatingPoint>::iterator it = m_allMatingPoints->begin(), end = m_allMatingPoints->end(); it != end; ++it){
-		if(it->error == ErrorCode::NO_ERROR) {
-			originalUsedPoints->addControlPoint(it->originPoint);
-			matingPoints->addControlPoint(it->point + hpvec2(m_distanceOfCenters, 0.0f));
-			informationList->push_back(new MatingGearInformationPart(normalLine(it->originPoint, it->originNormal), MatingGearPart::ORIGIN_NORMAL, "Normal of original gear"));
-			informationList->push_back(new MatingGearInformationPart(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal), MatingGearPart::MATING_NORMAL, "Normal of mating gear"));
-			cerr << "ErrorCode: " << static_cast<int>(it->error) << endl;
-		} else {
-			informationList->push_back(new MatingGearInformationPart(normalLine(it->originPoint, it->originNormal), MatingGearPart::ORIGIN_NORMAL, "Normal of original gear", it->error));
-		}
-	}
-	informationList->push_back(new MatingGearInformationPart(originalUsedPoints, MatingGearPart::ORIGIN_TOOTH_PROFILE, "Original used points"));
-	informationList->push_back(new MatingGearInformationPart(matingPoints, MatingGearPart::MATING_TOOTH_PROFILE, "Constructed mating gear points"));
-	return informationList;
+MatingGearConstructor::~MatingGearConstructor() {
+	delete m_allMatingPoints;
+	delete m_matingProfile;
+	delete m_originalToothProfile;
+	delete m_originalGearCurve;
+	delete m_originalToothCurve;
 }
+
+MatingGearConstructionInformation* MatingGearConstructor::getInformation() {
+	return new MatingGearConstructionInformation(this);
+}
+
+std::list< MatingPoint >* MatingGearConstructor::getMatingPointList() {
+	return new std::list<MatingPoint>(*m_allMatingPoints);
+}
+
+hpreal MatingGearConstructor::getMatingGearReferenceRadius() {
+	return m_matingRadius;
+}
+
+hpreal MatingGearConstructor::getOriginalGearReferenceRadius() {
+	return m_originalRadius;
+}
+
+hpreal MatingGearConstructor::getMinRadiusForOriginGear(const ToothProfile& toothProfile, hpuint matingNTeeth) {
+	hpreal min = toothProfile.getTipRadius() / (1.0f + matingNTeeth / toothProfile.getNumberOfTeeth());
+	if(min < toothProfile.getRootRadius())
+		return min;
+	else
+		return toothProfile.getRootRadius();
+}
+
+hpuint MatingGearConstructor::getMinNumberOfTeethForMatingGear(const ToothProfile& toothProfile, hpreal originRadius) {
+	hpreal minReal = toothProfile.getNumberOfTeeth() * ((toothProfile.getTipRadius() / originRadius) - 1.0f);
+	hpuint min = static_cast<hpuint>(minReal);
+	if(min < 1)
+		min = 1; //at least one tooth is necessary
+	//return the next higher integer value, if minReal is not already exactly an integer value
+	if(static_cast<hpreal>(min) >= minReal)
+		return min;
+	else
+		return min + 1;
+}
+
+
+// std::list< MatingGearInformationPart* >* MatingGearConstructor::getInformationSplines() {
+// 	std::list< MatingGearInformationPart* >* informationList = new std::list< MatingGearInformationPart* >();
+// 	informationList->push_back(new MatingGearInformationPart(circle(m_originalRadius, hpvec2(0.0f, 0.0f)), MatingGearPart::ORIGIN_REFERENCE_CIRCLE, "Original gear ref circle")); //Reference circle of original gear
+// 	informationList->push_back(new MatingGearInformationPart(circle(m_matingRadius, hpvec2(m_distanceOfCenters, 0.0f)),  MatingGearPart::MATING_REFERENCE_CIRCLE,"Mating gear ref circle")); //Reference circle of mating gear
+// 	BSplineCurve<hpvec2>* originalUsedPoints = new BSplineCurve<hpvec2>();
+// 	BSplineCurve<hpvec2>* matingPoints = new BSplineCurve<hpvec2>();
+// 	for(std::list<MatingPoint>::iterator it = m_allMatingPoints->begin(), end = m_allMatingPoints->end(); it != end; ++it){
+// 		if(it->error == ErrorCode::NO_ERROR) {
+// 			originalUsedPoints->addControlPoint(it->originPoint);
+// 			matingPoints->addControlPoint(it->point + hpvec2(m_distanceOfCenters, 0.0f));
+// 			informationList->push_back(new MatingGearInformationPart(normalLine(it->originPoint, it->originNormal), MatingGearPart::ORIGIN_NORMAL, "Normal of original gear"));
+// 			informationList->push_back(new MatingGearInformationPart(normalLine(it->point + hpvec2(m_distanceOfCenters, 0.0f), it->normal), MatingGearPart::MATING_NORMAL, "Normal of mating gear"));
+// 			cerr << "ErrorCode: " << static_cast<int>(it->error) << endl;
+// 		} else {
+// 			informationList->push_back(new MatingGearInformationPart(normalLine(it->originPoint, it->originNormal), MatingGearPart::ORIGIN_NORMAL, "Normal of original gear", it->error));
+// 		}
+// 	}
+// 	informationList->push_back(new MatingGearInformationPart(originalUsedPoints, MatingGearPart::ORIGIN_TOOTH_PROFILE, "Original used points"));
+// 	informationList->push_back(new MatingGearInformationPart(matingPoints, MatingGearPart::MATING_TOOTH_PROFILE, "Constructed mating gear points"));
+// 	return informationList;
+// }
 
 void MatingGearConstructor::constructListsOfPossibleMatingPoints() {
 
@@ -231,23 +258,3 @@ hpvec2 MatingGearConstructor::getValueAt(hpreal t) {
 	return m_originalGearCurve->getValueAt(t);
 }
 
-BSplineCurve<hpvec2>* MatingGearConstructor::normalLine(hpvec2 start, hpvec2 normal) {
-	BSplineCurve<hpvec2>* line = new BSplineCurve<hpvec2>();
-	line->setDegree(1);
-	line->setPeriodic(false);
-	line->addControlPoint(start);
-	line->addControlPoint(start + m_informationNormalLength * 0.8f * normal);
-	line->addControlPoint(start + m_informationNormalLength * normal);
-	return line;
-}
-
-BSplineCurve<hpvec2>* MatingGearConstructor::circle(hpreal radius, hpvec2 offset) {
-	std::vector<hpvec2> circlePoints(16);
-	for(unsigned int i = 0; i <= 16; ++i) {
-		hpreal alpha = M_PI * i / 8;
-		circlePoints[i] = hpvec2(offset.x + radius * sin(alpha), offset.y + radius * cos(alpha));
-	}
-	BSplineCurve<hpvec2>* circle = new BSplineCurve<hpvec2>();
-	circle->interpolatePoints(circlePoints);
-	return circle;
-}

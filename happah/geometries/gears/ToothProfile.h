@@ -16,8 +16,8 @@ public:
 	ToothProfile(const BSplineCurve<hpvec3>& toothProfile);
 	~ToothProfile();
 
-	void   constructMatingGear();
-	void   constructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth, hpreal maxAngle, hpuint samplingRate);
+	// void   constructMatingGear();
+	// void   constructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth, hpreal maxAngle, hpuint samplingRate);
 	void   extendToGearCurve(BSplineCurve<hpvec2>& gearProfile) const;
 	void   extendToGearCurve(BSplineCurve<hpvec3>& gearProfile) const;
 	hpreal getAngularPitch() const;

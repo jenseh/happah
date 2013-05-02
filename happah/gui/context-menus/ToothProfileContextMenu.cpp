@@ -22,9 +22,8 @@ ToothProfileContextMenu::ToothProfileContextMenu(GUIManager& guiManager, QWidget
 	QAction* createMatingGearAction = new QAction(tr("Construct a mating gear"), this);
 	addAction(createMatingGearAction);
 	connect(createMatingGearAction, SIGNAL(triggered()), this, SLOT(createMatingGear()));
-
-
 }
+
 ToothProfileContextMenu::~ToothProfileContextMenu() {}
 
 void ToothProfileContextMenu::createMatingGear() {

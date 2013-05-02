@@ -88,23 +88,28 @@ public:
 		hpreal maxAngle,
 		hpuint samplingRate
 	);
-	MatingGearConstructor(
-		ToothProfile* toothProfile,
-		hpreal originalGearRadius,
-		hpuint matingGearNTeeth,
-		hpreal maxAngle,
-		hpuint samplingRate
-	);
+	// MatingGearConstructor(
+	// 	ToothProfile* toothProfile,
+	// 	hpreal originalGearRadius,
+	// 	hpuint matingGearNTeeth,
+	// 	hpreal maxAngle,
+	// 	hpuint samplingRate
+	// );
 	~MatingGearConstructor();
 
 	MatingGearConstructionInformation* getInformation();
 
+	std::vector<hpvec2>*    getMatingAngularPitchPoints();
 	std::list<MatingPoint>* getMatingPointList();
-	hpreal getMatingGearReferenceRadius();
-	hpreal getOriginalGearReferenceRadius();
-	ToothProfile_ptr getToothProfile();
+	hpreal                  getMatingGearReferenceRadius();
+	ToothProfile_ptr        getMatingToothProfile();
+	std::vector<hpvec2>*    getOriginalAngularPitchPoints();
+	hpreal                  getOriginalGearReferenceRadius();
+	ToothProfile_ptr        getToothProfile();
 
 	void reconstructMatingGear();
+	void reconstructMatingGear(hpreal originalGearRadius);
+	void reconstructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth);
 
 	//delete following lines for printing:
 	void print(hpvec2 point) {
@@ -132,6 +137,7 @@ public:
 	}
 
 private:
+	void        chooseSuitableMatingPointsForGear();
 	void        constructMatingGear();
 	void        constructListsOfPossibleMatingPoints();
 	hpvec2      getNormalAt(hpreal t);
@@ -141,6 +147,7 @@ private:
 	void        insertThicknessInMatingPoint(MatingPoint& matingPoint);
 
 	std::list<MatingPoint> m_allMatingPoints;
+	std::vector<hpreal>    m_angularPitchKnots;
 	hpreal                 m_distanceOfCenters;
 
 	MatingGearConstructionInformation* m_information;

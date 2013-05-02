@@ -15,44 +15,68 @@ MatingGearConstructor::MatingGearConstructor(
 	hpreal maxAngle,
 	hpuint samplingRate
 ) : m_matingNTeeth(matingGearNTeeth),
+	// m_matingProfile(ToothProfile_ptr(new ToothProfile())),
 	m_maxDiffAngle(maxAngle * M_PI / 180.0f),
-	m_matingProfile(ToothProfile_ptr(new ToothProfile())),
 	m_originalToothProfile(originalGearToothProfile),
 	m_originalRadius(originalGearRadius),
 	m_samplingRate(samplingRate) {
 
-	if(m_originalToothProfile->setMatingGearConstructor(this))
+	if(m_originalToothProfile->setMatingGearConstructor(this)) {
 		constructMatingGear();
+		cerr << "MatingGearConstructor::MatingGearConstructor: finished constructMatingGear()!" << endl;
+		m_information = new MatingGearConstructionInformation(this);
+	}
 }
 
-MatingGearConstructor::MatingGearConstructor(
-	ToothProfile* originalGearToothProfile,
-	hpreal originalGearRadius,
-	hpuint matingGearNTeeth,
-	hpreal maxAngle,
-	hpuint samplingRate
-) : m_matingNTeeth(matingGearNTeeth),
-	m_maxDiffAngle(maxAngle * M_PI / 180.0f),
-	m_matingProfile(ToothProfile_ptr(new ToothProfile())),
-	m_originalToothProfile(ToothProfile_ptr(originalGearToothProfile)),
-	m_originalRadius(originalGearRadius),
-	m_samplingRate(samplingRate) {
+// MatingGearConstructor::MatingGearConstructor(
+// 	ToothProfile* originalGearToothProfile,
+// 	hpreal originalGearRadius,
+// 	hpuint matingGearNTeeth,
+// 	hpreal maxAngle,
+// 	hpuint samplingRate
+// ) : m_matingNTeeth(matingGearNTeeth),
+// 	m_matingProfile(ToothProfile_ptr(new ToothProfile())),
+// 	m_maxDiffAngle(maxAngle * M_PI / 180.0f),
+// 	m_originalToothProfile(ToothProfile_ptr(originalGearToothProfile)),
+// 	m_originalRadius(originalGearRadius),
+// 	m_samplingRate(samplingRate) {
 
-	if(originalGearToothProfile->setMatingGearConstructor(this));
-		constructMatingGear();
+// 	if(originalGearToothProfile->setMatingGearConstructor(this)) {
+// 		constructMatingGear();
+// 		m_information = new MatingGearConstructionInformation(this);
+// 	}
+// }
+
+MatingGearConstructor::~MatingGearConstructor() {
+	delete m_originalGearCurve;
+	delete m_originalToothCurve;
+	delete m_information;
 }
 
 void MatingGearConstructor::reconstructMatingGear() {
+	reconstructMatingGear(m_originalRadius, m_matingNTeeth);
+}
+
+void MatingGearConstructor::reconstructMatingGear(hpreal originalGearRadius) {
+	reconstructMatingGear(originalGearRadius, m_matingNTeeth);
+}
+
+void MatingGearConstructor::reconstructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth) {
+	m_originalRadius = originalGearRadius;
+	m_matingNTeeth = matingGearNTeeth;
+	cerr << "MatingGearConstructor::reconstructMatingGear() called" << endl;
 	hpreal minRadius = getMinRadiusForOriginGear(*m_originalToothProfile, m_matingNTeeth);
 	if(m_originalRadius < minRadius || m_originalRadius > m_originalToothProfile->getTipRadius()) {
 		std::cerr << "MatingGearConstructor::reconstructMatingGear: ToothProfile of MatingGearConstructor has changed with values, that make mating gear construction impossible!" << std::endl;
 		std::cerr << "MatingGearConstructor::reconstructMatingGear: Use another reference radius for mating gear construction!" << std::endl;
+		std::cerr << "                                              radius = " << m_originalRadius << ", minRadius = " << minRadius << ", tipRadius = " << m_originalToothProfile->getTipRadius() << endl;
 		return;
 	}
 	delete m_originalGearCurve;
 	delete m_originalToothCurve;
 
 	constructMatingGear();
+	m_information->update();
 }
 
 void MatingGearConstructor::constructMatingGear() {
@@ -69,17 +93,62 @@ void MatingGearConstructor::constructMatingGear() {
 
 	m_originalToothCurve->getParameterRange(m_startKnots, m_stopKnots);
 	m_stepSize = (m_stopKnots - m_startKnots) / (m_samplingRate - 1);
+	for(hpuint i = 0; i < m_originalToothProfile->getNumberOfTeeth(); ++i) {
+		m_angularPitchKnots.push_back(i * (m_stopKnots - m_startKnots));
+	}
 
 	constructListsOfPossibleMatingPoints();
-
-	m_information = new MatingGearConstructionInformation(this); //shoudl this be here????!!!
-
+	chooseSuitableMatingPointsForGear();
 }
 
-MatingGearConstructor::~MatingGearConstructor() {
-	delete m_originalGearCurve;
-	delete m_originalToothCurve;
+void MatingGearConstructor::chooseSuitableMatingPointsForGear() {
+	//every point has to be inside one angular pitch of the gear!
+	hpvec2 originGearStart = getValueAt(m_startKnots);
+	hpvec2 originGearStop  = getValueAt(m_stopKnots);
+	bool   originGearTurnsClockwise = originGearStart.x * originGearStop.y - originGearStart.y * originGearStop.x < 0;
+	hpreal matingTurnDirection = originGearTurnsClockwise ? 1.0f : -1.0f; //mating gear turns the other way round!
+
+	std::list<MatingPoint>::iterator it = m_allMatingPoints.begin();
+	while(it->error != ErrorCode::NO_ERROR)
+		++it;
+	hpvec2 startPitch = glm::normalize(it->point);
+	hpvec2 stopPitch = glm::normalize(glm::rotate(startPitch, (360.0f * matingTurnDirection) / m_matingNTeeth));
+	hpmat2x2 betweenStartStop = glm::inverse(hpmat2x2(startPitch, stopPitch));
+
+	std::vector<hpvec2> chosenPoints = std::vector<hpvec2>();
+	for(std::list<MatingPoint>::iterator it = m_allMatingPoints.begin(), end = m_allMatingPoints.end(); it != end; ++it) {
+		hpvec2 baryz = betweenStartStop * it->point;
+		if(glm::all(glm::greaterThanEqual(baryz, hpvec2(0,0)))) {
+			chosenPoints.push_back(it->point);
+		}
+	}
+	BSplineCurve<hpvec2> matingCurve = BSplineCurve<hpvec2>();
+	matingCurve.setDegree(m_originalToothCurve->getDegree());
+	matingCurve.setPeriodic(false);
+	matingCurve.interpolatePoints(chosenPoints);
+	m_matingProfile = ToothProfile_ptr(new ToothProfile(matingCurve));
 }
+
+std::vector<hpvec2>* MatingGearConstructor::getOriginalAngularPitchPoints() {
+	std::vector<hpvec2>* angularPitchPoints = new std::vector<hpvec2>(m_angularPitchKnots.size());
+	for(hpuint i = 0; i < angularPitchPoints->size(); ++i) {
+		(*angularPitchPoints)[i] = m_originalGearCurve->getValueAt(m_angularPitchKnots[i]);
+	}
+	return angularPitchPoints;
+}
+
+std::vector<hpvec2>* MatingGearConstructor::getMatingAngularPitchPoints() {
+	std::vector<hpvec2>* angularPitchPoints = new std::vector<hpvec2>(m_matingNTeeth);
+	std::list<MatingPoint>::iterator it = m_allMatingPoints.begin();
+	while(it->error != ErrorCode::NO_ERROR)
+		++it;
+	hpvec2 firstPoint = it->point;
+	for(hpuint i = 0; i < angularPitchPoints->size(); ++i) {
+		(*angularPitchPoints)[i] = glm::rotate(firstPoint, (360.0f * i) / m_matingNTeeth);
+	}
+	return angularPitchPoints;
+}
+
 
 MatingGearConstructionInformation* MatingGearConstructor::getInformation() {
 	return m_information;
@@ -99,6 +168,10 @@ hpreal MatingGearConstructor::getOriginalGearReferenceRadius() {
 
 ToothProfile_ptr MatingGearConstructor::getToothProfile() {
 	return m_originalToothProfile;
+}
+
+ToothProfile_ptr MatingGearConstructor::getMatingToothProfile() {
+	return m_matingProfile;
 }
 
 hpreal MatingGearConstructor::getMinRadiusForOriginGear(const ToothProfile& toothProfile, hpuint matingNTeeth) {
@@ -141,12 +214,12 @@ void MatingGearConstructor::constructListsOfPossibleMatingPoints() {
 		m_allMatingPoints.push_back(matingPoint);
 		cerr << "normal mating point created" << endl;
 
-		hpreal normalAngleDiff = asin(normal.x * nextNormal.y - normal.y * nextNormal.x);
+		hpreal normalAngleDiff = std::abs(asin(normal.x * nextNormal.y - normal.y * nextNormal.x));
+		hpreal direction = (normal.x * nextNormal.y > normal.y * nextNormal.x) ? 1.0f : -1.0f;
 		if(normalAngleDiff > m_maxDiffAngle) {
-			cerr << "              angle>maxAngle" << endl;
-			hpuint nPartitions = static_cast<hpuint>(std::abs(normalAngleDiff) / m_maxDiffAngle);
+			cerr << "              angle>maxAngle and direction: " << direction << endl;
+			hpuint nPartitions = static_cast<hpuint>(normalAngleDiff / m_maxDiffAngle);
 			hpvec2 pointDiff = nextPoint - point;
-			hpreal direction = (normalAngleDiff > 0) ? 1.0f : -1.0f;
 			for(hpuint partition = 1; partition <= nPartitions; ++partition) {
 				hpvec2 partitionPoint = point + pointDiff * static_cast<hpreal> (partition / nPartitions);
 				hpvec2 partitionNormal = glm::rotate(normal, m_maxDiffAngle * direction * partition * radToDegree);

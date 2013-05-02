@@ -25,16 +25,16 @@ ToothProfile::~ToothProfile() {
 	delete m_matingGearConstructor;
 }
 
-void ToothProfile::constructMatingGear() {
-	hpreal averageRadius = 0.5f * getRootRadius() + 0.5f * getTipRadius();
-	constructMatingGear(averageRadius, getNumberOfTeeth(), 5.0f, 30);
-}
+// void ToothProfile::constructMatingGear() {
+// 	hpreal averageRadius = 0.5f * getRootRadius() + 0.5f * getTipRadius();
+// 	constructMatingGear(averageRadius, getNumberOfTeeth(), 5.0f, 30);
+// }
 
-void ToothProfile::constructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth, hpreal maxAngle, hpuint samplingRate) {
-	if(m_matingGearConstructor == nullptr) {
-		m_matingGearConstructor = new MatingGearConstructor(this, originalGearRadius, matingGearNTeeth, maxAngle, samplingRate);
-	}
-}
+// void ToothProfile::constructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth, hpreal maxAngle, hpuint samplingRate) {
+// 	if(m_matingGearConstructor == nullptr) {
+// 		m_matingGearConstructor = new MatingGearConstructor(this, originalGearRadius, matingGearNTeeth, maxAngle, samplingRate);
+// 	}
+// }
 
 /*Returns a new BSplineCurve representing the whole gear by putting together
 many of copies of the tooth profile bspline.
@@ -202,23 +202,27 @@ Plane* ToothProfile::getPlaneToothProfileLiesIn() const {
 }
 
 hpreal ToothProfile::getRootRadius() const {
-	hpreal min = glm::length(m_toothProfileCurve.getValueAt(0));
+	hpreal min, max;
+	m_toothProfileCurve.getParameterRange(min, max);
+	hpreal minLength = glm::length(m_toothProfileCurve.getValueAt(min));
 	for(unsigned int i = 1; i <= 100; ++i) {
-		hpreal value = glm::length(m_toothProfileCurve.getValueAt((1.0f / 100) * i));
-		if (value < min)
-			min = value;
+		hpreal value = glm::length(m_toothProfileCurve.getValueAt(min + ((max - min) / 100.0f) * i));
+		if (value < minLength)
+			minLength = value;
 	}
-	return min;
+	return minLength;
 }
 
 hpreal ToothProfile::getTipRadius() const {
-	hpreal max = glm::length(m_toothProfileCurve.getValueAt(0));
+	hpreal min, max;
+	m_toothProfileCurve.getParameterRange(min, max);
+	hpreal maxLength = glm::length(m_toothProfileCurve.getValueAt(min));
 	for(unsigned int i = 1; i <= 100; ++i) {
-		hpreal value = glm::length(m_toothProfileCurve.getValueAt((1.0f / 100) * i));
-		if (value > max)
-			max = value;
+		hpreal value = glm::length(m_toothProfileCurve.getValueAt(min + ((max - min) / 100.0f) * i));
+		if (value > maxLength)
+			maxLength = value;
 	}
-	return max;
+	return maxLength;
 }
 
 bool ToothProfile::hasMatingGear() const {
@@ -314,7 +318,7 @@ LineMesh* ToothProfile::toLineMesh() {
 
 void ToothProfile::updateMatingGearConstructor() {
 	if(m_matingGearConstructor != nullptr)
-		m_matingGearConstructor->reconstructMatingGear();
+		m_matingGearConstructor->reconstructMatingGear(0.5f * getRootRadius() + 0.5f * getTipRadius());
 }
 
 void ToothProfile::getFirstAndLastPoint(hpvec3& first, hpvec3& last) const {

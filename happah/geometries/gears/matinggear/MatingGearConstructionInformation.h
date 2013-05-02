@@ -12,6 +12,10 @@ public:
 	MatingGearConstructionInformation(MatingGearConstructor* constructor);
 	~MatingGearConstructionInformation();
 
+	bool areFurtherNormalsAvailable();
+
+	BothGearInformation* getAngularPitches();
+	BothGearInformation* getNextNormal();
 	std::vector<BothGearInformation*>* getNormals();
 	BothGearInformation* getReferenceCircles();
 	BothGearInformation* getToothProfiles();
@@ -21,29 +25,33 @@ public:
 	void setDarkingOfNormals(bool darkened);
 	void setMaskingColor(hpcolor color);
 	void setNormalLength(hpreal length);
+	void update();
 
 private:
 	BSplineCurve<hpvec2>* circle(hpreal radius, hpvec2 offset);
+	void fillRainbowColorArray(std::vector<hpcolor>& colorArray);
 	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal);
 	void recolorNormals();
 
-	std::vector<BSplineCurve2D_ptr> m_matingNormals;
-	std::vector<BSplineCurve2D_ptr> m_originNormals;
-	std::vector<hpcolor> m_normalColors;
-	hpcolor m_maskingColor;
-	hpcolor m_errorColor;
-	hpcolor m_additionalOriginColor;
-	hpcolor m_additionalMatingColor;
-	hpcolor m_referenceCircleColor;
-	hpcolor m_toothProfileColor;
-	bool m_maskAllActivated;
-	bool m_maskNormalsActivated;
-
-	BothGearInformation* m_referenceCircles;
-	BothGearInformation* m_toothProfiles;
+	hpcolor                            m_additionalMatingColor;
+	hpcolor                            m_additionalOriginColor;
+	hpcolor                            m_angularPitchColor;
+	BothGearInformation*               m_angularPitches;
+	MatingGearConstructor*             m_constructor;
+	hpcolor                            m_errorColor;
+	bool                               m_maskAllActivated;
+	hpcolor                            m_maskingColor;
+	bool                               m_maskNormalsActivated;
+	std::vector<BSplineCurve2D_ptr>    m_matingNormals;
+	std::vector<hpcolor>               m_normalColors;
+	hpreal                             m_normalLength;
 	std::vector<BothGearInformation*>* m_normals;
-
-	hpreal m_normalLength;
+	std::vector<BothGearInformation*>::iterator m_normalsIterator;
+	std::vector<BSplineCurve2D_ptr>    m_originNormals;
+	hpcolor                            m_referenceCircleColor;
+	BothGearInformation*               m_referenceCircles;
+	hpcolor                            m_toothProfileColor;
+	BothGearInformation*               m_toothProfiles;
 
 };
 

@@ -130,7 +130,6 @@ ToothProfileForm::~ToothProfileForm() {
 }
 
 void ToothProfileForm::updateMatingGearConstructor(ToothProfile_ptr) {
-	cerr << "updateMatingGearConstructor arrived" << endl;
 	if(m_matingGearInformation != nullptr) {
 		m_toothProfile->updateMatingGearConstructor();
 		updateFormExistingMatingGear();
@@ -176,9 +175,7 @@ void ToothProfileForm::setToothProfile(ToothProfile_ptr toothProfile) {
 
 	if(m_toothProfile->hasMatingGear()) {
 		updateFormExistingMatingGear();
-		cerr << "ToothProfileForm::setToothProfile(): ToothProfile with MatingGearConstructor found" << endl;
 	} else {
-		cerr << "ToothProfileForm::setToothProfile(): ToothProfile without MatingGearConstructor found" << endl;
 		updateFormNoExistingMatingGear();
 	}
 }
@@ -192,7 +189,6 @@ void ToothProfileForm::updateFormNoExistingMatingGear() {
 	hpuint nTeeth = m_toothProfile->getNumberOfTeeth();
 	hpreal avgRadius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
 	hpreal minRadius = MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth);
-	cerr << "                                     radius: " << avgRadius << ", minRadius" << minRadius << ", nTeeth "<< nTeeth << endl;
 
 	if(avgRadius >= minRadius) {
 		m_matingRadiusSpinBox->setValue(avgRadius);
@@ -228,15 +224,14 @@ void ToothProfileForm::updateFormExistingMatingGear() {
 
 void ToothProfileForm::constructMatingGear() {
 	if(!m_toothProfile->hasMatingGear()) {
-		cerr << "ToothProfileForm::constructMatingGear(): has found no MatingGearConstructor until now" << endl;
-		cerr << "                                         radius will be: " << m_matingRadiusSpinBox->value() << endl;
+		// cerr << "ToothProfileForm::constructMatingGear(): has found no MatingGearConstructor until now" << endl;
+		// cerr << "                                         radius will be: " << m_matingRadiusSpinBox->value() << endl;
 		new MatingGearConstructor(
 			m_toothProfile,
 			m_matingRadiusSpinBox->value(),
 			m_matingNTeethSpinBox->value(),
 			m_matingConstrMaxAngleBox->value(),
 			m_matingConstrSamplRateBox->value());
-		cerr << "now it should have one: " << m_toothProfile->hasMatingGear() << endl;
 		updateFormExistingMatingGear();
 	} else {
 		m_toothProfile->updateMatingGearConstructor();
@@ -286,7 +281,6 @@ void ToothProfileForm::changeNormalsVisiblity(int state) {
 		bool visible = true;
 		if(state == Qt::Checked)
 			visible = false;
-		cerr << "ToothProfileForm::changeNormalsVisiblity() called " << visible << endl;
 		m_matingGearInformation->setDarkingOfNormals(visible);
 		updateNormals();
 	}

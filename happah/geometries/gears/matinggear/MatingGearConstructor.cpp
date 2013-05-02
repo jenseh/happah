@@ -23,7 +23,7 @@ MatingGearConstructor::MatingGearConstructor(
 
 	if(m_originalToothProfile->setMatingGearConstructor(this)) {
 		constructMatingGear();
-		cerr << "MatingGearConstructor::MatingGearConstructor: finished constructMatingGear()!" << endl;
+		// cerr << "MatingGearConstructor::MatingGearConstructor: finished constructMatingGear()!" << endl;
 		m_information = new MatingGearConstructionInformation(this);
 	}
 }
@@ -212,19 +212,16 @@ void MatingGearConstructor::constructListsOfPossibleMatingPoints() {
 
 		MatingPoint matingPoint = getMatingPointOf(point, normal);
 		m_allMatingPoints.push_back(matingPoint);
-		cerr << "normal mating point created" << endl;
 
 		hpreal normalAngleDiff = std::abs(asin(normal.x * nextNormal.y - normal.y * nextNormal.x));
 		hpreal direction = (normal.x * nextNormal.y > normal.y * nextNormal.x) ? 1.0f : -1.0f;
 		if(normalAngleDiff > m_maxDiffAngle) {
-			cerr << "              angle>maxAngle and direction: " << direction << endl;
 			hpuint nPartitions = static_cast<hpuint>(normalAngleDiff / m_maxDiffAngle);
 			hpvec2 pointDiff = nextPoint - point;
 			for(hpuint partition = 1; partition <= nPartitions; ++partition) {
 				hpvec2 partitionPoint = point + pointDiff * static_cast<hpreal> (partition / nPartitions);
 				hpvec2 partitionNormal = glm::rotate(normal, m_maxDiffAngle * direction * partition * radToDegree);
 				MatingPoint matingPoint = getMatingPointOf(partitionPoint, partitionNormal);
-				cerr << "angle> mating point created" << endl;
 				m_allMatingPoints.push_back(matingPoint);
 			}
 		}
@@ -277,7 +274,7 @@ MatingPoint MatingGearConstructor::getMatingPointOf(const hpvec2& point, const h
 	                       - glm::dot(point, point) + m_originalRadius * m_originalRadius);
 	if(valueUnderRoot < 0) {
 		matingPoint.error = ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS;
-		cerr << "NO_CUT_WITH_REFERENCE_RADIUS found" << endl;
+		// cerr << "NO_CUT_WITH_REFERENCE_RADIUS found" << endl;
 		return matingPoint;
 	}
 	hpreal t = -glm::dot(normal, point) + sqrt(valueUnderRoot);

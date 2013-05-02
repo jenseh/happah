@@ -126,7 +126,6 @@ MatingGearConstructionInformation::MatingGearConstructionInformation(MatingGearC
 	assert(m_normalColors.size() == allMatingPoints->size());
 	assert(m_normalColors.size() == m_normals->size());
 
-	cerr << "MatingGearConstructionInformation::MatingGearConstructionInformation is before iterator " << endl;
 	m_normalsIterator = m_normals->begin();
 
 	//tooth profiles:
@@ -338,7 +337,6 @@ void MatingGearConstructionInformation::update() {
 		m_normals->resize(i);
 	}
 
-	cerr << "normalColors: " << m_normalColors.size() << ", allMatingPoints: " << allMatingPoints->size() << ", m_normals: " << m_normals->size() << endl;
 	assert(m_normalColors.size() == allMatingPoints->size());
 	assert(m_normalColors.size() == m_normals->size());
 

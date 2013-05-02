@@ -20,7 +20,7 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals(hpuint pointsPerTooth, hpuin
     
     std::vector<hpvec2> profileTooth = std::vector<hpvec2>();
     profileTooth.reserve(pointsPerTooth);
-    m_standardProfile->getProfilePartition(profileTooth);
+    m_standardProfile->getToothSpaceProfile(profileTooth);
 
     
     for(hpuint angleStep = 0; angleStep < angleResolution; angleStep++) {
@@ -56,7 +56,6 @@ std::vector<hpvec3>* Worm::createVerticesAndNormals(hpuint pointsPerTooth, hpuin
           hpvec3 pointNZ = hpvec3(radiusNZ * cos(nextAngle), radiusNZ * sin(nextAngle), posZ_RZ);
           hpvec3 pointNN = hpvec3(radiusNN * cos(nextAngle), radiusNN * sin(nextAngle), posZ_RN);
           
-          // TODO: create real normals
           hpvec2 normalTempRZ = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
           hpvec2 normalTempRN = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));
           hpvec2 normalTempNZ = glm::normalize(hpvec2(pointRZ.x, pointRZ.y));

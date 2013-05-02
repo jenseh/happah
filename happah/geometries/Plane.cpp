@@ -33,7 +33,7 @@ hpvec3 Plane::getOrigin() const {
 }
 
 bool Plane::intersect( Ray& ray, hpvec3& intersectionPoint ) {
-	if( glm::abs(glm::dot(ray.getDirection(), m_normal)) < EPSILON ) {
+	if( glm::abs(glm::dot(ray.getDirection(), m_normal)) < HP_EPSILON ) {
 		return false;
 	}
 	hpreal t = -(glm::dot(ray.getOrigin(), m_normal) + glm::dot(m_origin, m_normal)) / glm::dot(ray.getDirection(), m_normal);
@@ -54,17 +54,17 @@ bool Plane::intersect( Ray& ray, hpvec2& intersectionPoint ) {
 
 void Plane::setNormal(hpvec3 normal) {
 	check(normal);
-	if( glm::length( normal ) < EPSILON ) return;
+	if( glm::length( normal ) < HP_EPSILON ) return;
 	hpvec3 newNormal    = glm::normalize( normal );
 	hpvec3 normalAxis   = glm::normalize( m_normal );
 
 	// if normal was infinitesimally changed, no need for proper rotation
-	if( glm::length( newNormal - normalAxis ) < EPSILON ) {
+	if( glm::length( newNormal - normalAxis ) < HP_EPSILON ) {
 		m_normal = normal;
 		setSystemXVector( m_localSystemXVector );
 		return;
 	}
-	if( glm::length( newNormal + normalAxis ) < EPSILON ) {
+	if( glm::length( newNormal + normalAxis ) < HP_EPSILON ) {
 		m_normal = normal;
 		setSystemXVector( -m_localSystemXVector );
 		return;
@@ -89,8 +89,8 @@ void Plane::setOrigin(hpvec3 origin) {
 
 void Plane::setSystemXVector(hpvec3 systemXVector) {
 	hpvec3 normal = glm::normalize( m_normal );
-	if( glm::length( normal - glm::normalize(systemXVector) ) < EPSILON ) return;
-	if( glm::length( normal + glm::normalize(systemXVector) ) < EPSILON ) return;
+	if( glm::length( normal - glm::normalize(systemXVector) ) < HP_EPSILON ) return;
+	if( glm::length( normal + glm::normalize(systemXVector) ) < HP_EPSILON ) return;
 	systemXVector = systemXVector - glm::dot( normal, systemXVector ) * normal;
 	m_localSystemXVector = glm::normalize( systemXVector );
 }

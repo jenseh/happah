@@ -7,6 +7,7 @@ using namespace std;
 
 #include "happah/geometries/BSplineCurve.h"
 #include "happah/geometries/gears/ToothProfile.h"
+#include "happah/geometries/ZCircleCloud.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 
 class SimpleGear : public CylindricalGear {
@@ -36,6 +37,9 @@ public:
 	void getToothSpaceProfile(vector<hpvec2>& toothSpaceProfile);
 	void getToothProfile(vector<hpvec2>& toothProfile);
 	void getTraverseProfile(hpreal z, BSplineCurve<hpvec2>& gearProfile);
+
+	// Used by WormGearGrind simulation
+	ZCircleCloud_ptr toZCircleCloud(hpuint resolutionZ = 100);
 
 private:
 	ToothProfile_ptr m_toothProfile;

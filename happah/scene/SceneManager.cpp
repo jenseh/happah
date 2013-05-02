@@ -463,6 +463,34 @@ PointCloudRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile
 	return doInsert<ToothProfile, ToothProfileNode>(toothProfile, pointCloud, color);
 }
 
+void SceneManager::insert(TriangleMesh_ptr triangleMesh, TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode) {
+	doInsert<TriangleMesh, TriangleMeshNode, TriangleMeshGUIStateNode>(triangleMesh, triangleMeshGUIStateNode);
+}
+
+TriangleMeshRenderStateNode_ptr SceneManager::insert(TriangleMesh_ptr triangleMesh, hpcolor& color) {
+	Node_ptr node = findContainingData(triangleMesh);
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode;
+	if(node) {
+		TriangleMeshNode_ptr triangleMeshNode = dynamic_pointer_cast<TriangleMeshNode>(node);
+		TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = triangleMeshNode->getTriangleMeshRenderStateNode();
+		if(triangleMeshRenderStateNode) {
+			triangleMeshRenderStateNode->setColor(color);
+			triggerSubtreeUpdatedEvent(triangleMeshRenderStateNode);
+		} else {
+			TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+			triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+			triggerSubtreeInsertedEvent(triangleMeshRenderStateNode);
+		}
+	} else {
+		TriangleMeshNode_ptr triangleMeshNode(new TriangleMeshNode(triangleMesh));
+		TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode(new TriangleMeshRenderStateNode(triangleMesh, color));
+		triangleMeshNode->insertChild(triangleMeshRenderStateNode);
+		insertChild(triangleMeshNode);
+		triggerSubtreeInsertedEvent(triangleMeshNode);
+	}
+	return triangleMeshRenderStateNode;
+}
+
 void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) {
 	doInsert<Worm, WormNode, WormGUIStateNode>(worm, wormGUIStateNode);
 }

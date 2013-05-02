@@ -29,7 +29,7 @@ bool KDTreeLeaf::intersectAll(Circle& intersector, std::list<CircleHitResult>* h
       for (; pos != end; pos++) {
           Triangle triangle = *pos;
 
-          if (intersector.intersect(&triangle, hitResults)) {
+          if (intersector.intersect(triangle, hitResults)) {
               hit = true;
             }
         }

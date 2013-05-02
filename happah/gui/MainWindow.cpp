@@ -1,3 +1,4 @@
+#include <fstream>
 #include <QAction>
 #include <QApplication>
 #include <QMenu>
@@ -5,18 +6,26 @@
 
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/Viewport.h"
+#include "happah/gui/widgets/FileDialog.h"
+#include "happah/io/WavefrontGeometryReaderOBJ.h"
+
+using namespace std;
 
 MainWindow::MainWindow(GUIManager& guiManager, 
 	ViewportListener& viewportListener,
 	SceneGraphExplorerListener& sceneGraphExplorerListener,
 	DrawManager& drawManager
-) : m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
+) : m_guiManager(guiManager), m_sceneGraphExplorerPanel(new SceneGraphExplorerPanel(sceneGraphExplorerListener, this)),
 	m_toolPanel(new ToolPanel(guiManager, this)) {
 	
 	resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 	setWindowTitle("Happah");
 
 	QMenu* file = menuBar()->addMenu("&File");
+	QAction* importAction = new QAction("&Import...", this);
+	importAction->setShortcut(tr("CTRL+I"));
+	connect(importAction, SIGNAL(triggered()), this, SLOT(handleImportActionTriggeredEvent()));
+	file->addAction(importAction);
 	QAction* quitAction = new QAction("&Quit", this);
 	quitAction->setShortcut(tr("CTRL+Q"));
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -37,6 +46,7 @@ MainWindow::MainWindow(GUIManager& guiManager,
 	m_simpleGearContextMenu = new SimpleGearContextMenu(guiManager, this);
 	m_simulationContextMenu = new SimulationContextMenu(guiManager, this);
 	m_toothProfileContextMenu = new ToothProfileContextMenu(guiManager, this);
+	m_triangleMeshContextMenu = new TriangleMeshContextMenu(guiManager, this);
 
 	setCentralWidget(centralWidget);
 }
@@ -83,8 +93,36 @@ ToothProfileContextMenu* MainWindow::getToothProfileContextMenu() {
 	return m_toothProfileContextMenu;
 }
 
+TriangleMeshContextMenu* MainWindow::getTriangleMeshContextMenu() {
+	return m_triangleMeshContextMenu;
+}
+
+void MainWindow::handleImportActionTriggeredEvent() {
+	FileDialog fileDialog("Import...", this);
+	fileDialog.setNameFilters(FileDialog::WAVEFRONT_TRIANGLE_MESH_3D);
+	fileDialog.setFileMode(QFileDialog::ExistingFile);
+	if(fileDialog.exec() == QDialog::Accepted) {
+		QString path = fileDialog.selectedFiles().first();
+		hpuint contentType = FileDialog::getContentType(path);
+		if(contentType != 0) {
+			switch(contentType) {
+			case FileDialog::WAVEFRONT_TRIANGLE_MESH_3D: {
+				TriangleMesh* triangleMesh;
+				ifstream file(path.toStdString().c_str());
+				WavefrontGeometryReaderOBJ::read(file, triangleMesh);
+				if(triangleMesh != 0)
+					m_guiManager.insert(TriangleMesh_ptr(triangleMesh));
+				return;
+			}
+			default:
+				return;
+			}
+		}
+	}
+}
+
 void MainWindow::keyPressEvent(QKeyEvent* event) {
-	if (event->key() == Qt::Key_Escape)
+	if(event->key() == Qt::Key_Escape)
 		qApp->quit();
 	QMainWindow::keyPressEvent(event);
 }

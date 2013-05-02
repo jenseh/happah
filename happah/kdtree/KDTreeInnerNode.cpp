@@ -1,20 +1,19 @@
 #include "KDTreeInnerNode.h"
 #include "happah/LoggingUtils.h"
 
-template <class T>
+template<
+		class T>
 class TriangleSorter {
-      int axis;
+	int axis;
 public:
-      TriangleSorter(int axis_) : axis(axis_) {}
-      bool operator()(const T& a, const T& b) {
+	TriangleSorter(int axis_) :
+			axis(axis_) {
+	}
+	bool operator()(const T& a, const T& b) {
 //        return glm::min(a.vertices[0][axis], glm::min(a.vertices[1][axis], a.vertices[2][axis]))
 //        	 < glm::min(b.vertices[0][axis], glm::min(b.vertices[1][axis], b.vertices[2][axis]));
-    	  return (a.vertices[0][axis]+
-    	  		  	   a.vertices[1][axis]+
-    	  		  	   a.vertices[2][axis])  < (b.vertices[0][axis]+
-    	    	  		  	   b.vertices[1][axis]+
-    	    	  		  	   b.vertices[2][axis]);
-      }
+		return (a.vertices[0][axis] + a.vertices[1][axis] + a.vertices[2][axis]) < (b.vertices[0][axis] + b.vertices[1][axis] + b.vertices[2][axis]);
+	}
 };
 
 

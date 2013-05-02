@@ -13,6 +13,11 @@ void TriangleMeshNode::accept(SceneVisitor& sceneVisitor) {
 	Node::accept(sceneVisitor);
 }
 
+//TODO: GUIStateNodes should be like RenderStateNodes (only one per node)
+void TriangleMeshNode::insertChild(TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode) {
+	Node::insertChild(triangleMeshGUIStateNode);
+}
+
 void TriangleMeshNode::insertChild(TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode) {
 	if(m_triangleMeshRenderStateNode)
 		Node::removeChild(m_triangleMeshRenderStateNode);

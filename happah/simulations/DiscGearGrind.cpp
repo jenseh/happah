@@ -45,16 +45,20 @@ void DiscGearGrind::calculateGrindingDepth(double time){
 
 DiscGearGrindResult DiscGearGrind::calculateSimulationResult(double time){
     calculateGrindingDepth(time);
-
     // Fill color
     for(size_t i = 0; i < m_gearColor->size(); i++){
-    	if( m_distances[i] >= 0 ){
-    		m_gearColor->at(i) = hpcolor(0.0, m_distances[i], 1.0, 1.0); //TODO: look at line 40, I think the value can be 2 which is more than 1.0!
-    	}else{
-            m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
-    	}
-    }
+//    	if( m_distances[i] >= 0 ){
+//    		m_gearColor->at(i) = hpcolor(0.0, m_distances[i], 1.0, 1.0);
+//    	}else{
+//            m_gearColor->at(i) = hpcolor(1.0, 1.0 + m_distances[i], 1.0 + m_distances[i], 1.0);
+//    	}
 
+    	if (m_distances[i] >= 0) {
+    		m_gearColor->at(i) = hpcolor(0.0, 0.5 * m_distances[i], 1.0 - m_distances[i], 1.0);
+		} else {
+			m_gearColor->at(i) = hpcolor(-m_distances[i], 0.5 * (1.0+m_distances[i]), 0.0, 1.0);
+		}
+    }
     return DiscGearGrindResult(m_gear, m_gearColor, m_gearMesh,  RigidAffineTransformation(),
     						   m_disc, m_discMesh, m_gearMovement.getRigidAffineTransformation(time).inverse());
 }

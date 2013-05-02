@@ -17,14 +17,16 @@ public:
 	~BSplineCurveForm();
 
 	BSplineCurve2D_ptr getCurve() const;
-	void handleRay(Ray& ray);
 	void handleDrag(Ray& ray);
-	void setCurve(BSplineCurve2D_ptr curve);
-	void setPlane(Plane_ptr plane);
+	void handleRay(Ray& ray);
 	void handleSelection();
 	void handleSelection(int pointIndex);
+	void setCurve(BSplineCurve2D_ptr curve);
+	void setPlane(Plane_ptr plane);
+
 signals:
-		void selected(Form* form);
+	void selected(Form* form);
+
 private slots:
 	void addPoint();
 	void changePeriodic(int state);
@@ -32,6 +34,7 @@ private slots:
 	void changeClamped(int state);
 	void changeDegree(int value);
 	void createCurve();
+	void deletePoint();
 	void interpolate();
 	void projectPointOntoPlane();
 	void resetPlane();

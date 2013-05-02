@@ -50,8 +50,8 @@ hpuint TriangleMesh::getTriangleCount() {
 }
 
 hpuint TriangleMesh::getVertexCount() {
-	vector<hpvec3>* verticesAndNormals = getVerticesAndNormals();
-	return verticesAndNormals->size() / 2;
+	vector<hpuint>* indices = getIndices();
+	return indices->size() / 2;
 }
 
 vector<Triangle>* TriangleMesh::toTriangles(){

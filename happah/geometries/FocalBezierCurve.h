@@ -16,6 +16,7 @@ public:
 
 private:
 	void generateNewControlPoints(hpreal delta);
+	//hpvec3 calcPointOnLine(hpvec3 a, hpvec3 b, hpreal deltaPhi);
 	hpreal m_phi;
 	hpvec3 m_center;
 	vector<hpvec3>*m_controlPoints;

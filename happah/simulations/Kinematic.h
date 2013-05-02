@@ -8,14 +8,16 @@
 #include "happah/math/Polynom.h"
 
 /**
+ * @class
  * @brief The Kinematic class represents movement in 3d space defined through polynoms representing the movement and polynoms representing the rotation.
  */
 class Kinematic
 {
+private:
     Polynom<double> m_translateX, m_translateY, m_translateZ;
     Polynom<double> m_rotateX, m_rotateY, m_rotateZ;
 
-public :
+public:
     /**
      * @brief Kinematic contructor for the polynoms with default polynom 0.
      * @param transX translation of the x position.
@@ -57,8 +59,6 @@ public :
      * @return the RigidAffineTransformation to the given time t.
      */
     RigidAffineTransformation getRigidAffineTransformation(double t);
-
-
 };
 
 #endif // KINEMATIC_H

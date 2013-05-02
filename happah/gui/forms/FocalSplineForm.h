@@ -28,6 +28,11 @@ private slots:
 	void changeDetail(int value);
 	void activateControPointCreation();
 	void extendSpline();
+	void toggleRiesenfeld();
+	void changeLRIterations(int value);
+	void changeLRDegree(int value);
+	void toggleControlPolygon();
+	void toggleCircle();
 private:
 	bool m_createPoints;
 	void update();
@@ -36,9 +41,14 @@ private:
 	FocalSpline_ptr m_focalSpline;
 	Plane_ptr m_plane;
 	bool m_focalSplineInserted;
-	LabeledIntegerSpinBox* m_degreeSpinBox;
-	LabeledIntegerSpinBox* m_detailSpinBox;
+	QSpinBox* m_degreeSpinBox;
+	QSpinBox* m_detailSpinBox;
 	QPushButton* m_addPointButton;
+	QPushButton* m_doRiesenfeldButton;
+	QSpinBox* 	 m_riesenfeldIterationsM;
+	QSpinBox* 	 m_riesenfeldDegreeN;
+	QPushButton* m_showControlPolygon;
+	QPushButton* m_showCircleButton;
 
 };
 

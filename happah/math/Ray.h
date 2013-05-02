@@ -29,7 +29,9 @@ public:
      * @param direction direction of the ray. The direction must have a positive length or the constructor throws an exception.
      */
     Ray(hpvec3 origin, hpvec3 direction);
-    // TODO: Used by BSplineCurve ( Erik? )
+    /**
+     * @brief Calculates shortest distance between point and ray.
+     */
     hpreal distanceToPoint(hpvec3& point) const;
     /**
      * @brief gets origin of the ray.

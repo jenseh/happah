@@ -22,7 +22,7 @@ void BSplineCurveContextMenu::setBSplineCurve(BSplineCurve2D_ptr curve) {
 
 void BSplineCurveContextMenu::createGearToothOfCurve() {
 
-	if(!m_curve->getClamped()) {
+	if(!m_curve->isClamped()) {
 		QMessageBox messageBox;
 		messageBox.setText("The chosen Curve is not clamped!");
 		messageBox.setInformativeText(

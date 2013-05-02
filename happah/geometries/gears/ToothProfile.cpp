@@ -329,7 +329,7 @@ void ToothProfile::getFirstAndLastPoint(hpvec3& first, hpvec3& last) const {
 }
 
 void ToothProfile::ensureClamping() {
-	if(!m_toothProfileCurve.getClamped()) {
+	if(!m_toothProfileCurve.isClamped()) {
 		std::cerr << "A BSplineCurve for a ToothProfile has to be clamed! Otherwise the resulting gear will look against expectation." << std::endl;
 		m_toothProfileCurve.setClamped(true);
 	}

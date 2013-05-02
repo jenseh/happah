@@ -9,6 +9,7 @@
 class KDTreeInnerNode : public KDTreeNode
 {
 public:
+  static int mCountInter;
   KDTreeInnerNode(std::vector<Triangle>* triangles, BBox& bBox, hpuint depth, hpuint maxTrianglesPerBox, int terminateDepth = -1);
   ~KDTreeInnerNode();
 

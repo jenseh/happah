@@ -120,7 +120,6 @@ template <class T> void BSplineCurve<T>::calculateNormalization() {
 }
 
 template <class T> bool BSplineCurve<T>::check( bool debugOutput ) const {
-	m_controlPoints.size() == m_degree + 1; // Bezier-curve property per segment
 	if( debugOutput ) {
 		std::cout << "BSplineCurve checking routine\n";
 		std::cout << "degree:\t " << m_degree << " \t control points:\t " << m_controlPoints.size() << std::endl;
@@ -141,30 +140,6 @@ template <class T> bool BSplineCurve<T>::check( bool debugOutput ) const {
 		}
 	}
 	return true;
-}
-
-template <class T> void BSplineCurve<T>::getBoundingBox( hpvec2* min, hpvec2* max ) const {
-	if( m_controlPoints.size() > 0 ) {
-		// TODO: Use iterator
-		min->x = m_controlPoints[0].x;
-		max->x = m_controlPoints[0].x;
-		min->y = m_controlPoints[0].y;
-		max->y = m_controlPoints[0].y;
-		for( unsigned int i = 1; i < m_controlPoints.size(); i++ ) {
-			if( m_controlPoints[i].x < min->x )
-				min->x = m_controlPoints[i].x;
-			if( m_controlPoints[i].x > max->x )
-				max->x = m_controlPoints[i].x;
-			if( m_controlPoints[i].y < min->y )
-				min->y = m_controlPoints[i].y;
-			if( m_controlPoints[i].y > max->y )
-				max->y = m_controlPoints[i].y;
-		}
-	}
-}
-
-template <class T> bool BSplineCurve<T>::getClamped() const {
-	return m_clamped;
 }
 
 template <class T> T BSplineCurve<T>::getControlPoint( unsigned int index ) const {
@@ -360,14 +335,6 @@ template <class T> void BSplineCurve<T>::getParameterRange( hpreal& t_low, hprea
 	t_high = m_normalizedKnots[m_normalizedPoints.size()];
 }
 
-template <class T> bool BSplineCurve<T>::getPeriodic() const {
-	return m_periodic;
-}
-
-template <class T> bool BSplineCurve<T>::getUniform() const {
-	return m_uniform;
-}
-
 template <class T> T BSplineCurve<T>::getDerivativeAt( hpreal t ) const {
 	if( m_normalizedPoints.size() < m_degree + 1 ) {
 		return T(0.0f);
@@ -532,6 +499,14 @@ template <class T> void BSplineCurve<T>::interpolatePoints( std::vector<T>& inpu
 	calculateNormalization();
 }
 
+template <class T> void BSplineCurve<T>::removeControlPoint( unsigned int index ) {
+	if( index < m_controlPoints.size() ) {
+		m_controlPoints.erase( m_controlPoints.begin() + index );
+		m_knots.resize( m_knots.size() - 1 );
+		calculateNormalization();
+	}
+}
+
 template <class T> void BSplineCurve<T>::removeControlPoints() {
 	m_controlPoints.clear();
 //	std::vector<T>().swap(m_controlPoints); // forces reallocation
@@ -642,7 +617,7 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 
 	hpreal tBegin = 0.0f, tEnd = 0.0f;
 	getParameterRange(tBegin, tEnd);
-	if( tEnd - tBegin > EPSILON && m_degree > 1 ) {
+	if( tEnd - tBegin > HP_EPSILON && m_degree > 1 ) {
 		if( m_clamped && !m_periodic ) {
 			std::vector<T> knots = knotRefinement( 0.05f );
 			if( knots.size() > 1 ) {
@@ -683,6 +658,8 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 	}
 
 	// control polygon
+	// TODO Control polygon shouldn't be part of the line mesh -> function controlPolygonToLineMesh()
+	//      But at the moment guiStateNode can handle only one single line mesh.
 	if( m_controlPoints.size() > 1 ) {
 		unsigned int n = m_controlPoints.size();
 		unsigned int nVData = verticesAndNormals->size();
@@ -702,6 +679,7 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 	}
 
 	// tangents
+	// TODO The same as for the control polygon.
 	/*
 	if( m_normalizedKnots.size() > 2*m_degree && m_degree > 1 ) {
 		unsigned int n = m_normalizedKnots.size() - 2*m_degree;
@@ -750,7 +728,7 @@ template <class T> int BSplineCurve<T>::findSpan( hpreal t ) const {
 	return l;
 
 	/*
-	// newer version. doesn't work with knot refinement?
+	// newer better version. doesn't work with knot refinement?
 	if( t < m_normalizedKnots.front() ) return -1;
 
 	//unsigned int l = 0;
@@ -835,7 +813,7 @@ template <class T> std::vector<T> BSplineCurve<T>::knotRefinement( hpreal minDis
 	do {
 		newKnots.clear();
 		for( int i = m_degree; i < refinedKnots.size() - m_degree - 1; i++ ) {
-			if( refinedKnots[i+1] - refinedKnots[i] > EPSILON ) {
+			if( refinedKnots[i+1] - refinedKnots[i] > HP_EPSILON ) {
 				bool refineCurrent = false;
 				for( int k = i - m_degree; k < i; k++ )
 				{
@@ -901,7 +879,7 @@ template <class T> void BSplineCurve<T>::refine(
 		for( int l = 1; l <= p; l++ ) {
 			int ind = k - p + l;
 			hpreal alpha = refinedKnots[k+l] - *newKnotIt;
-			if( std::abs(alpha) < EPSILON ) {
+			if( std::abs(alpha) < HP_EPSILON ) {
 				refinedPoints[ind-1] = refinedPoints[ind];
 			} else {
 				alpha = alpha / ( refinedKnots[k+l] - knots[i-p+l]);

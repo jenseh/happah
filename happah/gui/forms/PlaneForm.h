@@ -14,7 +14,6 @@ public:
 	~PlaneForm();
 
 	Plane_ptr getPlane() const;
-	void reset();
 	void setPlane(Plane_ptr plane);
 	void handleSelection(){emit selected(this);}
 signals:
@@ -23,7 +22,8 @@ private slots:
 	void createPlane();
 	void updatePlaneOrigin();
 	void updatePlaneNormal();
-
+public slots:
+	void reset();
 private:
 	GUIManager& m_guiManager;
 	VectorInput* m_originInput;

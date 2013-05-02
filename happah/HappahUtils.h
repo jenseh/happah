@@ -14,6 +14,10 @@ namespace HPUtils{
     // Caluclate Line Intersection in 2D Space (Warning: z value is never used)
     hpvec3   calculate2DLineIntersection(hpvec3 a1,hpvec3 a2, hpvec3 b1, hpvec3 b2);
 
+    // returns sign of an number
+    template <typename T> int sgn(T val) {
+        return (T(0) < val) - (val < T(0));
+    }
 };
 
 std::ostream& operator<<( std::ostream& os, const hpvec3& vec );

@@ -26,7 +26,7 @@ DefaultGUIManager::~DefaultGUIManager() {
 }
 
 void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(300, 100));
+	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(100, 30));
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
 	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
@@ -320,6 +320,7 @@ void DefaultGUIManager::insert(SimpleGear_ptr simpleGear,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SimpleGear, SimpleGearGUIStateNode, SimpleGearForm, SimpleGearContextMenu>(simpleGear, "Simple Gear", m_toolPanel->getSimpleGearForm(), m_mainWindow.getSimpleGearContextMenu());
 }
+
 void DefaultGUIManager::insert(SpherePatch_ptr spherePatch,hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<SpherePatch, SpherePatchGUIStateNode, SpherePatchForm>(spherePatch, "SpherePatch", m_toolPanel->getSpherePatchForm());
@@ -334,7 +335,15 @@ void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
 	}
 }
 
-void DefaultGUIManager::insert(Worm_ptr worm,hpuint drawMode) {
+void DefaultGUIManager::insert(TriangleMesh_ptr triangleMesh) {
+	TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode = TriangleMeshGUIStateNode_ptr(new TriangleMeshGUIStateNode(triangleMesh, m_mainWindow.getTriangleMeshContextMenu(), toFinalLabel("Triangle Mesh")));
+	hpcolor color(1.0, 0.0, 0.0, 1.0);
+	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = m_sceneManager->insert(triangleMesh, color);
+	triangleMeshGUIStateNode->setTriangleMesh(triangleMesh);
+	m_sceneManager->insert(triangleMesh, triangleMeshGUIStateNode);
+}
+
+void DefaultGUIManager::insert(Worm_ptr worm, hpuint drawMode) {
 	if (drawMode & HP_TRIANGLE_MESH)
 		doInsert2D<Worm, WormGUIStateNode, WormForm>(worm, "Worm", m_toolPanel->getWormForm());
 }

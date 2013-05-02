@@ -36,6 +36,9 @@ typedef shared_ptr<SpherePatchGUIStateNode> SpherePatchGUIStateNode_ptr;
 class ToothProfileGUIStateNode;
 typedef shared_ptr<ToothProfileGUIStateNode> ToothProfileGUIStateNode_ptr;
 
+class TriangleMeshGUIStateNode;
+typedef shared_ptr<TriangleMeshGUIStateNode> TriangleMeshGUIStateNode_ptr;
+
 class WormGUIStateNode;
 typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 
@@ -276,6 +279,21 @@ private:
 	ToothProfileForm* m_toothProfileForm;
 };
 
+#include "happah/gui/context-menus/TriangleMeshContextMenu.h"
+
+class TriangleMeshGUIStateNode : public GUIStateNode {
+public:
+	TriangleMeshGUIStateNode(TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name);
+	~TriangleMeshGUIStateNode();
+	
+	ContextMenu* getContextMenu() const;
+	shared_ptr<void> getData() const;
+	Form* getForm();
+private:
+	TriangleMesh_ptr m_triangleMesh;
+	TriangleMeshContextMenu* m_triangleMeshContextMenu;
+};
+
 #include "happah/gui/context-menus/SimulationContextMenu.h"
 #include "happah/gui/forms/SimulationForm.h"
 #include "happah/simulations/WormGearGrind.h"
@@ -306,7 +324,7 @@ public:
 
 	shared_ptr<void> getData() const;
 	Form* getForm();
-	Worm_ptr getWorm()const;
+	Worm_ptr getWorm() const;
 
 private:
 	Worm_ptr m_worm;

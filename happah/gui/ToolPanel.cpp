@@ -119,9 +119,10 @@ void ToolPanel::handleDragEvent(Ray& ray){
 }
 
 void ToolPanel::setForm(Form* form) {
-	m_forms->setCurrentWidget(form);
-
-	m_buttonsByForm[form]->setChecked(true);
+	if(form != 0) {
+		m_forms->setCurrentWidget(form);
+		m_buttonsByForm[form]->setChecked(true);
+	}
 }
 
 void ToolPanel::handleFormSelectedEvent(Form* form){

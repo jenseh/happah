@@ -8,7 +8,7 @@
 #include "happah/geometries/gears/SimpleGear.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/gears/Worm.h"
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/SpherePatch.h"
 #include "happah/geometries/SurfaceOfRevolution.h"

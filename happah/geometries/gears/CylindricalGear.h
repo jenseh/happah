@@ -7,9 +7,9 @@
 
 using namespace std;
 
-#include "happah/geometries/Geometry.h"
-#include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
+#include "happah/geometries/Geometry.h"
+#include "happah/geometries/TriangleMesh.h"
 
 /** @class CylindricalGear
  * @brief Simplest Gear class

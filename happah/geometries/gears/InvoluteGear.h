@@ -11,7 +11,7 @@ using namespace std;
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 #include "happah/geometries/gears/SimpleGear.h"
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/HappahTypes.h"
 
 /** @class InvoluteGear

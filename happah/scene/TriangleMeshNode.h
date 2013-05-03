@@ -1,7 +1,7 @@
 #ifndef TRIANGLE_MESH_NODE_H
 #define TRIANGLE_MESH_NODE_H
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/ElementRenderStateNode.h"

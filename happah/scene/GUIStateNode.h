@@ -45,8 +45,9 @@ typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 class WormGearGrindGUIStateNode;
 typedef shared_ptr<WormGearGrindGUIStateNode> WormGearGrindGUIStateNode_ptr;
 
-#include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"

@@ -5,9 +5,9 @@
 #include <memory>
 #include <vector>
 
-#include "happah/geometries/Mesh.h"
-#include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
+#include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
 #include "happah/math/Ray.h"
 
 template <class T>

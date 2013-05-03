@@ -1,7 +1,7 @@
 #ifndef LINE_MESH_NODE_H_
 #define LINE_MESH_NODE_H_
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/LineMesh.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/ElementRenderStateNode.h"
 

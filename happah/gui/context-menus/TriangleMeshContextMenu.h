@@ -1,7 +1,7 @@
 #ifndef TRIANGLE_MESH_CONTEXT_MENU_H
 #define TRIANGLE_MESH_CONTEXT_MENU_H
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/GUIManager.h"
 

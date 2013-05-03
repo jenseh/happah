@@ -2,7 +2,7 @@
 
 #include <istream>
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 
 using namespace std;
 

@@ -2,7 +2,7 @@
 #define RAY_CLOUD_TRIANGULATOR_H
 
 #include "happah/HappahTypes.h"
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 
 class RayCloudTriangulator {
 

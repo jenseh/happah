@@ -6,9 +6,9 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
-#include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
 #include "happah/geometries/Geometry.h"
+#include "happah/geometries/TriangleMesh.h"
 
 class SpherePatch;
 typedef shared_ptr<SpherePatch> SpherePatch_ptr;

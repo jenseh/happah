@@ -2,9 +2,9 @@
 #define TOOTHPROFILE_H
 
 #include "happah/geometries/BSplineCurve.h"
-#include "happah/geometries/Mesh.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
 #include "happah/HappahTypes.h"
 
 class MatingGearConstructor;

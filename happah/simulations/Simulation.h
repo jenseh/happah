@@ -3,9 +3,6 @@
 
 #include <memory>
 
-#include "happah/geometries/Mesh.h"
-#include "happah/geometries/Geometry.h"
-#include "happah/transformations/RigidAffineTransformation.h"
 /**
  * @brief The SimulationResult class base class for all the different simulation results.
  */

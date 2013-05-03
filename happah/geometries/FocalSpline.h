@@ -1,11 +1,11 @@
 #ifndef FOCALSPLINE_H_
 #define FOCALSPLINE_H_
 
+#include "happah/HappahTypes.h"
 #include "happah/geometries/FocalBezierCurve.h"
 #include "happah/geometries/Geometry.h"
-#include "happah/HappahTypes.h"
-#include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
 #include <vector>
 #include <memory>
 

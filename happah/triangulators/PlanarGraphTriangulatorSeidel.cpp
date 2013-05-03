@@ -4,7 +4,7 @@ PlanarGraphTriangulatorSeidel::PlanarGraphTriangulatorSeidel() {}
 
 PlanarGraphTriangulatorSeidel::~PlanarGraphTriangulatorSeidel() {}
 
-TriangleMesh2D* PlanarGraphTriangulatorSeidel::triangulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last) {
+TriangleMesh2D* PlanarGraphTriangulatorSeidel::triangulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last) {
 	/*
 	Alternative 1
 	TrapezoidMesh2D* trapezoidMesh = trapezoidulate(first, last);

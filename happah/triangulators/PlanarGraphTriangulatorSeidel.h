@@ -6,13 +6,13 @@ class PlanarGraphTriangulatorSeidel : public PlanarGraphTriangulator {
 
 public:
 	//returns trapezoidal decomposition of the interior of the given polygon according to Seidel's algorithm
-	//static TrapezoidMesh2D* trapezoidulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last); // Alternative 1
-	//static void trapezoidulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last, TrapezoidMesh2D& trapezoidMesh); // Alternative 2
+	//static TrapezoidMesh2D* trapezoidulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last); // Alternative 1
+	//static void trapezoidulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last, TrapezoidMesh2D& trapezoidMesh); // Alternative 2
 
 	PlanarGraphTriangulatorSeidel();
 	~PlanarGraphTriangulatorSeidel();
 
-	TriangleMesh2D* triangulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last);
+	TriangleMesh2D* triangulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last);
 
 	class TrapezoidMesh2D {
 		//TODO

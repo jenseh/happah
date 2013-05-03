@@ -3,11 +3,11 @@
 #include "happah/HappahTypes.h"
 
 template<typename T>
-struct Segment {
+struct SegmentEndpoints {
 	T& a;
 	T& b;
 };
 
-typedef Segment<hpvec2> Segment2D;
-typedef Segment<hpvec3> Segment3D;
+typedef SegmentEndpoints<hpvec2> SegmentEndpoints2D;
+typedef SegmentEndpoints<hpvec3> SegmentEndpoints3D;
 

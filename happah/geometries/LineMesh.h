@@ -8,7 +8,7 @@
 using namespace std;
 
 template<typename T>
-class LineMesh : public Mesh<T> {
+class LineMesh : public Mesh<T> {//TODO: rename LineMesh to SegmentMesh?
 public:
 	template<typename S>
 	class SegmentEndpointsIterator : public iterator<random_access_iterator_tag, const SegmentEndpoints<S> > {

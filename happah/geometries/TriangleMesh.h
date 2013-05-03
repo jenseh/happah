@@ -3,19 +3,18 @@
 #include <memory>
 
 #include "happah/geometries/Mesh.h"
-#include "happah/math/Ray.h"
-#include "happah/math/Triangle.h"
 
 using namespace std;
 
-class TriangleMesh : public Mesh {
+template<typename T>
+class TriangleMesh : public Mesh<T> {
 public:
-	TriangleMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
+	TriangleMesh(vector<T>* verticesAndNormals, vector<hpuint>* indices);
 	~TriangleMesh();
 
-	hpuint getTriangleCount();
-	hpuint getVertexCount();
-	vector<Triangle>* toTriangles();
-	vector<Ray>* toRays();
 };
-typedef shared_ptr<TriangleMesh> TriangleMesh_ptr;
+typedef TriangleMesh<hpvec2> TriangleMesh2D;
+typedef shared_ptr<TriangleMesh2D> TriangleMesh2D_ptr;
+typedef TriangleMesh<hpvec3> TriangleMesh3D;
+typedef shared_ptr<TriangleMesh3D> TriangleMesh_ptr;//TODO: rename to TriangleMesh3D_ptr
+

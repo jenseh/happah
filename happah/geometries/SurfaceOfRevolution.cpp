@@ -17,7 +17,7 @@ hpreal SurfaceOfRevolution::getRadius() {
     return m_radius;
 }
 
-TriangleMesh_ptr SurfaceOfRevolution::toTriangleMesh(uint nWedges){
+TriangleMesh3D* SurfaceOfRevolution::toTriangleMesh(uint nWedges){
 	// This creates the quads for a gear. The gear axis is the model's z-axis.
 	std::vector<hpvec3> *verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint> *indices = new std::vector<hpuint>;
@@ -92,7 +92,7 @@ TriangleMesh_ptr SurfaceOfRevolution::toTriangleMesh(uint nWedges){
 			}
 		}
 	}
-    return TriangleMesh_ptr(new TriangleMesh(verticesAndNormals, indices));
+    return new TriangleMesh3D(verticesAndNormals, indices);
 }
 
 

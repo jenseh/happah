@@ -6,10 +6,15 @@
 
 using namespace std;
 
-class LineMesh : public Mesh {
+template<typename T>
+class LineMesh : public Mesh<T> {
 public:
-	LineMesh(vector<hpvec2>* verticesAndNormals, vector<hpuint>* indices);
-	LineMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
+	LineMesh(vector<T>* verticesAndNormals, vector<hpuint>* indices);
 	~LineMesh();
+
 };
-typedef shared_ptr<LineMesh> LineMesh_ptr;
+typedef LineMesh<hpvec2> LineMesh2D;
+typedef shared_ptr<LineMesh2D> LineMesh2D_ptr;
+typedef LineMesh<hpvec3> LineMesh3D;
+typedef shared_ptr<LineMesh3D> LineMesh_ptr;//TODO: rename to LineMesh3D_ptr
+

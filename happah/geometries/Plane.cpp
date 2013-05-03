@@ -99,7 +99,7 @@ hpvec3 Plane::getSystemXVector() {
 	return m_localSystemXVector;
 }
 
-TriangleMesh* Plane::toTriangleMesh() {
+TriangleMesh3D* Plane::toTriangleMesh() {
 	hpreal edgeLength = 1.0f;
 	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
@@ -124,7 +124,7 @@ TriangleMesh* Plane::toTriangleMesh() {
 	indices->push_back(0);
 	indices->push_back(2);
 	indices->push_back(3);
-	return new TriangleMesh(verticesAndNormals, indices);
+	return new TriangleMesh3D(verticesAndNormals, indices);
 }
 
 PointCloud* Plane::toPointCloud() {
@@ -154,7 +154,7 @@ PointCloud* Plane::toPointCloud() {
 	return new PointCloud(verticesAndNormals);
 }
 
-LineMesh* Plane::toLineMesh() {
+LineMesh3D* Plane::toLineMesh() {
 	hpreal edgeLength = 1.0f;
 	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
@@ -186,7 +186,7 @@ LineMesh* Plane::toLineMesh() {
 	indices->push_back(0);
 	indices->push_back(2);
 	indices->push_back(3);
-	return new LineMesh(verticesAndNormals, indices);
+	return new LineMesh3D(verticesAndNormals, indices);
 }
 Plane& Plane::operator=(const Plane& other) {
 	if(this != &other) {

@@ -310,7 +310,7 @@ PointCloud* ToothProfile::toPointCloud() {
 	return curve.toPointCloud();
 }
 
-LineMesh* ToothProfile::toLineMesh() {
+LineMesh3D* ToothProfile::toLineMesh() {
 	BSplineCurve<hpvec3> curve;
 	extendToGearCurve(curve);
 	return curve.toLineMesh();

@@ -6,7 +6,7 @@
 #include "happah/scene/ElementRenderStateNode.h"
 
 
-class LineMeshNode : public SimpleGeometryNode<LineMesh>  {
+class LineMeshNode : public SimpleGeometryNode<LineMesh3D>  {
 
 public:
 	LineMeshNode(LineMesh_ptr lineMesh);

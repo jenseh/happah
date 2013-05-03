@@ -145,7 +145,7 @@ TriangleMesh_ptr Worm::toTriangleMesh(hpuint pointsPerTooth, hpuint angleResolut
     for (hpuint index = 0; index < indexCount; index++) {
     	indices->push_back(index);
     }
-    TriangleMesh_ptr result = TriangleMesh_ptr(new TriangleMesh(verticesAndNormals, indices));
+    TriangleMesh_ptr result = TriangleMesh_ptr(new TriangleMesh3D(verticesAndNormals, indices));
     return result;
 }
 

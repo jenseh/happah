@@ -11,7 +11,13 @@ DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr disc
     m_gearMovement = Kinematic::getLinearKinematic(start, end, -alpha / M_PI * 180);
 
     // Convert to right representation
-    m_gearRays = m_gearMesh->toRays();
+	vector<hpvec3>* verticesAndNormals = m_gearMesh->getVerticesAndNormals();
+
+	m_gearRays = new vector<Ray>();
+	m_gearRays->resize(verticesAndNormals->size()/2);
+	for( size_t i = 0; i < verticesAndNormals->size(); i+=2)
+		m_gearRays->at(i/2) = 	Ray(verticesAndNormals->at(i), // Origin
+								verticesAndNormals->at(i+1) ); // Direction
 
     // resize distances array
     m_distances.resize(m_gearRays->size());
@@ -19,7 +25,7 @@ DiscGearGrind::DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr disc
     m_gearColor->resize(m_gearRays->size());
 
     // Build kdtree
-    m_kdTree = new KDTree(m_discMesh->toTriangles());
+    m_kdTree = new KDTree(m_discMesh);
 }
 
 DiscGearGrind::~DiscGearGrind() {

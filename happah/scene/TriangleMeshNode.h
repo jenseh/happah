@@ -9,7 +9,7 @@
 class TriangleMeshRenderStateNode;
 typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 
-class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
+class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh3D> {
 
 public:
 	TriangleMeshNode(TriangleMesh_ptr triangleMesh);

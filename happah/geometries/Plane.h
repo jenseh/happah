@@ -31,8 +31,8 @@ public:
 
 	Plane& operator=(const Plane& other);
 
-	TriangleMesh* toTriangleMesh();
-	LineMesh* toLineMesh();
+	TriangleMesh3D* toTriangleMesh();
+	LineMesh3D* toLineMesh();
 	PointCloud* toPointCloud();
 
 private:

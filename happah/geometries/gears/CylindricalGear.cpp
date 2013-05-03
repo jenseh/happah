@@ -34,7 +34,7 @@ void CylindricalGear::getTraverseProfile(hpreal z, vector<hpvec2>& gearProfile) 
 	}
 }
 
-TriangleMesh* CylindricalGear::toTriangleMesh(hpuint nPointsPerTooth, hpuint nTraverseProfiles) {
+TriangleMesh3D* CylindricalGear::toTriangleMesh(hpuint nPointsPerTooth, hpuint nTraverseProfiles) {
 	vector<hpvec2> profile(nPointsPerTooth * getNumberOfTeeth());
 	// Create vectors for the triangle mesh
 	vector<hpvec3>* verticesAndNormals = new vector<hpvec3>();
@@ -118,5 +118,5 @@ TriangleMesh* CylindricalGear::toTriangleMesh(hpuint nPointsPerTooth, hpuint nTr
 		}
 	}
 
-	return new TriangleMesh(verticesAndNormals, indices);
+	return new TriangleMesh3D(verticesAndNormals, indices);
 }

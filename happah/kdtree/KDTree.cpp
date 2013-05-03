@@ -1,12 +1,24 @@
 #include "KDTree.h"
 
-KDTree::KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox) {
-	// Compute bounding box for whole tree
-  for (std::vector<Triangle>::iterator t = triangles->begin(); t != triangles->end(); t++) {
-      m_bBox.addTriangle(*t);
-  }
-  // Create root node
-  m_root = new KDTreeInnerNode(triangles, m_bBox, 0, maxTrianglesPerBox);
+KDTree::KDTree(TriangleMesh_ptr triangleMesh, hpuint maxTrianglesPerBox) {
+	vector<hpvec3>* verticesAndNormals = triangleMesh->getVerticesAndNormals();
+	vector<hpuint>* indices = triangleMesh->getIndices();
+
+	vector<Triangle>* result = new vector<Triangle>();
+	result->reserve(indices->size() / 3);
+	for(size_t i = 0; i < indices->size(); i += 3){
+		Triangle t = Triangle(verticesAndNormals->at(2 * indices->at(i)),
+							  verticesAndNormals->at(2 * indices->at(i+1)),
+							  verticesAndNormals->at(2 * indices->at(i+2)));
+
+		result->push_back(t);
+	}
+
+	for (std::vector<Triangle>::iterator t = result->begin(); t != result->end(); t++)
+	      m_bBox.addTriangle(*t);
+
+	// Create root node
+	m_root = new KDTreeInnerNode(result, m_bBox, 0, maxTrianglesPerBox);
 }
 
 KDTree::~KDTree(){

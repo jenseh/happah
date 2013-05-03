@@ -18,7 +18,7 @@ public:
 	void init(int degree);
 	void update();
 
-	LineMesh* toLineMesh();
+	LineMesh3D* toLineMesh();
 	PointCloud* toPointCloud();
 	void setControlPoint(hpuint index, hpvec3 controlPoint);
 	hpvec3 getControlPoint(hpuint index);

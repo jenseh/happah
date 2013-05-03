@@ -174,7 +174,7 @@ public:
 	void setUniform( bool uniform );
 
 	PointCloud* toPointCloud();
-	LineMesh* toLineMesh();
+	LineMesh<T>* toLineMesh();
 	BSplineCurve<hpvec3>* to3dBSplineCurve() const;
 	BSplineCurve<hpvec2>* to2dBSplineCurve() const;
 

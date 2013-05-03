@@ -1,6 +1,20 @@
 #include "happah/gui/DefaultGUIManager.h"
 #include <sstream>
 
+vector<hpvec3>* to3D(vector<hpvec2>* vs2D) {
+	vector<hpvec3>* vs3D = new vector<hpvec3>(vs2D->size());
+	vector<hpvec3>::iterator i3D = vs3D->begin();
+	for(vector<hpvec2>::iterator i2D = vs2D->begin(), end = vs2D->end(); i2D != end; ++i2D, ++i3D)
+		(*i3D) = hpvec3(*i2D, 0.0f);
+	return vs3D;
+}
+
+LineMesh3D* to3D(LineMesh2D* lineMesh2D) {
+	vector<hpvec3>* verticesAndNormals = to3D(lineMesh2D->getVerticesAndNormals());
+	vector<hpuint>* indices = new vector<hpuint>(*(lineMesh2D->getIndices()));
+	return new LineMesh3D(verticesAndNormals, indices);
+}
+
 DefaultGUIManager::DefaultGUIManager(SceneManager_ptr sceneManager)
 	  : m_counter(0),
 		m_drawManager(sceneManager),
@@ -28,7 +42,7 @@ DefaultGUIManager::~DefaultGUIManager() {
 void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
 	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(100, 30));
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
-	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
+	TriangleMesh_ptr discMesh = TriangleMesh_ptr(disc->toTriangleMesh());
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
 
 	QThread* thread = new QThread();
@@ -39,7 +53,7 @@ void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
 
 void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, SimpleGear_ptr simpleGear) {
 	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
-	TriangleMesh_ptr discMesh = disc->toTriangleMesh();
+	TriangleMesh_ptr discMesh = TriangleMesh_ptr(disc->toTriangleMesh());
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
 
 	QThread* thread = new QThread();
@@ -221,8 +235,8 @@ bool DefaultGUIManager::init() {
 }
 
 void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode) {
-
-	if( drawMode & HP_LINE_MESH ) {
+	insert(bSplineCurve, "BSplineCurve", hpcolor(1.0, 0.0, 0.0, 1.0), drawMode);
+	/*if( drawMode & HP_LINE_MESH ) {
 		doInsert1D<BSplineCurve<hpvec2>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
 	}
@@ -230,7 +244,7 @@ void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode)
 	if( drawMode & HP_POINT_CLOUD ) {
 		doInsert0D<BSplineCurve<hpvec2>, BSplineCurveGUIStateNode, BSplineCurveForm, BSplineCurveContextMenu>(
 				bSplineCurve, "BSplineCurve", m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu());
-	}
+	}*/
 
 }
 
@@ -241,7 +255,8 @@ void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* labe
 	if( drawMode & HP_LINE_MESH ) {
 		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
 			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
-		LineMesh_ptr lineMesh = LineMesh_ptr(bSplineCurve->toLineMesh());
+		LineMesh2D* lineMesh2D = bSplineCurve->toLineMesh();
+		LineMesh_ptr lineMesh = LineMesh_ptr(to3D(lineMesh2D));
 		guiStateNode->setLineMesh(lineMesh);
 		m_sceneManager->insert(bSplineCurve, guiStateNode);
 		LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(bSplineCurve, lineMesh, curveColor);
@@ -355,13 +370,22 @@ string DefaultGUIManager::toFinalLabel(const char* label) {
 }
 
 void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve) {
-	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
-	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
+	update(bSplineCurve, hpcolor(1.0, 0.0, 0.0, 1.0));
 }
 
-void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve, hpcolor curveColor) {
+void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve, hpcolor color) {
 	doUpdate0D<BSplineCurve<hpvec2>>(bSplineCurve);
-	doUpdate1D<BSplineCurve<hpvec2>>(bSplineCurve);
+	GUIStateNode_ptr guiStateNode = m_guiStateNodes[bSplineCurve];
+	if(!guiStateNode) {
+		cerr << "GUI state node not found." << endl;
+		return;
+	}
+	m_sceneManager->removeContainingData(bSplineCurve, guiStateNode->getLineMesh());
+	LineMesh2D* lineMesh2D = bSplineCurve->toLineMesh();
+	LineMesh_ptr lineMesh = LineMesh_ptr(to3D(lineMesh2D));
+	guiStateNode->setLineMesh(lineMesh);
+	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(bSplineCurve, lineMesh, color);
+	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 }
 
 void DefaultGUIManager::update(SurfaceOfRevolution_ptr disc) {

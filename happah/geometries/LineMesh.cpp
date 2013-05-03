@@ -1,9 +1,12 @@
 #include "happah/geometries/LineMesh.h"
 
-LineMesh::LineMesh(vector<hpvec2>* verticesAndNormals, vector<hpuint>* indices)
-	: Mesh(verticesAndNormals,indices) {}
+template<typename T>
+LineMesh<T>::LineMesh(vector<T>* verticesAndNormals, vector<hpuint>* indices)
+	: Mesh<T>(verticesAndNormals, indices) {}
 
-LineMesh::LineMesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices)
-	: Mesh(verticesAndNormals,indices) {}
+template<typename T>
+LineMesh<T>::~LineMesh() {}
 
-LineMesh::~LineMesh() {}
+template class LineMesh<hpvec2>;
+template class LineMesh<hpvec3>;
+

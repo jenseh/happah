@@ -17,6 +17,6 @@ public:
 	PlanarGraphTriangulator();
 	virtual ~PlanarGraphTriangulator();
 
-	virtual TriangleMesh* triangulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last) = 0;
+	virtual TriangleMesh2D* triangulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last) = 0;
 
 };

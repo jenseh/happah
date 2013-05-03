@@ -12,13 +12,13 @@ public:
 	PlanarGraphTriangulatorSeidel();
 	~PlanarGraphTriangulatorSeidel();
 
-	TriangleMesh* triangulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last);
+	TriangleMesh2D* triangulate(PlanarGraphSegmentIterator first, PlanarGraphSegmentIterator last);
 
 	class TrapezoidMesh2D {
 		//TODO
 	public:
-		//LineMesh* toLineMesh(); //TODO
-		//TriangleMesh* toTriangleMesh();
+		//LineMesh2D* toLineMesh(); //TODO
+		//TriangleMesh2D* toTriangleMesh();
 	};
 
 };

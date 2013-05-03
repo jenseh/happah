@@ -464,7 +464,7 @@ PointCloudRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile
 }
 
 void SceneManager::insert(TriangleMesh_ptr triangleMesh, TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode) {
-	doInsert<TriangleMesh, TriangleMeshNode, TriangleMeshGUIStateNode>(triangleMesh, triangleMeshGUIStateNode);
+	doInsert<TriangleMesh3D, TriangleMeshNode, TriangleMeshGUIStateNode>(triangleMesh, triangleMeshGUIStateNode);
 }
 
 TriangleMeshRenderStateNode_ptr SceneManager::insert(TriangleMesh_ptr triangleMesh, hpcolor& color) {

@@ -16,7 +16,7 @@ typedef shared_ptr<SpherePatch> SpherePatch_ptr;
 class SpherePatch: public Geometry  {
 public:
   SpherePatch(int degree, hpvec3 a, hpvec3 b, hpvec3 c);
-  TriangleMesh* toTriangleMesh();
+  TriangleMesh3D* toTriangleMesh();
   //void setControlPoint(int index,hpvec3 value);
   //void update();
   //hpvec3 getControlPoint(int index);

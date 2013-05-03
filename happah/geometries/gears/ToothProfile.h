@@ -39,7 +39,7 @@ public:
 	void   setPointOfToothProfile(hpuint toothProfileIndex, hpvec2 newValue);
 	void   setPointOfToothProfile(hpuint toothProfileIndex, hpvec3 newValue);
 	PointCloud* toPointCloud();
-	LineMesh*   toLineMesh();
+	LineMesh3D*   toLineMesh();
 	void    updateMatingGearConstructor();
 private:
 	MatingGearConstructor* m_matingGearConstructor;

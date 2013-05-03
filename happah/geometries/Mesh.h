@@ -7,19 +7,18 @@
 
 using namespace std;
 
+template<typename T>
 class Mesh {
 public:
-	Mesh(vector<hpvec2>* verticesAndNormals, vector<hpuint>* indices);
-	Mesh(vector<hpvec3>* verticesAndNormals, vector<hpuint>* indices);
+	Mesh(vector<T>* verticesAndNormals, vector<hpuint>* indices);
 	virtual ~Mesh();
 
-
-	vector<hpvec3>* getVerticesAndNormals();
+	vector<T>* getVerticesAndNormals();
 	vector<hpuint>* getIndices();
 
 private:
-	vector<hpvec3>* m_verticesAndNormals;
+	vector<T>* m_verticesAndNormals;
 	vector<hpuint>* m_indices;
+
 };
-typedef shared_ptr<Mesh> Mesh_ptr;
 

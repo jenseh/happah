@@ -5,6 +5,7 @@
 #include <list>
 #include <iostream>
 
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/math/Triangle.h"
 #include "happah/math/Circle.h"
 #include "happah/kdtree/KDTreeInnerNode.h"
@@ -14,8 +15,8 @@
 class KDTree
 {
 public:
-  KDTree(std::vector<Triangle>* triangles, hpuint maxTrianglesPerBox = 50);
-  ~KDTree();
+	KDTree(TriangleMesh_ptr triangleMesh, hpuint maxTrianglesPerBox = 50);
+	~KDTree();
 
   bool intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults);
   hpreal intersectFirst(Ray& intersector, hpreal maxLength);

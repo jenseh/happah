@@ -52,7 +52,7 @@ public:
 	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(ToothProfile_ptr toothProfile, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
-	void insert(TriangleMesh_ptr triangleMesh);
+	void insert(TriangleMesh3D_ptr triangleMesh);
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 
 	void update(BSplineCurve2D_ptr bSplineCurve);
@@ -68,8 +68,8 @@ public:
 	void update(Worm_ptr worm);
 
 	void useForBSpline(Plane_ptr plane);
-//	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh_ptr discMesh);
-//	void useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+//	void useInSimulation(SurfaceOfRevolution_ptr disc,TriangleMesh3D_ptr discMesh);
+//	void useInSimulation(SimpleGear_ptr gear, TriangleMesh3D_ptr gearMesh);
 	void visitScene(SceneVisitor& visitor);
 	void visitScene(SimulationVisitor& visitor);
 	const SceneManager_ptr getSceneManager();

@@ -12,11 +12,11 @@ public:
 	TriangleMeshContextMenu(GUIManager& guiManager, QWidget* parent);
 	~TriangleMeshContextMenu();
 
-	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
+	void setTriangleMesh(TriangleMesh3D_ptr triangleMesh);
 
 private:
 	GUIManager& m_guiManager;
-	TriangleMesh_ptr m_triangleMesh;
+	TriangleMesh3D_ptr m_triangleMesh;
 
 private slots:
 	void createRayCloud();

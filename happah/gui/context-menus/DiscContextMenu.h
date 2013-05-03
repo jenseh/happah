@@ -13,12 +13,12 @@ public:
 	DiscContextMenu(GUIManager& guiManager, QWidget* parent);
 	~DiscContextMenu();
 
-	void setDisc(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh);
+	void setDisc(SurfaceOfRevolution_ptr disc, TriangleMesh3D_ptr discMesh);
 
 private:
 	GUIManager& m_guiManager;
 	SurfaceOfRevolution_ptr m_disc;
-	TriangleMesh_ptr m_discMesh;
+	TriangleMesh3D_ptr m_discMesh;
 
 //private slots:
 //	void useDiscInSumulation();

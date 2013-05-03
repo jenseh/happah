@@ -12,8 +12,8 @@ typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh3D> {
 
 public:
-	TriangleMeshNode(TriangleMesh_ptr triangleMesh);
-	TriangleMeshNode(TriangleMesh_ptr triangleMesh, RigidAffineTransformation& transformation);
+	TriangleMeshNode(TriangleMesh3D_ptr triangleMesh);
+	TriangleMeshNode(TriangleMesh3D_ptr triangleMesh, RigidAffineTransformation& transformation);
 	virtual ~TriangleMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);

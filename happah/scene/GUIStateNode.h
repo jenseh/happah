@@ -65,11 +65,11 @@ public:
 	virtual Form* getForm() = 0;
 	const string& getName() const;
 	GUIStateNode_ptr getptr();
-	TriangleMesh_ptr getTriangleMesh() const;
+	TriangleMesh3D_ptr getTriangleMesh() const;
 	LineMesh_ptr getLineMesh() const;
 	PointCloud_ptr getPointCloud() const;
 	void setName(const char* name);
-	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
+	void setTriangleMesh(TriangleMesh3D_ptr triangleMesh);
 	void setLineMesh(LineMesh_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
 	void 	registerConnectListener(ConnectListener* selectListener);
@@ -104,7 +104,7 @@ private:
 	GUIConnectListener m_connectListener;
 	list<ConnectListener*> m_connectListeners;
 	string m_name;
-	TriangleMesh_ptr m_triangleMesh;
+	TriangleMesh3D_ptr m_triangleMesh;
 	LineMesh_ptr m_lineMesh;
 	PointCloud_ptr m_pointCloud;
 };
@@ -284,14 +284,14 @@ private:
 
 class TriangleMeshGUIStateNode : public GUIStateNode {
 public:
-	TriangleMeshGUIStateNode(TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name);
+	TriangleMeshGUIStateNode(TriangleMesh3D_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name);
 	~TriangleMeshGUIStateNode();
 	
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 private:
-	TriangleMesh_ptr m_triangleMesh;
+	TriangleMesh3D_ptr m_triangleMesh;
 	TriangleMeshContextMenu* m_triangleMeshContextMenu;
 };
 

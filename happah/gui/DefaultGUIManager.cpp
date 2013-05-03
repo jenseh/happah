@@ -40,9 +40,9 @@ DefaultGUIManager::~DefaultGUIManager() {
 }
 
 void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(100, 30));
+	TriangleMesh3D_ptr gearMesh = TriangleMesh3D_ptr(simpleGear->toTriangleMesh(100, 30));
 	SurfaceOfRevolution_ptr disc = DiscGenerator::generateDiscFrom(*simpleGear);
-	TriangleMesh_ptr discMesh = TriangleMesh_ptr(disc->toTriangleMesh());
+	TriangleMesh3D_ptr discMesh = TriangleMesh3D_ptr(disc->toTriangleMesh());
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
 
 	QThread* thread = new QThread();
@@ -52,8 +52,8 @@ void DefaultGUIManager::createDiscGearGrind(SimpleGear_ptr simpleGear) {
 }
 
 void DefaultGUIManager::createDiscGearGrind(SurfaceOfRevolution_ptr disc, SimpleGear_ptr simpleGear) {
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh());
-	TriangleMesh_ptr discMesh = TriangleMesh_ptr(disc->toTriangleMesh());
+	TriangleMesh3D_ptr gearMesh = TriangleMesh3D_ptr(simpleGear->toTriangleMesh());
+	TriangleMesh3D_ptr discMesh = TriangleMesh3D_ptr(disc->toTriangleMesh());
 	DiscGearGrind_ptr simulation = DiscGearGrind_ptr(new DiscGearGrind(disc, discMesh, simpleGear, gearMesh));
 
 	QThread* thread = new QThread();
@@ -70,8 +70,8 @@ void DefaultGUIManager::createWormGearGrind(InvoluteGear_ptr involuteGear) {
 void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr involuteGear) {
 	SimpleGear_ptr simpleGear = SimpleGear_ptr(involuteGear->toSimpleGear());
 
-	TriangleMesh_ptr gearMesh = TriangleMesh_ptr(simpleGear->toTriangleMesh(150, 100));
-	TriangleMesh_ptr wormMesh = worm->toTriangleMesh(30, 100);
+	TriangleMesh3D_ptr gearMesh = TriangleMesh3D_ptr(simpleGear->toTriangleMesh(150, 100));
+	TriangleMesh3D_ptr wormMesh = worm->toTriangleMesh(30, 100);
 	WormGearGrind_ptr simulation = WormGearGrind_ptr(new WormGearGrind(worm, wormMesh, simpleGear, involuteGear->getReferenceRadius(), gearMesh));
 
 	QThread* thread = new QThread();
@@ -82,7 +82,7 @@ void DefaultGUIManager::createWormGearGrind(Worm_ptr worm, InvoluteGear_ptr invo
 
 template<class G, class S>
 void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
-	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
+	TriangleMesh3D_ptr triangleMesh = TriangleMesh3D_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = m_sceneManager->insert(geometry, triangleMesh, color);
 	guiStateNode->setTriangleMesh(triangleMesh);
@@ -158,7 +158,7 @@ void DefaultGUIManager::doUpdate2D(shared_ptr<G> geometry) {
 		return;
 	}
 	m_sceneManager->removeContainingData(geometry, guiStateNode->getTriangleMesh());
-	TriangleMesh_ptr triangleMesh = TriangleMesh_ptr(geometry->toTriangleMesh());
+	TriangleMesh3D_ptr triangleMesh = TriangleMesh3D_ptr(geometry->toTriangleMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setTriangleMesh(triangleMesh);
 	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode =m_sceneManager->insert(geometry, triangleMesh, color);
@@ -350,7 +350,7 @@ void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
 	}
 }
 
-void DefaultGUIManager::insert(TriangleMesh_ptr triangleMesh) {
+void DefaultGUIManager::insert(TriangleMesh3D_ptr triangleMesh) {
 	TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode = TriangleMeshGUIStateNode_ptr(new TriangleMeshGUIStateNode(triangleMesh, m_mainWindow.getTriangleMeshContextMenu(), toFinalLabel("Triangle Mesh")));
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode = m_sceneManager->insert(triangleMesh, color);
@@ -432,11 +432,11 @@ void DefaultGUIManager::useForBSpline(Plane_ptr plane) {
 }
 
 //TODO: This should be removed since it is discriminating other simulations that dont have a disc..
-//void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh) {
+//void DefaultGUIManager::useInSimulation(SurfaceOfRevolution_ptr disc, TriangleMesh3D_ptr discMesh) {
 //	m_toolPanel->getSimulationForm()->setDisc(disc, discMesh);
 //}
 //
-//void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh_ptr gearMesh){
+//void DefaultGUIManager::useInSimulation(SimpleGear_ptr gear, TriangleMesh3D_ptr gearMesh){
 //	m_toolPanel->getSimulationForm()->setGear(gear, gearMesh);
 //}
 

@@ -1,6 +1,6 @@
 #include "KDTree.h"
 
-KDTree::KDTree(TriangleMesh_ptr triangleMesh, hpuint maxTrianglesPerBox) {
+KDTree::KDTree(TriangleMesh3D_ptr triangleMesh, hpuint maxTrianglesPerBox) {
 	vector<hpvec3>* verticesAndNormals = triangleMesh->getVerticesAndNormals();
 	vector<hpuint>* indices = triangleMesh->getIndices();
 

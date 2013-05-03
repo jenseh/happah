@@ -35,7 +35,7 @@ public:
 	/**
 	 * @brief m_gearMesh  The triangle mesh representing the gear.
 	 */
-	TriangleMesh_ptr m_gearMesh;
+	TriangleMesh3D_ptr m_gearMesh;
 	/**
 	 * @brief m_gearTransformation The position/transformation of the gear.
 	 */
@@ -51,7 +51,7 @@ public:
 	/**
 	 * @brief m_toolMesh The triangle mesh representing the tool.
 	 */
-	TriangleMesh_ptr m_toolMesh;
+	TriangleMesh3D_ptr m_toolMesh;
 	/**
 	 * @brief m_toolTransformation The position/transformation of the tool.
 	 */
@@ -68,7 +68,7 @@ public:
 	 * @param toolTransformation The position/transformation of the tool.
 	 */
 	WormGearGrindResult(SimpleGear_ptr gear, vector<
-			hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation, Worm_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation) :
+			hpcolor>* gearColor, TriangleMesh3D_ptr gearMesh, RigidAffineTransformation gearTransformation, Worm_ptr tool, TriangleMesh3D_ptr toolMesh, RigidAffineTransformation toolTransformation) :
 			m_gear(gear), m_gearColor(new std::vector<
 					hpcolor>(*gearColor)), m_gearMesh(gearMesh), m_gearTransformation(gearTransformation), m_tool(tool), m_toolColor(hpvec4(0.95, 0.4, 0.4, 1.0)), m_toolMesh(toolMesh), m_toolTransformation(toolTransformation) {
 	}
@@ -76,7 +76,7 @@ public:
 
 class WormGearGrind : public Simulation {
 public:
-	WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh);
+	WormGearGrind(Worm_ptr worm, TriangleMesh3D_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh3D_ptr gearMesh);
 
 	~WormGearGrind();
 
@@ -106,11 +106,11 @@ private:
 
 private:
 	Worm_ptr m_worm;
-	TriangleMesh_ptr m_wormMesh;
+	TriangleMesh3D_ptr m_wormMesh;
 
 	SimpleGear_ptr m_gear;
 	vector<hpcolor>* m_gearColor;
-	TriangleMesh_ptr m_gearMesh;
+	TriangleMesh3D_ptr m_gearMesh;
 	ZCircleCloud_ptr m_gearCircleCloud;
 
 	Kinematic m_gearMovement;

@@ -16,6 +16,6 @@ void TriangleMeshContextMenu::createRayCloud() {
 	//TODO: m_guiManager.
 }
 
-void TriangleMeshContextMenu::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
+void TriangleMeshContextMenu::setTriangleMesh(TriangleMesh3D_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }

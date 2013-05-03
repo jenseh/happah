@@ -43,8 +43,8 @@ typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 class TriangleMeshRenderStateNode : public ElementRenderStateNode {
 
 public:
-	TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,hpcolor& color);
-	TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh,std::vector<hpcolor>* colorVector);
+	TriangleMeshRenderStateNode(TriangleMesh3D_ptr triangleMesh,hpcolor& color);
+	TriangleMeshRenderStateNode(TriangleMesh3D_ptr triangleMesh,std::vector<hpcolor>* colorVector);
 	virtual ~TriangleMeshRenderStateNode();
 
 };

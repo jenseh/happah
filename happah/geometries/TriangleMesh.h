@@ -16,5 +16,5 @@ public:
 typedef TriangleMesh<hpvec2> TriangleMesh2D;
 typedef shared_ptr<TriangleMesh2D> TriangleMesh2D_ptr;
 typedef TriangleMesh<hpvec3> TriangleMesh3D;
-typedef shared_ptr<TriangleMesh3D> TriangleMesh_ptr;//TODO: rename to TriangleMesh3D_ptr
+typedef shared_ptr<TriangleMesh3D> TriangleMesh3D_ptr;
 

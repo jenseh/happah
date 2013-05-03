@@ -1,9 +1,9 @@
 #include "happah/scene/TriangleMeshNode.h"
 
-TriangleMeshNode::TriangleMeshNode(TriangleMesh_ptr triangleMesh) 
+TriangleMeshNode::TriangleMeshNode(TriangleMesh3D_ptr triangleMesh) 
 	: SimpleGeometryNode<TriangleMesh3D>(triangleMesh) {}
 
-TriangleMeshNode::TriangleMeshNode(TriangleMesh_ptr triangleMesh, RigidAffineTransformation& transformation):
+TriangleMeshNode::TriangleMeshNode(TriangleMesh3D_ptr triangleMesh, RigidAffineTransformation& transformation):
 		SimpleGeometryNode<TriangleMesh3D>(triangleMesh, transformation) { }
 
 TriangleMeshNode::~TriangleMeshNode() {}

@@ -111,7 +111,7 @@ void MainWindow::handleImportActionTriggeredEvent() {
 				ifstream file(path.toStdString().c_str());
 				WavefrontGeometryReaderOBJ::read(file, triangleMesh);
 				if(triangleMesh != 0)
-					m_guiManager.insert(TriangleMesh_ptr(triangleMesh));
+					m_guiManager.insert(TriangleMesh3D_ptr(triangleMesh));
 				return;
 			}
 			default:

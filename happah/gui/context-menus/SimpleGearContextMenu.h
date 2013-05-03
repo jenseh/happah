@@ -17,12 +17,12 @@ public:
 	SimpleGearContextMenu(GUIManager& guiManager, QWidget* parent);
 	~SimpleGearContextMenu();
 
-	void setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh);
+	void setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh3D_ptr simpleGearMesh);
 
 private:
 	GUIManager& m_guiManager;
 	SimpleGear_ptr m_simpleGear;
-	TriangleMesh_ptr m_simpleGearMesh;
+	TriangleMesh3D_ptr m_simpleGearMesh;
 
 private slots:
 	void generateDisc();

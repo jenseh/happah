@@ -81,7 +81,7 @@ void SceneManager::doInsert(shared_ptr<G> data, shared_ptr<S> guiStateNode) {
 }
 
 template<class G, class N>
-TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	Node_ptr node = findContainingData(geometry);
 	Node_ptr root;
 	shared_ptr<N> geometryNode;
@@ -114,7 +114,7 @@ TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, T
 }
 
 template<class G, class N>
-TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
+TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh3D_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
 	Node_ptr node = findContainingData(geometry);
 
 		Node_ptr root;
@@ -148,7 +148,7 @@ TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, T
 }
 
 template<class G, class N>
-TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation) {
+TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, TriangleMesh3D_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation) {
 	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
@@ -388,7 +388,7 @@ LineMeshRenderStateNode_ptr SceneManager::insert(FocalSpline_ptr focalSpline, Li
 }
 
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){
+TriangleMeshRenderStateNode_ptr SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh3D_ptr triangleMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation){
 	return doInsert<SimpleGear, SimpleGearNode >(simpleGear, triangleMesh, color, transformation);
 }
 
@@ -396,7 +396,7 @@ void SceneManager::insert(InvoluteGear_ptr involuteGear, InvoluteGearGUIStateNod
 	doInsert<InvoluteGear, InvoluteGearNode, InvoluteGearGUIStateNode>(involuteGear, involuteGearGUIStateNode);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::insert(InvoluteGear_ptr involuteGear, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	return doInsert<InvoluteGear, InvoluteGearNode>(involuteGear, triangleMesh, color);
 }
 
@@ -413,7 +413,7 @@ void SceneManager::insert(Plane_ptr plane, PlaneGUIStateNode_ptr planeGUIStateNo
 	doInsert<Plane, PlaneNode, PlaneGUIStateNode>(plane, planeGUIStateNode);
 }
 
-TriangleMeshRenderStateNode_ptr  SceneManager::insert(Plane_ptr plane, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr  SceneManager::insert(Plane_ptr plane, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	return doInsert<Plane, PlaneNode>(plane, triangleMesh, color);
 }
 
@@ -429,7 +429,7 @@ void SceneManager::insert(SimpleGear_ptr simpleGear, SimpleGearGUIStateNode_ptr 
 	doInsert<SimpleGear, SimpleGearNode, SimpleGearGUIStateNode>(simpleGear, simpleGearGUIStateNode);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::insert(SimpleGear_ptr simpleGear, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	return doInsert<SimpleGear, SimpleGearNode>(simpleGear, triangleMesh, color);
 }
 
@@ -437,11 +437,11 @@ void SceneManager::insert(SurfaceOfRevolution_ptr disc, DiscGUIStateNode_ptr dis
     doInsert<SurfaceOfRevolution, DiscNode, DiscGUIStateNode>(disc, discGUIStateNode);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
    return doInsert<SurfaceOfRevolution, DiscNode>(disc, triangleMesh, color);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
+TriangleMeshRenderStateNode_ptr SceneManager::insert(SurfaceOfRevolution_ptr disc, TriangleMesh3D_ptr triangleMesh, hpcolor& color, RigidAffineTransformation& transformation){
    return doInsert<SurfaceOfRevolution, DiscNode >(disc, triangleMesh, color, transformation);
 }
 
@@ -463,11 +463,11 @@ PointCloudRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile
 	return doInsert<ToothProfile, ToothProfileNode>(toothProfile, pointCloud, color);
 }
 
-void SceneManager::insert(TriangleMesh_ptr triangleMesh, TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode) {
+void SceneManager::insert(TriangleMesh3D_ptr triangleMesh, TriangleMeshGUIStateNode_ptr triangleMeshGUIStateNode) {
 	doInsert<TriangleMesh3D, TriangleMeshNode, TriangleMeshGUIStateNode>(triangleMesh, triangleMeshGUIStateNode);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::insert(TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	Node_ptr node = findContainingData(triangleMesh);
 	TriangleMeshRenderStateNode_ptr triangleMeshRenderStateNode;
 	if(node) {
@@ -495,11 +495,11 @@ void SceneManager::insert(Worm_ptr worm, WormGUIStateNode_ptr wormGUIStateNode) 
 	doInsert<Worm, WormNode, WormGUIStateNode>(worm, wormGUIStateNode);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(Worm_ptr worm, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::insert(Worm_ptr worm, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	return doInsert<Worm, WormNode>(worm, triangleMesh, color);
 }
 
-TriangleMeshRenderStateNode_ptr SceneManager::insert(SpherePatch_ptr spherePatch, TriangleMesh_ptr triangleMesh, hpcolor& color) {
+TriangleMeshRenderStateNode_ptr SceneManager::insert(SpherePatch_ptr spherePatch, TriangleMesh3D_ptr triangleMesh, hpcolor& color) {
 	return doInsert<SpherePatch, SpherePatchNode>(spherePatch,triangleMesh,color);
 }
 void SceneManager::insert(SpherePatch_ptr spherePatch, SpherePatchGUIStateNode_ptr spherePatchGUIStateNode) {

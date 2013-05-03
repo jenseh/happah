@@ -39,7 +39,7 @@ public:
   void setRotations(hpreal rotations);
   void setBaseRadius(hpreal baseRadius);
 
-  TriangleMesh_ptr toTriangleMesh(hpuint pointsPerTooth = 15, hpuint angleResolution = 50);
+  TriangleMesh3D_ptr toTriangleMesh(hpuint pointsPerTooth = 15, hpuint angleResolution = 50);
   ZCircleCloud_ptr toZCircleCloud(hpuint pointsPerTooth = 15);
 
 private:

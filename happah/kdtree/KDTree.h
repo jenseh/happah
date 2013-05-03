@@ -15,7 +15,7 @@
 class KDTree
 {
 public:
-	KDTree(TriangleMesh_ptr triangleMesh, hpuint maxTrianglesPerBox = 50);
+	KDTree(TriangleMesh3D_ptr triangleMesh, hpuint maxTrianglesPerBox = 50);
 	~KDTree();
 
   bool intersectAll(Circle& intersector, std::list<CircleHitResult>* hitResults);

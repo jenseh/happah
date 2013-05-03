@@ -51,7 +51,7 @@ void SimpleGearContextMenu::generateDisc() {
 	m_guiManager.generateDisc(m_simpleGear);
 }
 
-void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh_ptr simpleGearMesh) {
+void SimpleGearContextMenu::setSimpleGear(SimpleGear_ptr simpleGear, TriangleMesh3D_ptr simpleGearMesh) {
 	m_simpleGear = simpleGear;
 	m_simpleGearMesh = simpleGearMesh;
 }

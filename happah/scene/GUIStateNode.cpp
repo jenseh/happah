@@ -26,7 +26,7 @@ TriangleMesh3D_ptr GUIStateNode::getTriangleMesh() const {
 	return m_triangleMesh;
 }
 
-LineMesh_ptr GUIStateNode::getLineMesh() const {
+LineMesh3D_ptr GUIStateNode::getLineMesh() const {
 	return m_lineMesh;
 }
 
@@ -42,7 +42,7 @@ void GUIStateNode::setTriangleMesh(TriangleMesh3D_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
-void GUIStateNode::setLineMesh(LineMesh_ptr lineMesh){
+void GUIStateNode::setLineMesh(LineMesh3D_ptr lineMesh){
 	m_lineMesh = lineMesh;
 }
 void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){

@@ -181,7 +181,7 @@ TriangleMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, T
 	return triangleMeshRenderStateNode;
 }
 template<class G, class N>
-LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color) {
+LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh3D_ptr lineMesh, hpcolor& color) {
 	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
@@ -215,7 +215,7 @@ LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineM
 }
 
 template<class G, class N>
-LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
+LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh3D_ptr lineMesh, vector<hpcolor>* color, RigidAffineTransformation& transformation) {
 	Node_ptr node = findContainingData(geometry);
 
 		Node_ptr root;
@@ -249,7 +249,7 @@ LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineM
 }
 
 template<class G, class N>
-LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation) {
+LineMeshRenderStateNode_ptr SceneManager::doInsert(shared_ptr<G> geometry, LineMesh3D_ptr lineMesh, hpcolor& color, RigidAffineTransformation& transformation) {
 	Node_ptr node = findContainingData(geometry);
 
 	Node_ptr root;
@@ -370,10 +370,10 @@ template <class T> PointCloudRenderStateNode_ptr SceneManager::insert(shared_ptr
 }
 template PointCloudRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<hpvec2>> curve, PointCloud_ptr pointCloud, hpcolor& color);
 
-template <class T> LineMeshRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<T>> curve, LineMesh_ptr lineMesh, hpcolor& color) {
+template <class T> LineMeshRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<T>> curve, LineMesh3D_ptr lineMesh, hpcolor& color) {
 	return doInsert<BSplineCurve<T>, BSplineCurveNode>(curve, lineMesh, color);
 }
-template LineMeshRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<hpvec2>> curve, LineMesh_ptr lineMesh, hpcolor& color);
+template LineMeshRenderStateNode_ptr SceneManager::insert(shared_ptr<BSplineCurve<hpvec2>> curve, LineMesh3D_ptr lineMesh, hpcolor& color);
 
 void SceneManager::insert(FocalSpline_ptr focalSpline, FocalSplineGUIStateNode_ptr guiStateNode) {
 	doInsert<FocalSpline, FocalSplineNode, FocalSplineGUIStateNode>(focalSpline, guiStateNode);
@@ -383,7 +383,7 @@ PointCloudRenderStateNode_ptr SceneManager::insert(FocalSpline_ptr focalSpline, 
 	return doInsert<FocalSpline, FocalSplineNode>(focalSpline, pointCloud, color);
 }
 
-LineMeshRenderStateNode_ptr SceneManager::insert(FocalSpline_ptr focalSpline, LineMesh_ptr lineMesh, hpcolor& color) {
+LineMeshRenderStateNode_ptr SceneManager::insert(FocalSpline_ptr focalSpline, LineMesh3D_ptr lineMesh, hpcolor& color) {
 	return doInsert<FocalSpline, FocalSplineNode>(focalSpline, lineMesh, color);
 }
 
@@ -417,7 +417,7 @@ TriangleMeshRenderStateNode_ptr  SceneManager::insert(Plane_ptr plane, TriangleM
 	return doInsert<Plane, PlaneNode>(plane, triangleMesh, color);
 }
 
-LineMeshRenderStateNode_ptr SceneManager::insert(Plane_ptr plane, LineMesh_ptr lineMesh, hpcolor& color) {
+LineMeshRenderStateNode_ptr SceneManager::insert(Plane_ptr plane, LineMesh3D_ptr lineMesh, hpcolor& color) {
 	return doInsert<Plane, PlaneNode>(plane, lineMesh, color);
 }
 
@@ -456,7 +456,7 @@ void SceneManager::insert(WormGearGrind_ptr wormGearGrind, WormGearGrindGUIState
 void SceneManager::insert(ToothProfile_ptr toothProfile, ToothProfileGUIStateNode_ptr toothProfileGuiStateNode) {
 	doInsert<ToothProfile, ToothProfileNode, ToothProfileGUIStateNode>(toothProfile, toothProfileGuiStateNode);
 }
-LineMeshRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, LineMesh_ptr lineMesh, hpcolor& color) {
+LineMeshRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, LineMesh3D_ptr lineMesh, hpcolor& color) {
 	return doInsert<ToothProfile, ToothProfileNode>(toothProfile, lineMesh, color);
 }
 PointCloudRenderStateNode_ptr SceneManager::insert(ToothProfile_ptr toothProfile, PointCloud_ptr pointCloud, hpcolor& color) {

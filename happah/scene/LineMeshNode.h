@@ -9,8 +9,8 @@
 class LineMeshNode : public SimpleGeometryNode<LineMesh3D>  {
 
 public:
-	LineMeshNode(LineMesh_ptr lineMesh);
-	LineMeshNode(LineMesh_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation);
+	LineMeshNode(LineMesh3D_ptr lineMesh);
+	LineMeshNode(LineMesh3D_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation);
 	virtual ~LineMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);

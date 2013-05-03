@@ -58,8 +58,8 @@ typedef shared_ptr<LineMeshRenderStateNode> LineMeshRenderStateNode_ptr;
 class LineMeshRenderStateNode : public ElementRenderStateNode {
 
 public:
-	LineMeshRenderStateNode(LineMesh_ptr lineMesh,hpcolor& color);
-	LineMeshRenderStateNode(LineMesh_ptr lineMesh, std::vector<hpcolor>* colorVector);
+	LineMeshRenderStateNode(LineMesh3D_ptr lineMesh,hpcolor& color);
+	LineMeshRenderStateNode(LineMesh3D_ptr lineMesh, std::vector<hpcolor>* colorVector);
 	virtual ~LineMeshRenderStateNode();
 
 };

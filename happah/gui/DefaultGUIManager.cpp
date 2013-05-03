@@ -107,7 +107,7 @@ void DefaultGUIManager::doInsert2D(shared_ptr<G> geometry, const char* label, F*
 
 template<class G, class S>
 void DefaultGUIManager::doInsert1D(shared_ptr<G> geometry, shared_ptr<S> guiStateNode) {
-	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
+	LineMesh3D_ptr lineMesh = LineMesh3D_ptr(geometry->toLineMesh());
 	hpcolor color(1.0, 0.0, 0.0, 1.0);
 	guiStateNode->setLineMesh(lineMesh);
 	m_sceneManager->insert(geometry, guiStateNode);
@@ -173,7 +173,7 @@ void DefaultGUIManager::doUpdate1D(shared_ptr<G> geometry, hpcolor color) {
 		return;
 	}
 	m_sceneManager->removeContainingData(geometry, guiStateNode->getLineMesh());
-	LineMesh_ptr lineMesh = LineMesh_ptr(geometry->toLineMesh());
+	LineMesh3D_ptr lineMesh = LineMesh3D_ptr(geometry->toLineMesh());
 	guiStateNode->setLineMesh(lineMesh);
 	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(geometry, lineMesh, color);
 	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
@@ -256,7 +256,7 @@ void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* labe
 		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
 			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
 		LineMesh2D* lineMesh2D = bSplineCurve->toLineMesh();
-		LineMesh_ptr lineMesh = LineMesh_ptr(to3D(lineMesh2D));
+		LineMesh3D_ptr lineMesh = LineMesh3D_ptr(to3D(lineMesh2D));
 		guiStateNode->setLineMesh(lineMesh);
 		m_sceneManager->insert(bSplineCurve, guiStateNode);
 		LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(bSplineCurve, lineMesh, curveColor);
@@ -382,7 +382,7 @@ void DefaultGUIManager::update(BSplineCurve2D_ptr bSplineCurve, hpcolor color) {
 	}
 	m_sceneManager->removeContainingData(bSplineCurve, guiStateNode->getLineMesh());
 	LineMesh2D* lineMesh2D = bSplineCurve->toLineMesh();
-	LineMesh_ptr lineMesh = LineMesh_ptr(to3D(lineMesh2D));
+	LineMesh3D_ptr lineMesh = LineMesh3D_ptr(to3D(lineMesh2D));
 	guiStateNode->setLineMesh(lineMesh);
 	LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(bSplineCurve, lineMesh, color);
 	lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());

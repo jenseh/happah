@@ -16,5 +16,5 @@ public:
 typedef LineMesh<hpvec2> LineMesh2D;
 typedef shared_ptr<LineMesh2D> LineMesh2D_ptr;
 typedef LineMesh<hpvec3> LineMesh3D;
-typedef shared_ptr<LineMesh3D> LineMesh_ptr;
+typedef shared_ptr<LineMesh3D> LineMesh3D_ptr;
 

@@ -58,12 +58,12 @@ TriangleMeshRenderStateNode::~TriangleMeshRenderStateNode() {
 	// TODO Auto-generated destructor stub
 }
 
-LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, hpcolor& color)
+LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh3D_ptr lineMesh, hpcolor& color)
 	: ElementRenderStateNode(GL_LINES,lineMesh->getVerticesAndNormals(),lineMesh->getIndices(),color){
 
 }
 
-LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, std::vector<hpcolor>* colorVector)
+LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh3D_ptr lineMesh, std::vector<hpcolor>* colorVector)
 	: ElementRenderStateNode(GL_LINES,lineMesh->getVerticesAndNormals(),lineMesh->getIndices(),colorVector) {}
 
 LineMeshRenderStateNode::~LineMeshRenderStateNode() {

@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMenu>
 #include <QWidget>
+#include <QMessageBox>
 
 #include "happah/gui/MainWindow.h"
 #include "happah/gui/Viewport.h"
@@ -105,17 +106,28 @@ void MainWindow::handleImportActionTriggeredEvent() {
 		QString path = fileDialog.selectedFiles().first();
 		hpuint contentType = FileDialog::getContentType(path);
 		if(contentType != 0) {
-			switch(contentType) {
-			case FileDialog::WAVEFRONT_TRIANGLE_MESH_3D: {
-				TriangleMesh3D* triangleMesh;
-				ifstream file(path.toStdString().c_str());
-				WavefrontGeometryReaderOBJ::read(file, triangleMesh);
-				if(triangleMesh != 0)
-					m_guiManager.insert(TriangleMesh3D_ptr(triangleMesh));
-				return;
+			try {
+				switch(contentType) {
+				case FileDialog::WAVEFRONT_TRIANGLE_MESH_3D: {
+					TriangleMesh3D* triangleMesh;
+					ifstream file(path.toStdString().c_str());
+					WavefrontGeometryReaderOBJ::read(file, triangleMesh);
+					if(triangleMesh != 0)
+						m_guiManager.insert(TriangleMesh3D_ptr(triangleMesh));
+					return;
+				}
+				default:
+					return;
+				}
 			}
-			default:
-				return;
+			catch(WavefrontGeometryReaderOBJ::ParseException& e) {
+				QString message;
+				message = "File: " + path + "\nLine: " + QString::number(e.getErrLine()) + "\nType: ";
+				switch( e.getErrCode() ) {
+					case VERTEX_PARSE_ERROR : { message += "Vertex data could not be read"; break; }
+					default : { message += "Unknown"; }
+				}
+				QMessageBox::warning( 0, "Parse error", message );
 			}
 		}
 	}

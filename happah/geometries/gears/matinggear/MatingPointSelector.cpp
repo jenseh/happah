@@ -42,7 +42,6 @@ std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear
 
 	std::vector< std::vector<MatingPoint>* > lists = std::vector< std::vector<MatingPoint>* >();
 	lists.push_back(new std::vector<MatingPoint>());
-	std::vector<MatingPoint>* currentList = lists.back();
 	PointPosition lastPosition = PointPosition::IN_ANGULAR_PITCH;
 
 	std::vector<MatingPoint> chosenPoints = std::vector<MatingPoint>();
@@ -84,7 +83,7 @@ void MatingPointSelector::insertInList(
 	PointPosition currentPosition,
 	std::vector< std::vector<MatingPoint>* >& lists) {
 
-	if(lastPosition != currentPosition) {
+	if(lastPosition != currentPosition && !lists.back()->empty()) {
 		MatingPoint lastMatingPoint = lists.back()->back();
 		lists.back()->push_back(matingPoint);
 		turnPointsOfList(lists.back(), lastPosition);
@@ -100,9 +99,9 @@ void MatingPointSelector::turnPointsOfList(std::vector<MatingPoint>* list, Point
 	} else {
 		hpreal rotation = 0.0f;
 		if(positionOfListPoints == PointPosition::INFRONT_OF_ANGULAR_PITCH) {
-			rotation = m_angularPitchRotation;
-		} else { //positionOfListsPoints == PointPosition::BEHIND_ANGULAR_PITCH
 			rotation = -m_angularPitchRotation;
+		} else { //positionOfListsPoints == PointPosition::BEHIND_ANGULAR_PITCH
+			rotation = m_angularPitchRotation;
 		}
 		for(std::vector<MatingPoint>::iterator it = list->begin(), end = list->end(); it != end; ++it) {
 			it->rotate(rotation);

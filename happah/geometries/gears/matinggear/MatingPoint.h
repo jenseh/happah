@@ -1,6 +1,11 @@
 #ifndef MATINGPOINT_H
 #define MATINGPOINT_H
 
+#include "happah/HappahTypes.h"
+#include "glm/glm.hpp"
+#include "glm/gtx/rotate_vector.hpp"
+
+
 enum class ErrorCode {
 	NO_ERROR,
 	NO_CUT_WITH_REFERENCE_RADIUS,
@@ -16,6 +21,16 @@ struct MatingPoint {
 	hpreal forbiddenAreaLength;
 	hpvec2 forbiddenAreaEndPoint;
 	ErrorCode error;
+
+	void rotate(hpreal rotation) {
+		if(error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {
+			point = glm::rotate(point, rotation);
+			normal = glm::rotate(normal, rotation);
+			if(error != ErrorCode::NO_THICKNESS) {
+				forbiddenAreaEndPoint = glm::rotate(forbiddenAreaEndPoint, rotation);
+			}
+		}
+	}
 };
 
 

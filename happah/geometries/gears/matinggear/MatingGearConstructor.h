@@ -7,6 +7,7 @@
 #include "happah/HappahTypes.h"
 #include "happah/geometries/gears/matinggear/MatingGearConstructionInformationPart.h"
 #include "happah/geometries/gears/matinggear/MatingPoint.h"
+#include "happah/geometries/gears/matinggear/MatingPointSelector.h"
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/BSplineCurve.h"
 
@@ -103,7 +104,7 @@ private:
 	MatingPoint getMatingPointOf(const hpvec2& point, const hpvec2& normal);
 	void        insertThicknessInMatingPoint(MatingPoint& matingPoint);
 
-	std::list<MatingPoint> m_allMatingPoints;
+	MatingPointSelector    m_allMatingPoints;
 	std::vector<hpreal>    m_angularPitchKnots;
 	hpreal                 m_distanceOfCenters;
 

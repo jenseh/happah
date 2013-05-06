@@ -18,6 +18,8 @@ MatingGearConstructionInformation::MatingGearConstructionInformation(MatingGearC
 
 	std::list<MatingPoint>* allMatingPoints = m_constructor->getMatingPointList();
 
+	cerr << "MatingGearConstructionInformation: allMatingPoints->size() = " << allMatingPoints->size() << endl;
+
 	std::vector<hpcolor> normalColors(allMatingPoints->size());
 	fillRainbowColorArray(normalColors);
 

@@ -221,6 +221,7 @@ void ToothProfileForm::updateFormExistingMatingGear() {
 	setAllMatingWidgetsEnabled(true);
 
 	if(!m_matingGearInformation->areFurtherNormalsAvailable()) {
+		cerr << "No further normals available found" << endl;
 		m_showMatingGearButton->setEnabled(false);
 		m_showNextNormalButton->setEnabled(false);
 		m_showAllNormalsButton->setEnabled(false);

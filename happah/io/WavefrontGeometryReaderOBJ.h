@@ -33,7 +33,5 @@ private:
 	static const string OBJ_NORMAL_TOKEN;
 	static const string OBJ_FACE_TOKEN;
 	static const int OBJ_TRIANGLE_INDICES = 3;
-
-
 };
 

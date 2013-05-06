@@ -122,9 +122,13 @@ void MainWindow::handleImportActionTriggeredEvent() {
 			}
 			catch(WavefrontGeometryReaderOBJ::ParseException& e) {
 				QString message;
-				message = "File: " + path + "\nLine: " + QString::number(e.getErrLine()) + "\nType: ";
+				message = "File: """ + path + """\nLine: " + QString::number(e.getErrLine()) + "\nType: ";
 				switch( e.getErrCode() ) {
-					case VERTEX_PARSE_ERROR : { message += "Vertex data could not be read"; break; }
+					case VERTEX_PARSE_ERROR : { message += "Vertex data could not be read."; break; }
+					case NORMAL_PARSE_ERROR : { message += "Normal data could not be read."; break; }
+					case FACE_PARSE_ERROR : { message += "Face data could not be read."; break; }
+					case NOT_VALID_MESH : { message += "Mesh is not valid."; break; }
+
 					default : { message += "Unknown"; }
 				}
 				QMessageBox::warning( 0, "Parse error", message );

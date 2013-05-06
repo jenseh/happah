@@ -1,5 +1,4 @@
 #include <sstream>
-#include <iostream>
 
 #include "happah/io/WavefrontGeometryReaderOBJ.h"
 
@@ -22,50 +21,44 @@ void WavefrontGeometryReaderOBJ::read(istream& stream, TriangleMesh3D*& triangle
 		getline( stream, lineToParse );
 		lineCount++;
 
-		if( lineToParse.substr( 0, 2 ) == OBJ_VERTEX_TOKEN ) {
-			try {
-				istringstream stream( lineToParse.substr(2) );
-				stream >> tmpVector.x >> tmpVector.y >> tmpVector.z;
-				vertices.push_back( tmpVector );
-			}
-			catch( ios_base::failure ) {
+		if( lineToParse.substr(0, 2) == OBJ_VERTEX_TOKEN ) {
+			istringstream stream( lineToParse.substr(2) );
+			stream >> tmpVector.x >> tmpVector.y >> tmpVector.z;
+			if( stream.fail() ) {
 				throw ParseException( VERTEX_PARSE_ERROR, lineCount );
 			}
-
+			vertices.push_back( tmpVector );
 		} else
-		if( lineToParse.substr( 0, 2 ) == OBJ_NORMAL_TOKEN ) {
-			try {
-				istringstream stream( lineToParse.substr(2) );
-				stream >> tmpVector.x >> tmpVector.y >> tmpVector.z;
-				normals.push_back( tmpVector );
-			}
-			catch( ios_base::failure ) {
+		if( lineToParse.substr(0, 2) == OBJ_NORMAL_TOKEN ) {
+			istringstream stream( lineToParse.substr(2) );
+			stream >> tmpVector.x >> tmpVector.y >> tmpVector.z;
+			if( stream.fail() ) {
 				throw ParseException( NORMAL_PARSE_ERROR, lineCount );
 			}
+			normals.push_back( tmpVector );
 		} else
-		if( lineToParse.substr( 0, 2 ) == OBJ_FACE_TOKEN ) {
-			try {
-				istringstream stream( lineToParse.substr(2) );
-				hpuint index;
-				for( int i = 0; i < OBJ_TRIANGLE_INDICES; i++ ) {
-					stream >> index;
-					indices.push_back(index - 1);
+		if( lineToParse.substr(0, 2) == OBJ_FACE_TOKEN ) {
+			istringstream stream( lineToParse.substr(2) );
+			hpuint index;
+			for( int i = 0; i < OBJ_TRIANGLE_INDICES; i++ ) {
+				stream >> index;
+				if( stream.fail() ) {
+					throw ParseException( FACE_PARSE_ERROR, lineCount );
 				}
-			}
-			catch( ios_base::failure ) {
-				throw ParseException( FACE_PARSE_ERROR, lineCount );
+				indices.push_back(index - 1);
+				stream.ignore(32,' ');
 			}
 		}
 	}
 
-	if( vertices.size() == normals.size() ) {
+
+	if( vertices.size() && vertices.size() == normals.size() ) {
 		vector<hpvec3>* verticesAndNormals_ptr = new vector<hpvec3>;
 		for( hpuint i = 0; i < vertices.size(); i++ ) {
 			verticesAndNormals_ptr->push_back( vertices.at(i) );
 			verticesAndNormals_ptr->push_back( normals.at(i) );
 		}
 		vector<hpuint>* indices_ptr = new vector<hpuint>( indices );
-		cout << verticesAndNormals_ptr->size() << " " << indices_ptr->size() << endl;
 		triangleMesh = new TriangleMesh3D( verticesAndNormals_ptr, indices_ptr );
 	} else
 		throw ParseException( NOT_VALID_MESH, 0 );

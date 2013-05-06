@@ -308,7 +308,7 @@ MatingPoint MatingGearConstructor::getMatingPointOf(const hpvec2& point, const h
 }
 
 
-//Given MatingPoint already needs its point, normal originPoint and originNormal!
+//Given MatingPoint already needs its point, normal, originPoint and originNormal!
 void MatingGearConstructor::insertThicknessInMatingPoint(MatingPoint& matingPoint) {
 	Ray ray(hpvec3(matingPoint.originPoint, 0.0f), hpvec3(-matingPoint.originNormal, 0.0f));
 	std::vector<hpvec2> intersectionPoints;
@@ -317,7 +317,7 @@ void MatingGearConstructor::insertThicknessInMatingPoint(MatingPoint& matingPoin
 		std::cerr << "CURIOS THINGS HAPPENED! A ray of the gear hadn't found a cutting!" << std::endl;
 		matingPoint.error = ErrorCode::NO_THICKNESS;
 	} else {
-		hpreal epsilon = 0.00001f; //prevent finding point as intersection point
+		hpreal epsilon = 0.01f; //prevent finding point as intersection point
 		hpreal thickness = 3.0f * m_originalToothProfile->getTipRadius(); //gear can only have a thickness of 2.0f * getTipRadius()
 		for(std::vector<hpvec2>::iterator it = intersectionPoints.begin(), end = intersectionPoints.end(); it != end; ++it) {
 			hpreal distance = glm::length(*it - matingPoint.originPoint);

@@ -60,6 +60,7 @@ private:
 	QDoubleSpinBox* m_matingNormalsLengthBox;
 
 	QCheckBox* m_matingDarkenNormalsBox;
+	QCheckBox* m_useGearWidthForNormalsBox;
 
 	std::vector<QWidget*> m_matingStartWidgetList;
 	std::vector<QWidget*> m_matingGearAvailableWidgetList;
@@ -82,6 +83,7 @@ private slots:
 	void showReferenceCircles();
 	void toSimpleGear();
 	void updateMatingGearConstructor(ToothProfile_ptr);
+	void useGearWidthForNormals(int state);
 
 signals:
 	void selected(Form* form);

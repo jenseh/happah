@@ -68,10 +68,13 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	m_matingDarkenNormalsBox = new QCheckBox(tr("Darken normals"), this);
 	connect(m_matingDarkenNormalsBox, SIGNAL(stateChanged(int)), this, SLOT(changeNormalsVisiblity(int)));
 
+	m_useGearWidthForNormalsBox = new QCheckBox(tr("Use gear width for length of normals"), this);
+	connect(m_useGearWidthForNormalsBox, SIGNAL(stateChanged(int)), this, SLOT(useGearWidthForNormals(int)));
+
 	QGridLayout* gridLayout = new QGridLayout(this);
 	gridLayout->setHorizontalSpacing(0);
 	gridLayout->setVerticalSpacing(2);
-	gridLayout->setRowStretch(12, 2);
+	gridLayout->setRowStretch(13, 2);
 
 	gridLayout->addWidget(matingRadiusLabel,          1, 0);
 	gridLayout->addWidget(m_matingRadiusSpinBox,      1, 1, Qt::AlignTop);
@@ -95,9 +98,9 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	gridLayout->addWidget(m_showAllNormalsButton,    10, 0, 1, 2, Qt::AlignTop);
 	gridLayout->addWidget(m_showAngularPitchButton,  11, 0, 1, 2, Qt::AlignTop);
 
-	gridLayout->addWidget(m_matingDarkenNormalsBox,  12, 0, Qt::AlignTop);
+	gridLayout->addWidget(m_useGearWidthForNormalsBox,12,0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_matingDarkenNormalsBox,  13, 0, 1, 2, Qt::AlignTop);
 
-	
 	QGroupBox* matingCollection = new QGroupBox(tr("Mating gear construction options"));
 	matingCollection->setAlignment(Qt::AlignLeft);
 	matingCollection->setLayout(gridLayout);
@@ -120,6 +123,7 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	m_matingGearAvailableWidgetList.push_back(m_showAllNormalsButton);
 	m_matingGearAvailableWidgetList.push_back(m_showReferenceCirclesButton);
 	m_matingGearAvailableWidgetList.push_back(m_showAngularPitchButton);
+	m_matingGearAvailableWidgetList.push_back(m_useGearWidthForNormalsBox);
 
 	reset();
 
@@ -153,6 +157,7 @@ void ToothProfileForm::reset() {
 	m_matingNormalsLengthBox->setValue(1.0f);
 	m_matingConstrSamplRateBox->setValue(30);
 	m_matingDarkenNormalsBox->setChecked(false);
+	m_useGearWidthForNormalsBox->setChecked(false);
 }
 
 void ToothProfileForm::setAllMatingWidgetsEnabled(bool enable) {
@@ -310,8 +315,20 @@ void ToothProfileForm::showAllNormals() {
 }
 
 void ToothProfileForm::showNextNormal() {
-	if(m_matingGearInformation->areFurtherNormalsAvailable())
-		insertGearInformation(m_matingGearInformation->getNextNormal());
+	if(m_matingGearInformation->areFurtherNormalsAvailable()) {
+		//delete lines below until ***
+		BothGearInformation* bothNormals = m_matingGearInformation->getNextNormal();
+		cerr << "This normal ";
+		if(bothNormals->hasTwoParts) {
+			std::vector<hpvec2> normal = bothNormals->matingPart.curve->getControlPoints();
+			cerr << "has a mating part and forbiddenArea is: " << glm::length(normal[2] - normal[0]) << endl;
+		} else {
+			cerr << "doesn't have a mating part" << endl;
+		}
+
+		insertGearInformation(bothNormals); }
+		//***and uncomment the line below!!!
+		// insertGearInformation(m_matingGearInformation->getNextNormal());
 	if(!m_matingGearInformation->areFurtherNormalsAvailable())
 		m_showNextNormalButton->setEnabled(false);
 }
@@ -348,4 +365,14 @@ void ToothProfileForm::updateGearInformation(BothGearInformation* gearPart) {
 	m_guiManager.update(gearPart->originPart.curve, gearPart->originPart.color);
 	if(gearPart->hasTwoParts)
 		m_guiManager.update(gearPart->matingPart.curve, gearPart->matingPart.color);
+}
+
+void ToothProfileForm::useGearWidthForNormals(int state) {
+	if(m_matingGearInformation != nullptr) {
+		bool visible = true;
+		if(state == Qt::Unchecked)
+			visible = false;
+		m_matingGearInformation->useGearSizeAsNormalLength(visible);
+		// updateNormals();
+	}
 }

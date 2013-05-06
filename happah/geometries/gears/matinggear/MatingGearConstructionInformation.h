@@ -26,11 +26,13 @@ public:
 	void setMaskingColor(hpcolor color);
 	void setNormalLength(hpreal length);
 	void update();
+	void useGearSizeAsNormalLength(bool normalsHaveGearLength);
 
 private:
 	BSplineCurve<hpvec2>* circle(hpreal radius, hpvec2 offset);
 	void fillRainbowColorArray(std::vector<hpcolor>& colorArray);
 	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal);
+	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal, hpreal length);
 	void recolorNormals();
 
 	hpcolor                            m_additionalMatingColor;
@@ -39,6 +41,7 @@ private:
 	BothGearInformation*               m_angularPitches;
 	MatingGearConstructor*             m_constructor;
 	hpcolor                            m_errorColor;
+	bool                               m_gearSizeUsedAsNormalLength;
 	bool                               m_maskAllActivated;
 	hpcolor                            m_maskingColor;
 	bool                               m_maskNormalsActivated;

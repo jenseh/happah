@@ -2,13 +2,14 @@
 
 MatingGearConstructionInformation::MatingGearConstructionInformation(MatingGearConstructor* constructor)
   : m_constructor(constructor),
+	m_gearSizeUsedAsNormalLength(false),
 	m_maskAllActivated(false),
 	m_maskNormalsActivated(false),
 	m_normalLength(1.0f) {
 
 	//Default Colors
 	m_additionalMatingColor = hpcolor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_additionalOriginColor = hpcolor(0.8f, 0.8f, 0.8f, 1.0f);
+	m_additionalOriginColor = hpcolor(0.5f, 0.5f, 0.5f, 1.0f);
 	m_angularPitchColor =     hpcolor(0.1f, 0.2f, 0.4f, 1.0f);
 	m_maskingColor =          hpcolor(0.0f, 0.0f, 0.0f, 1.0f);
 	m_errorColor =            hpcolor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -145,6 +146,10 @@ MatingGearConstructionInformation::MatingGearConstructionInformation(MatingGearC
 	m_toothProfiles = new BothGearInformation(originalToothProfile, matingToothProfile);
 
 	delete allMatingPoints;
+
+	if(m_gearSizeUsedAsNormalLength) {
+		useGearSizeAsNormalLength(true);
+	}
 }
 
 MatingGearConstructionInformation::~MatingGearConstructionInformation() {
@@ -360,6 +365,32 @@ void MatingGearConstructionInformation::update() {
 	m_toothProfiles->matingPart = matingToothProfile;
 
 	delete allMatingPoints;
+
+	if(m_gearSizeUsedAsNormalLength) {
+		useGearSizeAsNormalLength(true);
+	}
+}
+
+void MatingGearConstructionInformation::useGearSizeAsNormalLength(bool normalsHaveGearLength) {
+	m_gearSizeUsedAsNormalLength = normalsHaveGearLength;
+	std::list<MatingPoint>* matingPoints = m_constructor->getMatingPointList();
+	if(matingPoints->size() == m_normals->size()) {
+		cerr << "useGearSizeAsNormalLength: has found equal sizes! normalsHaveGearLength = " << normalsHaveGearLength << endl;
+		cerr << ((*m_normalsIterator)->hasTwoParts) << endl;
+		hpvec2 toMatingCenter = hpvec2(m_constructor->getOriginalGearReferenceRadius() + m_constructor->getMatingGearReferenceRadius(), 0.0f);
+		std::list<MatingPoint>::iterator mpIt= matingPoints->begin();
+		for(std::vector<BothGearInformation*>::iterator it = m_normals->begin(), end = m_normals->end(); it != end; ++it) {
+			if(mpIt->error == ErrorCode::NO_ERROR && normalsHaveGearLength) {
+				cerr << "NO_ERROR and "<< mpIt->forbiddenAreaLength << endl;
+				(*it)->matingPart.curve = BSplineCurve2D_ptr(normalLine(mpIt->point + toMatingCenter, mpIt->normal, mpIt->forbiddenAreaLength));
+			} else {
+				cerr << "Error" << endl;
+				(*it)->matingPart.curve = BSplineCurve2D_ptr(normalLine(mpIt->point + toMatingCenter, mpIt->normal));
+			}
+			++mpIt;
+		}
+		cerr << ((*m_normalsIterator)->hasTwoParts) << endl;
+	}
 }
 
 BSplineCurve<hpvec2>* MatingGearConstructionInformation::circle(hpreal radius, hpvec2 offset) {
@@ -399,12 +430,16 @@ void MatingGearConstructionInformation::fillRainbowColorArray(std::vector<hpcolo
 }
 
 BSplineCurve<hpvec2>* MatingGearConstructionInformation::normalLine(hpvec2 start, hpvec2 normal) {
+	return normalLine(start, normal, m_normalLength);
+}
+
+BSplineCurve<hpvec2>* MatingGearConstructionInformation::normalLine(hpvec2 start, hpvec2 normal, hpreal length) {
 	BSplineCurve<hpvec2>* line = new BSplineCurve<hpvec2>();
 	line->setDegree(1);
 	line->setPeriodic(false);
 	line->addControlPoint(start);
-	line->addControlPoint(start + m_normalLength * 0.8f * normal);
-	line->addControlPoint(start + m_normalLength * normal);
+	line->addControlPoint(start + length * 0.8f * normal);
+	line->addControlPoint(start + length * normal);
 	return line;
 }
 

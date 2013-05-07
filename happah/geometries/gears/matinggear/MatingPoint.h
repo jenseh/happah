@@ -21,6 +21,7 @@ struct MatingPoint {
 	hpreal forbiddenAreaLength;
 	hpvec2 forbiddenAreaEndPoint;
 	ErrorCode error;
+	bool isCovered;
 
 	void rotate(hpreal rotation) {
 		if(error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {

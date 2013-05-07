@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtx/rotate_vector.hpp"
+#include "happah/HappahUtils.h"
 
 #include <iostream>
 using namespace std;
@@ -36,6 +37,9 @@ std::list<MatingPoint>* MatingPointSelector::getMatingPoints() {
 
 std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear() {
 	//every point has to be inside one angular pitch of the gear!
+	//create lists with MatingPoints which lay either out of the angular pitch region or in it
+	//lists with points that lay outside are rotated to the start or respectively to the end
+	//of the angular pitch region so that they lay inside the region, too.
 	hpvec2 startPitch = glm::normalize(getFirstNoneErrorMatingPoint().point);
 	hpvec2 stopPitch = glm::normalize(glm::rotate(startPitch, m_angularPitchRotation));
 	hpmat2x2 betweenStartStop = glm::inverse(hpmat2x2(startPitch, stopPitch));
@@ -43,6 +47,8 @@ std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear
 	std::vector< std::vector<MatingPoint>* > lists = std::vector< std::vector<MatingPoint>* >();
 	lists.push_back(new std::vector<MatingPoint>());
 	PointPosition lastPosition = PointPosition::IN_ANGULAR_PITCH;
+
+	std::vector<PointPosition> positionList = std::vector<PointPosition>();
 
 	std::vector<MatingPoint> chosenPoints = std::vector<MatingPoint>();
 	for(MatingPointSelector::iterator it = this->begin(), end = this->end(); it != end; ++it) {
@@ -52,19 +58,19 @@ std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear
 			if(glm::all(glm::greaterThanEqual(baryz, hpvec2(0,0)))) {
 				chosenPoints.push_back(*it);
 				cerr << "point lies correct" << endl;
-				insertInList(*it, lastPosition, PointPosition::IN_ANGULAR_PITCH, lists);
+				insertInList(*it, lastPosition, PointPosition::IN_ANGULAR_PITCH, lists, positionList);
 				lastPosition = PointPosition::IN_ANGULAR_PITCH;
 
 			} else if (baryz.x > 0.0f && baryz.y < 0.0f) {
 				//startPitch still positive, stopPitch negative => point lies infront of start of tooth
 				cerr << "point lies behind end of tooth" << endl;
-				insertInList(*it, lastPosition, PointPosition::BEHIND_ANGULAR_PITCH, lists);
+				insertInList(*it, lastPosition, PointPosition::BEHIND_ANGULAR_PITCH, lists, positionList);
 				lastPosition = PointPosition::BEHIND_ANGULAR_PITCH;
 
 			} else if (baryz.x < 0.0f && baryz.y > 0.0f) {
 				//startPitch negative, stopPitch still positive => point lies behind end of tooth
 				cerr << "point lies infront of start of tooth" << endl;
-				insertInList(*it, lastPosition, PointPosition::INFRONT_OF_ANGULAR_PITCH, lists);
+				insertInList(*it, lastPosition, PointPosition::INFRONT_OF_ANGULAR_PITCH, lists, positionList);
 				lastPosition = PointPosition::INFRONT_OF_ANGULAR_PITCH;
 
 			} else {
@@ -73,20 +79,178 @@ std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear
 			}
 		} //else: point on original gear has no equivalent on mating gear => do nothing with that point!
 	}
+	positionList.push_back(lastPosition); //as positionList is filled only when new one list ends, the last list needs its position
 	cerr << "lists have a size of: " << lists.size() << endl;
-	return new std::vector<MatingPoint>(chosenPoints);
+	cerr << "and positionList    : " << positionList.size() << endl;
+	assert(lists.size() == positionList.size());
+
+	// now all points of all lists are compared and points, which are covered by two other points and there
+	// forbidden area are deleted. Or to be exact, the other ones are chosen for the mating gear.
+
+	std::vector<MatingPoint> chosenPoints2 = std::vector<MatingPoint>();
+	for(std::vector< std::vector<MatingPoint>* >::iterator listIt = lists.begin(), listEnd = lists.end(); listIt != listEnd; ++listIt) {
+		for(std::vector<MatingPoint>::iterator it = (*listIt)->begin(), end = (*listIt)->end(); it != end; ++it) {
+			it->isCovered = false;
+		}
+	}
+	for(std::vector< std::vector<MatingPoint>* >::iterator listIt = lists.begin(), listEnd = lists.end(); listIt != listEnd; ++listIt) {
+		for(std::vector<MatingPoint>::iterator it = (*listIt)->begin(), end = --((*listIt)->end()); it != end; ++it) {
+
+			for(std::vector< std::vector<MatingPoint>* >::iterator list2It = lists.begin(), list2End = lists.end(); list2It != list2End; ++list2It) {
+				for(std::vector<MatingPoint>::iterator it2 = (*list2It)->begin(), end2 = (*list2It)->end(); it2 != end2; ++it2) {
+					if(it != it2 && (it+1) != it2) {//don't compare points itself!
+						if(matingPointIsCovered(*it2, *it, *(it+1))) {
+							it2->isCovered = true;
+						}
+					}
+				}
+			}
+
+		}
+	}
+	for(hpuint i = 0; i < positionList.size(); ++i) {
+		if(positionList[i] == PointPosition::IN_ANGULAR_PITCH) {
+			cerr << "list is taken and has " << lists[i]->size() << " points" << endl;
+			for(std::vector<MatingPoint>::iterator it = lists[i]->begin(), end = lists[i]->end(); it != end; ++it) {
+				if(!it->isCovered) {
+					chosenPoints2.push_back(*it);
+				}
+			}
+		} else {
+			cerr << "list is not taken and has " << lists[i]->size() << " points" << endl;
+		}
+	}
+	// for(std::vector< std::vector<MatingPoint>* >::iterator listIt = lists.begin(), listEnd = lists.end(); listIt != listEnd; ++listIt) {
+	// 	for(std::vector<MatingPoint>::iterator it = (*listIt)->begin(), end = (*listIt)->end(); it != end; ++it) {
+	// 		cerr << "it->isCovered? : " << it->isCovered << endl;
+	// 		if(!it->isCovered){
+	// 			chosenPoints2.push_back(*it);
+	// 		}
+	// 	}
+	// }
+// 	MatingPoint candidate, a, b = MatingPoint();
+// 	a.point = hpvec2(1,1);
+// 	a.forbiddenAreaEndPoint = hpvec2(3,3);
+// 	b.point = hpvec2(2,0);
+// 	b.forbiddenAreaEndPoint = hpvec2(2,3);
+// cerr << "1:" << endl;
+// 	candidate.point = hpvec2(1,0);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "2:" << endl;
+// 	candidate.point = hpvec2(1.5,1);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "3:" << endl;
+// 	candidate.point = hpvec2(2,0);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "4:" << endl;
+// 	candidate.point = hpvec2(2,2);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "5:" << endl;
+// 	candidate.point = hpvec2(2,3.5);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "6:" << endl;
+// 	candidate.point = hpvec2(2.5,3);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "7:" << endl;
+// 	candidate.point = hpvec2(2.25,1.5);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "8:" << endl;
+// 	candidate.point = hpvec2(2.25,2.5);
+// 	matingPointIsCovered(candidate, a, b);
+
+// cerr << "///////////////////////////////////////////" << endl;
+// cerr << "NOW A=Y, B=X" << endl;
+// 	a.point = hpvec2(0.0001,0.0002);
+// 	a.forbiddenAreaEndPoint = hpvec2(0.0002,0.0003);
+// 	b.point = hpvec2(0.0000,0.0002);
+// 	b.forbiddenAreaEndPoint = hpvec2(0.0000,0.0004);
+// cerr << "1:" << endl;
+// 	candidate.point = hpvec2(-0.0001,0.0002);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "2:" << endl;
+// 	candidate.point = hpvec2(0.0000,0.0003);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "3:" << endl;
+// 	candidate.point = hpvec2(0.00005,0.00015);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "4:" << endl;
+// 	candidate.point = hpvec2(0.00005,0.0002);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "5:" << endl;
+// 	candidate.point = hpvec2(0.0001,0.0003);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "6:" << endl;
+// 	candidate.point = hpvec2(0.0001,0.0004);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "7:" << endl;
+// 	candidate.point = hpvec2(0.00015,0.00025);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "8:" << endl;
+// 	candidate.point = hpvec2(0.00025,0.00035);
+// 	matingPointIsCovered(candidate, a, b);
+// cerr << "9:" << endl;
+// 	candidate.point = hpvec2(0.0000,0.0004);
+// 	matingPointIsCovered(candidate, a, b);
+
+	return new std::vector<MatingPoint>(chosenPoints2);
+}
+
+bool MatingPointSelector::intersectLines(hpvec2& intersection, hpvec2 lineAStart, hpvec2 lineAEnd, hpvec2 lineBStart, hpvec2 lineBEnd) {
+	hpvec2 x = lineAStart - lineAEnd;
+	hpvec2 y = lineBEnd - lineBStart;
+	hpvec2 z = lineAStart - lineBStart;
+	hpmat2x2 matrix = hpmat2x2(x, y);
+	if(glm::determinant(matrix) != 0) {
+		hpmat2x2 invMatrix = glm::inverse(matrix);
+		hpvec2 t = invMatrix * z;
+		if (0 <= t.x && 0 <= t.y && t.x <= 1 && t.y <= 1) {
+			intersection = lineBStart + t.y * y;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool MatingPointSelector::isPointInTriangle(hpvec2 point, hpvec2 a, hpvec2 b, hpvec2 c) {
+	hpreal e = 0.01f;
+	hpvec2 start = a - b;
+	hpvec2 stop = c - b;
+	hpmat2x2 betweenStartStop = glm::inverse(hpmat2x2(start, stop));
+	hpvec2 baryz = betweenStartStop * (point - b);
+	if(glm::all(glm::greaterThan(baryz, hpvec2(e,e))) && glm::all(glm::lessThan(baryz, hpvec2(1.0f - e, 1.0f - e))) && (baryz.x + baryz.y < 1.0f - 2 * e)) {
+		cerr << "baryz: " << baryz <<"	a = " << a << "	b = " << b << "	c" << b << "	candidate = " << point << endl;
+		return true;
+	}
+	if(glm::all(glm::greaterThan(baryz, hpvec2(0,0))) && glm::all(glm::lessThan(baryz, hpvec2(1.0f, 1.0f))) && (baryz.x + baryz.y < 1.0f)) {
+		cerr << "epsilon caught this" << endl;
+	}
+	return false;
+}
+
+bool MatingPointSelector::matingPointIsCovered(MatingPoint candidate, MatingPoint a, MatingPoint b) {
+	// in each case two tests to make!
+	hpvec2 intersection;
+	if(intersectLines(intersection, a.point, a.forbiddenAreaEndPoint, b.point, b.forbiddenAreaEndPoint)) {
+		return isPointInTriangle(candidate.point, a.point, intersection, b.point)
+			|| isPointInTriangle(candidate.point, a.forbiddenAreaEndPoint, intersection, b.forbiddenAreaEndPoint);
+	} else {
+		return isPointInTriangle(candidate.point, b.forbiddenAreaEndPoint, a.point, a.forbiddenAreaEndPoint)
+			|| isPointInTriangle(candidate.point, b.point, a.point, b.forbiddenAreaEndPoint);
+		}
 }
 
 void MatingPointSelector::insertInList(
 	MatingPoint matingPoint,
 	PointPosition lastPosition,
 	PointPosition currentPosition,
-	std::vector< std::vector<MatingPoint>* >& lists) {
+	std::vector< std::vector<MatingPoint>* >& lists,
+	std::vector<PointPosition>& positionList) {
 
 	if(lastPosition != currentPosition && !lists.back()->empty()) {
 		MatingPoint lastMatingPoint = lists.back()->back();
 		lists.back()->push_back(matingPoint);
 		turnPointsOfList(lists.back(), lastPosition);
+		positionList.push_back(lastPosition);
 		lists.push_back(new std::vector<MatingPoint>());
 		lists.back()->push_back(lastMatingPoint);
 	}
@@ -108,63 +272,3 @@ void MatingPointSelector::turnPointsOfList(std::vector<MatingPoint>* list, Point
 		}
 	}
 }
-
-/*
-#include "happah/geometries/gears/matinggear/MatingPointSelector.h"
-
-#include "glm/glm.hpp"
-#include "glm/gtx/rotate_vector.hpp"
-
-MatingPointSelector::MatingPointSelector() : m_matingNTeeth(10), m_turnDirection(1.0f) {
-}
-
-MatingPointSelector::MatingPointSelector(hpuint matingNTeeth, bool matingTurnsClockwise)
-  : m_list(std::list<MatingPoint>()),
-	m_matingNTeeth(matingNTeeth),
-	m_turnDirection((matingTurnsClockwise) ? 1.0f : -1.0f) {
-}
-
-MatingPointSelector::~MatingPointSelector() {
-}
-
-MatingPoint MatingPointSelector::getFirstNoneErrorMatingPoint() {
-	std::list<MatingPoint>::iterator it = m_list.begin();
-	while(it->error != ErrorCode::NO_ERROR && it != m_list.end())
-		++it;
-	return *it; //TODO: what can be returned if end was reached?
-}
-
-std::list<MatingPoint>* MatingPointSelector::getMatingPoints() {
-	new std::list<MatingPoint>(m_list);
-}
-
-#include <iostream>
-using namespace std;
-
-std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear() {
-	//every point has to be inside one angular pitch of the gear!
-	hpvec2 startPitch = glm::normalize(getFirstNoneErrorMatingPoint().point);
-	hpvec2 stopPitch = glm::normalize(glm::rotate(startPitch, (360.0f * m_turnDirection) / m_matingNTeeth));
-	hpmat2x2 betweenStartStop = glm::inverse(hpmat2x2(startPitch, stopPitch));
-
-	std::vector<MatingPoint> chosenPoints = std::vector<hpvec2>();
-	for(std::list<MatingPoint>::iterator it = m_list.begin(), end = m_list.end(); it != end; ++it) {
-		if(it->error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {
-			hpvec2 baryz = betweenStartStop * it->point;
-			if(glm::all(glm::greaterThanEqual(baryz, hpvec2(0,0)))) {
-				chosenPoints.push_back(*it);
-			} else if (baryz.x > 0.0f && baryz.y < 0.0f) { //point lies behind end of tooth
-				cerr << "point lies behind end of tooth" << endl;
-			} else if (baryz.x < 0.0f && baryz.y > 0.0f) { //point lies infront of start of tooth
-				cerr << "point lies infront of start of tooth" << endl;
-			} else {//point lies nearly opposite tooth
-				cerr << "point is opposite! That's really bad :-/" << endl;
-			}
-		} //else: point on original gear has no equivalent on mating gear => do nothing with that point!
-	}
-	return new std::vector<MatingPoint>(chosenPoints);
-}
-
-void MatingPointSelector::push_back(MatingPoint matingPoint) {
-	m_list.push_back(matingPoint);
-}*/

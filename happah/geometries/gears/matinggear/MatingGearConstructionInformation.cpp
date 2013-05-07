@@ -14,140 +14,19 @@ MatingGearConstructionInformation::MatingGearConstructionInformation(MatingGearC
 	m_maskingColor =          hpcolor(0.0f, 0.0f, 0.0f, 1.0f);
 	m_errorColor =            hpcolor(1.0f, 0.0f, 0.0f, 1.0f);
 	m_referenceCircleColor =  hpcolor(0.1f, 0.1f, 0.7f, 1.0f);
-	m_toothProfileColor =     hpcolor(0.1f, 0.4f, 0.5f, 1.0f);
-
-	std::list<MatingPoint>* allMatingPoints = m_constructor->getMatingPointList();
-
-	cerr << "MatingGearConstructionInformation: allMatingPoints->size() = " << allMatingPoints->size() << endl;
-
-	std::vector<hpcolor> normalColors(allMatingPoints->size());
-	fillRainbowColorArray(normalColors);
+	m_usedPointsColor =     hpcolor(0.1f, 0.4f, 0.5f, 1.0f);
 
 	//Vector between centers
-	hpvec2 toMatingCenter = hpvec2(m_constructor->getOriginalGearReferenceRadius() + m_constructor->getMatingGearReferenceRadius(), 0.0f);
+	m_toMatingCenter = hpvec2(m_constructor->getOriginalGearReferenceRadius() + m_constructor->getMatingGearReferenceRadius(), 0.0f);
 
 	//Reference Circles
-	MatingGearConstructionInformationPart originReferenceRadius =
-		MatingGearConstructionInformationPart(
-			BSplineCurve2D_ptr(circle(m_constructor->getOriginalGearReferenceRadius(), hpvec2(0.0f, 0.0f))),
-			m_referenceCircleColor * m_additionalOriginColor,
-			"Original gear ref circle",
-			HP_LINE_MESH);
-
-	MatingGearConstructionInformationPart matingReferenceRadius =
-		MatingGearConstructionInformationPart(
-			BSplineCurve2D_ptr(circle(m_constructor->getMatingGearReferenceRadius(), toMatingCenter)),
-			m_referenceCircleColor * m_additionalMatingColor,
-			"Mating gear ref circle",
-			HP_LINE_MESH);
-
-	m_referenceCircles = new BothGearInformation(originReferenceRadius, matingReferenceRadius);
+	constructReferenceCircles(); // m_referenceCircles is set
 
 	//Angular Pitches
-	std::vector<hpvec2>* angularOriginPitchPoints = m_constructor->getOriginalAngularPitchPoints();
-	BSplineCurve<hpvec2>* angularOriginPitches = new BSplineCurve<hpvec2>();
-	angularOriginPitches->setPeriodic(false);
-	angularOriginPitches->setDegree(1);
-	for(hpuint i = 0; i < angularOriginPitchPoints->size(); ++i) {
-		angularOriginPitches->addControlPoint(hpvec2(0.0f, 0.0f));
-		angularOriginPitches->addControlPoint((*angularOriginPitchPoints)[i]);
-	}
-	angularOriginPitches->addControlPoint(hpvec2(0.0f));
-	MatingGearConstructionInformationPart angularOriginPitchPart = 
-		MatingGearConstructionInformationPart(
-			BSplineCurve2D_ptr(angularOriginPitches),
-			m_angularPitchColor * m_additionalOriginColor,
-			"Original gear angular pitches",
-			HP_LINE_MESH);
-	delete angularOriginPitchPoints;
+	constructAngularPitchFan(); // m_angularPitches is set
 
-	std::vector<hpvec2>* angularMatingPitchPoints = m_constructor->getMatingAngularPitchPoints();
-	BSplineCurve<hpvec2>* angularMatingPitches = new BSplineCurve<hpvec2>();
-	angularMatingPitches->setPeriodic(false);
-	angularMatingPitches->setDegree(1);
-	for(hpuint i = 0; i < angularMatingPitchPoints->size(); ++i) {
-		angularMatingPitches->addControlPoint(toMatingCenter);
-		angularMatingPitches->addControlPoint(toMatingCenter + (*angularMatingPitchPoints)[i]);
-	}
-	angularMatingPitches->addControlPoint(toMatingCenter);
-	MatingGearConstructionInformationPart angularMatingPitchPart = 
-		MatingGearConstructionInformationPart(
-			BSplineCurve2D_ptr(angularMatingPitches),
-			m_angularPitchColor * m_additionalMatingColor,
-			"Original gear angular pitches",
-			HP_LINE_MESH);
-	delete angularMatingPitchPoints;
-
-	m_angularPitches = new BothGearInformation(angularOriginPitchPart, angularMatingPitchPart);
-
-	//Tooth Profiles And Normals
-	BSplineCurve<hpvec2>* originalUsedPoints = new BSplineCurve<hpvec2>();
-	BSplineCurve<hpvec2>* matingPoints = new BSplineCurve<hpvec2>();
-
-	m_normals = new std::vector<BothGearInformation*>();
-	m_normals->reserve(allMatingPoints->size());
-	m_normalColors = std::vector<hpcolor>();
-	m_normalColors.reserve(allMatingPoints->size());
-
-	hpuint colorCounter = 0;
-	for(auto it = allMatingPoints->begin(); it != allMatingPoints->end(); ++it) {
-		if(it->error == ErrorCode::NO_ERROR) {
-
-			//for tooth profile:
-			originalUsedPoints->addControlPoint(it->originPoint);
-			matingPoints->addControlPoint(it->point + toMatingCenter);
-
-			//for normals:
-			MatingGearConstructionInformationPart matingNormal =
-				MatingGearConstructionInformationPart(
-					BSplineCurve2D_ptr(normalLine(it->point + toMatingCenter, it->normal)),
-					normalColors[colorCounter] * m_additionalMatingColor,
-					"Normal Of Mating Gear",
-					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
-			MatingGearConstructionInformationPart originalNormal =
-				MatingGearConstructionInformationPart(
-					BSplineCurve2D_ptr(normalLine(it->originPoint, it->originNormal)),
-					normalColors[colorCounter] * m_additionalOriginColor,
-					"Normal Of Original Gear",
-					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
-			m_normals->push_back(new BothGearInformation(originalNormal, matingNormal));
-			m_normalColors.push_back(normalColors[colorCounter]);
-			++colorCounter;
-
-		} else {
-			MatingGearConstructionInformationPart originalNormal =
-				MatingGearConstructionInformationPart(
-					BSplineCurve2D_ptr(normalLine(it->originPoint, it->originNormal)),
-					m_errorColor * m_additionalOriginColor,
-					"Normal Of Original Gear without cut",
-					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
-			m_normals->push_back(new BothGearInformation(originalNormal));
-			m_normalColors.push_back(m_errorColor);
-			++colorCounter;
-		}
-	}
-	assert(m_normalColors.size() == allMatingPoints->size());
-	assert(m_normalColors.size() == m_normals->size());
-
-	m_normalsIterator = m_normals->begin();
-
-	//tooth profiles:
-	MatingGearConstructionInformationPart originalToothProfile =
-		MatingGearConstructionInformationPart(
-			BSplineCurve2D_ptr(originalUsedPoints),
-			m_toothProfileColor * m_additionalOriginColor,
-			"Used Points Of Original Gear",
-			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
-	MatingGearConstructionInformationPart matingToothProfile =
-		MatingGearConstructionInformationPart(
-			BSplineCurve2D_ptr(matingPoints),
-			m_toothProfileColor * m_additionalMatingColor,
-			"Constructed Points Of Mating Gear",
-			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
-	
-	m_toothProfiles = new BothGearInformation(originalToothProfile, matingToothProfile);
-
-	delete allMatingPoints;
+	//Used Point And Normals
+	constructUsedPointsAndNormals(); //m_usedPoints, m_normalsIterator, m_normals, m_normalColors
 
 	if(m_gearSizeUsedAsNormalLength) {
 		useGearSizeAsNormalLength(true);
@@ -160,7 +39,7 @@ MatingGearConstructionInformation::~MatingGearConstructionInformation() {
 	}
 	delete m_normals;
 	delete m_referenceCircles;
-	delete m_toothProfiles;
+	delete m_usedPoints;
 }
 
 bool MatingGearConstructionInformation::areFurtherNormalsAvailable() {
@@ -194,22 +73,22 @@ BothGearInformation* MatingGearConstructionInformation::getReferenceCircles() {
 	return m_referenceCircles;
 }
 
-BothGearInformation* MatingGearConstructionInformation::getToothProfiles() {
-	return m_toothProfiles;
+BothGearInformation* MatingGearConstructionInformation::getUsedConstructionPoints() {
+	return m_usedPoints;
 }
 
 void MatingGearConstructionInformation::setAdditionalMatingColor(hpcolor color) {
 	m_additionalMatingColor = color;
 	recolorNormals();
 	m_referenceCircles->matingPart.color = m_referenceCircleColor * m_additionalMatingColor;
-	m_toothProfiles->matingPart.color = m_toothProfileColor * m_additionalMatingColor;
+	m_usedPoints->matingPart.color = m_usedPointsColor * m_additionalMatingColor;
 }
 
 void MatingGearConstructionInformation::setAdditionalOriginColor(hpcolor color) {
 	m_additionalOriginColor = color;
 	recolorNormals();
 	m_referenceCircles->originPart.color = m_referenceCircleColor * m_additionalOriginColor;
-	m_toothProfiles->originPart.color = m_toothProfileColor * m_additionalOriginColor;
+	m_usedPoints->originPart.color = m_usedPointsColor * m_additionalOriginColor;
 }
 
 void MatingGearConstructionInformation::setDarkingOfNormals(bool darkened) {
@@ -233,7 +112,7 @@ void MatingGearConstructionInformation::update() {
 	fillRainbowColorArray(normalColors);
 
 	//Vector between centers
-	hpvec2 toMatingCenter = hpvec2(m_constructor->getOriginalGearReferenceRadius() + m_constructor->getMatingGearReferenceRadius(), 0.0f);
+	m_toMatingCenter = hpvec2(m_constructor->getOriginalGearReferenceRadius() + m_constructor->getMatingGearReferenceRadius(), 0.0f);
 
 	//Reference Circles
 	m_referenceCircles->originPart = MatingGearConstructionInformationPart(
@@ -243,7 +122,7 @@ void MatingGearConstructionInformation::update() {
 		HP_LINE_MESH);
 
 	m_referenceCircles->matingPart = MatingGearConstructionInformationPart(
-		BSplineCurve2D_ptr(circle(m_constructor->getMatingGearReferenceRadius(), toMatingCenter)),
+		BSplineCurve2D_ptr(circle(m_constructor->getMatingGearReferenceRadius(), m_toMatingCenter)),
 		m_referenceCircleColor * m_additionalMatingColor,
 		"Mating gear ref circle",
 		HP_LINE_MESH);
@@ -266,10 +145,10 @@ void MatingGearConstructionInformation::update() {
 	angularMatingPitches->setPeriodic(false);
 	angularMatingPitches->setDegree(1);
 	for(hpuint i = 0; i < angularMatingPitchPoints->size(); ++i) {
-		angularMatingPitches->addControlPoint(toMatingCenter);
-		angularMatingPitches->addControlPoint(toMatingCenter + (*angularMatingPitchPoints)[i]);
+		angularMatingPitches->addControlPoint(m_toMatingCenter);
+		angularMatingPitches->addControlPoint(m_toMatingCenter + (*angularMatingPitchPoints)[i]);
 	}
-	angularMatingPitches->addControlPoint(toMatingCenter);
+	angularMatingPitches->addControlPoint(m_toMatingCenter);
 	m_angularPitches->matingPart.curve = BSplineCurve2D_ptr(angularMatingPitches);
 
 	//Tooth Profiles And Normals
@@ -289,12 +168,12 @@ void MatingGearConstructionInformation::update() {
 
 			//for tooth profile:
 			originalUsedPoints->addControlPoint(it->originPoint);
-			matingPoints->addControlPoint(it->point + toMatingCenter);
+			matingPoints->addControlPoint(it->point + m_toMatingCenter);
 
 			//for normals:
 			MatingGearConstructionInformationPart matingNormal =
 				MatingGearConstructionInformationPart(
-					BSplineCurve2D_ptr(normalLine(it->point + toMatingCenter, it->normal)),
+					BSplineCurve2D_ptr(normalLine(it->point + m_toMatingCenter, it->normal)),
 					normalColors[colorCounter] * m_additionalMatingColor,
 					"Normal Of Mating Gear",
 					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
@@ -353,18 +232,18 @@ void MatingGearConstructionInformation::update() {
 	MatingGearConstructionInformationPart originalToothProfile =
 		MatingGearConstructionInformationPart(
 			BSplineCurve2D_ptr(originalUsedPoints),
-			m_toothProfileColor * m_additionalOriginColor,
+			m_usedPointsColor * m_additionalOriginColor,
 			"Used Points Of Original Gear",
 			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
 	MatingGearConstructionInformationPart matingToothProfile =
 		MatingGearConstructionInformationPart(
 			BSplineCurve2D_ptr(matingPoints),
-			m_toothProfileColor * m_additionalMatingColor,
+			m_usedPointsColor * m_additionalMatingColor,
 			"Constructed Points Of Mating Gear",
 			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
 	
-	m_toothProfiles->originPart = originalToothProfile;
-	m_toothProfiles->matingPart = matingToothProfile;
+	m_usedPoints->originPart = originalToothProfile;
+	m_usedPoints->matingPart = matingToothProfile;
 
 	delete allMatingPoints;
 
@@ -395,6 +274,9 @@ void MatingGearConstructionInformation::useGearSizeAsNormalLength(bool normalsHa
 	}
 }
 
+//*****************************************************************************
+//***** PRIVATE METHODS BELOW *************************************************
+
 BSplineCurve<hpvec2>* MatingGearConstructionInformation::circle(hpreal radius, hpvec2 offset) {
 	std::vector<hpvec2> circlePoints(16);
 	for(unsigned int i = 0; i < 16; ++i) {
@@ -405,6 +287,137 @@ BSplineCurve<hpvec2>* MatingGearConstructionInformation::circle(hpreal radius, h
 	circle->interpolatePoints(circlePoints);
 	circle->setPeriodic(true);
 	return circle;
+}
+
+void MatingGearConstructionInformation::constructAngularPitchFan() {
+	std::vector<hpvec2>* angularOriginPitchPoints = m_constructor->getOriginalAngularPitchPoints();
+	BSplineCurve<hpvec2>* angularOriginPitches = new BSplineCurve<hpvec2>();
+	angularOriginPitches->setPeriodic(false);
+	angularOriginPitches->setDegree(1);
+	for(hpuint i = 0; i < angularOriginPitchPoints->size(); ++i) {
+		angularOriginPitches->addControlPoint(hpvec2(0.0f, 0.0f));
+		angularOriginPitches->addControlPoint((*angularOriginPitchPoints)[i]);
+	}
+	angularOriginPitches->addControlPoint(hpvec2(0.0f));
+	MatingGearConstructionInformationPart angularOriginPitchPart = 
+		MatingGearConstructionInformationPart(
+			BSplineCurve2D_ptr(angularOriginPitches),
+			m_angularPitchColor * m_additionalOriginColor,
+			"Original gear angular pitches",
+			HP_LINE_MESH);
+	delete angularOriginPitchPoints;
+
+	std::vector<hpvec2>* angularMatingPitchPoints = m_constructor->getMatingAngularPitchPoints();
+	BSplineCurve<hpvec2>* angularMatingPitches = new BSplineCurve<hpvec2>();
+	angularMatingPitches->setPeriodic(false);
+	angularMatingPitches->setDegree(1);
+	for(hpuint i = 0; i < angularMatingPitchPoints->size(); ++i) {
+		angularMatingPitches->addControlPoint(m_toMatingCenter);
+		angularMatingPitches->addControlPoint(m_toMatingCenter + (*angularMatingPitchPoints)[i]);
+	}
+	angularMatingPitches->addControlPoint(m_toMatingCenter);
+	MatingGearConstructionInformationPart angularMatingPitchPart = 
+		MatingGearConstructionInformationPart(
+			BSplineCurve2D_ptr(angularMatingPitches),
+			m_angularPitchColor * m_additionalMatingColor,
+			"Original gear angular pitches",
+			HP_LINE_MESH);
+	delete angularMatingPitchPoints;
+
+	m_angularPitches = new BothGearInformation(angularOriginPitchPart, angularMatingPitchPart);
+}
+
+void MatingGearConstructionInformation::constructReferenceCircles() {
+	MatingGearConstructionInformationPart originReferenceRadius =
+		MatingGearConstructionInformationPart(
+			BSplineCurve2D_ptr(circle(m_constructor->getOriginalGearReferenceRadius(), hpvec2(0.0f, 0.0f))),
+			m_referenceCircleColor * m_additionalOriginColor,
+			"Original gear ref circle",
+			HP_LINE_MESH);
+
+	MatingGearConstructionInformationPart matingReferenceRadius =
+		MatingGearConstructionInformationPart(
+			BSplineCurve2D_ptr(circle(m_constructor->getMatingGearReferenceRadius(), m_toMatingCenter)),
+			m_referenceCircleColor * m_additionalMatingColor,
+			"Mating gear ref circle",
+			HP_LINE_MESH);
+
+	m_referenceCircles = new BothGearInformation(originReferenceRadius, matingReferenceRadius);
+}
+
+void MatingGearConstructionInformation::constructUsedPointsAndNormals() {
+
+	std::list<MatingPoint>* allMatingPoints = m_constructor->getMatingPointList();
+	std::vector<hpcolor> normalColors(allMatingPoints->size());
+	fillRainbowColorArray(normalColors);
+
+	BSplineCurve<hpvec2>* originalUsedPoints = new BSplineCurve<hpvec2>();
+	BSplineCurve<hpvec2>* matingPoints = new BSplineCurve<hpvec2>();
+
+	m_normals = new std::vector<BothGearInformation*>();
+	m_normals->reserve(allMatingPoints->size());
+	m_normalColors = std::vector<hpcolor>();
+	m_normalColors.reserve(allMatingPoints->size());
+
+	hpuint colorCounter = 0;
+	for(auto it = allMatingPoints->begin(); it != allMatingPoints->end(); ++it) {
+		if(it->error == ErrorCode::NO_ERROR) {
+
+			//for used points:
+			originalUsedPoints->addControlPoint(it->originPoint);
+			matingPoints->addControlPoint(it->point + m_toMatingCenter);
+
+			//for normals:
+			MatingGearConstructionInformationPart matingNormal =
+				MatingGearConstructionInformationPart(
+					BSplineCurve2D_ptr(normalLine(it->point + m_toMatingCenter, it->normal)),
+					normalColors[colorCounter] * m_additionalMatingColor,
+					"Normal Of Mating Gear",
+					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
+			MatingGearConstructionInformationPart originalNormal =
+				MatingGearConstructionInformationPart(
+					BSplineCurve2D_ptr(normalLine(it->originPoint, it->originNormal)),
+					normalColors[colorCounter] * m_additionalOriginColor,
+					"Normal Of Original Gear",
+					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
+			m_normals->push_back(new BothGearInformation(originalNormal, matingNormal));
+			m_normalColors.push_back(normalColors[colorCounter]);
+			++colorCounter;
+
+		} else {
+			MatingGearConstructionInformationPart originalNormal =
+				MatingGearConstructionInformationPart(
+					BSplineCurve2D_ptr(normalLine(it->originPoint, it->originNormal)),
+					m_errorColor * m_additionalOriginColor,
+					"Normal Of Original Gear without cut",
+					static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
+			m_normals->push_back(new BothGearInformation(originalNormal));
+			m_normalColors.push_back(m_errorColor);
+			++colorCounter;
+		}
+	}
+	assert(m_normalColors.size() == allMatingPoints->size());
+	assert(m_normalColors.size() == m_normals->size());
+
+	m_normalsIterator = m_normals->begin();
+
+	//used points:
+	MatingGearConstructionInformationPart originalUsedPointsPart =
+		MatingGearConstructionInformationPart(
+			BSplineCurve2D_ptr(originalUsedPoints),
+			m_usedPointsColor * m_additionalOriginColor,
+			"Used Points Of Original Gear",
+			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
+	MatingGearConstructionInformationPart matingUsedPointsPart =
+		MatingGearConstructionInformationPart(
+			BSplineCurve2D_ptr(matingPoints),
+			m_usedPointsColor * m_additionalMatingColor,
+			"Constructed Points Of Mating Gear",
+			static_cast<Flags>(HP_LINE_MESH | HP_POINT_CLOUD));
+	
+	m_usedPoints = new BothGearInformation(originalUsedPointsPart, matingUsedPointsPart);
+
+	delete allMatingPoints;
 }
 
 void MatingGearConstructionInformation::fillRainbowColorArray(std::vector<hpcolor>& normalColors) {
@@ -455,3 +468,4 @@ void MatingGearConstructionInformation::recolorNormals() {
 		}
 	}
 }
+

@@ -8,6 +8,8 @@ ToothProfile::ToothProfile() : m_matingGearConstructor(nullptr) {
 	m_toothProfileCurve = BSplineCurve<hpvec3>();
 	m_toothProfileCurve.setClamped(true);
 	m_toothProfileCurve.setDegree(3);
+	//TODO: following line can be removed when moving is done by the transformation matrices
+	m_center = hpvec2(0.0f, 0.0f);
 }
 
 ToothProfile::ToothProfile(const BSplineCurve<hpvec2>& toothProfile) : m_matingGearConstructor(nullptr) {
@@ -15,26 +17,19 @@ ToothProfile::ToothProfile(const BSplineCurve<hpvec2>& toothProfile) : m_matingG
 	m_toothProfileCurve = BSplineCurve<hpvec3>(*curve);
 	delete curve;
 	ensureClamping();
+	//TODO: following line can be removed when moving is done by the transformation matrices
+	m_center = hpvec2(0.0f, 0.0f);
 }
 
 ToothProfile::ToothProfile(const BSplineCurve<hpvec3>& toothProfile) : m_matingGearConstructor(nullptr), m_toothProfileCurve(toothProfile) {
 	ensureClamping();
+	//TODO: following line can be removed when moving is done by the transformation matrices
+	m_center = hpvec2(0.0f, 0.0f);
 }
 
 ToothProfile::~ToothProfile() {
 	delete m_matingGearConstructor;
 }
-
-// void ToothProfile::constructMatingGear() {
-// 	hpreal averageRadius = 0.5f * getRootRadius() + 0.5f * getTipRadius();
-// 	constructMatingGear(averageRadius, getNumberOfTeeth(), 5.0f, 30);
-// }
-
-// void ToothProfile::constructMatingGear(hpreal originalGearRadius, hpuint matingGearNTeeth, hpreal maxAngle, hpuint samplingRate) {
-// 	if(m_matingGearConstructor == nullptr) {
-// 		m_matingGearConstructor = new MatingGearConstructor(this, originalGearRadius, matingGearNTeeth, maxAngle, samplingRate);
-// 	}
-// }
 
 /*Returns a new BSplineCurve representing the whole gear by putting together
 many of copies of the tooth profile bspline.
@@ -264,7 +259,7 @@ void ToothProfile::rotate(hpreal degree) {
 
 bool ToothProfile::setMatingGearConstructor(MatingGearConstructor* constructor) {
 	//TODO: This "solution" isn't good!!! If anyone knows a better one, let me know!
-	if(constructor->getToothProfile().get() == this) {
+	if(constructor->getOriginalToothProfile().get() == this) {
 		m_matingGearConstructor = constructor;
 		return true;
 	} else {
@@ -307,12 +302,16 @@ void ToothProfile::setPointOfToothProfile(hpuint toothProfileIndex, hpvec3 newVa
 PointCloud* ToothProfile::toPointCloud() {
 	BSplineCurve<hpvec3> curve;
 	extendToGearCurve(curve);
+	//TODO: following line can be removed when gear moving is done in a better way!
+	moveCurve(m_center, curve);
 	return curve.toPointCloud();
 }
 
 LineMesh* ToothProfile::toLineMesh() {
 	BSplineCurve<hpvec3> curve;
 	extendToGearCurve(curve);
+	//TODO: following line can be removed when gear moving is done in a better way!
+	moveCurve(m_center, curve);
 	return curve.toLineMesh();
 }
 
@@ -333,4 +332,17 @@ void ToothProfile::ensureClamping() {
 		std::cerr << "A BSplineCurve for a ToothProfile has to be clamed! Otherwise the resulting gear will look against expectation." << std::endl;
 		m_toothProfileCurve.setClamped(true);
 	}
+}
+
+//TODO: following two methods can be removed when moving is done by the transformation matrices
+void ToothProfile::moveCurve(hpvec2 direction, BSplineCurve<hpvec3>& curve) const {
+	if(m_center != hpvec2(0.0f, 0.0f)) {
+		for(hpuint i = 0; i < curve.getNumberOfControlPoints(); ++i) {
+			curve.setControlPoint(i, curve.getControlPoint(i) + hpvec3(direction, 0.0f));
+		}
+	}
+}
+
+void ToothProfile::setCenter(hpvec2 center) {
+	m_center = center;
 }

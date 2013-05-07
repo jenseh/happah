@@ -45,7 +45,7 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	m_matingNormalsLengthBox->setMinimum(0.0f);
 	m_matingNormalsLengthBox->setSingleStep(0.25f);
 	QLabel* matingNormalsLength = new QLabel(tr("Length of normals"));
-	connect(m_matingNormalsLengthBox, SIGNAL(valueChanged(double)), this, SLOT(changeNormalLength(double)));
+	connect(m_matingNormalsLengthBox, SIGNAL(valueChanged(double)), this, SLOT(changeNormalsLengths(double)));
 
 	m_matingGearButton = new QPushButton("Construct mating gear");
 	connect(m_matingGearButton, SIGNAL(clicked()), this, SLOT(constructMatingGear()));
@@ -133,17 +133,30 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 ToothProfileForm::~ToothProfileForm() {
 }
 
-void ToothProfileForm::updateMatingGearConstructor(ToothProfile_ptr) {
-	if(m_matingGearInformation != nullptr) {
-		m_toothProfile->updateMatingGearConstructor();
-		updateFormExistingMatingGear();
-	} else {
-		updateFormNoExistingMatingGear();
+ToothProfile_ptr ToothProfileForm::getToothProfile() {
+	return m_toothProfile;
+}
+
+void ToothProfileForm::handleDrag(Ray& ray) {
+	hpvec3 intersectionPoint;
+	if(m_plane->intersect(ray, intersectionPoint)) {
+		m_toothProfile->setPointOfGear(m_currentPointIndex, intersectionPoint);
+		m_guiManager.update(m_toothProfile);
+		emit toothProfileChanged(m_toothProfile);
 	}
 }
 
-ToothProfile_ptr ToothProfileForm::getToothProfile() {
-	return m_toothProfile;
+void ToothProfileForm::handleRay(Ray& ray) {
+}
+
+void ToothProfileForm::handleSelection() {
+	emit selected(this);
+	m_currentPointIndex = -1;
+}
+
+void ToothProfileForm::handleSelection(int pointIndex) {
+	emit selected(this);
+	m_currentPointIndex = pointIndex;
 }
 
 void ToothProfileForm::reset() {
@@ -153,24 +166,11 @@ void ToothProfileForm::reset() {
 	//Mating gear things:
 	m_matingGearInformation = nullptr;
 	setAllMatingWidgetsEnabled(false);
-	m_matingConstrMaxAngleBox->setValue(5.0f);
+	m_matingConstrMaxAngleBox->setValue(3.0f);
 	m_matingNormalsLengthBox->setValue(1.0f);
-	m_matingConstrSamplRateBox->setValue(30);
+	m_matingConstrSamplRateBox->setValue(80);
 	m_matingDarkenNormalsBox->setChecked(false);
 	m_useGearWidthForNormalsBox->setChecked(false);
-}
-
-void ToothProfileForm::setAllMatingWidgetsEnabled(bool enable) {
-	for(std::vector<QWidget*>::iterator it = m_matingGearAvailableWidgetList.begin(), end = m_matingGearAvailableWidgetList.end(); it != end; ++it) {
-		(*it)->setEnabled(enable);
-	}
-	setMatingWidgetsEnabled(enable);
-}
-
-void ToothProfileForm::setMatingWidgetsEnabled(bool enable) {
-	for(std::vector<QWidget*>::iterator it = m_matingStartWidgetList.begin(), end = m_matingStartWidgetList.end(); it != end; ++it) {
-		(*it)->setEnabled(enable);
-	}
 }
 
 void ToothProfileForm::setToothProfile(ToothProfile_ptr toothProfile) {
@@ -185,24 +185,25 @@ void ToothProfileForm::setToothProfile(ToothProfile_ptr toothProfile) {
 	}
 }
 
-void ToothProfileForm::toSimpleGear() {
-	SimpleGear_ptr simpleGear = SimpleGear_ptr(new SimpleGear(*m_toothProfile, 0.0f, 2.0f));
-	m_guiManager.insert(simpleGear, HP_TRIANGLE_MESH );
+//*****************************************************************************
+//***** PRIVATE METHODS BELOW *************************************************
+
+void ToothProfileForm::insertGearInformation(BothGearInformation* gearPart) {
+	m_guiManager.insert(gearPart->originPart.curve, gearPart->originPart.name, gearPart->originPart.color, gearPart->originPart.drawModes);
+	if(gearPart->hasTwoParts)
+		m_guiManager.insert(gearPart->matingPart.curve, gearPart->matingPart.name, gearPart->matingPart.color, gearPart->matingPart.drawModes);
 }
 
-void ToothProfileForm::updateFormNoExistingMatingGear() {
-	hpuint nTeeth = m_toothProfile->getNumberOfTeeth();
-	hpreal avgRadius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
-	hpreal minRadius = MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth);
+void ToothProfileForm::setAllMatingWidgetsEnabled(bool enable) {
+	for(std::vector<QWidget*>::iterator it = m_matingGearAvailableWidgetList.begin(), end = m_matingGearAvailableWidgetList.end(); it != end; ++it) {
+		(*it)->setEnabled(enable);
+	}
+	setMatingWidgetsEnabled(enable);
+}
 
-	if(avgRadius >= minRadius) {
-		m_matingRadiusSpinBox->setValue(avgRadius);
-		m_matingRadiusSpinBox->setMinimum(MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth));
-
-		m_matingNTeethSpinBox->setValue(nTeeth);
-		m_matingNTeethSpinBox->setMinimum(MatingGearConstructor::getMinNumberOfTeethForMatingGear(*m_toothProfile, avgRadius));
-
-		setMatingWidgetsEnabled(true);
+void ToothProfileForm::setMatingWidgetsEnabled(bool enable) {
+	for(std::vector<QWidget*>::iterator it = m_matingStartWidgetList.begin(), end = m_matingStartWidgetList.end(); it != end; ++it) {
+		(*it)->setEnabled(enable);
 	}
 }
 
@@ -228,10 +229,59 @@ void ToothProfileForm::updateFormExistingMatingGear() {
 	}
 }
 
+void ToothProfileForm::updateFormNoExistingMatingGear() {
+	hpuint nTeeth = m_toothProfile->getNumberOfTeeth();
+	hpreal avgRadius = 0.5f * m_toothProfile->getRootRadius() + 0.5f * m_toothProfile->getTipRadius();
+	hpreal minRadius = MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth);
+
+	if(avgRadius >= minRadius) {
+		m_matingRadiusSpinBox->setValue(avgRadius);
+		m_matingRadiusSpinBox->setMinimum(MatingGearConstructor::getMinRadiusForOriginGear(*m_toothProfile, nTeeth));
+
+		m_matingNTeethSpinBox->setValue(nTeeth);
+		m_matingNTeethSpinBox->setMinimum(MatingGearConstructor::getMinNumberOfTeethForMatingGear(*m_toothProfile, avgRadius));
+
+		setMatingWidgetsEnabled(true);
+	}
+}
+
+void ToothProfileForm::updateGearInformation(BothGearInformation* gearPart) {
+	m_guiManager.update(gearPart->originPart.curve, gearPart->originPart.color);
+	if(gearPart->hasTwoParts)
+		m_guiManager.update(gearPart->matingPart.curve, gearPart->matingPart.color);
+}
+
+void ToothProfileForm::updateNormals() {
+	if(m_matingGearInformation != nullptr) {
+		std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
+		for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
+			updateGearInformation(*it);
+		}
+	}
+}
+
+//*****************************************************************************
+//***** PRIVATE SLOTS BELOW ***************************************************
+
+void ToothProfileForm::changeNormalsLengths(double length) {
+	if(m_matingGearInformation != nullptr) {
+		m_matingGearInformation->setNormalLength(length);
+		updateNormals();
+	}
+}
+
+void ToothProfileForm::changeNormalsVisiblity(int state) {
+	if(m_matingGearInformation != nullptr) {
+		bool visible = true;
+		if(state == Qt::Checked)
+			visible = false;
+		m_matingGearInformation->setDarkingOfNormals(visible);
+		updateNormals();
+	}
+}
+
 void ToothProfileForm::constructMatingGear() {
 	if(!m_toothProfile->hasMatingGear()) {
-		// cerr << "ToothProfileForm::constructMatingGear(): has found no MatingGearConstructor until now" << endl;
-		// cerr << "                                         radius will be: " << m_matingRadiusSpinBox->value() << endl;
 		new MatingGearConstructor(
 			m_toothProfile,
 			m_matingRadiusSpinBox->value(),
@@ -245,18 +295,19 @@ void ToothProfileForm::constructMatingGear() {
 	}
 }
 
-void ToothProfileForm::darkenNormals() {
-	// for(auto it : m_informationCurves) {
-	// 	if((*m_partIterator)->getPart() == ORIGIN_NORMAL ||
-	// 		(*m_partIterator)->getPart() == MATING_NORMAL) {
-	// 		BSplineCurve2D_ptr curve2d = (*m_partIterator)->getCurve();
-	// 		m_guiManager.update(curve2d, darkenColor);
-	// 	}
-	// }
+void ToothProfileForm::showAllNormals() {
+	if(m_matingGearInformation != nullptr) {
+		for(;m_matingGearInformation->areFurtherNormalsAvailable();)
+			insertGearInformation(m_matingGearInformation->getNextNormal());
+		m_showNextNormalButton->setEnabled(false);
+		m_showAllNormalsButton->setEnabled(false);
+	}
 }
 
 void ToothProfileForm::showAngularPitches() {
-	insertGearInformation(m_matingGearInformation->getAngularPitches());
+	if(m_matingGearInformation != nullptr) {
+		insertGearInformation(m_matingGearInformation->getAngularPitches());
+	}
 }
 
 void ToothProfileForm::showMatingGear() {
@@ -265,7 +316,7 @@ void ToothProfileForm::showMatingGear() {
 	m_guiManager.insert(matingToothProfile, HP_LINE_MESH | HP_POINT_CLOUD);
 
 	insertGearInformation(m_matingGearInformation->getReferenceCircles());
-	insertGearInformation(m_matingGearInformation->getToothProfiles());
+	insertGearInformation(m_matingGearInformation->getUsedConstructionPoints());
 
 	if(m_matingGearInformation->areFurtherNormalsAvailable()) {
 		std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
@@ -277,95 +328,34 @@ void ToothProfileForm::showMatingGear() {
 	m_showNextNormalButton->setEnabled(false);
 }
 
-void ToothProfileForm::showReferenceCircles() {
-	insertGearInformation(m_matingGearInformation->getReferenceCircles());
-	m_showReferenceCirclesButton->setEnabled(false);
-}
-
-void ToothProfileForm::changeNormalsVisiblity(int state) {
-	if(m_matingGearInformation != nullptr) {
-		bool visible = true;
-		if(state == Qt::Checked)
-			visible = false;
-		m_matingGearInformation->setDarkingOfNormals(visible);
-		updateNormals();
-	}
-}
-
-void ToothProfileForm::changeNormalLength(double length) {
-	if(m_matingGearInformation != nullptr) {
-		m_matingGearInformation->setNormalLength(length);
-		// updateNormals();
-	}
-}
-
-void ToothProfileForm::updateNormals() {
-	if(m_matingGearInformation != nullptr) {
-		std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
-		for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
-			updateGearInformation(*it);
-		}
-	}
-}
-
-void ToothProfileForm::showAllNormals() {
-	for(;m_matingGearInformation->areFurtherNormalsAvailable();)
-		insertGearInformation(m_matingGearInformation->getNextNormal());
-	m_showNextNormalButton->setEnabled(false);
-	m_showAllNormalsButton->setEnabled(false);
-}
-
 void ToothProfileForm::showNextNormal() {
-	if(m_matingGearInformation->areFurtherNormalsAvailable()) {
-		//delete lines below until ***
-		BothGearInformation* bothNormals = m_matingGearInformation->getNextNormal();
-		cerr << "This normal ";
-		if(bothNormals->hasTwoParts) {
-			std::vector<hpvec2> normal = bothNormals->matingPart.curve->getControlPoints();
-			cerr << "has a mating part and forbiddenArea is: " << glm::length(normal[2] - normal[0]) << endl;
-		} else {
-			cerr << "doesn't have a mating part" << endl;
-		}
-
-		insertGearInformation(bothNormals); }
-		//***and uncomment the line below!!!
-		// insertGearInformation(m_matingGearInformation->getNextNormal());
-	if(!m_matingGearInformation->areFurtherNormalsAvailable())
-		m_showNextNormalButton->setEnabled(false);
-}
-
-void ToothProfileForm::handleRay(Ray& ray) {
-}
-
-void ToothProfileForm::handleDrag(Ray& ray) {
-	hpvec3 intersectionPoint;
-	if(m_plane->intersect(ray, intersectionPoint)) {
-		m_toothProfile->setPointOfGear(m_currentPointIndex, intersectionPoint);
-		m_guiManager.update(m_toothProfile);
-		emit toothProfileChanged(m_toothProfile);
+	if(m_matingGearInformation != nullptr) {
+		if(m_matingGearInformation->areFurtherNormalsAvailable())
+			insertGearInformation(m_matingGearInformation->getNextNormal());
+		if(!m_matingGearInformation->areFurtherNormalsAvailable())
+			m_showNextNormalButton->setEnabled(false);
 	}
 }
 
-void ToothProfileForm::handleSelection() {
-	emit selected(this);
-	m_currentPointIndex = -1;
+void ToothProfileForm::showReferenceCircles() {
+	if(m_matingGearInformation != nullptr) {
+		insertGearInformation(m_matingGearInformation->getReferenceCircles());
+		m_showReferenceCirclesButton->setEnabled(false);
+	}
 }
 
-void ToothProfileForm::handleSelection(int pointIndex) {
-	emit selected(this);
-	m_currentPointIndex = pointIndex;
+void ToothProfileForm::toSimpleGear() {
+	SimpleGear_ptr simpleGear = SimpleGear_ptr(new SimpleGear(*m_toothProfile, 0.0f, 2.0f));
+	m_guiManager.insert(simpleGear, HP_TRIANGLE_MESH );
 }
 
-void ToothProfileForm::insertGearInformation(BothGearInformation* gearPart) {
-	m_guiManager.insert(gearPart->originPart.curve, gearPart->originPart.name, gearPart->originPart.color, gearPart->originPart.drawModes);
-	if(gearPart->hasTwoParts)
-		m_guiManager.insert(gearPart->matingPart.curve, gearPart->matingPart.name, gearPart->matingPart.color, gearPart->matingPart.drawModes);
-}
-
-void ToothProfileForm::updateGearInformation(BothGearInformation* gearPart) {
-	m_guiManager.update(gearPart->originPart.curve, gearPart->originPart.color);
-	if(gearPart->hasTwoParts)
-		m_guiManager.update(gearPart->matingPart.curve, gearPart->matingPart.color);
+void ToothProfileForm::updateMatingGearConstructor(ToothProfile_ptr) {
+	if(m_matingGearInformation != nullptr) {
+		m_toothProfile->updateMatingGearConstructor();
+		updateFormExistingMatingGear();
+	} else {
+		updateFormNoExistingMatingGear();
+	}
 }
 
 void ToothProfileForm::useGearWidthForNormals(int state) {
@@ -374,6 +364,6 @@ void ToothProfileForm::useGearWidthForNormals(int state) {
 		if(state == Qt::Unchecked)
 			visible = false;
 		m_matingGearInformation->useGearSizeAsNormalLength(visible);
-		// updateNormals();
+		updateNormals();
 	}
 }

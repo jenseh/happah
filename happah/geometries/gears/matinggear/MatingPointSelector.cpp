@@ -35,7 +35,7 @@ std::list<MatingPoint>* MatingPointSelector::getMatingPoints() {
 	return new std::list<MatingPoint>(*this);
 }
 
-std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear() {
+std::vector<MatingPoint>* MatingPointSelector::getSuitableMatingPointsForGear() {
 	//every point has to be inside one angular pitch of the gear!
 	//create lists with MatingPoints which lay either out of the angular pitch region or in it
 	//lists with points that lay outside are rotated to the start or respectively to the end
@@ -120,78 +120,6 @@ std::vector<MatingPoint>* MatingPointSelector::chooseSuitableMatingPointsForGear
 			cerr << "list is not taken and has " << lists[i]->size() << " points" << endl;
 		}
 	}
-	// for(std::vector< std::vector<MatingPoint>* >::iterator listIt = lists.begin(), listEnd = lists.end(); listIt != listEnd; ++listIt) {
-	// 	for(std::vector<MatingPoint>::iterator it = (*listIt)->begin(), end = (*listIt)->end(); it != end; ++it) {
-	// 		cerr << "it->isCovered? : " << it->isCovered << endl;
-	// 		if(!it->isCovered){
-	// 			chosenPoints2.push_back(*it);
-	// 		}
-	// 	}
-	// }
-// 	MatingPoint candidate, a, b = MatingPoint();
-// 	a.point = hpvec2(1,1);
-// 	a.forbiddenAreaEndPoint = hpvec2(3,3);
-// 	b.point = hpvec2(2,0);
-// 	b.forbiddenAreaEndPoint = hpvec2(2,3);
-// cerr << "1:" << endl;
-// 	candidate.point = hpvec2(1,0);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "2:" << endl;
-// 	candidate.point = hpvec2(1.5,1);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "3:" << endl;
-// 	candidate.point = hpvec2(2,0);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "4:" << endl;
-// 	candidate.point = hpvec2(2,2);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "5:" << endl;
-// 	candidate.point = hpvec2(2,3.5);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "6:" << endl;
-// 	candidate.point = hpvec2(2.5,3);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "7:" << endl;
-// 	candidate.point = hpvec2(2.25,1.5);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "8:" << endl;
-// 	candidate.point = hpvec2(2.25,2.5);
-// 	matingPointIsCovered(candidate, a, b);
-
-// cerr << "///////////////////////////////////////////" << endl;
-// cerr << "NOW A=Y, B=X" << endl;
-// 	a.point = hpvec2(0.0001,0.0002);
-// 	a.forbiddenAreaEndPoint = hpvec2(0.0002,0.0003);
-// 	b.point = hpvec2(0.0000,0.0002);
-// 	b.forbiddenAreaEndPoint = hpvec2(0.0000,0.0004);
-// cerr << "1:" << endl;
-// 	candidate.point = hpvec2(-0.0001,0.0002);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "2:" << endl;
-// 	candidate.point = hpvec2(0.0000,0.0003);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "3:" << endl;
-// 	candidate.point = hpvec2(0.00005,0.00015);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "4:" << endl;
-// 	candidate.point = hpvec2(0.00005,0.0002);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "5:" << endl;
-// 	candidate.point = hpvec2(0.0001,0.0003);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "6:" << endl;
-// 	candidate.point = hpvec2(0.0001,0.0004);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "7:" << endl;
-// 	candidate.point = hpvec2(0.00015,0.00025);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "8:" << endl;
-// 	candidate.point = hpvec2(0.00025,0.00035);
-// 	matingPointIsCovered(candidate, a, b);
-// cerr << "9:" << endl;
-// 	candidate.point = hpvec2(0.0000,0.0004);
-// 	matingPointIsCovered(candidate, a, b);
-
 	return new std::vector<MatingPoint>(chosenPoints2);
 }
 

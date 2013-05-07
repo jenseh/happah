@@ -38,44 +38,32 @@ private:
 	void updateGearInformation(BothGearInformation* gearPart);
 	void updateNormals();
 
-	int m_currentPointIndex;
-	GUIManager& m_guiManager;
-	Plane_ptr m_plane;
-	ToothProfile_ptr m_toothProfile;
-
-	// std::vector<hpcolor>* m_splineColors;
-	// std::list< MatingGearInformationPart* >* m_informationCurves;
-	QPushButton* m_matingGearButton;
-	QPushButton* m_showNextNormalButton;
-	QPushButton* m_toSimpleGearButton;
-	QPushButton* m_showAllNormalsButton;
-	QPushButton* m_showAngularPitchButton;
-	QPushButton* m_showMatingGearButton;
-	QPushButton* m_showReferenceCirclesButton;
-
-	QDoubleSpinBox* m_matingRadiusSpinBox;
-	QDoubleSpinBox* m_matingConstrMaxAngleBox;
-	QSpinBox* m_matingNTeethSpinBox;
-	QSpinBox* m_matingConstrSamplRateBox;
-	QDoubleSpinBox* m_matingNormalsLengthBox;
-
-	QCheckBox* m_matingDarkenNormalsBox;
-	QCheckBox* m_useGearWidthForNormalsBox;
-
-	std::vector<QWidget*> m_matingStartWidgetList;
+	int                   m_currentPointIndex;
+	GUIManager&           m_guiManager;
+	QDoubleSpinBox*       m_matingConstrMaxAngleBox;
+	QSpinBox*             m_matingConstrSamplRateBox;
+	QCheckBox*            m_matingDarkenNormalsBox;
 	std::vector<QWidget*> m_matingGearAvailableWidgetList;
-
 	MatingGearConstructionInformation* m_matingGearInformation;
-
-	// hpuint m_stepCounter;
-	// std::list< MatingGearInformationPart* >::iterator m_partIterator;
-	// hpcolor m_errorColor;
+	QPushButton*          m_matingGearButton;
+	QSpinBox*             m_matingNTeethSpinBox;
+	QDoubleSpinBox*       m_matingNormalsLengthBox;
+	QDoubleSpinBox*       m_matingRadiusSpinBox;
+	std::vector<QWidget*> m_matingStartWidgetList;
+	Plane_ptr             m_plane;
+	QPushButton*          m_showNextNormalButton;
+	QPushButton*          m_showAllNormalsButton;
+	QPushButton*          m_showAngularPitchButton;
+	QPushButton*          m_showMatingGearButton;
+	QPushButton*          m_showReferenceCirclesButton;
+	ToothProfile_ptr      m_toothProfile;
+	QPushButton*          m_toSimpleGearButton;
+	QCheckBox*            m_useGearWidthForNormalsBox;
 
 private slots:
+	void changeNormalsLengths(double length);
 	void changeNormalsVisiblity(int state);
-	void changeNormalLength(double length);
 	void constructMatingGear();
-	void darkenNormals();
 	void showAllNormals();
 	void showAngularPitches();
 	void showMatingGear();

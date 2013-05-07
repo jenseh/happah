@@ -1,7 +1,7 @@
 #ifndef TRIANGLE_MESH_NODE_H
 #define TRIANGLE_MESH_NODE_H
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/scene/GUIStateNode.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/ElementRenderStateNode.h"
@@ -9,11 +9,11 @@
 class TriangleMeshRenderStateNode;
 typedef shared_ptr<TriangleMeshRenderStateNode> TriangleMeshRenderStateNode_ptr;
 
-class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh> {
+class TriangleMeshNode : public SimpleGeometryNode<TriangleMesh3D> {
 
 public:
-	TriangleMeshNode(TriangleMesh_ptr triangleMesh);
-	TriangleMeshNode(TriangleMesh_ptr triangleMesh, RigidAffineTransformation& transformation);
+	TriangleMeshNode(TriangleMesh3D_ptr triangleMesh);
+	TriangleMeshNode(TriangleMesh3D_ptr triangleMesh, RigidAffineTransformation& transformation);
 	virtual ~TriangleMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);

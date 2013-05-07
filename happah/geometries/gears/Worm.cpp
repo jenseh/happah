@@ -137,7 +137,7 @@ void Worm::setBaseRadius(hpreal baseRadius) {
 	updateValues();
 }
 
-TriangleMesh_ptr Worm::toTriangleMesh(hpuint pointsPerTooth, hpuint angleResolution) {
+TriangleMesh3D_ptr Worm::toTriangleMesh(hpuint pointsPerTooth, hpuint angleResolution) {
     std::vector<hpvec3>* verticesAndNormals = createVerticesAndNormals(pointsPerTooth, angleResolution);
     std::vector<hpuint>* indices = new std::vector<hpuint>();
     hpuint indexCount =  verticesAndNormals->size() / 2;
@@ -145,7 +145,7 @@ TriangleMesh_ptr Worm::toTriangleMesh(hpuint pointsPerTooth, hpuint angleResolut
     for (hpuint index = 0; index < indexCount; index++) {
     	indices->push_back(index);
     }
-    TriangleMesh_ptr result = TriangleMesh_ptr(new TriangleMesh(verticesAndNormals, indices));
+    TriangleMesh3D_ptr result = TriangleMesh3D_ptr(new TriangleMesh3D(verticesAndNormals, indices));
     return result;
 }
 

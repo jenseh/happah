@@ -1,16 +1,16 @@
 #ifndef LINE_MESH_NODE_H_
 #define LINE_MESH_NODE_H_
 
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/LineMesh.h"
 #include "happah/scene/SimpleGeometryNode.h"
 #include "happah/scene/ElementRenderStateNode.h"
 
 
-class LineMeshNode : public SimpleGeometryNode<LineMesh>  {
+class LineMeshNode : public SimpleGeometryNode<LineMesh3D>  {
 
 public:
-	LineMeshNode(LineMesh_ptr lineMesh);
-	LineMeshNode(LineMesh_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation);
+	LineMeshNode(LineMesh3D_ptr lineMesh);
+	LineMeshNode(LineMesh3D_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation);
 	virtual ~LineMeshNode();
 
 	virtual void accept(SceneVisitor& sceneVisitor);

@@ -46,24 +46,24 @@ int ElementRenderStateNode::getSelected(){
 	return m_selected;
 }
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, hpcolor& color)
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh3D_ptr triangleMesh, hpcolor& color)
 	: ElementRenderStateNode(GL_TRIANGLES,triangleMesh->getVerticesAndNormals(),triangleMesh->getIndices(),color){
 
 }
 
-TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh_ptr triangleMesh, std::vector<hpcolor>* colorVector)
+TriangleMeshRenderStateNode::TriangleMeshRenderStateNode(TriangleMesh3D_ptr triangleMesh, std::vector<hpcolor>* colorVector)
 	: ElementRenderStateNode(GL_TRIANGLES,triangleMesh->getVerticesAndNormals(),triangleMesh->getIndices(),colorVector) {}
 
 TriangleMeshRenderStateNode::~TriangleMeshRenderStateNode() {
 	// TODO Auto-generated destructor stub
 }
 
-LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, hpcolor& color)
+LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh3D_ptr lineMesh, hpcolor& color)
 	: ElementRenderStateNode(GL_LINES,lineMesh->getVerticesAndNormals(),lineMesh->getIndices(),color){
 
 }
 
-LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh_ptr lineMesh, std::vector<hpcolor>* colorVector)
+LineMeshRenderStateNode::LineMeshRenderStateNode(LineMesh3D_ptr lineMesh, std::vector<hpcolor>* colorVector)
 	: ElementRenderStateNode(GL_LINES,lineMesh->getVerticesAndNormals(),lineMesh->getIndices(),colorVector) {}
 
 LineMeshRenderStateNode::~LineMeshRenderStateNode() {

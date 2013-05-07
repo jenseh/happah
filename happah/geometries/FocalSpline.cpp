@@ -183,7 +183,7 @@ void FocalSpline::adjustControlPoints(int bezierCurveIndex,int currentIndex,int 
 
 }
 
-LineMesh* FocalSpline::toLineMesh(){
+LineMesh3D* FocalSpline::toLineMesh(){
 	std::vector<hpvec3>* verticesAndNormals = new std::vector<hpvec3>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
@@ -266,7 +266,7 @@ LineMesh* FocalSpline::toLineMesh(){
 			indices->pop_back();
 		}
 	}
-	return new LineMesh(verticesAndNormals, indices);
+	return new LineMesh3D(verticesAndNormals, indices);
 }
 
 PointCloud* FocalSpline::toPointCloud(){
@@ -362,8 +362,9 @@ void FocalSpline::extendSpline(){
 
 void FocalSpline::generateLaneRiesenfeld(int n,int m){
 	vector<hpvec3>* lrControlPoints = new vector<hpvec3>;
+	lrControlPoints->push_back(m_controlPoints->at(0)->at(0));
 	for(int i=0;i<m_controlPoints->size();i++){
-		for(int j=0; j<m_controlPoints->at(i)->size();j++){
+		for(int j=1; j<m_controlPoints->at(i)->size();j++){
 			lrControlPoints->push_back(m_controlPoints->at(i)->at(j));
 		}
 	}

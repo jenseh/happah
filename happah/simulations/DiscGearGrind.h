@@ -26,7 +26,7 @@ public:
     /**
      * @brief m_gearMesh  The triangle mesh representing the gear.
      */
-	TriangleMesh_ptr m_gearMesh;
+	TriangleMesh3D_ptr m_gearMesh;
     /**
      * @brief m_gearTransformation The position/transformation of the gear.
      */
@@ -42,7 +42,7 @@ public:
     /**
      * @brief m_toolMesh The triangle mesh representing the tool.
      */
-	TriangleMesh_ptr m_toolMesh;
+	TriangleMesh3D_ptr m_toolMesh;
     /**
      * @brief m_toolTransformation The position/transformation of the tool.
      */
@@ -58,8 +58,8 @@ public:
      * @param toolMesh The triangle mesh representing the tool.
      * @param toolTransformation The position/transformation of the tool.
      */
-	DiscGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh_ptr gearMesh, RigidAffineTransformation gearTransformation,
-						SurfaceOfRevolution_ptr tool, TriangleMesh_ptr toolMesh, RigidAffineTransformation toolTransformation):
+	DiscGearGrindResult(SimpleGear_ptr gear, vector<hpcolor>* gearColor, TriangleMesh3D_ptr gearMesh, RigidAffineTransformation gearTransformation,
+						SurfaceOfRevolution_ptr tool, TriangleMesh3D_ptr toolMesh, RigidAffineTransformation toolTransformation):
 		m_gear(gear),
         m_gearColor(new std::vector<hpcolor>(*gearColor) ),
 		m_gearMesh(gearMesh),
@@ -83,7 +83,7 @@ public:
      * @param gear The gear which is grinded by the gear in the simulation.
      * @param gearMesh The triangle mesh representing the gear.
      */
-    DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh_ptr discMesh, SimpleGear_ptr gear, TriangleMesh_ptr gearMesh);
+    DiscGearGrind(SurfaceOfRevolution_ptr disc, TriangleMesh3D_ptr discMesh, SimpleGear_ptr gear, TriangleMesh3D_ptr gearMesh);
     /**
      * @brief ~DiscGearGrind Destructor deleting memory which was allocated for the calculation of the simulation.
      */
@@ -109,11 +109,11 @@ private:
 	static const int STEP_COUNT = 10;
 
     SurfaceOfRevolution_ptr m_disc;
-    TriangleMesh_ptr m_discMesh;
+    TriangleMesh3D_ptr m_discMesh;
     std::vector<double> m_distances;
     SimpleGear_ptr m_gear;
     vector<hpcolor>* m_gearColor;
-    TriangleMesh_ptr m_gearMesh;
+    TriangleMesh3D_ptr m_gearMesh;
     Kinematic m_gearMovement;
     std::vector<Ray>* m_gearRays;
     KDTree* m_kdTree;

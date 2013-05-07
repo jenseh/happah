@@ -7,9 +7,9 @@
 
 using namespace std;
 
-#include "happah/geometries/Geometry.h"
-#include "happah/geometries/Mesh.h"
 #include "happah/HappahTypes.h"
+#include "happah/geometries/Geometry.h"
+#include "happah/geometries/TriangleMesh.h"
 
 /** @class CylindricalGear
  * @brief Simplest Gear class
@@ -65,7 +65,7 @@ public:
 	//nTraverseProfiles is the number of samples used to sample along the z axis
 	//whereas nTraverseProfiles = 10 means, that the TriangleMesh will consist of
 	//11 gear profiles with 10 intervals
-	TriangleMesh* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
+	TriangleMesh3D* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
 
 };
 

@@ -22,11 +22,11 @@ GUIStateNode_ptr GUIStateNode::getptr() {
 	return static_pointer_cast<GUIStateNode>(shared_from_this()); //TODO: what is this?
 }
 
-TriangleMesh_ptr GUIStateNode::getTriangleMesh() const {
+TriangleMesh3D_ptr GUIStateNode::getTriangleMesh() const {
 	return m_triangleMesh;
 }
 
-LineMesh_ptr GUIStateNode::getLineMesh() const {
+LineMesh3D_ptr GUIStateNode::getLineMesh() const {
 	return m_lineMesh;
 }
 
@@ -38,11 +38,11 @@ void GUIStateNode::setName(const char* name) {
 	m_name = string(name);
 }
 
-void GUIStateNode::setTriangleMesh(TriangleMesh_ptr triangleMesh) {
+void GUIStateNode::setTriangleMesh(TriangleMesh3D_ptr triangleMesh) {
 	m_triangleMesh = triangleMesh;
 }
 
-void GUIStateNode::setLineMesh(LineMesh_ptr lineMesh){
+void GUIStateNode::setLineMesh(LineMesh3D_ptr lineMesh){
 	m_lineMesh = lineMesh;
 }
 void GUIStateNode::setPointCloud(PointCloud_ptr pointCloud){
@@ -336,7 +336,7 @@ Form* ToothProfileGUIStateNode::getForm() {
 
 // TriangleMesh
 
-TriangleMeshGUIStateNode::TriangleMeshGUIStateNode (TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name) 
+TriangleMeshGUIStateNode::TriangleMeshGUIStateNode (TriangleMesh3D_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name) 
 	: GUIStateNode(name), m_triangleMesh(triangleMesh), m_triangleMeshContextMenu(triangleMeshContextMenu) {}
 
 TriangleMeshGUIStateNode::~TriangleMeshGUIStateNode() {}

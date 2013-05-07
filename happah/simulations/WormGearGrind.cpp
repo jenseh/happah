@@ -1,7 +1,7 @@
 #include "happah/simulations/WormGearGrind.h"
 #include <glm/glm.hpp>
 
-WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh_ptr gearMesh) :
+WormGearGrind::WormGearGrind(Worm_ptr worm, TriangleMesh3D_ptr wormMesh, SimpleGear_ptr gear, hpreal gearReferenceRadius, TriangleMesh3D_ptr gearMesh) :
 		m_worm(worm), m_wormMesh(wormMesh), m_gear(gear), m_gearMesh(gearMesh), m_maxDistance(worm->getModule()) {
 	init(gearReferenceRadius);
 }
@@ -39,15 +39,14 @@ void WormGearGrind::init(hpreal gearReferenceRadius) {
 	m_gearCircleCloud = m_gear->toZCircleCloud(m_resultPosZSlotCount);
 
 	// Convert vertices to triangles
-	std::vector<Triangle>* triangles = m_wormMesh->toTriangles();
-	hpuint gearVertexCount = m_gearMesh->getVertexCount();
+	hpuint gearVertexCount = m_gearMesh->getVerticesAndNormals()->size()/2;
 
 	// Resize color array
 	m_gearColor = new vector<hpcolor>;
 	m_gearColor->resize(gearVertexCount);
 
 	// Build kdtree
-	m_kdTree = new KDTree(triangles);
+	m_kdTree = new KDTree(m_wormMesh);
 }
 
 WormGearGrind::~WormGearGrind() {

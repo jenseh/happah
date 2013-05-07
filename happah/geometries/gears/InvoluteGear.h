@@ -11,7 +11,7 @@ using namespace std;
 #include "happah/geometries/gears/ToothProfile.h"
 #include "happah/geometries/gears/CylindricalGear.h"
 #include "happah/geometries/gears/SimpleGear.h"
-#include "happah/geometries/Mesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/HappahTypes.h"
 
 /** @class InvoluteGear
@@ -89,7 +89,7 @@ public:
 
     void getToothSpaceProfile(vector<hpvec2> &profile);
     void getToothProfile(vector<hpvec2>& toothProfile);
-    TriangleMesh* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
+    TriangleMesh3D* toTriangleMesh(hpuint nPointsPerTooth = 100, hpuint nTraverseProfiles = 10);
     SimpleGear* toSimpleGear(hpuint nPointsPerTooth = 100);
 
 private:

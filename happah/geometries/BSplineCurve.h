@@ -5,9 +5,9 @@
 #include <memory>
 #include <vector>
 
-#include "happah/geometries/Mesh.h"
-#include "happah/geometries/PointCloud.h"
 #include "happah/HappahTypes.h"
+#include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
 #include "happah/math/Ray.h"
 
 template <class T>
@@ -174,7 +174,7 @@ public:
 	void setUniform( bool uniform );
 
 	PointCloud* toPointCloud();
-	LineMesh* toLineMesh();
+	LineMesh<T>* toLineMesh();
 	BSplineCurve<hpvec3>* to3dBSplineCurve() const;
 	BSplineCurve<hpvec2>* to2dBSplineCurve() const;
 

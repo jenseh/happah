@@ -103,7 +103,7 @@ hpvec3 SpherePatch::triPatch3(hpvec3 p300,hpvec3 p210,hpvec3 p201,hpvec3 p120,hp
   return triPatch1(triPatch2(p300,p210,p201,p120,p111,p102),triPatch2(p210,p120,p111,p030,p021,p012),triPatch2(p201,p111,p102,p021,p012,p003));
 }
 
-TriangleMesh* SpherePatch::toTriangleMesh(){
+TriangleMesh3D* SpherePatch::toTriangleMesh(){
   std::vector<hpvec3> *verticesAndNormals = &m_verticesAndNormals;
   std::vector<hpuint> *indices = new std::vector<hpuint>();
   int detail = m_detail;
@@ -129,8 +129,7 @@ TriangleMesh* SpherePatch::toTriangleMesh(){
         }
     }
 }
-  TriangleMesh* result = new TriangleMesh(verticesAndNormals, indices);
-  return result;
+  return new TriangleMesh3D(verticesAndNormals, indices);
 }
 
 void SpherePatch::buildSecantTriangle(hpvec3 a, hpvec3 b, hpvec3 c){

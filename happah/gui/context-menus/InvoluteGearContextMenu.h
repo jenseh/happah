@@ -12,12 +12,12 @@ public:
 	InvoluteGearContextMenu(GUIManager& guiManager, QWidget* parent);
 	~InvoluteGearContextMenu();
 
-	void setInvoluteGear(InvoluteGear_ptr involuteGear, TriangleMesh_ptr involuteGearMesh);
+	void setInvoluteGear(InvoluteGear_ptr involuteGear, TriangleMesh3D_ptr involuteGearMesh);
 
 private:
 	GUIManager& m_guiManager;
 	InvoluteGear_ptr m_involuteGear;
-	TriangleMesh_ptr m_involuteGearMesh;
+	TriangleMesh3D_ptr m_involuteGearMesh;
 
 private slots:
 	void createSimpleGear();

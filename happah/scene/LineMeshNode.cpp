@@ -1,10 +1,10 @@
 #include "LineMeshNode.h"
 
-LineMeshNode::LineMeshNode(LineMesh_ptr lineMesh)
-	: SimpleGeometryNode<LineMesh>(lineMesh) {}
+LineMeshNode::LineMeshNode(LineMesh3D_ptr lineMesh)
+	: SimpleGeometryNode<LineMesh3D>(lineMesh) {}
 
-LineMeshNode::LineMeshNode(LineMesh_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation)
-	: SimpleGeometryNode<LineMesh>(lineMesh,rigidAffineTransformation) {}
+LineMeshNode::LineMeshNode(LineMesh3D_ptr lineMesh,RigidAffineTransformation& rigidAffineTransformation)
+	: SimpleGeometryNode<LineMesh3D>(lineMesh,rigidAffineTransformation) {}
 
 LineMeshNode::~LineMeshNode() {}
 

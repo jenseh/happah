@@ -2,9 +2,9 @@
 #define TOOTHPROFILE_H
 
 #include "happah/geometries/BSplineCurve.h"
-#include "happah/geometries/Mesh.h"
 #include "happah/geometries/Plane.h"
 #include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
 #include "happah/HappahTypes.h"
 
 class MatingGearConstructor;
@@ -39,7 +39,7 @@ public:
 	void   setPointOfToothProfile(hpuint toothProfileIndex, hpvec2 newValue);
 	void   setPointOfToothProfile(hpuint toothProfileIndex, hpvec3 newValue);
 	PointCloud* toPointCloud();
-	LineMesh*   toLineMesh();
+	LineMesh3D*   toLineMesh();
 	void    updateMatingGearConstructor();
 private:
 	MatingGearConstructor* m_matingGearConstructor;

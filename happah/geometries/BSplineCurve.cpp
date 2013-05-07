@@ -611,7 +611,7 @@ template <class T> void BSplineCurve<T>::setPeriodic( bool periodic ) {
 	calculateNormalization();
 }
 
-template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
+template <class T> LineMesh<T>* BSplineCurve<T>::toLineMesh() {
 	std::vector<T>* verticesAndNormals = new std::vector<T>;
 	std::vector<hpuint>* indices = new std::vector<hpuint>;
 
@@ -704,7 +704,7 @@ template <class T> LineMesh* BSplineCurve<T>::toLineMesh() {
 		}
 	}
 	*/
-	return new LineMesh(verticesAndNormals, indices);
+	return new LineMesh<T>(verticesAndNormals, indices);
 }
 
 template <class T> PointCloud* BSplineCurve<T>::toPointCloud() {

@@ -7,8 +7,9 @@
 using namespace std;
 
 #include "happah/geometries/Geometry.h"
-#include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/HappahTypes.h"
 #include "happah/math/Ray.h"
 
@@ -30,8 +31,8 @@ public:
 
 	Plane& operator=(const Plane& other);
 
-	TriangleMesh* toTriangleMesh();
-	LineMesh* toLineMesh();
+	TriangleMesh3D* toTriangleMesh();
+	LineMesh3D* toLineMesh();
 	PointCloud* toPointCloud();
 
 private:

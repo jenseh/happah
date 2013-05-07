@@ -418,9 +418,9 @@ hpvec2 InvoluteGear::pointOnRightTurnedInvolute(const hpreal& involuteStartAngle
 	return point;
 }
 
-TriangleMesh* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
+TriangleMesh3D* InvoluteGear::toTriangleMesh(hpuint toothSampleSize, hpuint zSampleSize) {
 
-	TriangleMesh* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
+	TriangleMesh3D* mesh = CylindricalGear::toTriangleMesh(toothSampleSize, zSampleSize);
 	vector<hpvec2> profile(toothSampleSize * getNumberOfTeeth());
 	vector<hpvec3>* verticesAndNormals = mesh->getVerticesAndNormals();
 	vector<hpuint>* indices = mesh->getIndices();

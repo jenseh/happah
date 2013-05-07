@@ -45,8 +45,9 @@ typedef shared_ptr<WormGUIStateNode> WormGUIStateNode_ptr;
 class WormGearGrindGUIStateNode;
 typedef shared_ptr<WormGearGrindGUIStateNode> WormGearGrindGUIStateNode_ptr;
 
-#include "happah/geometries/Mesh.h"
 #include "happah/geometries/PointCloud.h"
+#include "happah/geometries/LineMesh.h"
+#include "happah/geometries/TriangleMesh.h"
 #include "happah/gui/context-menus/ContextMenu.h"
 #include "happah/gui/forms/Form.h"
 #include "happah/scene/Node.h"
@@ -64,12 +65,12 @@ public:
 	virtual Form* getForm() = 0;
 	const string& getName() const;
 	GUIStateNode_ptr getptr();
-	TriangleMesh_ptr getTriangleMesh() const;
-	LineMesh_ptr getLineMesh() const;
+	TriangleMesh3D_ptr getTriangleMesh() const;
+	LineMesh3D_ptr getLineMesh() const;
 	PointCloud_ptr getPointCloud() const;
 	void setName(const char* name);
-	void setTriangleMesh(TriangleMesh_ptr triangleMesh);
-	void setLineMesh(LineMesh_ptr lineMesh);
+	void setTriangleMesh(TriangleMesh3D_ptr triangleMesh);
+	void setLineMesh(LineMesh3D_ptr lineMesh);
 	void setPointCloud(PointCloud_ptr pointCloud);
 	void 	registerConnectListener(ConnectListener* selectListener);
 	void	removeConnectListener(ConnectListener* selectListener);
@@ -103,8 +104,8 @@ private:
 	GUIConnectListener m_connectListener;
 	list<ConnectListener*> m_connectListeners;
 	string m_name;
-	TriangleMesh_ptr m_triangleMesh;
-	LineMesh_ptr m_lineMesh;
+	TriangleMesh3D_ptr m_triangleMesh;
+	LineMesh3D_ptr m_lineMesh;
 	PointCloud_ptr m_pointCloud;
 };
 
@@ -283,14 +284,14 @@ private:
 
 class TriangleMeshGUIStateNode : public GUIStateNode {
 public:
-	TriangleMeshGUIStateNode(TriangleMesh_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name);
+	TriangleMeshGUIStateNode(TriangleMesh3D_ptr triangleMesh, TriangleMeshContextMenu* triangleMeshContextMenu, string name);
 	~TriangleMeshGUIStateNode();
 	
 	ContextMenu* getContextMenu() const;
 	shared_ptr<void> getData() const;
 	Form* getForm();
 private:
-	TriangleMesh_ptr m_triangleMesh;
+	TriangleMesh3D_ptr m_triangleMesh;
 	TriangleMeshContextMenu* m_triangleMeshContextMenu;
 };
 

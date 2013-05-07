@@ -307,7 +307,7 @@ PointCloud* ToothProfile::toPointCloud() {
 	return curve.toPointCloud();
 }
 
-LineMesh* ToothProfile::toLineMesh() {
+LineMesh3D* ToothProfile::toLineMesh() {
 	BSplineCurve<hpvec3> curve;
 	extendToGearCurve(curve);
 	//TODO: following line can be removed when gear moving is done in a better way!

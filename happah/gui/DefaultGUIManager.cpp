@@ -235,9 +235,6 @@ void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, hpuint drawMode)
 }
 
 void DefaultGUIManager::insert(BSplineCurve2D_ptr bSplineCurve, const char* label, hpcolor curveColor, hpuint drawMode) {
-	// ostringstream labelStream;
-	// labelStream << name << " BSplineCurve";
-	// const char* label = labelStream.str().c_str();
 	if( drawMode & HP_LINE_MESH ) {
 		shared_ptr<BSplineCurveGUIStateNode> guiStateNode = shared_ptr<BSplineCurveGUIStateNode>(
 			new BSplineCurveGUIStateNode(bSplineCurve, m_toolPanel->getBSplineCurveForm(), m_mainWindow.getBSplineCurveContextMenu(), toFinalLabel(label)));
@@ -265,15 +262,15 @@ void DefaultGUIManager::insert(SurfaceOfRevolution_ptr disc,hpuint drawMode) {
 
 
 void DefaultGUIManager::insert(DiscGearGrind_ptr discGearGrind) {
-    DiscGearGrindGUIStateNode_ptr guiStateNode = DiscGearGrindGUIStateNode_ptr(new DiscGearGrindGUIStateNode(
-    			discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation")));
-    m_sceneManager->insert(discGearGrind, guiStateNode);
+	DiscGearGrindGUIStateNode_ptr guiStateNode = DiscGearGrindGUIStateNode_ptr(new DiscGearGrindGUIStateNode(
+				discGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Disc gear grind simulation")));
+	m_sceneManager->insert(discGearGrind, guiStateNode);
 }
 
 void DefaultGUIManager::insert(WormGearGrind_ptr wormGearGrind) {
-    WormGearGrindGUIStateNode_ptr guiStateNode = WormGearGrindGUIStateNode_ptr(new WormGearGrindGUIStateNode(
-    			wormGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Worm gear grind simulation")));
-    m_sceneManager->insert(wormGearGrind, guiStateNode);
+	WormGearGrindGUIStateNode_ptr guiStateNode = WormGearGrindGUIStateNode_ptr(new WormGearGrindGUIStateNode(
+				wormGearGrind, m_toolPanel->getSimulationForm(), m_mainWindow.getSimulationContextMenu(), toFinalLabel("Worm gear grind simulation")));
+	m_sceneManager->insert(wormGearGrind, guiStateNode);
 }
 
 void DefaultGUIManager::insert(FocalSpline_ptr focalSpline, hpuint drawMode){
@@ -332,6 +329,27 @@ void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, hpuint drawMode) {
 	}
 	if(drawMode & HP_POINT_CLOUD) {
 		doInsert0D<ToothProfile, ToothProfileGUIStateNode, ToothProfileForm, ToothProfileContextMenu>(toothProfile, "Tooth Profile", m_toolPanel->getToothProfileForm(), m_mainWindow.getToothProfileContextMenu());
+	}
+}
+
+void DefaultGUIManager::insert(ToothProfile_ptr toothProfile, const char* label, hpcolor curveColor, hpuint drawMode) {
+	if( drawMode & HP_LINE_MESH ) {
+		shared_ptr<ToothProfileGUIStateNode> guiStateNode = shared_ptr<ToothProfileGUIStateNode>(
+			new ToothProfileGUIStateNode(toothProfile, m_toolPanel->getToothProfileForm(), m_mainWindow.getToothProfileContextMenu(), toFinalLabel(label)));
+		LineMesh_ptr lineMesh = LineMesh_ptr(toothProfile->toLineMesh());
+		guiStateNode->setLineMesh(lineMesh);
+		m_sceneManager->insert(toothProfile, guiStateNode);
+		LineMeshRenderStateNode_ptr lineMeshRenderStateNode = m_sceneManager->insert(toothProfile, lineMesh, curveColor);
+		lineMeshRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
+	}
+	if( drawMode & HP_POINT_CLOUD ) {
+		shared_ptr<ToothProfileGUIStateNode> guiStateNode = shared_ptr<ToothProfileGUIStateNode>(
+			new ToothProfileGUIStateNode(toothProfile, m_toolPanel->getToothProfileForm(), m_mainWindow.getToothProfileContextMenu(), toFinalLabel(label)));
+		PointCloud_ptr pointCloud = PointCloud_ptr(toothProfile->toPointCloud());
+		guiStateNode->setPointCloud(pointCloud);
+		m_sceneManager->insert(toothProfile, guiStateNode);
+		PointCloudRenderStateNode_ptr pointCloudRenderStateNode = m_sceneManager->insert(toothProfile, pointCloud, curveColor);
+		pointCloudRenderStateNode->registerSelectListener(guiStateNode->getSelectListener());
 	}
 }
 

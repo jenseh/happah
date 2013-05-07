@@ -39,6 +39,7 @@ public:
 	virtual void insert(SimpleGear_ptr simpleGear, hpuint drawMode) = 0;
 	virtual void insert(SpherePatch_ptr spherePatch, hpuint drawMode) = 0;
 	virtual void insert(ToothProfile_ptr toothProfile, hpuint drawMode) = 0;
+	virtual void insert(ToothProfile_ptr toothProfile, const char* name, hpcolor curveColor, hpuint drawMode) = 0;
 	virtual void insert(TriangleMesh_ptr triangleMesh) = 0;
 	virtual void insert(Worm_ptr worm, hpuint drawMode) = 0;
 

@@ -52,6 +52,7 @@ public:
 	void insert(SimpleGear_ptr simpleGear,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(SpherePatch_ptr spherePatch,hpuint drawMode = HP_TRIANGLE_MESH);
 	void insert(ToothProfile_ptr toothProfile, hpuint drawMode = HP_LINE_MESH | HP_POINT_CLOUD);
+	void insert(ToothProfile_ptr toothProfile, const char* name, hpcolor curveColor, hpuint drawMode);
 	void insert(TriangleMesh_ptr triangleMesh);
 	void insert(Worm_ptr worm,hpuint drawMode = HP_TRIANGLE_MESH);
 

@@ -17,6 +17,8 @@ public:
 	BothGearInformation* getNextNormal();
 	std::vector<BothGearInformation*>* getNormals();
 	BothGearInformation* getReferenceCircles();
+	std::vector<MatingGearConstructionInformationPart*>* getSplitPointLists();
+	MatingGearToothProfilePart* getToothProfilePart();
 	BothGearInformation* getUsedConstructionPoints();
 	void                 setAdditionalMatingColor(hpcolor color);
 	void                 setAdditionalOriginColor(hpcolor color);
@@ -30,6 +32,8 @@ private:
 	BSplineCurve<hpvec2>* circle(hpreal radius, hpvec2 offset);
 	void                  constructAngularPitchFan();
 	void                  constructReferenceCircles();
+	void                  constructToothProfilePart();
+	void                  constructSplitPointLists();
 	void                  constructUsedPointsAndNormals();
 	void                  fillRainbowColorArray(std::vector<hpcolor>& colorArray);
 	BSplineCurve<hpvec2>* normalLine(hpvec2 start, hpvec2 normal);
@@ -54,7 +58,10 @@ private:
 	std::vector<BSplineCurve2D_ptr>    m_originNormals;
 	hpcolor                            m_referenceCircleColor;
 	BothGearInformation*               m_referenceCircles;
+	std::vector<MatingGearConstructionInformationPart*>* m_splitPointLists;
 	hpvec2                             m_toMatingCenter;
+	hpcolor                            m_toothProfileColor;
+	MatingGearToothProfilePart*        m_toothProfilePart;
 	hpcolor                            m_usedPointsColor;
 	BothGearInformation*               m_usedPoints;
 

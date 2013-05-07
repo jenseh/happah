@@ -57,6 +57,7 @@ public:
 	std::vector<hpvec2>*    getOriginalAngularPitchPoints();
 	hpreal                  getOriginalGearReferenceRadius();
 	ToothProfile_ptr        getOriginalToothProfile();
+	vector< vector<MatingPoint>* >* getSplitMatingPointLists();
 
 	void reconstructMatingGear();
 	void reconstructMatingGear(hpreal originalGearRadius);
@@ -75,28 +76,24 @@ private:
 	void        insertThicknessInMatingPoint(MatingPoint& matingPoint);
 	hpreal      referenceRadiusAngle();
 
-	MatingPointSelector    m_allMatingPoints;
-	std::vector<hpreal>    m_angularPitchKnots;
-	hpreal                 m_distanceOfCenters;
-
+	MatingPointSelector                m_allMatingPoints;
+	std::vector<hpreal>                m_angularPitchKnots;
+	hpreal                             m_distanceOfCenters;
 	MatingGearConstructionInformation* m_information;
-
-	hpuint                 m_matingNTeeth;
-	ToothProfile_ptr       m_matingProfile;
-	hpreal                 m_matingRadius;
-
-	hpreal                 m_maxDiffAngle;
-	hpreal                 m_module;
-
-	ToothProfile_ptr       m_originalToothProfile;
-	BSplineCurve<hpvec2>*  m_originalToothCurve;
-	BSplineCurve<hpvec2>*  m_originalGearCurve;
-	hpreal                 m_originalRadius;
-
-	hpuint                 m_samplingRate;
-	hpreal                 m_startKnots;
-	hpreal                 m_stepSize;
-	hpreal                 m_stopKnots;
+	hpuint                             m_matingNTeeth;
+	ToothProfile_ptr                   m_matingProfile;
+	hpreal                             m_matingRadius;
+	hpreal                             m_maxDiffAngle;
+	hpreal                             m_module;
+	ToothProfile_ptr                   m_originalToothProfile;
+	BSplineCurve<hpvec2>*              m_originalToothCurve;
+	BSplineCurve<hpvec2>*              m_originalGearCurve;
+	hpreal                             m_originalRadius;
+	hpuint                             m_samplingRate;
+	vector< vector<MatingPoint>* >*    m_splitMatingPointLists;
+	hpreal                             m_startKnots;
+	hpreal                             m_stepSize;
+	hpreal                             m_stopKnots;
 
 };
 

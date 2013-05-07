@@ -50,23 +50,31 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	m_matingGearButton = new QPushButton("Construct mating gear");
 	connect(m_matingGearButton, SIGNAL(clicked()), this, SLOT(constructMatingGear()));
 
-	m_showMatingGearButton = new QPushButton("Show mating gear");
-	connect(m_showMatingGearButton, SIGNAL(clicked()), this, SLOT(showMatingGear()));
-
 	m_showReferenceCirclesButton = new QPushButton("Show reference circles");
 	connect(m_showReferenceCirclesButton, SIGNAL(clicked()), this, SLOT(showReferenceCircles()));
+
+	m_showAngularPitchButton = new QPushButton("Show angular pitch fan");
+	connect(m_showAngularPitchButton, SIGNAL(clicked()), this, SLOT(showAngularPitches()));
 
 	m_showNextNormalButton = new QPushButton("Next mating normal");
 	connect(m_showNextNormalButton, SIGNAL(clicked()), this, SLOT(showNextNormal()));
 
-	m_showAllNormalsButton = new QPushButton("All mating normals");
+	m_showAllNormalsButton = new QPushButton("Show all mating normals");
 	connect(m_showAllNormalsButton, SIGNAL(clicked()), this, SLOT(showAllNormals()));
-
-	m_showAngularPitchButton = new QPushButton("Show angular pitches");
-	connect(m_showAngularPitchButton, SIGNAL(clicked()), this, SLOT(showAngularPitches()));
 
 	m_matingDarkenNormalsBox = new QCheckBox(tr("Darken normals"), this);
 	connect(m_matingDarkenNormalsBox, SIGNAL(stateChanged(int)), this, SLOT(changeNormalsVisiblity(int)));
+
+	m_showUsedPointsButton = new QPushButton(tr("Show used points"));
+	m_showUsedPointsButton->setToolTip(tr("On these points a cut with the reference circle of the original gear has been found and therefore a mating point could be constructed."));
+	connect(m_showUsedPointsButton, SIGNAL(clicked()), this, SLOT(showUsedPoints()));
+
+	m_showSplitPointsButton = new QPushButton(tr("Show splitted lists"));
+	m_showSplitPointsButton->setToolTip(tr("Constructed points of the mating gear may be outside of one angular pitch range and then are rotated to the other side for the construction."));
+	connect(m_showSplitPointsButton, SIGNAL(clicked()), this, SLOT(showSplittedListsOfPoints()));
+
+	m_showMatingGearButton = new QPushButton("Show mating gear");
+	connect(m_showMatingGearButton, SIGNAL(clicked()), this, SLOT(showMatingGear()));
 
 	m_useGearWidthForNormalsBox = new QCheckBox(tr("Use gear width for length of normals"), this);
 	connect(m_useGearWidthForNormalsBox, SIGNAL(stateChanged(int)), this, SLOT(useGearWidthForNormals(int)));
@@ -74,7 +82,7 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	QGridLayout* gridLayout = new QGridLayout(this);
 	gridLayout->setHorizontalSpacing(0);
 	gridLayout->setVerticalSpacing(2);
-	gridLayout->setRowStretch(13, 2);
+	gridLayout->setRowStretch(15, 2);
 
 	gridLayout->addWidget(matingRadiusLabel,          1, 0);
 	gridLayout->addWidget(m_matingRadiusSpinBox,      1, 1, Qt::AlignTop);
@@ -93,13 +101,15 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 
 	gridLayout->addWidget(m_matingGearButton,         6, 0, 1, 2, Qt::AlignTop);
 	gridLayout->addWidget(m_showReferenceCirclesButton,7,0, 1, 2, Qt::AlignTop);
-	gridLayout->addWidget(m_showMatingGearButton,     8, 0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_showAngularPitchButton,   8, 0, 1, 2, Qt::AlignTop);
 	gridLayout->addWidget(m_showNextNormalButton,     9, 0, 1, 2, Qt::AlignTop);
 	gridLayout->addWidget(m_showAllNormalsButton,    10, 0, 1, 2, Qt::AlignTop);
-	gridLayout->addWidget(m_showAngularPitchButton,  11, 0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_showUsedPointsButton,    11, 0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_showSplitPointsButton,   12, 0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_showMatingGearButton,    13, 0, 1, 2, Qt::AlignTop);
 
-	gridLayout->addWidget(m_useGearWidthForNormalsBox,12,0, 1, 2, Qt::AlignTop);
-	gridLayout->addWidget(m_matingDarkenNormalsBox,  13, 0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_useGearWidthForNormalsBox,14,0, 1, 2, Qt::AlignTop);
+	gridLayout->addWidget(m_matingDarkenNormalsBox,  15, 0, 1, 2, Qt::AlignTop);
 
 	QGroupBox* matingCollection = new QGroupBox(tr("Mating gear construction options"));
 	matingCollection->setAlignment(Qt::AlignLeft);
@@ -116,13 +126,15 @@ ToothProfileForm::ToothProfileForm(GUIManager& guiManager, QWidget* parent)
 	m_matingStartWidgetList.push_back(m_matingConstrSamplRateBox);
 	m_matingStartWidgetList.push_back(m_matingConstrMaxAngleBox);
 	m_matingStartWidgetList.push_back(m_matingNormalsLengthBox);
-	m_matingStartWidgetList.push_back(m_matingDarkenNormalsBox);
 
+	m_matingGearAvailableWidgetList.push_back(m_matingDarkenNormalsBox);
+	m_matingGearAvailableWidgetList.push_back(m_showAngularPitchButton);
+	m_matingGearAvailableWidgetList.push_back(m_showAllNormalsButton);
 	m_matingGearAvailableWidgetList.push_back(m_showMatingGearButton);
 	m_matingGearAvailableWidgetList.push_back(m_showNextNormalButton);
-	m_matingGearAvailableWidgetList.push_back(m_showAllNormalsButton);
 	m_matingGearAvailableWidgetList.push_back(m_showReferenceCirclesButton);
-	m_matingGearAvailableWidgetList.push_back(m_showAngularPitchButton);
+	m_matingGearAvailableWidgetList.push_back(m_showSplitPointsButton);
+	m_matingGearAvailableWidgetList.push_back(m_showUsedPointsButton);
 	m_matingGearAvailableWidgetList.push_back(m_useGearWidthForNormalsBox);
 
 	reset();
@@ -189,9 +201,9 @@ void ToothProfileForm::setToothProfile(ToothProfile_ptr toothProfile) {
 //***** PRIVATE METHODS BELOW *************************************************
 
 void ToothProfileForm::insertGearInformation(BothGearInformation* gearPart) {
-	m_guiManager.insert(gearPart->originPart.curve, gearPart->originPart.name, gearPart->originPart.color, gearPart->originPart.drawModes);
+	m_guiManager.insert(gearPart->originPart.curve, gearPart->originPart.name.c_str(), gearPart->originPart.color, gearPart->originPart.drawModes);
 	if(gearPart->hasTwoParts)
-		m_guiManager.insert(gearPart->matingPart.curve, gearPart->matingPart.name, gearPart->matingPart.color, gearPart->matingPart.drawModes);
+		m_guiManager.insert(gearPart->matingPart.curve, gearPart->matingPart.name.c_str(), gearPart->matingPart.color, gearPart->matingPart.drawModes);
 }
 
 void ToothProfileForm::setAllMatingWidgetsEnabled(bool enable) {
@@ -222,7 +234,6 @@ void ToothProfileForm::updateFormExistingMatingGear() {
 	setAllMatingWidgetsEnabled(true);
 
 	if(!m_matingGearInformation->areFurtherNormalsAvailable()) {
-		cerr << "No further normals available found" << endl;
 		m_showMatingGearButton->setEnabled(false);
 		m_showNextNormalButton->setEnabled(false);
 		m_showAllNormalsButton->setEnabled(false);
@@ -252,12 +263,12 @@ void ToothProfileForm::updateGearInformation(BothGearInformation* gearPart) {
 }
 
 void ToothProfileForm::updateNormals() {
-	if(m_matingGearInformation != nullptr) {
-		std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
-		for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
-			updateGearInformation(*it);
-		}
-	}
+	// if(m_matingGearInformation != nullptr) {
+	// 	std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
+	// 	for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
+	// 		updateGearInformation(*it);
+	// 	}
+	// }
 }
 
 //*****************************************************************************
@@ -272,10 +283,10 @@ void ToothProfileForm::changeNormalsLengths(double length) {
 
 void ToothProfileForm::changeNormalsVisiblity(int state) {
 	if(m_matingGearInformation != nullptr) {
-		bool visible = true;
+		bool darkened = false;
 		if(state == Qt::Checked)
-			visible = false;
-		m_matingGearInformation->setDarkingOfNormals(visible);
+			darkened = true;
+		m_matingGearInformation->setDarkingOfNormals(darkened);
 		updateNormals();
 	}
 }
@@ -307,33 +318,26 @@ void ToothProfileForm::showAllNormals() {
 void ToothProfileForm::showAngularPitches() {
 	if(m_matingGearInformation != nullptr) {
 		insertGearInformation(m_matingGearInformation->getAngularPitches());
+		m_showAngularPitchButton->setEnabled(false);
 	}
 }
 
 void ToothProfileForm::showMatingGear() {
-
-	ToothProfile_ptr matingToothProfile = m_toothProfile->getMatingGearConstructor()->getMatingToothProfile();
-	m_guiManager.insert(matingToothProfile, HP_LINE_MESH | HP_POINT_CLOUD);
-
-	insertGearInformation(m_matingGearInformation->getReferenceCircles());
-	insertGearInformation(m_matingGearInformation->getUsedConstructionPoints());
-
-	if(m_matingGearInformation->areFurtherNormalsAvailable()) {
-		std::vector<BothGearInformation*>* normals = m_matingGearInformation->getNormals();
-		for(std::vector<BothGearInformation*>::iterator it = normals->begin(), end = normals->end(); it != end; ++it) {
-			insertGearInformation(*it);
-		}
+	if(m_matingGearInformation != nullptr) {
+		MatingGearToothProfilePart* toothProfilePart = m_matingGearInformation->getToothProfilePart();
+		m_guiManager.insert(toothProfilePart->toothProfile, toothProfilePart->name.c_str(), toothProfilePart->color, toothProfilePart->drawModes);
+		m_showMatingGearButton->setEnabled(false);
 	}
-	m_showMatingGearButton->setEnabled(false);
-	m_showNextNormalButton->setEnabled(false);
 }
 
 void ToothProfileForm::showNextNormal() {
 	if(m_matingGearInformation != nullptr) {
 		if(m_matingGearInformation->areFurtherNormalsAvailable())
 			insertGearInformation(m_matingGearInformation->getNextNormal());
-		if(!m_matingGearInformation->areFurtherNormalsAvailable())
+		if(!m_matingGearInformation->areFurtherNormalsAvailable()) {
 			m_showNextNormalButton->setEnabled(false);
+			m_showAllNormalsButton->setEnabled(false);
+		}
 	}
 }
 
@@ -341,6 +345,23 @@ void ToothProfileForm::showReferenceCircles() {
 	if(m_matingGearInformation != nullptr) {
 		insertGearInformation(m_matingGearInformation->getReferenceCircles());
 		m_showReferenceCirclesButton->setEnabled(false);
+	}
+}
+
+void ToothProfileForm::showSplittedListsOfPoints() {
+	if(m_matingGearInformation != nullptr) {
+		std::vector<MatingGearConstructionInformationPart*>* lists = m_matingGearInformation->getSplitPointLists();
+		for(hpuint i = 0; i < lists->size(); ++i) {
+			MatingGearConstructionInformationPart* list = lists->at(i);
+			m_guiManager.insert(list->curve, list->name.c_str(), list->color, list->drawModes);
+		}
+	}
+}
+
+void ToothProfileForm::showUsedPoints() {
+	if(m_matingGearInformation != nullptr) {
+		insertGearInformation(m_matingGearInformation->getUsedConstructionPoints());
+		m_showUsedPointsButton->setEnabled(false);
 	}
 }
 

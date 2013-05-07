@@ -18,7 +18,6 @@ MatingPointSelector::MatingPointSelector(hpuint matingNTeeth, bool matingTurnsCl
   : m_matingNTeeth(matingNTeeth),
 	m_turnDirection((matingTurnsClockwise) ? 1.0f : -1.0f),
 	m_angularPitchRotation((360.0f * m_turnDirection) / m_matingNTeeth) {
-		cerr << "MatingPointSelector::constructed with " << m_matingNTeeth << " and " << m_turnDirection  << "and angularPitch = " << m_angularPitchRotation << endl;
 }
 
 MatingPointSelector::~MatingPointSelector() {
@@ -36,6 +35,11 @@ std::list<MatingPoint>* MatingPointSelector::getMatingPoints() {
 }
 
 std::vector<MatingPoint>* MatingPointSelector::getSuitableMatingPointsForGear() {
+	std::vector< std::vector<MatingPoint>* > lists = std::vector< std::vector<MatingPoint>* >();
+	return getSuitableMatingPointsForGearAndLists(lists);
+}
+
+std::vector<MatingPoint>* MatingPointSelector::getSuitableMatingPointsForGearAndLists(std::vector< std::vector<MatingPoint>* >& lists) {
 	//every point has to be inside one angular pitch of the gear!
 	//create lists with MatingPoints which lay either out of the angular pitch region or in it
 	//lists with points that lay outside are rotated to the start or respectively to the end
@@ -44,55 +48,50 @@ std::vector<MatingPoint>* MatingPointSelector::getSuitableMatingPointsForGear() 
 	hpvec2 stopPitch = glm::normalize(glm::rotate(startPitch, m_angularPitchRotation));
 	hpmat2x2 betweenStartStop = glm::inverse(hpmat2x2(startPitch, stopPitch));
 
-	std::vector< std::vector<MatingPoint>* > lists = std::vector< std::vector<MatingPoint>* >();
+	if (!lists.empty()) {
+		lists.resize(0); //assure that no wrong points are included!
+	}
+
 	lists.push_back(new std::vector<MatingPoint>());
 	PointPosition lastPosition = PointPosition::IN_ANGULAR_PITCH;
 
 	std::vector<PointPosition> positionList = std::vector<PointPosition>();
 
-	std::vector<MatingPoint> chosenPoints = std::vector<MatingPoint>();
 	for(MatingPointSelector::iterator it = this->begin(), end = this->end(); it != end; ++it) {
 		if(it->error != ErrorCode::NO_CUT_WITH_REFERENCE_RADIUS) {
 			hpvec2 baryz = betweenStartStop * it->point;
 
 			if(glm::all(glm::greaterThanEqual(baryz, hpvec2(0,0)))) {
-				chosenPoints.push_back(*it);
-				cerr << "point lies correct" << endl;
 				insertInList(*it, lastPosition, PointPosition::IN_ANGULAR_PITCH, lists, positionList);
 				lastPosition = PointPosition::IN_ANGULAR_PITCH;
 
 			} else if (baryz.x > 0.0f && baryz.y < 0.0f) {
 				//startPitch still positive, stopPitch negative => point lies infront of start of tooth
-				cerr << "point lies behind end of tooth" << endl;
 				insertInList(*it, lastPosition, PointPosition::BEHIND_ANGULAR_PITCH, lists, positionList);
 				lastPosition = PointPosition::BEHIND_ANGULAR_PITCH;
 
 			} else if (baryz.x < 0.0f && baryz.y > 0.0f) {
 				//startPitch negative, stopPitch still positive => point lies behind end of tooth
-				cerr << "point lies infront of start of tooth" << endl;
 				insertInList(*it, lastPosition, PointPosition::INFRONT_OF_ANGULAR_PITCH, lists, positionList);
 				lastPosition = PointPosition::INFRONT_OF_ANGULAR_PITCH;
 
-			} else {
-				//point lies nearly opposite tooth
-				cerr << "point is opposite! That's really bad :-/" << endl;
-			}
+			} //else: point lies nearly opposite tooth
 		} //else: point on original gear has no equivalent on mating gear => do nothing with that point!
 	}
 	positionList.push_back(lastPosition); //as positionList is filled only when new one list ends, the last list needs its position
-	cerr << "lists have a size of: " << lists.size() << endl;
-	cerr << "and positionList    : " << positionList.size() << endl;
 	assert(lists.size() == positionList.size());
 
-	// now all points of all lists are compared and points, which are covered by two other points and there
-	// forbidden area are deleted. Or to be exact, the other ones are chosen for the mating gear.
-
-	std::vector<MatingPoint> chosenPoints2 = std::vector<MatingPoint>();
+	// Now all points of all lists are compared and only points, which are not covered by any of the rectangles
+	// which are constructed by two other points with their forbidden area are chosen for the mating gear.
+	// First mark all points as not covered.
+	std::vector<MatingPoint> chosenPoints = std::vector<MatingPoint>();
 	for(std::vector< std::vector<MatingPoint>* >::iterator listIt = lists.begin(), listEnd = lists.end(); listIt != listEnd; ++listIt) {
 		for(std::vector<MatingPoint>::iterator it = (*listIt)->begin(), end = (*listIt)->end(); it != end; ++it) {
 			it->isCovered = false;
 		}
 	}
+	// Find all covered points
+	// This loop is quite expensive but it is quite complicated to reduce the cicles, as no constraint is known for the points.
 	for(std::vector< std::vector<MatingPoint>* >::iterator listIt = lists.begin(), listEnd = lists.end(); listIt != listEnd; ++listIt) {
 		for(std::vector<MatingPoint>::iterator it = (*listIt)->begin(), end = --((*listIt)->end()); it != end; ++it) {
 
@@ -108,19 +107,17 @@ std::vector<MatingPoint>* MatingPointSelector::getSuitableMatingPointsForGear() 
 
 		}
 	}
+	// ???
 	for(hpuint i = 0; i < positionList.size(); ++i) {
 		if(positionList[i] == PointPosition::IN_ANGULAR_PITCH) {
-			cerr << "list is taken and has " << lists[i]->size() << " points" << endl;
 			for(std::vector<MatingPoint>::iterator it = lists[i]->begin(), end = lists[i]->end(); it != end; ++it) {
 				if(!it->isCovered) {
-					chosenPoints2.push_back(*it);
+					chosenPoints.push_back(*it);
 				}
 			}
-		} else {
-			cerr << "list is not taken and has " << lists[i]->size() << " points" << endl;
 		}
 	}
-	return new std::vector<MatingPoint>(chosenPoints2);
+	return new std::vector<MatingPoint>(chosenPoints);
 }
 
 bool MatingPointSelector::intersectLines(hpvec2& intersection, hpvec2 lineAStart, hpvec2 lineAEnd, hpvec2 lineBStart, hpvec2 lineBEnd) {
@@ -139,6 +136,7 @@ bool MatingPointSelector::intersectLines(hpvec2& intersection, hpvec2 lineAStart
 	return false;
 }
 
+//TODO: is the epsilon value e a suitable one? Maybe it catches too much or too less?
 bool MatingPointSelector::isPointInTriangle(hpvec2 point, hpvec2 a, hpvec2 b, hpvec2 c) {
 	hpreal e = 0.01f;
 	hpvec2 start = a - b;
@@ -146,11 +144,7 @@ bool MatingPointSelector::isPointInTriangle(hpvec2 point, hpvec2 a, hpvec2 b, hp
 	hpmat2x2 betweenStartStop = glm::inverse(hpmat2x2(start, stop));
 	hpvec2 baryz = betweenStartStop * (point - b);
 	if(glm::all(glm::greaterThan(baryz, hpvec2(e,e))) && glm::all(glm::lessThan(baryz, hpvec2(1.0f - e, 1.0f - e))) && (baryz.x + baryz.y < 1.0f - 2 * e)) {
-		cerr << "baryz: " << baryz <<"	a = " << a << "	b = " << b << "	c" << b << "	candidate = " << point << endl;
 		return true;
-	}
-	if(glm::all(glm::greaterThan(baryz, hpvec2(0,0))) && glm::all(glm::lessThan(baryz, hpvec2(1.0f, 1.0f))) && (baryz.x + baryz.y < 1.0f)) {
-		cerr << "epsilon caught this" << endl;
 	}
 	return false;
 }

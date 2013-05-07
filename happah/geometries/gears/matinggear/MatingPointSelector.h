@@ -21,6 +21,7 @@ public:
 	MatingPoint getFirstNoneErrorMatingPoint();
 	std::list<MatingPoint>* getMatingPoints();
 	std::vector<MatingPoint>* getSuitableMatingPointsForGear();
+	std::vector<MatingPoint>* getSuitableMatingPointsForGearAndLists(std::vector< std::vector<MatingPoint>* >& constructedPointLists);
 private:
 	hpuint m_matingNTeeth;
 	hpreal m_turnDirection;

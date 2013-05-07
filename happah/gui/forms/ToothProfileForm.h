@@ -56,6 +56,8 @@ private:
 	QPushButton*          m_showAngularPitchButton;
 	QPushButton*          m_showMatingGearButton;
 	QPushButton*          m_showReferenceCirclesButton;
+	QPushButton*          m_showSplitPointsButton;
+	QPushButton*          m_showUsedPointsButton;
 	ToothProfile_ptr      m_toothProfile;
 	QPushButton*          m_toSimpleGearButton;
 	QCheckBox*            m_useGearWidthForNormalsBox;
@@ -69,6 +71,8 @@ private slots:
 	void showMatingGear();
 	void showNextNormal();
 	void showReferenceCircles();
+	void showSplittedListsOfPoints();
+	void showUsedPoints();
 	void toSimpleGear();
 	void updateMatingGearConstructor(ToothProfile_ptr);
 	void useGearWidthForNormals(int state);

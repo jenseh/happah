@@ -22,15 +22,18 @@ MatingGearConstructor::MatingGearConstructor(
 
 	if(m_originalToothProfile->setMatingGearConstructor(this)) {
 		constructMatingGear();
-		// cerr << "MatingGearConstructor::MatingGearConstructor: finished constructMatingGear()!" << endl;
 		m_information = new MatingGearConstructionInformation(this);
 	}
 }
 
 MatingGearConstructor::~MatingGearConstructor() {
+	delete m_information;
 	delete m_originalGearCurve;
 	delete m_originalToothCurve;
-	delete m_information;
+	for(hpuint i = 0; i < m_splitMatingPointLists->size(); ++i) {
+		delete ((*m_splitMatingPointLists)[i]);
+	}
+	delete m_splitMatingPointLists;
 }
 
 MatingGearConstructionInformation* MatingGearConstructor::getInformation() {
@@ -41,7 +44,7 @@ std::vector<hpvec2>* MatingGearConstructor::getMatingAngularPitchPoints() {
 	std::vector<hpvec2>* angularPitchPoints = new std::vector<hpvec2>(m_matingNTeeth);
 	hpvec2 firstPoint = m_allMatingPoints.getFirstNoneErrorMatingPoint().point;
 	for(hpuint i = 0; i < angularPitchPoints->size(); ++i) {
-		(*angularPitchPoints)[i] = glm::rotate(firstPoint, (360.0f * i) / m_matingNTeeth);
+		(*angularPitchPoints)[i] = glm::normalize(glm::rotate(firstPoint, (360.0f * i) / m_matingNTeeth)) * m_matingRadius;
 	}
 	return angularPitchPoints;
 }
@@ -61,7 +64,7 @@ ToothProfile_ptr MatingGearConstructor::getMatingToothProfile() {
 std::vector<hpvec2>* MatingGearConstructor::getOriginalAngularPitchPoints() {
 	std::vector<hpvec2>* angularPitchPoints = new std::vector<hpvec2>(m_angularPitchKnots.size());
 	for(hpuint i = 0; i < angularPitchPoints->size(); ++i) {
-		(*angularPitchPoints)[i] = m_originalGearCurve->getValueAt(m_angularPitchKnots[i]);
+		(*angularPitchPoints)[i] = glm::normalize(m_originalGearCurve->getValueAt(m_angularPitchKnots[i])) * m_originalRadius;
 	}
 	return angularPitchPoints;
 }
@@ -73,6 +76,11 @@ hpreal MatingGearConstructor::getOriginalGearReferenceRadius() {
 ToothProfile_ptr MatingGearConstructor::getOriginalToothProfile() {
 	return m_originalToothProfile;
 }
+
+vector< vector<MatingPoint>* >* MatingGearConstructor::getSplitMatingPointLists() {
+	return m_splitMatingPointLists;
+}
+
 
 void MatingGearConstructor::reconstructMatingGear() {
 	reconstructMatingGear(m_originalRadius, m_matingNTeeth);
@@ -94,6 +102,10 @@ void MatingGearConstructor::reconstructMatingGear(hpreal originalGearRadius, hpu
 	}
 	delete m_originalGearCurve;
 	delete m_originalToothCurve;
+	for(hpuint i = 0; i < m_splitMatingPointLists->size(); ++i) {
+		delete ((*m_splitMatingPointLists)[i]);
+	}
+	delete m_splitMatingPointLists;
 
 	constructMatingGear();
 	m_information->update();
@@ -127,7 +139,8 @@ hpuint MatingGearConstructor::getMinNumberOfTeethForMatingGear(const ToothProfil
 
 void MatingGearConstructor::chooseSuitableMatingPointsForGear() {
 	//every point has to be inside one angular pitch of the gear!
-	std::vector<MatingPoint>* chosenMatingPoints = m_allMatingPoints.getSuitableMatingPointsForGear();
+	m_splitMatingPointLists = new std::vector< std::vector<MatingPoint>* >();
+	std::vector<MatingPoint>* chosenMatingPoints = m_allMatingPoints.getSuitableMatingPointsForGearAndLists(*m_splitMatingPointLists);
 	std::vector<hpvec2> chosenPoints = std::vector<hpvec2>(chosenMatingPoints->size());
 	for(hpuint i = 0; i < chosenMatingPoints->size(); ++i) {
 		chosenPoints[i] = (*chosenMatingPoints)[i].point;

@@ -9,7 +9,7 @@ using namespace std;
 
 
 FocalSpline::FocalSpline()
-	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_detail(20),m_phi(0),m_phiComplete(0),m_doLaneRiesenfeld(false),m_LRIterations(0),m_LRDegree(0),m_showControlPolygon(true),m_showCircle(true) {
+	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_detail(20),m_phi(0),m_doLaneRiesenfeld(false),m_LRIterations(0),m_LRDegree(0),m_showControlPolygon(true),m_showCircle(true) {
 	m_controlPoints = new vector<vector<hpvec3>*>;
 	m_generatedSpline = new vector<hpvec3>;
 
@@ -52,10 +52,8 @@ void FocalSpline::init(int degree){
 			m_controlPoints->at(0)->push_back(controlPoint);
 		}
 		if (m_controlPoints->at(0)->size() > 0){
-		m_phiComplete = m_controlPoints->at(0)->at(degree).x - m_controlPoints->at(0)->at(0).x;
-
-		m_focalBezierCurves.push_back(new FocalBezierCurve(m_phi,m_controlPoints->at(0)));
-		update();
+			m_focalBezierCurves.push_back(new FocalBezierCurve(m_phi,m_controlPoints->at(0)));
+			update();
 		}
 	}
 }

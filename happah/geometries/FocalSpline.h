@@ -52,9 +52,9 @@ private:
     vector<FocalBezierCurve*> m_focalBezierCurves;
 	vector<vector<hpvec3>*>* m_controlPoints;
 	vector<hpvec3>* m_generatedSpline;
+
 	hpvec3 m_center;
 	hpreal m_phi;
-	hpreal m_phiComplete;
 	bool   m_doLaneRiesenfeld;
 	int    m_detail;
 	int m_LRIterations;

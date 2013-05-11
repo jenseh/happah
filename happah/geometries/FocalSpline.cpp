@@ -9,11 +9,25 @@ using namespace std;
 
 
 FocalSpline::FocalSpline()
-	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_detail(20),m_phi(0),m_doLaneRiesenfeld(false),m_LRIterations(0),m_LRDegree(0),m_showControlPolygon(true),m_showCircle(true) {
+	: m_center(hpvec3(0.0f,0.0f,0.0f)),m_detail(20),m_phi(0),m_doLaneRiesenfeld(false),m_LRIterations(0),m_LRDegree(0),m_showControlPolygon(true),m_doBSpline(true),m_showCircle(true) {
 	m_controlPoints = new vector<vector<hpvec3>*>;
 	m_generatedSpline = new vector<hpvec3>;
-
-
+	m_BSplineKnots = new vector<hpreal>;
+	m_BSplineControlPoints = new vector<hpvec3>;
+	m_BSplineKnots->push_back(M_PI/4.0f);
+	m_BSplineKnots->push_back(M_PI/4.0f);
+	m_BSplineKnots->push_back(M_PI/4.0f);
+	m_BSplineKnots->push_back(M_PI/4.0f);
+	m_BSplineKnots->push_back(3*M_PI/4.0f);
+	m_BSplineKnots->push_back(3*M_PI/4.0f);
+	m_BSplineKnots->push_back(3*M_PI/4.0f);
+	m_BSplineKnots->push_back(3*M_PI/4.0f);
+	m_BSplineControlPoints->push_back(hpvec3(M_PI/4.0f,0,2.0f));
+	m_BSplineControlPoints->push_back(hpvec3((M_PI/4.0f)+(0.33f*M_PI/2.0f),0,2.0f));
+	m_BSplineControlPoints->push_back(hpvec3((M_PI/4.0f)+(0.66f*M_PI/2.0f),0,2.0f));
+	m_BSplineControlPoints->push_back(hpvec3(3*M_PI/4.0f,0,2.0f));
+	m_focalBSplineCurve = new FocalBSplineCurve(m_BSplineKnots,m_BSplineControlPoints);
+//	m_focalBSplineCurve->insertKnot(M_PI/2.0f);
 }
 
 FocalSpline::~FocalSpline() {
@@ -187,7 +201,7 @@ LineMesh3D* FocalSpline::toLineMesh(){
 
 	//draw controlpolygon
 	int i = 0;
-	if(m_showControlPolygon){
+	if(m_showControlPolygon && !m_doBSpline){
 	for(vector<vector<hpvec3>*>::iterator iter=m_controlPoints->begin();iter !=m_controlPoints->end();++iter){
 		if ((*iter)->size()>0){
 		for(vector<hpvec3>::iterator it = (*iter)->begin(); it != (*iter)->end(); ++it){
@@ -225,7 +239,7 @@ LineMesh3D* FocalSpline::toLineMesh(){
 		indices->push_back(iTemp);
 	}
 	//draw generated Spline
-	if(m_doLaneRiesenfeld == false){
+	if(m_doLaneRiesenfeld == false && !m_doBSpline){
 	if (m_generatedSpline->size()>0){
 		int j=m_detail;
 		for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
@@ -245,7 +259,7 @@ LineMesh3D* FocalSpline::toLineMesh(){
 
 	}
 	}
-	if(m_doLaneRiesenfeld == true){
+	if(m_doLaneRiesenfeld == true && !m_doBSpline){
 		if (m_generatedSpline->size()>0){
 
 			for(vector<hpvec3>::iterator it = m_generatedSpline->begin(); it != m_generatedSpline->end(); ++it){
@@ -269,11 +283,13 @@ LineMesh3D* FocalSpline::toLineMesh(){
 
 PointCloud* FocalSpline::toPointCloud(){
 	std::vector<hpvec3>* vertices = new std::vector<hpvec3>;
+	if(!m_doBSpline){
 	for(vector<vector<hpvec3>*>::iterator i=m_controlPoints->begin();i !=m_controlPoints->end();++i){
 	if ((*i)->size()>0){
 	for(vector<hpvec3>::iterator it = (*i)->begin(); it != (*i)->end(); ++it){
 		vertices->push_back(HPUtils::polarToCartesianCoordinates(*it));
 
+	}
 	}
 	}
 	}
@@ -285,10 +301,19 @@ PointCloud* FocalSpline::toPointCloud(){
 	}
 	}
 	*/
+	if(m_doBSpline){
+		for(vector<hpvec3>::iterator it = m_BSplineControlPoints->begin(); it != m_BSplineControlPoints->end(); ++it){
+					vertices->push_back(HPUtils::polarToCartesianCoordinates(*it));
+		}
+		for(vector<hpreal>::iterator it = m_BSplineKnots->begin(); it != m_BSplineKnots->end(); ++it){
+						vertices->push_back(HPUtils::polarToCartesianCoordinates(hpvec3(*it,0,1.0f)));
+		}
+	}
 	// draw Center
 	if(m_showCircle)
 		vertices->push_back(m_center);
 	return new PointCloud(vertices);
+
 }
 
 

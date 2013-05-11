@@ -27,6 +27,7 @@ public:
 	virtual ~FocalBSplineCurve();
 
 private:
+	hpvec3 findNewPoint(hpvec3 pim1,hpvec3 pi,hpreal ratio);
 	vector<hpreal>* m_knots;
 	vector<hpvec3>* m_controlPoints;
 	int       m_degree;

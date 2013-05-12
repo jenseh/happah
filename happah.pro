@@ -6,10 +6,12 @@ QT += core \
 	opengl
 
 HEADERS += happah/*.h happah/geometries/*.h happah/geometries/gears/*.h happah/geometries/gears/matinggear/*.h happah/gui/*.h happah/gui/context-menus/*.h happah/gui/forms/*.h happah/gui/widgets/*.h happah/io/*.h happah/kdtree/*.h happah/math/*.h happah/scene/*.h happah/simulations/*.h happah/transformations/*.h happah/triangulators/*.h \
-    happah/kdtree/FastKdTree.h
+    happah/kdtree/FastKdTree.h \
+    happah/kdtree/TriangleIterator.h \
+    happah/math/TriangleVerticeRefs.h
 
 SOURCES += happah/*.cpp happah/geometries/*.cpp happah/geometries/gears/*.cpp happah/geometries/gears/matinggear/*.cpp happah/gui/*.cpp happah/gui/context-menus/*.cpp happah/gui/forms/*.cpp happah/gui/widgets/*.cpp happah/io/*.cpp happah/kdtree/*.cpp happah/math/*.cpp happah/scene/*.cpp happah/simulations/*.cpp happah/transformations/*.cpp happah/triangulators/*.cpp
-	
+
 FORMS += 
 RESOURCES += 
 

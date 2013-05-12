@@ -10,6 +10,11 @@ Viewport::Viewport(ViewportListener& viewportListener, DrawManager& drawManager,
 	  m_draggingActive(false),
 	  DISTANCE_TO_CENTER(5.0) {
 
+    if(!m_drawManager.isGLInitialized())
+    {
+        m_drawManager.init(this);
+    }
+
 	setFocusPolicy(Qt::ClickFocus); // for keyPressEvent
 
 	m_projectionMatrix = hpmat4x4(1.0);
@@ -28,7 +33,6 @@ Viewport::Viewport(ViewportListener& viewportListener, DrawManager& drawManager,
 
 	m_theta = 0;
 	m_phi = 0;
-
 }
 
 Ray Viewport::getMouseRay() {

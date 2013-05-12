@@ -6,6 +6,10 @@
 #include "glm/gtx/rotate_vector.hpp"
 
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#undef NO_ERROR
+#endif
+
 enum class ErrorCode {
 	NO_ERROR,
 	NO_CUT_WITH_REFERENCE_RADIUS,

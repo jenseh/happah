@@ -32,10 +32,12 @@ public:
 
 	void draw(hpmat4x4& projectionMatrix, hpmat4x4& viewMatrix, hpvec3& cameraPosition);
 	QGLContext* getGlContext();
-	bool init();
+    bool init(QPaintDevice* paintDevice = NULL);
 	void resizeSelectorTexture();
 	bool select(int x,int y);
 	bool isSomethingSelected(){return m_somethingSelected;}
+    bool isGLInitialized() { return m_glInitialized; }
+
 private:
 	class DefaultDrawVisitor : public DrawVisitor {
 	public:
@@ -152,6 +154,9 @@ private:
 	GLint m_pointCloudSelectionColorLocation;
 	GLint m_pointCloudSelectedLocation;
 	GLint m_pointCloudColorComponent;
+
+    bool m_glInitialized;
+
 	void compileShader(GLuint shader, const char* filePath);
 	void doDraw(ElementRenderStateNode_ptr elementRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);
 	void doDraw(PointCloudRenderStateNode_ptr pointCloudRenderStateNode, RigidAffineTransformation& rigidAffineTransformation,bool doSelection);

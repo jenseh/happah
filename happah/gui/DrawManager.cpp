@@ -13,7 +13,7 @@
 using namespace std;
 
 HappahGlFormat::HappahGlFormat() {
-	setVersion(3, 3);
+    setVersion(3, 1);
 	setProfile(QGLFormat::CompatibilityProfile);
 	setSampleBuffers(true);
 	setDoubleBuffer(true);
@@ -23,7 +23,7 @@ HappahGlFormat::HappahGlFormat() {
 const HappahGlFormat DrawManager::GL_FORMAT;
 
 DrawManager::DrawManager(SceneManager_ptr sceneManager)
-	: m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager),m_selectionVisitor(*this), m_glContext(new QGLContext(GL_FORMAT)),m_somethingSelected(false) {
+    : m_glInitialized(false), m_drawVisitor(*this), m_sceneListener(*this), m_sceneManager(sceneManager),m_selectionVisitor(*this), m_glContext(new QGLContext(GL_FORMAT)),m_somethingSelected(false) {
 	m_isSkipLightingContributionComputation = false;
 	m_sceneManager->registerSceneListener(&m_sceneListener);
 
@@ -228,39 +228,43 @@ bool DrawManager::select(int x, int y){
 QGLContext* DrawManager::getGlContext() {
 	return m_glContext;
 }
+bool DrawManager::init(QPaintDevice* device) {
 
-bool DrawManager::init() {
-	if(!m_glContext->create()) {
-		fprintf(stderr, "Unable to create QGLContext! \n");
-		return false;
-	}
-	m_glContext->makeCurrent();
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    if(device == NULL)
+        return false;
+    #endif
 
-	GLenum errorCode = glewInit();
-	if (GLEW_OK != errorCode) {
-		fprintf(stderr, "Glew initialization failed: %s\n", glewGetErrorString(errorCode));
-		return false;
-	}
+    m_glContext = new QGLContext(GL_FORMAT, device);
+    if(!m_glContext->create()) {
+        fprintf(stderr, "Unable to create QGLContext! \n");
+        return false;
+    }
+    m_glContext->makeCurrent();
 
+    GLenum errorCode = glewInit();
+    if (GLEW_OK != errorCode) {
+        fprintf(stderr, "Glew initialization failed: %s\n", glewGetErrorString(errorCode));
+        return false;
+    }
 
-
-
-	QGLFormat glFormat = m_glContext->format();
-	if (!glFormat.sampleBuffers()) {
-		qWarning() << "Could not enable sample buffers";
-	}
-
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
-	if (!initShaderPrograms())
-		return false;
-	if (!enableFrameBuffer())
-		return false;
-	return true;
+    QGLFormat glFormat = m_glContext->format();
+    if (!glFormat.sampleBuffers()) {
+        qWarning() << "Could not enable sample buffers";
+    }
 
 
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepth(1.0f);
+    glEnable(GL_DEPTH_TEST);
+    if (!initShaderPrograms())
+        return false;
+    if (!enableFrameBuffer())
+        return false;
+
+    m_glInitialized = true;
+
+    return true;
 }
 
 void DrawManager::initialize(ElementRenderStateNode_ptr elementRenderStateNode) {
@@ -431,10 +435,10 @@ bool DrawManager::initShaderPrograms() {
 	m_pointCloudVertexLocation = glGetAttribLocation(m_pointCloudProgram, "vertex");
 	if (m_pointCloudVertexLocation < 0)
 		cerr << "Failed to find pcvertexLocation." << endl;
-	m_pointCloudColorLocation = glGetAttribLocation(m_pointCloudProgram, "color");
+    m_pointCloudColorLocation = m_colorLocation;//glGetAttribLocation(m_pointCloudProgram, "color");
 	if (m_pointCloudColorLocation < 0)
 		cerr << "Failed to find PointCloudColorLocation." << endl;
-	m_pointCloudSinglePointSelectionColorLocation= glGetAttribLocation(m_pointCloudProgram, "pointSelectionColor");
+    m_pointCloudSinglePointSelectionColorLocation= glGetAttribLocation(m_pointCloudProgram, "pointSelectionColor");
 	if (m_pointCloudSinglePointSelectionColorLocation < 0)
 		cerr << "Failed to find m_pointCloudSinglePointSelectionColorLocation." << endl;
 	m_pointCloudModelViewMatrixLocation = glGetUniformLocation(m_pointCloudProgram, "modelViewMatrix");
@@ -481,7 +485,8 @@ bool DrawManager::enableFrameBuffer(){
 	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height); //TODO: adjust to viewport size
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,m_depthRenderBuffer);
 
-	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,m_selectorTexture,0);
+    //glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,m_selectorTexture,0);
+    glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,m_selectorTexture,0);
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE )
 		return false;
 	glBindFramebuffer(GL_FRAMEBUFFER,0);

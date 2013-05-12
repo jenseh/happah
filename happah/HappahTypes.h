@@ -15,6 +15,9 @@ typedef glm::vec3 hpvec3;
 typedef glm::vec4 hpvec4;
 typedef glm::vec4 hpcolor;
 typedef unsigned int hpuint;
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+typedef unsigned int uint;
+#endif
 
 typedef std::vector<hpvec2> PointCloud2D;
 typedef std::vector<hpvec3> RayCloud3D;

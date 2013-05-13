@@ -7,7 +7,7 @@ RayCloudTriangulatorBPA::RayCloudTriangulatorBPA(hpreal radius) : m_radius(radiu
 
 RayCloudTriangulatorBPA::~RayCloudTriangulatorBPA() {}
 
-TriangleMesh* RayCloudTriangulatorBPA::triangulate(const RayCloud3D& rays) {
+TriangleMesh3D* RayCloudTriangulatorBPA::triangulate(const RayCloud3D& rays) {
 	initializeGrid(rays);
 
 	hpvec3 point1, point2, point3;
@@ -125,95 +125,6 @@ void RayCloudTriangulatorBPA::testSeedTriangle(const hpvec3& point1, const hpvec
 	printf("Abstand 1 zu 3: %f\n", (float) glm::length(diff3));
 	hpvec3 diff4 = point2 - point3;
 	printf("Abstand 2 zu 3: %f\n\n", (float) glm::length(diff4));
-
-	hpvec3 sa = 0.5 * sqrt(2.0 * ((point3 - point1) * (point3 - point1) + (point2 - point1) * (point2 - point1)) - 
-		(point2 - point3) * (point2 - point3)));
-
-
-	/*
-	hpvec3 mitte12 = (point2 - point1);
-	hpvec3 mitte13 = (point3 - point1);
-	hpvec3 average = (mitte12 + mitte13) / (float) 2.0;
-	
-	printf("Mitte 1 - 2 x:%f y:%f z:%f\n", mitte12.x, mitte12.y, mitte12.z);
-	printf("Mitte 1 - 3 x:%f y:%f z:%f\n", mitte13.x, mitte13.y, mitte13.z);
-	printf("Average x:%f y:%f z:%f\n\n", average.x, average.y, average.z);
-
-
-	hpvec3 mitte23 = (point3 - point2);
-	hpvec3 mitte21 = (point1 - point2);
-	hpvec3 average2 = (mitte23 + mitte21) / (float) 2.0;
-
-	printf("Mitte 2 - 3 x:%f y:%f z:%f\n", mitte23.x, mitte23.y, mitte23.z);
-	printf("Mitte 2 - 1 x:%f y:%f z:%f\n", mitte21.x, mitte21.y, mitte21.z);
-	printf("Average 2 x:%f y:%f z:%f\n\n", average2.x, average2.y, average2.z);
-
-	float divisor = ((average2.x * average.y) - (average2.y * average.x));
-	float c, k;
-	
-	if (divisor == 0.0) {
-		printf("TODO Divisor 0.");
-	} else {
-		c = (((point2.x - point1.x) * -1 * average.y) + (average.x * 
-			(point2.y - point1.y))) / divisor;
-		if (average.x != 0.0) {
-			k = ((point2.x - point1.x) + (c * average2.x)) / average.x;
-		} else if (average.y != 0.0) {
-			k = ((point2.y - point1.y) + (c * average2.y)) / average.y;
-		} else {
-			printf("TODO average.x und average.y sind 0.");
-		}
-	}
-
-	printf("c: %f k: %f test: %f\n", c, k, divisor);
-
-	printf("Check x: %f == %f\n", point1.x + k * average.x, point2.x + c * average2.x);
-	printf("Check y: %f == %f\n", point1.y + k * average.y, point2.y + c * average2.y);
-	printf("Check z: %f == %f\n", point1.z + k * average.z, point2.z + c * average2.z);
-
-	printf("Test2\n\n");	
-
-	hpvec3 mitte31 = (point1 - point3);
-	hpvec3 mitte32 = (point2 - point3);
-	hpvec3 average3 = (mitte31 + mitte32) / (float) 2.0;
-
-	printf("Mitte 3 - 1 x:%f y:%f z:%f\n", mitte31.x, mitte31.y, mitte31.z);
-	printf("Mitte 3 - 2 x:%f y:%f z:%f\n", mitte32.x, mitte32.y, mitte32.z);
-	printf("Average 3 x:%f y:%f z:%f\n\n", average3.x, average3.y, average3.z);
-
-	divisor = ((average3.x * average.y) - (average3.y * average.x));
-	
-	if (divisor == 0.0) {
-		printf("TODO Divisor 0.");
-	} else {
-		c = (((point3.x - point1.x) * -1 * average.y) + (average.x * 
-			(point3.y - point1.y))) / divisor;
-		if (average.x != 0.0) {
-			k = ((point3.x - point1.x) + (c * average3.x)) / average.x;
-		} else if (average.y != 0.0) {
-			k = ((point3.y - point1.y) + (c * average3.y)) / average.y;
-		} else {
-			printf("TODO average.x und average.y sind 0.");
-		}
-	}
-
-	printf("c: %f k: %f test: %f\n", c, k, divisor);
-	
-	float blah = point3.x + (c * average3.x);
-	
-	printf("x3: %f c: %f a3.x: %f res = %f\n", point3.x, c, average3.x, blah);
-
-	printf("Check x: %f == %f\n", point1.x + k * average.x, point3.x + c * average3.x);
-	printf("Check y: %f == %f\n", point1.y + k * average.y, point3.y + c * average3.y);
-	printf("Check z: %f == %f\n\n", point1.z + k * average.z, point3.z + c * average3.z);
-	
-
-	hpvec3 triangle_normal = glm::cross(point2 - point1, point3 - point1);
-
-	printf("Normale x: %f y: %f z: %f\n\n", triangle_normal.x, triangle_normal.y, triangle_normal.z);
-	*/
-
-
 	
 }
 
@@ -306,7 +217,7 @@ int RayCloudTriangulatorBPA::getIndex(const hpvec3& point) {
 		(int) voxel_coordinates.z;
 }
 
-TriangleMesh* RayCloudTriangulatorBPA::triangulate(const PointCloud2D& pofints, const hpvec3& origin, const hpvec3& normal) {
+TriangleMesh2D* RayCloudTriangulatorBPA::triangulate(const PointCloud2D& pofints, const hpvec3& origin, const hpvec3& normal) {
 	//TODO
 	return 0;
 }

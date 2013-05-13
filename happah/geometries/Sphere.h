@@ -19,6 +19,9 @@ public:
 	Sphere(const hpvec3& center, hpreal radius);
 	~Sphere();
 
+	const hpvec3& getCenter() const;
+	hpreal getRadius() const;
+
 private:
 	hpvec3 m_center;
 	hpreal m_radius;

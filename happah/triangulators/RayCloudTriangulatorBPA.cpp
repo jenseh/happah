@@ -33,47 +33,90 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 		results[0] = i;
 		bool stop = false;
 		unsigned int results_index = 1;
-		voxel_coordinates = (rays[i] - minvec) / (2 * m_radius);
-		hpvec3 old_coordinates(voxel_coordinates);
+		voxel_coordinates = (rays[i] - minvec) / m_diameter;
 
-		
+		int possible_index[27];		
 
-		int possible_index[27];
-		int* ptr = possible_index;
-		for (int j = -1; j < 2; j++) {
-			voxel_coordinates.x += j * 0.5;
-			for (int k = -1; k < 2; k++) {
-				voxel_coordinates.y += k * 0.5;
-				for (int l = -1; l < 2; l++) {
-					voxel_coordinates.z += l * 0.5;
-					
-					*ptr++ = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
-						(int)voxel_coordinates.y * m_nZvoxels + (int)voxel_coordinates.z;
-					
-					voxel_coordinates.z = old_coordinates.z;
-				}
-				voxel_coordinates.y = old_coordinates.y;
-			}
-			voxel_coordinates.x = old_coordinates.x;
-		}
-		//printf("Punkt x:%f y:%f z:%f\n", rays[i].x, rays[i].y, rays[i].z);	
+		possible_index[0] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[1] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[2] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[3] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[4] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[5] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[6] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[6] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[8] = (int)(voxel_coordinates.x - 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[9] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[10] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[11] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[12] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[13] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[14] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[15] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[16] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[17] = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[18] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[19] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[20] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y - 0.5) * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+	
+		possible_index[21] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[22] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[23] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)voxel_coordinates.y * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
+		possible_index[24] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)(voxel_coordinates.z - 0.5);
+		possible_index[25] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)voxel_coordinates.z;
+		possible_index[26] = (int)(voxel_coordinates.x + 0.5) * m_nYvoxels * m_nZvoxels + 
+				(int)(voxel_coordinates.y + 0.5) * m_nZvoxels + (int)(voxel_coordinates.z + 0.5);
+
 				
-		for (unsigned int n = 0; !stop && n < 27 && n < grid.size(); n++) {
+		for (unsigned int n = 0; !stop && n < 27 && n < grid.size(); ++n) {
 
 			//printf("Block: %d\n", n);	
 
-			if (grid[n] != -1) {
+			if (grid[possible_index[n]] != -1) {
 				//printf("Punkt x:%f y:%f z:%f\n", rays[grid[n]].x, rays[grid[n]].y,
 			 	//rays[grid[n]].z);
-				hpvec3 diff = rays[i] - rays[grid[n]];
-				if (glm::length(diff) <= m_radius && grid[n] != i) {
-					results[results_index] = grid[n];
+				hpvec3 diff = rays[i] - rays[grid[possible_index[n]]];
+				if (glm::length(diff) <= m_radius && grid[possible_index[n]] != i) {
+					results[results_index] = grid[possible_index[n]];
 					if (++results_index == 3) {
 						stop = true;
 					}
 				}
 			
-				int c = grid[n] / 2;
+				int c = grid[possible_index[n]] >> 1;
 				while (!stop && nexts[c] != -1) {
 					//printf("Punkt x:%f y:%f z:%f\n", rays[nexts[c]].x,
 					//srays[nexts[c]].y, rays[nexts[c]].z);
@@ -86,7 +129,7 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 						}
 					}
 
-					c = nexts[c] / 2;
+					c = nexts[c] >> 1;
 				}
 			}
 			//printf("\n");
@@ -97,11 +140,13 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 			hpvec3 normal1 = rays[results[0] + 1];
 			hpvec3 normal2 = rays[results[1] + 1];
 			hpvec3 normal3 = rays[results[2] + 1];
-			hpvec3 triangle_normal = glm::cross(rays[results[1]] - rays[results[0]], rays[results[2]] - rays[results[0]]);
+			hpvec3 triangle_normal = glm::cross(rays[results[1]] - rays[results[0]], 
+				rays[results[2]] - rays[results[0]]);
 
 			testSeedTriangle(rays[results[0]], rays[results[1]], rays[results[2]]);
 
-			if (glm::dot(triangle_normal, normal1) > 0 && glm::dot(triangle_normal, normal2) > 0 && glm::dot(triangle_normal, normal3) > 0) {
+			if (glm::dot(triangle_normal, normal1) > 0 && glm::dot(triangle_normal, normal2) > 0 && 
+				glm::dot(triangle_normal, normal3) > 0) {
 			
 				//TODO 
 
@@ -157,7 +202,7 @@ void RayCloudTriangulatorBPA::initializeGrid(const RayCloud3D& rays) {
 	
 	unsigned int index;
 	for (unsigned int j = 0; j < m_RaySize; j += 2) {
-		index = getIndex(rays[j]);
+		index = getIndex(rays[j]);		
 
 		if (grid[index] >= 0) {
 			nexts[j >> 1] = grid[index];
@@ -179,7 +224,7 @@ void RayCloudTriangulatorBPA::testGrid(const RayCloud3D& rays) {
 	printf("m_nZvoxels: %d\n\n", m_nZvoxels);
 
 
-	for (unsigned int k = 0; k < grid.size(); k++) {
+	for (unsigned int k = 0; k < m_GridSize; ++k) {
 		unsigned int l = k;
 		int x = l / (m_nYvoxels * m_nZvoxels);
 		l %= (m_nYvoxels * m_nZvoxels);

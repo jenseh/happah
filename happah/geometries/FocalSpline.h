@@ -6,6 +6,7 @@
 #include "happah/geometries/Geometry.h"
 #include "happah/geometries/PointCloud.h"
 #include "happah/geometries/LineMesh.h"
+#include "happah/geometries/FocalBSplineCurve.h"
 #include <vector>
 #include <memory>
 
@@ -52,15 +53,19 @@ private:
     vector<FocalBezierCurve*> m_focalBezierCurves;
 	vector<vector<hpvec3>*>* m_controlPoints;
 	vector<hpvec3>* m_generatedSpline;
+	vector<hpreal>* m_BSplineKnots;
+	vector<hpvec3>* m_BSplineControlPoints;
+
 	hpvec3 m_center;
 	hpreal m_phi;
-	hpreal m_phiComplete;
+	FocalBSplineCurve* m_focalBSplineCurve;
 	bool   m_doLaneRiesenfeld;
 	int    m_detail;
 	int m_LRIterations;
 	int m_LRDegree;
 	bool  m_showControlPolygon;
 	bool  m_showCircle;
+	bool  m_doBSpline;
 
 };
 typedef shared_ptr<FocalSpline> FocalSpline_ptr;

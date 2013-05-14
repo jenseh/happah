@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2012, 2013 See the COPYRIGHT-HOLDERS file in the top-level
+ * directory of this distribution and at http://github.com/happah-graphics/happah.
+ *
+ * This file is part of Happah. It is subject to the license terms in the LICENSE
+ * file found in the top-level directory of this distribution and at
+ * http://github.com/happah-graphics/happah. No part of Happah, including this
+ * file, may be copied, modified, propagated, or distributed except according to
+ * the terms contained in the LICENSE file.
+ *
+*/
 #pragma once
 
 #include <istream>
@@ -33,5 +44,6 @@ private:
 	static const string OBJ_NORMAL_TOKEN;
 	static const string OBJ_FACE_TOKEN;
 	static const int OBJ_TRIANGLE_INDICES = 3;
+	static bool parseFaceTriplet(const string& faceTriplet, hpuint& vertex, hpuint& texture, hpuint& normal);
 };
 

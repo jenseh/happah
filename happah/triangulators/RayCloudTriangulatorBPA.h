@@ -16,24 +16,27 @@ public:
 
 private:
 	hpreal m_radius;
-	float x_min;
-	float y_min;
-	float z_min;
-	float x_max;
-	float y_max;
-	float z_max;
-	const float FLOAT_MIN;
-	const float FLOAT_MAX;
+	hpreal m_diameter;
+	
+	float m_Xmin;
+	float m_Ymin;
+	float m_Zmin;
+	float m_Xmax;
+	float m_Ymax;
+	float m_Zmax;
 
-	int x_voxels;
-	int y_voxels;
-	int z_voxels;
+	unsigned int m_RaySize;
+	unsigned int m_GridSize;	
+
+	unsigned int m_nXvoxels;
+	unsigned int m_nYvoxels;
+	unsigned int m_nZvoxels;
 
 	vector<int> grid;
 	vector<int> nexts;
 
 	void initializeGrid(const RayCloud3D& rays);
-	int getIndex(const hpvec3& point);
+	unsigned int getIndex(const hpvec3& point);
 	void testGrid(const RayCloud3D& rays);
 	bool searchSeedTriangle(const RayCloud3D& rays, hpvec3& point1, hpvec3& point2, hpvec3& point3);
 	void testSeedTriangle(const hpvec3& point1, const hpvec3& point2, const hpvec3& point3);

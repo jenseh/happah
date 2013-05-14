@@ -2,12 +2,13 @@
 #include <stdio.h>
 
 
-RayCloudTriangulatorBPA::RayCloudTriangulatorBPA(hpreal radius) : m_radius(radius), 
-	FLOAT_MIN(numeric_limits<float>::min()), FLOAT_MAX(numeric_limits<float>::max()) {}
+RayCloudTriangulatorBPA::RayCloudTriangulatorBPA(hpreal radius) : m_radius(radius) {}
 
 RayCloudTriangulatorBPA::~RayCloudTriangulatorBPA() {}
 
 TriangleMesh3D* RayCloudTriangulatorBPA::triangulate(const RayCloud3D& rays) {
+	m_RaySize = rays.size();
+	m_diameter = 2 * m_radius;
 	initializeGrid(rays);
 
 	hpvec3 point1, point2, point3;
@@ -23,14 +24,10 @@ TriangleMesh3D* RayCloudTriangulatorBPA::triangulate(const RayCloud3D& rays) {
 
 bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3& point1, hpvec3& point2, hpvec3& point3) {
 
-	using namespace glm; {
-
 	hpvec3 voxel_coordinates;
-	unsigned int rays_size = rays.size();
-	hpvec3 minvec = hpvec3(x_min, y_min, z_min);	
+	hpvec3 minvec = hpvec3(m_Xmin, m_Ymin, m_Zmin);		
 	
-	
-	for (unsigned int i = 0; i < rays_size; i += 2) {
+	for (unsigned int i = 0; i < m_RaySize; i += 2) {
 		//TODO prüfe ob bereits verwendet
 		int results[3];
 		results[0] = i;
@@ -38,6 +35,8 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 		unsigned int results_index = 1;
 		voxel_coordinates = (rays[i] - minvec) / (2 * m_radius);
 		hpvec3 old_coordinates(voxel_coordinates);
+
+		
 
 		int possible_index[27];
 		int* ptr = possible_index;
@@ -48,8 +47,8 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 				for (int l = -1; l < 2; l++) {
 					voxel_coordinates.z += l * 0.5;
 					
-					*ptr++ = (int)voxel_coordinates.x * y_voxels * z_voxels + 
-						(int)voxel_coordinates.y * z_voxels + (int)voxel_coordinates.z;
+					*ptr++ = (int)voxel_coordinates.x * m_nYvoxels * m_nZvoxels + 
+						(int)voxel_coordinates.y * m_nZvoxels + (int)voxel_coordinates.z;
 					
 					voxel_coordinates.z = old_coordinates.z;
 				}
@@ -67,7 +66,7 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 				//printf("Punkt x:%f y:%f z:%f\n", rays[grid[n]].x, rays[grid[n]].y,
 			 	//rays[grid[n]].z);
 				hpvec3 diff = rays[i] - rays[grid[n]];
-				if (length(diff) <= m_radius && grid[n] != i) {
+				if (glm::length(diff) <= m_radius && grid[n] != i) {
 					results[results_index] = grid[n];
 					if (++results_index == 3) {
 						stop = true;
@@ -80,7 +79,7 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 					//srays[nexts[c]].y, rays[nexts[c]].z);
 					diff = rays[i] - rays[nexts[c]];
 
-					if (length(diff) <= m_radius && nexts[c] != i) {
+					if (glm::length(diff) <= m_radius && nexts[c] != i) {
 						results[results_index] = nexts[c];
 						if (++results_index == 3) {
 							stop = true;
@@ -98,17 +97,16 @@ bool RayCloudTriangulatorBPA::searchSeedTriangle(const RayCloud3D& rays, hpvec3&
 			hpvec3 normal1 = rays[results[0] + 1];
 			hpvec3 normal2 = rays[results[1] + 1];
 			hpvec3 normal3 = rays[results[2] + 1];
-			hpvec3 triangle_normal = cross(rays[results[1]] - rays[results[0]], rays[results[2]] - rays[results[0]]);
+			hpvec3 triangle_normal = glm::cross(rays[results[1]] - rays[results[0]], rays[results[2]] - rays[results[0]]);
 
 			testSeedTriangle(rays[results[0]], rays[results[1]], rays[results[2]]);
 
-			if (dot(triangle_normal, normal1) > 0 && dot(triangle_normal, normal2) > 0 && dot(triangle_normal, normal3) > 0) {
+			if (glm::dot(triangle_normal, normal1) > 0 && glm::dot(triangle_normal, normal2) > 0 && glm::dot(triangle_normal, normal3) > 0) {
 			
 				//TODO 
 
 			}
 		}
-	}
 	}
 
 	return true;
@@ -129,41 +127,40 @@ void RayCloudTriangulatorBPA::testSeedTriangle(const hpvec3& point1, const hpvec
 }
 
 void RayCloudTriangulatorBPA::initializeGrid(const RayCloud3D& rays) {
-	x_max = FLOAT_MIN;
-	y_max = FLOAT_MIN;
-	z_max = FLOAT_MIN;
-	x_min = FLOAT_MAX;
-	y_min = FLOAT_MAX;
-	z_min = FLOAT_MAX;
-
-	unsigned int rays_size = rays.size();
-	for (unsigned int i = 0; i < rays_size; i += 2) {
-		x_min = min(x_min, rays[i].x);
-		y_min = min(y_min, rays[i].y);
-		z_min = min(z_min, rays[i].z);
-		x_max = max(x_max, rays[i].x);
-		y_max = max(y_max, rays[i].y);
-		z_max = max(z_max, rays[i].z);
+	m_Xmax = numeric_limits<float>::max();
+	m_Ymax = m_Xmax;
+	m_Zmax = m_Xmax;
+	m_Xmin = numeric_limits<float>::min();
+	m_Ymin = m_Xmin;
+	m_Zmin = m_Xmin;
+	
+	for (unsigned int i = 0; i < m_RaySize; i += 2) {
+		m_Xmin = min(m_Xmin, rays[i].x);
+		m_Ymin = min(m_Ymin, rays[i].y);
+		m_Zmin = min(m_Zmin, rays[i].z);
+		m_Xmax = max(m_Xmax, rays[i].x);
+		m_Ymax = max(m_Ymax, rays[i].y);
+		m_Zmax = max(m_Zmax, rays[i].z);
 	}
 
-	float x_distance = x_max - x_min;
-	float y_distance = y_max - y_min;
-	float z_distance = z_max - z_min;
+	float x_distance = m_Xmax - m_Xmin;
+	float y_distance = m_Ymax - m_Ymin;
+	float z_distance = m_Zmax - m_Zmin;
 
-	x_voxels = (int) ceil(x_distance / (2 * m_radius));
-	y_voxels = (int) ceil(y_distance / (2 * m_radius));
-	z_voxels = (int) ceil(z_distance / (2 * m_radius));
+	m_nXvoxels = (int) ceil(x_distance / m_diameter);
+	m_nYvoxels = (int) ceil(y_distance / m_diameter);
+	m_nZvoxels = (int) ceil(z_distance / m_diameter);
 
-	int grid_size = x_voxels * y_voxels * z_voxels;
-	nexts = vector<int>(rays_size / 2, -1);	
-	grid = vector<int>(grid_size, -1);
+	m_GridSize = m_nXvoxels * m_nYvoxels * m_nZvoxels;
+	nexts = vector<int>(m_RaySize >> 1, -1);	
+	grid = vector<int>(m_GridSize, -1);
 	
-	int index;
-	for (unsigned int j = 0; j < rays_size; j += 2) {
+	unsigned int index;
+	for (unsigned int j = 0; j < m_RaySize; j += 2) {
 		index = getIndex(rays[j]);
 
 		if (grid[index] >= 0) {
-			nexts[j / 2] = grid[index];
+			nexts[j >> 1] = grid[index];
 		}
 		grid[index] = j;
 	}
@@ -173,21 +170,21 @@ void RayCloudTriangulatorBPA::initializeGrid(const RayCloud3D& rays) {
 
 void RayCloudTriangulatorBPA::testGrid(const RayCloud3D& rays) {
 
-	printf("x_min: %f\n", x_min);
-	printf("y_min: %f\n", y_min);
-	printf("z_min: %f\n\n", z_min);
+	printf("m_Xmin: %f\n", m_Xmin);
+	printf("m_Ymin: %f\n", m_Ymin);
+	printf("m_Zmin: %f\n\n", m_Zmin);
 
-	printf("x_voxels: %d\n", x_voxels);
-	printf("y_voxels: %d\n", y_voxels);
-	printf("z_voxels: %d\n\n", z_voxels);
+	printf("m_nXvoxels: %d\n", m_nXvoxels);
+	printf("m_nYvoxels: %d\n", m_nYvoxels);
+	printf("m_nZvoxels: %d\n\n", m_nZvoxels);
 
 
 	for (unsigned int k = 0; k < grid.size(); k++) {
 		unsigned int l = k;
-		int x = l / (y_voxels * z_voxels);
-		l %= (y_voxels * z_voxels);
-		int y = l / z_voxels;
-		l %= z_voxels;
+		int x = l / (m_nYvoxels * m_nZvoxels);
+		l %= (m_nYvoxels * m_nZvoxels);
+		int y = l / m_nZvoxels;
+		l %= m_nZvoxels;
 		int z = l;	
 		
 		printf("Voxel x:%d y:%d z:%d\n", x, y, z);
@@ -210,10 +207,10 @@ void RayCloudTriangulatorBPA::testGrid(const RayCloud3D& rays) {
 }
 
 
-int RayCloudTriangulatorBPA::getIndex(const hpvec3& point) {
-	hpvec3 voxel_coordinates = (point - hpvec3(x_min, y_min, z_min)) / (2 * m_radius);
+unsigned int RayCloudTriangulatorBPA::getIndex(const hpvec3& point) {
+	hpvec3 voxel_coordinates = (point - hpvec3(m_Xmin, m_Ymin, m_Zmin)) / m_diameter;
 
-	return (int) voxel_coordinates.x * y_voxels * z_voxels + (int) voxel_coordinates.y * z_voxels + 
+	return (int) voxel_coordinates.x * m_nYvoxels * m_nZvoxels + (int) voxel_coordinates.y * m_nZvoxels + 
 		(int) voxel_coordinates.z;
 }
 

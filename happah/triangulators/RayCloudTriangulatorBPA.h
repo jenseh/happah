@@ -18,12 +18,14 @@ private:
 	hpreal m_radius;
 	hpreal m_diameter;
 	
-	float m_Xmin;
-	float m_Ymin;
-	float m_Zmin;
-	float m_Xmax;
-	float m_Ymax;
-	float m_Zmax;
+	hpvec3 m_MinVec;
+
+	float m_XMin;
+	float m_YMin;
+	float m_ZMin;
+	float m_XMax;
+	float m_YMax;
+	float m_ZMax;
 
 	unsigned int m_RaySize;
 	unsigned int m_GridSize;	
@@ -40,6 +42,7 @@ private:
 	void testGrid(const RayCloud3D& rays);
 	bool searchSeedTriangle(const RayCloud3D& rays, hpvec3& point1, hpvec3& point2, hpvec3& point3);
 	void testSeedTriangle(const hpvec3& point1, const hpvec3& point2, const hpvec3& point3);
+	unsigned int[] getNearVoxels(hpvec3 point);
 
 };
 

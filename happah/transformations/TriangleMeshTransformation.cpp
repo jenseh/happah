@@ -32,10 +32,13 @@ TriangleMeshTransformation::TriangleMeshTransformation(vector<hpmat4x4> *transfo
     this->transformations = transformations;
 }
 
+TriangleMeshTransformation::~TriangleMeshTransformation() {}
+
 TriangleMesh3D_ptr TriangleMeshTransformation::transform(TriangleMesh3D_ptr mesh)
 {
     vector<hpvec3>* vertices = TriangleMeshTransformation::getVertices(mesh);
     vector<hpvec3>* verticesAndNormals = new vector<hpvec3>(mesh->getVerticesAndNormals()->size());
+    vector<hpuint> *indices;
 
     if (transformations == 0) {
         hpvec4 v1 = hpvec4(vertices->at(0), 1);
@@ -55,7 +58,8 @@ TriangleMesh3D_ptr TriangleMeshTransformation::transform(TriangleMesh3D_ptr mesh
         verticesAndNormals->push_back(n);
 
     } else {
-        vector<hpuint> *indices = mesh->getIndices();
+
+        indices = new vector<hpuint>(*mesh->getIndices());
         hpvec3 v1, v2, v3, c1, c2, c3, n;
         hpuint i1, i2, i3;
 
@@ -83,17 +87,10 @@ TriangleMesh3D_ptr TriangleMeshTransformation::transform(TriangleMesh3D_ptr mesh
             verticesAndNormals->at(i3*2) = c3;
             verticesAndNormals->at(i3*2+1) = n;
 
-//            verticesAndNormals->push_back(c1);
-//            verticesAndNormals->push_back(n);
-//            verticesAndNormals->push_back(c2);
-//            verticesAndNormals->push_back(n);
-//            verticesAndNormals->push_back(c3);
-//            verticesAndNormals->push_back(n);
-
             vertexIndex += 3;
             ++transformationIndex;
         }
     }
 
-    return shared_ptr<TriangleMesh3D>( new TriangleMesh3D(verticesAndNormals , mesh->getIndices()) );
+    return TriangleMesh3D_ptr(new TriangleMesh3D(verticesAndNormals, indices) );
 }

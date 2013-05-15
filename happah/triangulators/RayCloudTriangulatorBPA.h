@@ -20,6 +20,8 @@ private:
 	
 	hpvec3 m_MinVec;
 
+	static const float EPSILON;
+
 	float m_XMin;
 	float m_YMin;
 	float m_ZMin;
@@ -42,9 +44,10 @@ private:
 	void testGrid(const RayCloud3D& rays);
 	bool searchSeedTriangle(const RayCloud3D& rays, hpvec3& point1, hpvec3& point2, hpvec3& point3);
 	void testSeedTriangle(const hpvec3& point1, const hpvec3& point2, const hpvec3& point3);
-	unsigned int[] getNearVoxels(hpvec3 point);
+	void getNearVoxels(const hpvec3 point, unsigned int voxels[]);
 
 };
 
+	//const float RayCloudTriangulatorBPA::EPSILON = 0.00000001;
 
 #endif

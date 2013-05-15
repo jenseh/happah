@@ -16,6 +16,12 @@ int Happah::exec() {
 	RayCloud3D rayCloud = RayCloud3D();
 	rayCloud.push_back(hpvec3(0.0, 0.0, 0.0));
 	rayCloud.push_back(hpvec3(0.0, 0.0, 0.0));
+	
+	rayCloud.push_back(hpvec3(0.2, 0.0, 0.3));
+	rayCloud.push_back(hpvec3(0.0, 0.0, 0.0));
+
+	rayCloud.push_back(hpvec3(0.1, 0.3, 0.0));
+	rayCloud.push_back(hpvec3(0.0, 0.0, 0.0));
 
 	rayCloud.push_back(hpvec3(1.0, 1.0, 1.0));
 	rayCloud.push_back(hpvec3(1.0, 1.0, 1.0));

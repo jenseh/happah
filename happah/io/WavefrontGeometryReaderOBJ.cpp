@@ -86,6 +86,23 @@ void WavefrontGeometryReaderOBJ::read(istream& stream, TriangleMesh3D*& triangle
 }
 
 
+void WavefrontGeometryReaderOBJ::write(ostream &stream, TriangleMesh3D_ptr triangleMesh) {
+	const std::vector<hpvec3>* verticesAndNormals = triangleMesh->getVerticesAndNormals();
+	const std::vector<hpuint>* indices = triangleMesh->getIndices();
+	bool even = true;
+	for( std::vector<hpvec3>::const_iterator it = verticesAndNormals->begin(); it != verticesAndNormals->end(); ++it ) {
+		stream << (even ? OBJ_VERTEX_TOKEN : OBJ_NORMAL_TOKEN) << ' ' << (*it).x << ' ' << (*it).y << ' ' << (*it).z << std::endl;
+		even = !even;
+	}
+	for( size_t i = 0; i < indices->size(); i += OBJ_TRIANGLE_INDICES ) {
+		stream << OBJ_FACE_TOKEN;
+		stream << ' ' << indices->at( i ) + 1 << "//" << indices->at( i ) + 1;
+		stream << ' ' << indices->at( i + 1 ) + 1 << "//" << indices->at( i + 1 ) + 1;
+		stream << ' ' << indices->at( i + 2 ) + 1 << "//" << indices->at( i + 2 ) + 1 << std::endl;
+	}
+}
+
+
 bool WavefrontGeometryReaderOBJ::parseFaceTriplet(const string& faceTriplet, hpuint& vertex, hpuint& texture, hpuint& normal) {
 	size_t firstSlash = faceTriplet.find( '/' );
 	size_t lastSlash = faceTriplet.rfind( '/' );

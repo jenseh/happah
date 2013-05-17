@@ -38,6 +38,7 @@ public:
 	};
 
 	static void read(istream& stream, TriangleMesh3D*& triangleMesh);
+	static void write(ostream& stream, const TriangleMesh3D_ptr triangleMesh);
 
 private:
 	static const string OBJ_VERTEX_TOKEN;

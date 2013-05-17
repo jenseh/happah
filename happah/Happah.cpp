@@ -5,6 +5,7 @@
 
 #include "transformations/DeformationTransferer.h"
 #include "transformations/TriangleMeshTransformation.h"
+#include "kdtreeLib/NearestNeighbor.h"
 
 Happah::Happah(int& argc, char** argv)
     : QApplication(argc, argv), m_sceneManager(new SceneManager()), m_defaultGUIManager(m_sceneManager) {}
@@ -36,6 +37,24 @@ int Happah::exec() {
 
         if(deformedMesh != 0)
             m_defaultGUIManager.insert(deformedMesh);
+
+
+        // Nearest Neighbor
+        TriangleKDTree *tree = NearestNeighbor::generateTriangleKDTree(sourceMesh_ptr);
+
+        // Test: Print Neighbor Triangles for each Triangle
+        vector<hpuint> *triangleIds;
+        for (size_t i = 0; i < sourceMesh->getIndices()->size()/3; ++i) {
+            triangleIds = NearestNeighbor::trianglesWithinRange(sourceMesh_ptr, i, 0.02, *tree);
+            stringstream  s;
+            const string delimiter=",";
+            copy(triangleIds->begin(),triangleIds->end(), ostream_iterator<hpuint>(s,delimiter.c_str()));
+            std::cout << s.str() << "\n" << endl;
+
+            free(triangleIds);
+        }
+
+        free(tree);
 
         return QApplication::exec();
     }

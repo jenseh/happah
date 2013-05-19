@@ -30,7 +30,11 @@ void FocalBezierCurve::update(hpreal phi, vector<hpvec3>* controlPoints){
 
 
 void FocalBezierCurve::generateNewControlPoints(hpreal delta){
+	#ifndef MSVC2012
 	hpvec3 result[m_currentDegree];
+	#else
+	hpvec3* result = new hpvec3[m_currentDegree];
+	#endif
 
 	for(int i=0; i < m_currentDegree; i++){
 		hpvec3 p1 = m_currentControlPoints->at(i);
@@ -74,6 +78,11 @@ void FocalBezierCurve::generateNewControlPoints(hpreal delta){
 		m_currentControlPoints->at(i)= result[i];
 	}
 	*/
+
+	#ifdef MSVC2012
+		delete[] result;
+	#endif
+
 	m_currentDegree--;
 
 }

@@ -530,7 +530,7 @@ DefaultGUIManager::DefaultViewportListener::DefaultViewportListener(DefaultGUIMa
 
 DefaultGUIManager::DefaultViewportListener::~DefaultViewportListener() {}
 
-void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleMouseClickEvent(Ray& ray) {
+void DefaultGUIManager::DefaultViewportListener::handleMouseClickEvent(Ray& ray) {
 	m_defaultGUIManager.m_toolPanel->handleMouseClickEvent(ray);
 	RayIntersectionVisitor intersectionVisitor(ray);
 	m_defaultGUIManager.m_sceneManager->accept( intersectionVisitor );
@@ -544,7 +544,7 @@ void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handle
 }
 
 
-void DefaultGUIManager::DefaultViewportListener::DefaultViewportListener::handleDragEvent(Ray& ray){
+void DefaultGUIManager::DefaultViewportListener::handleDragEvent(Ray& ray){
 	m_defaultGUIManager.m_toolPanel->handleDragEvent(ray);
 }
 

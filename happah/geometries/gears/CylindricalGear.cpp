@@ -73,7 +73,7 @@ TriangleMesh3D* CylindricalGear::toTriangleMesh(hpuint nPointsPerTooth, hpuint n
 	hpuint trianglePairsInRow  = indicesInRow / 6;
 
 	//array steps is necessary to walk in the verticesAndNormals array to the right places
-	int steps[] = {0, 3, 4, -(indicesInRow - 3), -2, -3};
+	int steps[] = {0, 3, 4, -((int)indicesInRow - 3), -2, -3};
 
 	// go one step further in width direction to reach all points
 	for(hpuint i = 0; i <= nTraverseProfiles; ++i) {

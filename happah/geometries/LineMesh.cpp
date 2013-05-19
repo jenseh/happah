@@ -8,12 +8,12 @@ template<typename T>
 LineMesh<T>::~LineMesh() {}
 
 template<typename T>
-LineMesh<T>::SegmentEndpointsIterator<T> LineMesh<T>::getBeginningOfSegmentEndpointsIteration() {
+SegmentEndpointsIterator<T> LineMesh<T>::getBeginningOfSegmentEndpointsIteration() {
 	return SegmentEndpointsIterator<T>(); //TODO
 }
 
 template<typename T>
-LineMesh<T>::SegmentEndpointsIterator<T> LineMesh<T>::getEndOfSegmentEndpointsIteration() {
+SegmentEndpointsIterator<T> LineMesh<T>::getEndOfSegmentEndpointsIteration() {
 	return SegmentEndpointsIterator<T>(); //TODO
 }
 

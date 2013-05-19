@@ -21,6 +21,7 @@ private:
 	hpvec3 m_center;
 	vector<hpvec3>*m_controlPoints;
 	vector<hpvec3>*m_currentControlPoints;
+	
 	int	m_currentDegree;
 };
 

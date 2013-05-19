@@ -12,6 +12,14 @@
 
 //#include "happah/LoggingUtils.h"
 
+#ifdef MSVC2012
+#define isnan(x) _isnan(x)
+#define isinf(x) !_finite(x)
+#else
+#define isnan(x) std::isnan(x)
+#define isinf(x) std::isinf(x)
+#endif
+
 struct CircleHitResult {
   hpvec3 hitPointA;
   hpvec3 hitPointB;
@@ -465,13 +473,13 @@ struct Circle {
 
 	// Check whether a vector has only valid entries
 	bool isValidVector(hpvec3& vector) {
-		if (std::isinf(vector.x) || std::isnan(vector.x)) {
+		if (isinf(vector.x) || isnan(vector.x)) {
 		    return false;
 		}
-		if (std::isinf(vector.y) || std::isnan(vector.y)) {
+		if (isinf(vector.y) || isnan(vector.y)) {
 		    return false;
 		}
-		if (std::isinf(vector.z) || std::isnan(vector.z)) {
+		if (isinf(vector.z) || isnan(vector.z)) {
 		    return false;
 		}
 

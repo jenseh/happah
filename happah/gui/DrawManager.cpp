@@ -253,7 +253,6 @@ bool DrawManager::init(QPaintDevice* device) {
         qWarning() << "Could not enable sample buffers";
     }
 
-
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -486,7 +485,7 @@ bool DrawManager::enableFrameBuffer(){
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,m_depthRenderBuffer);
 
     //glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,m_selectorTexture,0);
-    glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,m_selectorTexture,0);
+    //glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,m_selectorTexture,0);
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE )
 		return false;
 	glBindFramebuffer(GL_FRAMEBUFFER,0);

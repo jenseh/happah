@@ -317,7 +317,7 @@ void InvoluteGear::getToothSpaceProfile(vector<hpvec2> &profile) {
 	for (int i = profile.capacity()/2-1;  i >= 0; i--) {
 		profile.push_back(hpvec2(-toothProfile[i].x, toothProfile[i].y));
 	}
-	for (uint i = 0; i < profile.capacity()/2; i++) {
+	for (hpuint i = 0; i < profile.capacity()/2; i++) {
 		profile.push_back(hpvec2(toothProfile[i].x, toothProfile[i].y));
 	}
 }
@@ -364,12 +364,13 @@ void InvoluteGear::getToothProfile(vector<hpvec2>& toothProfile) {
 void InvoluteGear::insertCirclePoints(vector<hpvec2>& v, const hpuint& start, const hpuint& stopBefore,
 		const hpreal& sampleAngleSize, const hpreal& radius) {
 
+	hpreal mirrorAngle = getAngularPitch() / 2.0f;
+	hpvec2 mirrorAxis = hpvec2(sin(mirrorAngle), cos(mirrorAngle));
 	for(hpuint i = start; i < stopBefore; ++i) {
 		v[i].x = radius * glm::sin(sampleAngleSize * i);
 		v[i].y = radius * glm::cos(sampleAngleSize * i);
 		hpuint j = v.size() - 1 - i; //mirrored side
-		v[j].x = radius * glm::sin(sampleAngleSize * j);
-		v[j].y = radius * glm::cos(sampleAngleSize * j);
+		v[j] = mirrorPoint(v[i], mirrorAxis);
 	}
 }
 

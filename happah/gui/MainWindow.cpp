@@ -2,6 +2,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QMenu>
+#include <QMenuBar>
 #include <QWidget>
 
 #include "happah/gui/MainWindow.h"

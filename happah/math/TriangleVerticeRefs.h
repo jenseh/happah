@@ -1,6 +1,8 @@
 #ifndef TRIANGLEVERTICEREFS_H
 #define TRIANGLEVERTICEREFS_H
 
+#include "happah/HappahTypes.h"
+
 /**
  * @brief The TriangleVerticeRefs struct to store the vertices references to one complete triangle
  */

@@ -1,13 +1,7 @@
 #ifndef FASTKDTREE_H
 #define FASTKDTREE_H
 
-#include <list>
-#include <iostream>
-
 #include "TriangleIterator.h"
-#include "happah/math/Circle.h"
-#include "happah/math/Ray.h"
-#include "happah/kdtree/BBox.h"
 
 /**
  * @brief The class is used to build a fast kd tree. Only the really
@@ -33,12 +27,13 @@ public:
      * @param begin the start of the iterator to the triangles
      * @param end the end index to the triangle iterator
      */
-    FastKdTree(TriangleIterator begin, TriangleIterator end);
+    FastKdTree(TriangleIterator* begin, TriangleIterator* end);
 
     /**
       * @brief destroys the pointer to the child.
       */
     ~FastKdTree();
+
 };
 
 #endif // FASTKDTREE_H

@@ -8,6 +8,7 @@ class KDTreeSplitPlaneStrategy
 {
 public:
     KDTreeSplitPlaneStrategy();
+	virtual void buildKdTree(TriangleIterator& triangleIterator, FastKdTree*& fastKdTree) = 0;
 };
 
 #endif // KDTREESPLITPLANESTRATEGY_H

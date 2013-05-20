@@ -3,7 +3,7 @@
 
 #include "HappahTypes.h"
 
-static const hpreal HP_EPSILON = 1e-5;
+static const hpreal HP_EPSILON = 1e-5f;
 // DRAW MODES:
 
 enum Flags {

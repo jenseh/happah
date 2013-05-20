@@ -451,7 +451,7 @@ struct Circle {
 
 	// Check whether two hpreals are equal plus minus a tolerance value
 	bool floatEquals(hpreal a, hpreal b) {
-		const hpreal epsilon = 10e-07;
+		const hpreal epsilon = 10e-07f;
 		return (a > b - epsilon) && (a < b + epsilon);
 	}
 
@@ -463,7 +463,7 @@ struct Circle {
 	// Check whether a vector has only zeros
 	// This requires a very small epsilon (i.e. 10-e7) to avoid misinterpretation of small normals
 	bool isNullVector(hpvec3& vector) {
-	  hpreal epsilon = 10e-10;
+	  hpreal epsilon = 10e-10f;
 		if (floatEquals(vector.x, 0.0, epsilon) && floatEquals(vector.y, 0.0, epsilon) && floatEquals(vector.z, 0.0, epsilon)) {
 			return true;
 		} else {
@@ -489,7 +489,7 @@ struct Circle {
 	// Check whether float a is smaller than float b
 	// A tolerance is added that makes overlapping more likely
 	bool floatSmaller(hpreal a, hpreal b) {
-		const hpreal epsilon = 10e-06;
+		const hpreal epsilon = 10e-06f;
 		return floatSmaller(a, b, epsilon);
 	}
 
@@ -502,7 +502,7 @@ struct Circle {
 	// Check whether hpreal a is bigger than hpreal b
 	// A tolerance is added that makes overlapping more likely
 	bool floatBigger(hpreal a, hpreal b) {
-		const hpreal epsilon = 10e-06;
+		const hpreal epsilon = 10e-06f;
 		return floatBigger(a, b, epsilon);
 	}
 
@@ -547,7 +547,7 @@ struct Circle {
 
 		hpreal dotProduct = glm::dot(cp1, cp2);
 
-		if (floatEquals(dotProduct, 0.0, 10e-4)) {
+		if (floatEquals(dotProduct, 0.0, 10e-4f)) {
 		    return false;
 		} else if (dotProduct > 0.0) {
 			return true;

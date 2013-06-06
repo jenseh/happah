@@ -10,14 +10,17 @@ using namespace std;
 template<typename T>
 class LineMesh : public Mesh<T> {//TODO: rename LineMesh to SegmentMesh?
 public:
+
+    /* Implements a RandomAccessIterator for SegmentEndpoints */
 	template<typename S>
 	class SegmentEndpointsIterator : public iterator<random_access_iterator_tag, const SegmentEndpoints<S> > {
+
 		protected:
-    			hpuint m_iIndex;   
-				LineMesh<T>* m_pMesh;
+    			hpuint m_iIndex;            /* Current iteration index */
+				LineMesh<T>* m_pMesh;       /* LineMesh structure */
 
 		public:
-
+            
     		typedef random_access_iterator_tag iterator_category;
     		typedef
         		typename iterator<random_access_iterator_tag, SegmentEndpoints<S>>::value_type
@@ -31,46 +34,60 @@ public:
     		typedef
         		typename iterator<random_access_iterator_tag, SegmentEndpoints<S>>::pointer
         		pointer;
-   
+            
+            /* Empty constructor */
     		SegmentEndpointsIterator() : m_iIndex(0), m_pMesh(NULL) {}
 
+            /* Construct from an index value and a LineMesh instance */
 			SegmentEndpointsIterator(hpuint iIndex, LineMesh<T>* pMesh) : m_iIndex(iIndex), m_pMesh(pMesh) {}
    
+            /* Construct from another SegmentEndpointsIterator instance */
     		SegmentEndpointsIterator(const SegmentEndpointsIterator<S>& r) : m_iIndex(r.m_iIndex), m_pMesh(r.m_pMesh) {}
    
+            /* = operator, set index and LineMesh instance from other SegmentEndpointsIterator instance */
     		SegmentEndpointsIterator& operator=(const SegmentEndpointsIterator<S>& r)
         		{ m_iIndex = r.m_iIndex; m_pMesh = r.m_pMesh; return *this; }
 
-    		SegmentEndpointsIterator& operator++()  // PREFIX
+            /* Prefix increment */
+    		SegmentEndpointsIterator& operator++()  
         		{ m_iIndex += 2; return *this; }
 
-    		SegmentEndpointsIterator& operator--()  // PREFIX
+            /* Prefix decrement */
+    		SegmentEndpointsIterator& operator--() 
         		{ m_iIndex -= 2; return *this; }
 
-    		SegmentEndpointsIterator operator++(int)  // POSTFIX
+            /* Postfix increment */
+    		SegmentEndpointsIterator operator++(int)  
         		{ return SegmentEndpointsIterator(m_iIndex + 2, m_pMesh); }
-
-    		SegmentEndpointsIterator operator--(int)  // POSTFIX
+            
+            /* Postfix decrement */
+    		SegmentEndpointsIterator operator--(int)  
         		{ return SegmentEndpointsIterator(m_iIndex - 2, m_pMesh); }
 
+            /* + operator, increment by n */
     		SegmentEndpointsIterator operator+(const difference_type& n) const
         		{ return SegmentEndpointsIterator(m_iIndex + 2 * n, m_pMesh); }
 
+            /* += operator, increment current instance by n */
     		SegmentEndpointsIterator& operator+=(const difference_type& n)
         		{ m_iIndex += 2 * n; return *this; }
 
+            /* - operator, decrement by n */
     		SegmentEndpointsIterator operator-(const difference_type& n) const
         		{ return SegmentEndpointsIterator(m_iIndex - 2 * n, m_pMesh); }
-
+            
+            /* -= operator, decrement current instance by n */
     		SegmentEndpointsIterator& operator-=(const difference_type& n) 
 				{ m_iIndex -= 2 * n; return *this; }
 
+            /* Access current SegmentEndpoints */
     		SegmentEndpoints<S> operator*() const { 
 				return this[m_iIndex];
 			}
 
     		//pointer operator->() const { return &this; }
-
+            
+            /* Random access a SegmentEndpoints instance at index n */
     		SegmentEndpoints<S> operator[](const difference_type& n) const { 
 				vector<S>* pVerticesAndNormals = m_pMesh->getVerticesAndNormals();
 				vector<hpuint>* pIndices = m_pMesh->getIndices();

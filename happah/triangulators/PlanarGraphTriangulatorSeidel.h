@@ -6,7 +6,7 @@ class PlanarGraphTriangulatorSeidel : public PlanarGraphTriangulator {
 
 public:
 	//returns trapezoidal decomposition of the interior of the given polygon according to Seidel's algorithm
-	//static TrapezoidMesh2D* trapezoidulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last); // Alternative 1
+	static TrapezoidMesh2D* trapezoidulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last); // Alternative 1
 	//static void trapezoidulate(PlanarGraphSegmentEndpointsIterator first, PlanarGraphSegmentEndpointsIterator last, TrapezoidMesh2D& trapezoidMesh); // Alternative 2
 
 	PlanarGraphTriangulatorSeidel();
@@ -26,6 +26,8 @@ public:
 		public:
 			void splitHorizontal(hpvec2& point);
 			void splitVertical(SegmentEndpoints2D& segment);
+
+			void setSink(Sink* sink) {this->sink = sink;};
 
 		private:
 			Sink* sink;
@@ -75,9 +77,14 @@ public:
 	class Sink : public Node {
 
 		public:
+
+			Sink(Trapezoid* trapezoid) : trapezoid(trapezoid) {
+				trapezoid->setSink(this);			
+			};
+
 			Trapezoid* getTrapezoid(const hpvec2& point);
-			YNode* splitHorizontal(hpdouble yValue);
-			XNode* splitVertical(SegmentEndpoints2D* segment);
+			YNode* splitHorizontal(const hpdouble& yValue);
+			XNode* splitVertical(SegmentEndpoints2D& segment);
 
 		private:
 			Trapezoid* trapezoid;

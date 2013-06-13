@@ -36,6 +36,7 @@ public:
 			SegmentEndpoints* rightSegment = NULL;
 
 			Trapezoid* upperLeft = NULL;
+			Trapezoid* upperMiddle = NULL;
 			Trapezoid* upperRight = NULL;
 			Trapezoid* lowerLeft = NULL;
 			Trapezoid* lowerRight = NULL;
@@ -59,6 +60,7 @@ public:
 	class XNode : public Node {
 		
 		public:
+			XNode(SegmentEndpoints2D* key) : key(key) {};
 			Trapezoid* getTrapezoid(const hpvec2& point);
 
 		private:
@@ -68,6 +70,7 @@ public:
 	class YNode : public Node {
 		
 		public:
+			YNode(hpdouble key) : key(key) {};
 			Trapezoid* getTrapezoid(const hpvec2& point);
 
 		private:
@@ -83,8 +86,8 @@ public:
 			};
 
 			Trapezoid* getTrapezoid(const hpvec2& point);
-			YNode* splitHorizontal(const hpdouble& yValue);
-			XNode* splitVertical(SegmentEndpoints2D& segment);
+			YNode* splitHorizontal(const hpdouble& yValue, Trapezoid* upper, Trapezoid* lower);
+			XNode* splitVertical(SegmentEndpoints2D& segment, Trapezoid* left, Trapezoid* right);
 
 		private:
 			Trapezoid* trapezoid;

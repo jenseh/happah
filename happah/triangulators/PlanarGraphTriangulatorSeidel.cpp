@@ -74,15 +74,36 @@ void PlanarGraphTriangulatorSeidel::Trapezoid::splitHorizontal(hpvec2& point) {
 	upper->lowerLeft = lower;
 	lower->upperLeft = upper;
 
+	if(upperLeft->lowerLeft == this)
+		upperLeft->lowerLeft = upper;
+	if(upperRight->lowerLeft == this)
+		upperRight->lowerLeft = upper;
+	if(upperLeft->lowerRight == this)
+		upperLeft->lowerRight = upper;
+	if(upperRight->lowerRight == this)
+		upperRight->lowerRight = upper;
+
+	if(lowerLeft->upperLeft == this)
+		lowerLeft->upperLeft = lower;
+	if(lowerRight->upperLeft == this)
+		lowerRight->upperLeft = lower;
+	if(lowerLeft->upperRight == this)
+		lowerLeft->upperRight = lower;
+	if(lowerRight->upperRight == this)
+		lowerRight->upperRight = lower;
+
 	delete this;
 }
 
 void PlanarGraphTriangulatorSeidel::Trapezoid::splitVertical(SegmentEndpoints2D& segment) {
 
-	XNode* xNode = sink->splitVertical(segment);
+	Trapezoid* left = new Trapezoid();
+	Trapezoid* right = new Trapezoid();
 
-	Trapezoid* left = new Trapezoid(xNode->getChild1());
-	Trapezoid* right = new Trapezoid(xNode->getChild2());
+	XNode* xNode = sink->splitVertical(segment, left, right);
+
+	left->setSink(xNode->getChild1());
+	right->setSink(xNode->getChild2());
 
 	left->leftSegment = leftSegment;
 	right->rightSegment = rightSegment;
@@ -90,7 +111,58 @@ void PlanarGraphTriangulatorSeidel::Trapezoid::splitVertical(SegmentEndpoints2D&
 	right->leftSegment = &segment;
 
 	left->upperLeft = upperLeft;
+	right->upperRight = upperRight;
+
+	///TODO
 }
+
+
+
+Trapezoid* PlanarGraphTriangulatorSeidel::XNode::getTrapezoid(const hpvec2& point) {
+	hpdouble m = (key->b->y - key->a->y) / (key->b->x - key->a->x);
+	hpdouble b = key->a->y - m * key->a->x;
+	hpdouble x = (point->y - b) / m;
+	return (point.x > x)
+			? child1->getTrapezoid(point)
+			: child2->getTrapezoid(point);
+}
+
+Trapezoid* PlanarGraphTriangulatorSeidel::YNode::getTrapezoid(const hpvec2& point) {
+
+	return (point.y > key)
+			? child1->getTrapezoid(point)
+			: child2->getTrapezoid(point);
+}
+
+Trapezoid* PlanarGraphTriangulatorSeidel::Sink::getTrapezoid(const hpvec2& point) {
+
+	return trapezoid;
+}
+
+YNode* PlanarGraphTriangulatorSeidel::Sink::splitHorizontal(const hpdouble& yValue, Trapezoid* upper, Trapezoid* lower) {
+	
+	YNode yNode = new YNode(yValue);
+	
+	yNode->child1 = new Sink(upper);
+	yNode->child2 = new Sink(lower);
+
+	delete this;
+
+	return yNode;
+}
+
+XNode* PlanarGraphTriangulatorSeidel::Sink::splitVertical(SegmentEndpoints2D& segment, Trapezoid* left, Trapezoid* right) {
+	
+	XNode xNode = new XNode(segment);
+	
+	xNode->child1 = new Sink(left);
+	xNode->child2 = new Sink(right);
+
+	delete this;
+
+	return xNode;
+}
+
 
 
 
